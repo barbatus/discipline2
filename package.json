@@ -1,0 +1,14 @@
+{
+  "name": "discipline",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh"
+  },
+  "dependencies": {
+    "eventemitter3": "^1.1.1",
+    "promise": "^7.0.4",
+    "react-native": "git+https://github.com/facebook/react-native.git",
+    "regenerator": "^0.8.36"
+  }
+}
