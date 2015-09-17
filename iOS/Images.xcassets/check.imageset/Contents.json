@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "check.png"
+      "filename" : "check.pdf",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",

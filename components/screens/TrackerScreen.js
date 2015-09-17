@@ -8,7 +8,7 @@ var {
   View,
 } = React;
 
-var MeterScreen = React.createClass({
+var TrackerScreen = React.createClass({
   render: function() {
     return (
       <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -23,4 +23,4 @@ var styles = StyleSheet.create({
   }
 });
 
-module.exports = MeterScreen;
+module.exports = TrackerScreen;

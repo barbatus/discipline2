@@ -1,19 +1,39 @@
 'use strict';
 
-var meters = require('./meters');
+var trackers = require('./trackers');
+var ticks = require('./ticks');
+var consts = require('./consts');
 
 var depot = {
-  meters: meters,
+  trackers: trackers,
+  ticks: ticks,
+  consts: consts,
 
   initTestData: async function() {
-    await depot.meters.add({title: 'Morning Run', iconId: 'sneakers'});
-    await depot.meters.add({title: 'Cup of Coffee', iconId: 'coffee'});
-    await depot.meters.add({title: 'Spent on Food', iconId: 'pizza'});
-    await depot.meters.add({title: 'Reading', iconId: 'stopwatch'});
+    await depot.trackers.add({
+      title: 'Morning Run',
+      type: consts.COUNTER,
+      iconId: 'sneakers'
+    });
+    await depot.trackers.add({
+      title: 'Cup of Coffee',
+      type: consts.GOAL_TRACKER,
+      iconId: 'coffee'
+    });
+    await depot.trackers.add({
+      title: 'Spent on Food',
+      type: consts.GOAL_TRACKER,
+      iconId: 'pizza'
+    });
+    await depot.trackers.add({
+      title: 'Reading',
+      type: consts.COUNTER, 
+      iconId: 'stopwatch'
+    });
   },
 
   hasTestData: async function() {
-    return await depot.meters.count()
+    return await depot.trackers.count();
   }
 };
 
