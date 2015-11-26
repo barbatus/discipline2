@@ -1,6 +1,6 @@
 'use strict';
 
-var BasicTracker = require('BasicTracker');
+var BasicTracker = require('./BasicTracker');
 
 class Trackers {
   static async getAll() {

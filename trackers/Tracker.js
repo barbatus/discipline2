@@ -1,6 +1,6 @@
 'use strict';
 
-class BasicTracker {
+class Tracker {
   constructor(tracker) {
     this._id = tracker._id;
     this.title = tracker.title;
@@ -8,21 +8,33 @@ class BasicTracker {
     this.type = tracker.type;
   }
 
-  async getCount() {
-    return await depot.trackers.getTodayCount(this._id);
+  static async getAll() {
+    var trackers = await depot.trackers.get_all(
+      trackDoc => {
+        return new Tracker(trackDoc);
+      });
+    return trackers;
   }
 
   get value() {
     return depot.trackers.getTodayValue(this._id);
   }
 
+  get icon() {
+    return getIcon(this.iconId);
+  }
+
+  get lastTick() {
+    return depot.trackers.getLastTick(this._id);
+  }
+
+  async getCount() {
+    return await depot.trackers.getTodayCount(this._id);
+  }
+
   async getChecked() {
     var count = await this.getCount();
     return count != 0;
-  }
-
-  get icon() {
-    return getIcon(this.iconId);
   }
 
   async click(opt_value, opt_onResult) {
@@ -49,10 +61,6 @@ class BasicTracker {
 
   async getTodayTicks() {
     return await depot.trackers.getTodayTicks(this._id);
-  }
-
-  get lastTick() {
-    return depot.trackers.getLastTick(this._id);
   }
 };
 

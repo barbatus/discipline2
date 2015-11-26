@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-var {
+const React = require('react-native');
+const {
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -10,17 +10,20 @@ var {
   StyleSheet
 } = React;
 
-var trackStyles = require('./trackStyles');
-var TrackerCell = require('./TrackerCell');
+const { trackerStyles } = require('./trackerStyles');
+const TrackerCell = require('./TrackerCell');
 
-var CounterCell = React.createClass({
-
+const CounterCell = React.createClass({
   getInitialState() {
     return {count: 0};
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     this._loadInitialState();
+  },
+
+  toggleView(callback) {
+    this.refs.cell.toggleView(callback);
   },
 
   _loadInitialState: async function() {
@@ -37,19 +40,19 @@ var CounterCell = React.createClass({
     this.setState({count: count + 1});
   },
 
-  _onMinus: function() {
+  _onMinus() {
     var count = this.state.count;
     if (count > 0) {
       this.setState({count: count - 1});
     }
   },
 
-  getControls: function() {
+  _getControls() {
     return [
       <TouchableOpacity onPress={this._onMinus}>
         <Image
           source={getIcon('minus')}
-          style={trackStyles.circleBtn}
+          style={trackerStyles.circleBtn}
         />
       </TouchableOpacity>,
       <Text style={styles.countText} numberOfLines={1}>
@@ -58,22 +61,26 @@ var CounterCell = React.createClass({
       <TouchableOpacity onPress={this._onPlus}>
         <Image
           source={getIcon('plus')}
-          style={trackStyles.circleBtn}
+          style={trackerStyles.circleBtn}
         />
       </TouchableOpacity>
     ];
   },
 
-  render: function() {
-    var tracker = this.props.tracker;
+  render() {
+    let tracker = this.props.tracker;
     return (
-      <TrackerCell icon={tracker.icon} title={tracker.title}
-        controls={this.getControls()} />
+      <TrackerCell
+        ref='cell'
+        icon={tracker.icon}
+        title={tracker.title}
+        controls={this._getControls()}
+        onEdit={this.props.onEdit} />
     );
   }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   countText: {
     fontSize: 54,
     fontWeight: '300',

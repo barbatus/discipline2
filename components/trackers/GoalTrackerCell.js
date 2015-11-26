@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react-native');
-var {
+const React = require('react-native');
+const {
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -10,58 +10,64 @@ var {
   StyleSheet
 } = React;
 
-var trackStyles = require('./trackStyles');
-var TrackerCell = require('./TrackerCell');
+const { trackerStyles } = require('./trackerStyles');
+const TrackerCell = require('./TrackerCell');
 
-var GoalTrackerCell = React.createClass({
-
+const GoalTrackerCell = React.createClass({
   getInitialState() {
-    return {checked: false};
+    return {
+      checked: false
+    };
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     this._loadInitialState();
   },
 
+  toggleView(callback) {
+    this.refs.cell.toggleView(callback);
+  },
+
   _loadInitialState: async function() {
-    var tracker = this.props.tracker;
-    var checked = await tracker.getChecked();
+    let tracker = this.props.tracker;
+    let checked = await tracker.getChecked();
     this.setState({checked: checked});
   },
 
   _onCheck: async function() {
-    var tracker = this.props.tracker;
+    let tracker = this.props.tracker;
     await tracker.addTick();
     this.setState({checked: true});
   },
 
-  getBtnStyle: function() {
+  _getCheckStyle() {
     return this.state.checked ?
-      [trackStyles.checkBtn, trackStyles.filledBtn] :
-      trackStyles.checkBtn;
+      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
+        trackerStyles.checkBtn;
   },
 
-  getControls: function() {
+  _getControls() {
     return (
       <TouchableOpacity onPress={this._onCheck}>
         <Image
           source={getIcon('check')}
-          style={this.getBtnStyle()}
+          style={this._getCheckStyle()}
         />
       </TouchableOpacity>
     );
   },
 
-  render: function() {
-    var tracker = this.props.tracker;
+  render() {
+    let tracker = this.props.tracker;
     return (
-      <TrackerCell icon={tracker.icon} title={tracker.title}
-        controls={this.getControls()} />
+      <TrackerCell
+        ref='cell'
+        icon={tracker.icon}
+        title={tracker.title}
+        controls={this._getControls()}
+        onEdit={this.props.onEdit} />
     );
   }
-});
-
-var styles = StyleSheet.create({
 });
 
 module.exports = GoalTrackerCell;

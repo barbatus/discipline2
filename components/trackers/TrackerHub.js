@@ -7,144 +7,113 @@ const {
   Text
 } = React;
 
-const TrackerScreen = require('../screens/TrackerScreen');
 const Swiper = require('../swiper/Swiper');
-var LinearGradient = require('react-native-linear-gradient');
+const LinearGradient = require('react-native-linear-gradient');
 
 const GoalTrackerCell = require('./GoalTrackerCell');
 const CounterCell = require('./CounterCell');
 
-var Trackers = require('../../trackers/Trackers');
+const Tracker = require('../../trackers/Tracker');
 
 class TrackerHub extends Component {
   constructor(props) {
     super(props);
+    this.index = 0;
     this.state = {
       trackers: [],
-      colorBottom: '#E97490',
-      colorTop: '#FBDDB7'
+      trackerIndex: 0
     };
-    this.swiperDirection = 1;
-    this.colors = [{
-      colorBottom: '#E97490',
-      colorTop: '#FBDDB7'
-    }, {
-      colorBottom: '#FBDDB7',
-      colorTop: '#FFA878'
-    }, {
-      colorBottom: '#FA9E72',
-      colorTop: '#9FC1E7'
-    }, {
-      colorBottom: '#96BAEF',
-      colorTop: '#B454A6'
-    }, {
-      colorBottom: '#BA4699',
-      colorTop: '#E68C7D'
-    }];
   }
 
   componentDidMount() {
     this._loadInitialState();
   }
 
+  get currentTracker() {
+    return this.state.trackers[this.index];
+  }
+
+  toggleCurTracker(callback) {
+    let trackerId = this.currentTracker._id;
+    this.refs[trackerId].toggleView(callback);
+  }
+
+  addTracker(tracker, callback) {
+    let trackers = this.state.trackers;
+    trackers.splice(this.index + 1, 0, tracker);
+    this.setState({
+      trackers: trackers
+    }, () => {
+      this.refs.swiper.scrollTo(1);
+      if (callback) {
+        callback();
+      }
+    });
+  }
+
   async _loadInitialState() {
-    var hasTestData = await depot.hasTestData();
+    let hasTestData = await depot.hasTestData();
     if (!hasTestData) {
       await depot.initTestData();
     }
-    var trackers = await Trackers.getAll();
+    let trackers = await Tracker.getAll();
     this.setState({
       trackers: trackers
     });
   }
 
-  renderTracker(tracker: Object) {
-    var type = tracker.type;
-    return type == depot.consts.GOAL_TRACKER ? 
-        <GoalTrackerCell
-          key={tracker.id}
-          onSelect={() => this.selectTracker(tracker)}
-          tracker={tracker}
-        /> :
-        <CounterCell
-          key={tracker.id}
-          onSelect={() => this.selectTracker(tracker)}
-          tracker={tracker}
-        />;
+  _renderTracker(tracker: Object) {
+    let type = tracker.type;
+    return type === depot.consts.GOAL_TRACKER ?
+      <GoalTrackerCell
+        ref={tracker._id}
+        key={tracker._id}
+        onEdit={this.props.onTrackerEdit}
+        tracker={tracker}
+      /> :
+      <CounterCell
+        ref={tracker._id}
+        key={tracker._id}
+        onEdit={this.props.onTrackerEdit}
+        tracker={tracker}
+      />;
   }
 
-  renderTrackSlide(tracker: Object) {
-    return (
-      <View style={styles.slide}>
-        {this.renderTracker(tracker)}
-      </View>
-    );
-  }
+  _onSlideChange(event, index) {
+    this.index = index;
 
-  selectTracker(tracker: Object) {
-    this.props.navigator.push({
-      title: tracker.title,
-      component: TrackerScreen,
-      passProps: {tracker}
-    });
-  }
-
-  _onSlide(event, swiper) {
-    var inc = swiper.state.inc;
-    var index = swiper.state.index;
-    var total = swiper.state.total;
-    var offset = swiper.state.offset;
-
-    var color = this.colors[(index + inc) % this.colors.length];
-    this.setState({
-      colorTop: color.colorTop,
-      colorBottom: color.colorBottom
-    });
+    if (this.props.onTrackerSlideChange) {
+      this.props.onTrackerSlideChange(index);
+    }
   }
 
   render() {
-    var trackerSlides = this.state.trackers.map((tracker) => {
-      return this.renderTrackSlide(tracker);
-    });
+    let trackerSlides = this.state.trackers.map(
+      tracker => {
+        return this._renderTracker(tracker);
+      });
 
-    var swiperView = trackerSlides.length ? 
-      <Swiper showsButtons={false} loop={false}
-        onMomentumScrollBegin={(event, state, swiper) => {this._onSlide(event, swiper)}}>
+    let swiperView = trackerSlides.length ? 
+      <Swiper
+        ref='swiper'
+        index={this.state.trackerIndex}
+        onSlideChange={
+          this._onSlideChange.bind(this)
+        }>
         {trackerSlides}
-      </Swiper> : <View />;
+      </Swiper> : null;
 
     return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={[this.state.colorTop, this.state.colorBottom]}
-          style={styles.gradient} />
+      <View style={[styles.root, this.props.style]}>
         {swiperView}
       </View>
     );
   }
 }
 
-// TODO: create absolute style helper.
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1
-  },
-  slide: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: 0,
-    paddingTop: 20,
-    paddingBottom: 60,
-    alignItems: 'center'
-  },
-  gradient: {
-    position: 'absolute',
-    bottom: 0,
-    top: 0,
-    left: 0,
-    right: 0
   }
 });
 

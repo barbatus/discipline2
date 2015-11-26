@@ -14,7 +14,7 @@ var SideMenu = require('react-native-side-menu');
 var MainScreen = require('./components/screens/MainScreen');
 var Menu = require('./components/nav/Menu');
 
-class HabTrackerApp extends Component {
+class DisciplineApp extends Component {
   constructor(props) {
     super(props);
     this.state = { touchToClose: false };
@@ -51,6 +51,6 @@ var styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('HabTrackerApp', () => HabTrackerApp);
+AppRegistry.registerComponent('Discipline', () => DisciplineApp);
 
-module.exports = HabTrackerApp;
+module.exports = DisciplineApp;

@@ -1,11 +1,19 @@
 var icons = {
-  coffee: require('image!coffee'),
-  stopwatch: require('image!stopwatch'),
-  pizza: require('image!pizza'),
-  sneakers: require('image!sneakers'),
-  check: require('image!check'),
-  plus: require('image!plus'),
-  minus: require('image!minus')
+  back: require('./files/back.png'),
+  coffee: require('./files/coffee.png'),
+  stopwatch: require('./files/stopwatch.png'),
+  pizza: require('./files/pizza.png'),
+  sneakers: require('./files/sneakers.png'),
+  check: require('./files/check.png'),
+  plus: require('./files/plus.png'),
+  minus: require('./files/minus.png'),
+  info: require('./files/info.png'),
+  menu: require('./files/menu.png'),
+  new: require('./files/new.png'),
+  cancel: require('./files/cancel.png'),
+  accept: require('./files/accept.png'),
+  oval: require('./files/oval.png'),
+  marker: require('./files/marker.png')
 };
 
 class IconStore {

@@ -1,20 +1,20 @@
 {
-  "name": "discipline",
+  "name": "AwesomeProject",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node_modules/react-native/packager/packager.sh"
+    "start": "react-native start"
   },
   "dependencies": {
-    "eventemitter3": "^1.1.1",
-    "moment": "^2.10.6",
-    "promise": "^7.0.4",
-    "react-native": "^0.11.0",
-    "react-native-linear-gradient": "^0.3.2",
-    "react-native-navbar": "^0.8.2",
-    "react-native-side-menu": "^0.13.0",
+    "eventemitter3": "1.1.1",
+    "moment": "2.10.6",
+    "promise": "7.0.4",
+    "react-native": "^0.14.2",
+    "react-native-linear-gradient": "^1.1.0-alpha",
+    "react-native-navbar": "^1.0.7",
+    "react-native-side-menu": "^0.15.5",
     "react-timer-mixin": "^0.13.3",
-    "regenerator": "^0.8.36",
     "underscore": "^1.8.3"
-  }
+  },
+  "devDependencies": {}
 }

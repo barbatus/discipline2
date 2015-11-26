@@ -1,22 +1,61 @@
-var React = require('react-native');
-var {
+const React = require('react-native');
+const {
   StyleSheet,
   View,
   Component
 } = React;
 
-var NavigationBar = require('react-native-navbar');
+const NavigationBar = require('react-native-navbar');
+const LinearGradient = require('react-native-linear-gradient');
 
 class Screen extends Component {
+  constructor(props) {
+    super(props);
+    this.colors = [{
+      colorBottom: '#E97490',
+      colorTop: '#FBDDB7'
+    }, {
+      colorBottom: '#FBDDB7',
+      colorTop: '#FFA878'
+    }, {
+      colorBottom: '#FA9E72',
+      colorTop: '#9FC1E7'
+    }, {
+      colorBottom: '#96BAEF',
+      colorTop: '#B454A6'
+    }, {
+      colorBottom: '#BA4699',
+      colorTop: '#E68C7D'
+    }];
+
+    // let color = this.colors[(index + inc) % this.colors.length];
+    // this.setState({
+    //   colorTop: color.colorTop,
+    //   colorBottom: color.colorBottom
+    // });
+  }
+
   render() {
-    let { leftBtn, rightBtn, title, content, navigator } = this.props;
+    let {
+      leftBtn,
+      rightBtn,
+      title,
+      content,
+      navigator
+    } = this.props;
+
     return (
       <View style={styles.container}>
+        <LinearGradient
+          colors={['#FBDDB7', '#E97490']}
+          style={styles.gradient} />
         <View style={styles.navbar}>
-          <NavigationBar navigator={navigator}
+          <NavigationBar
+            tintColor='transparent'
+            navigator={navigator}
             title={title}
-            customPrev={leftBtn}
-            customNext={rightBtn} />
+            leftButton={leftBtn}
+            rightButton={rightBtn} />
         </View>
         <View style={styles.content}>
           {{content}}
@@ -26,20 +65,28 @@ class Screen extends Component {
   }
 }
 
-var Dimensions = require('Dimensions');
-var window = Dimensions.get('window');
+const Dimensions = require('Dimensions');
+const window = Dimensions.get('window');
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white'
+    backgroundColor: 'transparent'
   },
   navbar: {
     height: 64,
-    width: window.width
+    width: window.width,
+    backgroundColor: 'transparent'
   },
   content: {
     height: window.height - 64,
     width: window.width
+  },
+  gradient: {
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0
   }
 });
 

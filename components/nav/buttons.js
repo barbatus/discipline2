@@ -14,9 +14,8 @@ class NavAddButton extends Component {
       <TouchableOpacity
         onPress={this.props.onPress}
         style={styles.navBarRightButton}>
-        <Text style={[styles.navBarText, styles.navBarButtonText]}>
-          Add
-        </Text>
+        <Image source={getIcon('new')}
+          style={styles.navBarIcon} />
       </TouchableOpacity>
     );
   }
@@ -28,7 +27,7 @@ class NavBackButton extends Component {
       <TouchableOpacity
         onPress={this.props.onPress}
         style={styles.navBarLeftButton}>
-        <Image source={require('image!back')}
+        <Image source={getIcon('back')}
           style={styles.navBarIcon} />
       </TouchableOpacity>
     );
@@ -41,11 +40,43 @@ class NavMenuButton extends Component {
       <TouchableOpacity
         onPress={this.props.onPress}
         style={styles.navBarLeftButton}>
-        <Image source={require('image!menu')}
+        <Image source={getIcon('menu')}
+          style={[styles.navBarIcon, styles.menuIcon]} />
+      </TouchableOpacity>
+    );
+  }
+}
+
+class NavCancelButton extends Component {
+  render() {
+    return (
+      <TouchableOpacity
+        onPress={this.props.onPress}
+        style={styles.navBarLeftButton}>
+        <Image source={getIcon('cancel')}
           style={styles.navBarIcon} />
       </TouchableOpacity>
     );
   }
 }
 
-module.exports = { NavAddButton, NavBackButton, NavMenuButton };
+class NavAcceptButton extends Component {
+  render() {
+    return (
+      <TouchableOpacity
+        onPress={this.props.onPress}
+        style={styles.navBarRightButton}>
+        <Image source={getIcon('accept')}
+          style={styles.navBarIcon} />
+      </TouchableOpacity>
+    );
+  }
+}
+
+module.exports = {
+  NavAddButton,
+  NavBackButton,
+  NavMenuButton,
+  NavCancelButton,
+  NavAcceptButton
+};
