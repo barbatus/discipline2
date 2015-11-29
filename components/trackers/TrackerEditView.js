@@ -18,12 +18,20 @@ const {
   propsStyles
 } = require('./trackerStyles');
 
+const { TrackerType } = require('../../depot/consts');
+
 const TrackerEditView = React.createClass({
   getInitialState() {
     return {
       sendNotif: false,
       saveGoog: false
     };
+  },
+
+  getDefaultProps() {
+    return {
+      showType: true
+    }
   },
 
   _getMainIcon() {
@@ -46,15 +54,19 @@ const TrackerEditView = React.createClass({
   },
 
   render() {
+    let typeEnum = TrackerType.fromValue(this.props.trackerType);
+
     return (
       <Animated.View style={[propsStyles.innerView, this.props.style]}>
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
-            <View style={styles.textBox}>
+            <TouchableOpacity
+              style={styles.textBox}
+              onPress={this.props.onIconEdit}>
               <Text style={styles.text}>
-                Choose an Icon
+                Change Icon
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={propsStyles.iconContainer}>
             <Image
@@ -71,22 +83,30 @@ const TrackerEditView = React.createClass({
           </View>
         </View>
         <View style={propsStyles.bodyContainer}>
-          <View style={propsStyles.row}>
-            <View style={propsStyles.colLeft}>
-              <Text style={propsStyles.text}>
-                Tracker Type
-              </Text>
-            </View>
-            <View style={propsStyles.colRight}>
-              <Text style={propsStyles.text}>
-                Goal >
-              </Text>
-            </View>
-          </View>
+          {
+            this.props.showType ? (
+              <View style={propsStyles.row}>
+                <View style={propsStyles.colLeft}>
+                  <Text style={propsStyles.colText}>
+                    Tracker Type
+                  </Text>
+                </View>
+                <TouchableOpacity
+                    style={propsStyles.colRight}
+                    onPress={this.props.onTypeClick}>
+                  <Text style={[propsStyles.colText, styles.trackTypeText]}>
+                    {typeEnum ? typeEnum.title : 'Select'}
+                  </Text>
+                  <Image source={getIcon('next')}
+                    style={propsStyles.nextIcon} />
+                </TouchableOpacity>
+              </View>
+            ) : null
+          }
           <View style={propsStyles.group}>
             <View style={propsStyles.firstGroupRow}>
-              <View style={propsStyles.colLeft}>
-                <Text style={propsStyles.text}>
+              <View style={propsStyles.colLeftWide}>
+                <Text style={propsStyles.colText}>
                   Send Notifications
                 </Text>
               </View>
@@ -97,8 +117,8 @@ const TrackerEditView = React.createClass({
               </View>
             </View>
             <View style={propsStyles.row}>
-              <View style={propsStyles.colLeft}>
-                <Text style={propsStyles.text}>
+              <View style={propsStyles.colLeftWide}>
+                <Text style={propsStyles.colText}>
                   Save in Google Cal
                 </Text>
               </View>
@@ -116,7 +136,7 @@ const TrackerEditView = React.createClass({
   }
 });
 
- const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   barContainer: {
     justifyContent: 'center',
     alignItems: 'flex-end'
@@ -125,20 +145,24 @@ const TrackerEditView = React.createClass({
     borderWidth: 1,
     borderColor: '#D4D4D4',
     padding: 3,
-    paddingRight: 7,
-    paddingLeft: 7,
-    borderRadius: 13,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 15
   },
   text: {
     fontSize: 16,
-    color: '#C4C4C4'
+    color: '#C4C4C4',
+    fontWeight: '300'
   },
   inputTitle: {
     fontSize: 27
   },
   deleteText: {
     color: '#FF001F'
+  },
+  trackTypeText: {
+    color: '#C4C4C4'
   }
- });
+});
 
 module.exports = TrackerEditView;

@@ -18,29 +18,28 @@ const Tracker = require('../../trackers/Tracker');
 class TrackerHub extends Component {
   constructor(props) {
     super(props);
-    this.index = 0;
+    this._trackerIndex = 0;
     this.state = {
-      trackers: [],
-      trackerIndex: 0
+      trackers: []
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this._loadInitialState();
   }
 
   get currentTracker() {
-    return this.state.trackers[this.index];
+    return this.state.trackers[this._trackerIndex];
   }
 
-  toggleCurTracker(callback) {
+  toggleTracker(callback) {
     let trackerId = this.currentTracker._id;
     this.refs[trackerId].toggleView(callback);
   }
 
   addTracker(tracker, callback) {
     let trackers = this.state.trackers;
-    trackers.splice(this.index + 1, 0, tracker);
+    trackers.splice(this._trackerIndex + 1, 0, tracker);
     this.setState({
       trackers: trackers
     }, () => {
@@ -56,10 +55,17 @@ class TrackerHub extends Component {
     if (!hasTestData) {
       await depot.initTestData();
     }
+    let start = time.getDateMs();
     let trackers = await Tracker.getAll();
     this.setState({
       trackers: trackers
     });
+
+    // setTimeout(() => {
+    //   this.setState({
+    //     trackers: trackers
+    //   });
+    // });
   }
 
   _renderTracker(tracker: Object) {
@@ -68,19 +74,21 @@ class TrackerHub extends Component {
       <GoalTrackerCell
         ref={tracker._id}
         key={tracker._id}
+        onIconEdit={this.props.onIconEdit}
         onEdit={this.props.onTrackerEdit}
         tracker={tracker}
       /> :
       <CounterCell
         ref={tracker._id}
         key={tracker._id}
+        onIconEdit={this.props.onIconEdit}
         onEdit={this.props.onTrackerEdit}
         tracker={tracker}
       />;
   }
 
   _onSlideChange(event, index) {
-    this.index = index;
+    this._trackerIndex = index;
 
     if (this.props.onTrackerSlideChange) {
       this.props.onTrackerSlideChange(index);
@@ -96,7 +104,7 @@ class TrackerHub extends Component {
     let swiperView = trackerSlides.length ? 
       <Swiper
         ref='swiper'
-        index={this.state.trackerIndex}
+        //index={this.state.trackerIndex}
         onSlideChange={
           this._onSlideChange.bind(this)
         }>

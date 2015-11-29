@@ -18,7 +18,7 @@ const CounterCell = React.createClass({
     return {count: 0};
   },
 
-  componentDidMount() {
+  componentWillMount() {
     this._loadInitialState();
   },
 
@@ -75,6 +75,7 @@ const CounterCell = React.createClass({
         icon={tracker.icon}
         title={tracker.title}
         controls={this._getControls()}
+        onIconEdit={this.props.onIconEdit}
         onEdit={this.props.onEdit} />
     );
   }

@@ -4,9 +4,13 @@ const {
 } = React;
 
 const styles = StyleSheet.create({
-  navBarText: {
-    fontSize: 16,
-    marginVertical: 10,
+  navTitle: {
+    marginVertical: -10
+  },
+  navTitleText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#FFF'
   },
   navBarIcon: {
     marginVertical: 10,

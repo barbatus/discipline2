@@ -2,11 +2,14 @@ const React = require('react-native');
 const {
   StyleSheet,
   View,
-  Component
+  Component,
+  Text
 } = React;
 
 const NavigationBar = require('react-native-navbar');
 const LinearGradient = require('react-native-linear-gradient');
+
+const NavTitle = require('../nav/Title');
 
 class Screen extends Component {
   constructor(props) {
@@ -53,7 +56,9 @@ class Screen extends Component {
           <NavigationBar
             tintColor='transparent'
             navigator={navigator}
-            title={title}
+            title={
+              <NavTitle title={this.props.navTitle} />
+            }
             leftButton={leftBtn}
             rightButton={rightBtn} />
         </View>

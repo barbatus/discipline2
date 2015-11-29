@@ -1,10 +1,10 @@
 'use strict';
 
-var trackers = require('./trackers');
-var ticks = require('./ticks');
-var consts = require('./consts');
+const trackers = require('./trackers');
+const ticks = require('./ticks');
+const consts = require('./consts');
 
-var depot = {
+const depot = {
   trackers: trackers,
   ticks: ticks,
   consts: consts,

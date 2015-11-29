@@ -1,64 +1,48 @@
 'use strict';
 
-var ReactNativeStore = require('./asyncstore');
-var TableModel = require('./TableModel');
+const ReactNativeStore = require('./asyncstore');
+const TableModel = require('./TableModel');
 
-var Events = require('eventemitter3');
-var events = new Events();
+const Events = require('eventemitter3');
+let events = new Events();
 
-function table(tableName) {
-
-  /**
-   * @description Finds rows matching the query.
-   * @param where
-   */
+function DbTable(tableName) {
   this.get = async function(where) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
     return table.where(where).find();
   };
 
-  /**
-   * @description Gets by ID.
-   * @param rowId
-   */
-  this.get_id = async function(rowId) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
+  this.getId = async function(rowId) {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
     return table.get(rowId);
   };
 
-  /**
-   * @description Gets all rows of the table.
-   */
-  this.get_all = async function() {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
+  this.getAll = async function() {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
     return table.rows;
   };
 
-  /**
-   * @description Adds a row to the table.
-   * @param newRow
-   */
   this.add = async function(newRow) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var docId = table.add(newRow);
+    return await this.addAt(newRow);
+  };
+
+  this.addAt = async function(newRow, opt_index) {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let docId = table.addAt(newRow, opt_index);
     await ReactNativeStore.saveTable(tableName, table.data);
 
-    events.emit("all");
+    events.emit('all');
     return docId;
   };
 
-  /**
-   * @description Removes rows matching the query.
-   * @param where
-   */
   this.remove = async function(where) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var removedIds = table.where(where).remove();
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let removedIds = table.where(where).remove();
     if (removedIds.length) {
       await ReactNativeStore.saveTable(tableName, table.data);
     }
@@ -66,14 +50,10 @@ function table(tableName) {
     return removedIds; 
   };
 
-  /**
-   * @description Removes row by ID.
-   * @param rowId
-   */
-  this.remove_id = async function(rowId) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var removed = table.removeById(rowId);
+  this.removeId = async function(rowId) {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let removed = table.removeById(rowId);
     if (removed) {
       await ReactNativeStore.saveTable(tableName, table.data);
     }
@@ -82,27 +62,19 @@ function table(tableName) {
     return removed;
   };
 
-  /**
-   * @description Erases DB.
-   */
   this.erase_db = async function() {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var removedIds = table.remove();
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let removedIds = table.remove();
     await ReactNativeStore.saveTable(tableName, table.data);
 
     events.emit('all');
   }
 
-  /**
-   * @description Updates rows matching the query.
-   * @param where
-   * @param rowData
-   */
   this.update = async function(where, rowData) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var updatedIds = table.where(where).update(rowData);
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let updatedIds = table.where(where).update(rowData);
     if (updatedIds.length) {
       await ReactNativeStore.saveTable(tableName, table.data);
     }
@@ -111,15 +83,10 @@ function table(tableName) {
     return updatedIds;
   };
 
-  /**
-   * @description Updates row by ID.
-   * @param rowId
-   * @param rowData
-   */
-  this.update_id = async function(rowId, rowData) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var updated = table.updateById(rowId, rowData);
+  this.updateId = async function(rowId, rowData) {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let updated = table.updateById(rowId, rowData);
     if (updated) {
       await ReactNativeStore.saveTable(tableName, table.data);
     }
@@ -128,14 +95,10 @@ function table(tableName) {
     return updated;
   };
 
-  /**
-   * @description Removes row by ID.
-   * @param rowId
-   */
-  this.remove_id = async function(rowId) {
-    var dbTable = await ReactNativeStore.table(tableName);
-    var table = new TableModel(dbTable);
-    var removed = table.removeById(rowId);
+  this.removeId = async function(rowId) {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    let removed = table.removeById(rowId);
     if (removed) {
       await ReactNativeStore.saveTable(tableName, table.data);
     }
@@ -145,9 +108,12 @@ function table(tableName) {
   };
 };
 
-var db = {
-  create_table: function(name) {
-    return new table(name);
+let db = {
+  createTable: function(name) {
+    return new DbTable(name);
+  },
+  getTable: function(name) {
+    return new DbTable(name);
   }
 };
 

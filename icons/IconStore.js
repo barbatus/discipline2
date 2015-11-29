@@ -13,7 +13,11 @@ var icons = {
   cancel: require('./files/cancel.png'),
   accept: require('./files/accept.png'),
   oval: require('./files/oval.png'),
-  marker: require('./files/marker.png')
+  marker: require('./files/marker.png'),
+  goal: require('./files/goal.png'),
+  counter: require('./files/counter.png'),
+  sum: require('./files/sum.png'),
+  next: require('./files/next.png')
 };
 
 class IconStore {

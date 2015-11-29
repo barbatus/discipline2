@@ -1,3 +1,5 @@
+'use strict';
+
 const React = require('react-native');
 const {
   StyleSheet
@@ -6,51 +8,18 @@ const {
 const Dimensions = require('Dimensions');
 const window = Dimensions.get('window');
 
-const common = {
-  slide: {
-    flex: 1,
-    paddingTop: 20,
-    paddingBottom: 40,
-    alignItems: 'center'
-  },
-  container: {
-    flex: 1,
-    width: window.width - 50
-  },
-  innerView: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    shadowColor: '#000',
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 2,
-      width: 0
-    },
-    opacity: 1,
-    transform: [{rotateY: '0deg'}],
-    backgroundColor: 'transparent'
-  },
+const { cellDef } = require('./cellStyles');
+
+const trackerDef = {
+  ...cellDef,
   headerContainer: {
+    ...cellDef.headerContainer,
     flex: 0.4,
-    backgroundColor: '#F5F5F5',
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: 'transparent',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0
+    backgroundColor: '#F5F5F5'
   },
   bodyContainer: {
-    flex: 0.6,
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: 'transparent',
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0
+    ...cellDef.bodyContainer,
+    flex: 0.6
   },
   controls: {
     flex: 1,
@@ -110,36 +79,36 @@ const common = {
   }
 };
 
-const trackerStyles = StyleSheet.create(common);
+const trackerStyles = StyleSheet.create(trackerDef);
 
-const props = {
+const editDef = {
   innerView: {
-    ...common.innerView,
+    ...trackerDef.innerView,
     opacity: 0,
     transform: [{rotateY: '-180deg'}],
     backgroundColor: 'transparent'
   },
   headerContainer: {
-    ...common.headerContainer,
+    ...trackerDef.headerContainer,
     flex: 0.45
   },
   bodyContainer: {
-    ...common.bodyContainer,
+    ...trackerDef.bodyContainer,
     flex: 0.55,
     backgroundColor: '#F5F5F5'
   },
   barContainer: {
-    ...common.barContainer,
+    ...trackerDef.barContainer,
     alignItems: 'center',
     flex: 0.25
   },
   iconContainer: {
-    ...common.iconContainer,
+    ...trackerDef.iconContainer,
     alignItems: 'flex-end',
     flex: 0.4
   },
   textContainer: {
-    ...common.textContainer,
+    ...trackerDef.textContainer,
     alignItems: 'center',
     flex: 0.35
   },
@@ -167,26 +136,36 @@ const props = {
     fontWeight: '400'
   },
   colLeft: {
-    flex: 0.7,
+    flex: 0.5,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     paddingLeft: 15
   },
   colRight: {
-    flex: 0.3,
+    flex: 0.5,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-end',
     paddingRight: 15
   },
-  text: {
+  colText: {
     fontSize: 16
+  },
+  nextIcon: {
+    resizeMode: 'contain',
+    height: 13,
+    marginLeft: 10
   }
 };
 
 const propsStyles = StyleSheet.create({
-  ...props,
+  ...editDef,
+  colLeftWide: {
+    ...editDef.colLeft,
+    flex: 0.7
+  },
   firstGroupRow: {
-    ...props.row,
+    ...editDef.row,
     borderBottomWidth: 0
   }
 });

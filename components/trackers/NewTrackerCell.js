@@ -7,7 +7,8 @@ const {
   Text,
   TextInput,
   StyleSheet,
-  Animated
+  Animated,
+  Component
 } = React;
 
 const {
@@ -16,17 +17,36 @@ const {
 
 const TrackerEditView = require('./TrackerEditView');
 
-const NewTrackerCell = React.createClass({
+const consts = require('../../depot/consts');
+
+class NewTrackerCell extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  get tracker() {
+    return {
+      title: 'test',
+      type: consts.COUNTER,
+      iconId: 'sneakers'
+    };
+  }
+
   render() {
     return (
-      <View style={trackerStyles.slide}>
+      <View style={trackerStyles.cell}>
         <View style={trackerStyles.container}>
-          <TrackerEditView style={styles.editView} />
+          <TrackerEditView
+            ref='editView'
+            trackerType={this.props.trackerType}
+            onIconEdit={this.props.onIconEdit}
+            onTypeClick={this.props.onTypeClick}
+            style={styles.editView} />
         </View>
       </View>
     );
   }
-});
+}
 
 const styles = StyleSheet.create({
   editView: {

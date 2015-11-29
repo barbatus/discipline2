@@ -9,11 +9,20 @@ class Tracker {
   }
 
   static async getAll() {
-    var trackers = await depot.trackers.get_all(
-      trackDoc => {
-        return new Tracker(trackDoc);
-      });
-    return trackers;
+    let trackers = await depot.trackers.getAll();
+    return trackers.map(trackDoc => {
+      return new Tracker(trackDoc);
+    });
+  }
+
+  static async getOne(trackId) {
+    let trackDoc = await depot.trackers.getOne(trackId);
+    return new Tracker(trackDoc);
+  }
+
+  static async addAt(tracker, index) {
+    let trackId = await depot.trackers.addAt(tracker, index);
+    return await Tracker.getOne(trackId);
   }
 
   get value() {

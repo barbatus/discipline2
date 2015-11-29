@@ -1,3 +1,5 @@
+'use strict';
+
 const React = require('react-native');
 const {
   ScrollView,
@@ -13,25 +15,29 @@ const {
   NavAddButton,
   NavMenuButton,
   NavCancelButton,
-  NavAcceptButton
+  NavAcceptButton,
+  NavBackButton
 } = require('../nav/buttons');
 
 const Screen = require('./Screen');
+const ScreenView = require('./ScreenView');
+
 const TrackerHub = require('../trackers/TrackerHub');
 const NewTrackerCell = require('../trackers/NewTrackerCell');
+const TrackerTypesCell = require('../trackers/TrackerTypesCell');
+
+const IconsDlg = require('./IconsDlg');
 
 const Tracker = require('../../trackers/Tracker');
 
 class MainScreen extends Component {
   constructor(props) {
     super(props);
+    this._trackerIndex = 0;
     this.state = {
+      navTitle: 'Trackers',
       rightNavBtn: this._getNewBtn(this._onNewTracker),
-      leftNavBtn: this._getMenuBtn(this._onMenuToggle),
-      moveXHub: new Animated.Value(0),
-      moveXNew: new Animated.Value(0),
-      opacityHub: new Animated.Value(1),
-      opacityNew: new Animated.Value(1)
+      leftNavBtn: this._getMenuBtn(this._onMenuToggle)
     };
   }
 
@@ -59,95 +65,161 @@ class MainScreen extends Component {
     );
   }
 
-  // Edit tracker events.
+  _getBackBtn(onPress) {
+    return (
+      <NavBackButton onPress={onPress.bind(this)} />
+    );
+  }
 
-  _cancelTrackerEdit() {
-    this.refs.trackers.toggleCurTracker(() => {
-      this.setState({
-        rightNavBtn: this._getNewBtn(this._onNewTracker),
-        leftNavBtn: this._getMenuBtn(this._onMenuToggle)
-      });
+  _setMainViewBtns() {
+    this.setState({
+      navTitle: 'Trackers',
+      rightNavBtn: this._getNewBtn(this._onNewTracker),
+      leftNavBtn: this._getMenuBtn(this._onMenuToggle)
     });
   }
 
-  _onTrackerEdit() {
-    this.refs.trackers.toggleCurTracker(() => {
-      this.setState({
-        rightNavBtn: this._getAccetpBtn(() => {}),
-        leftNavBtn: this._getCancelBtn(
-          this._cancelTrackerEdit
-        )
-      });
+  _setNewTrackerBtns() {
+    this.setState({
+      navTitle: 'Add New Tracker',
+      rightNavBtn: this._getAccetpBtn(this._acceptNewTracker),
+      leftNavBtn: this._getCancelBtn(this._cancelNewTracker)
     });
+  }
+
+  _setEditTrackerBtns() {
+    this.setState({
+      navTitle: 'Edit Tracker',
+      rightNavBtn: this._getAccetpBtn(() => {}),
+      leftNavBtn: this._getCancelBtn(this._cancelTrackerEdit)
+    });
+  }
+
+  _setChoseTypeBtns() {
+    this.setState({
+      navTitle: 'Choose Tracker Type',
+      rightNavBtn: <View />,
+      leftNavBtn: this._getBackBtn(this._onTypeChosen)
+    });
+  }
+
+  _onSlideChange(index) {
+    this._trackerIndex = index;
+  }
+
+  // Tracker edit events.
+
+  _onTypeClick() {
+    this._moveToLeft(this.newTrackerView, this.trackTypesView,
+      this._setChoseTypeBtns.bind(this));
+  }
+
+  _onTypeChosen() {
+    this.setState({
+      newTrackerType: this.refs.trackerTypesCell.chosenType
+    }, () => {
+      this._moveToRight(this.newTrackerView, this.trackTypesView,
+        this._setNewTrackerBtns.bind(this));
+    });
+  }
+
+  _onIconEdit() {
+    this.refs.iconDlg.show();    
+  }
+
+  // Edit tracker events.
+
+  _cancelTrackerEdit() {
+    this.refs.trackers.toggleTracker(
+      this._setMainViewBtns.bind(this));
+  }
+
+  _onTrackerEdit() {
+    this.refs.trackers.toggleTracker(
+      this._setEditTrackerBtns.bind(this));
   }
 
   // New tracker events.
 
-  _acceptNewTracker() {
-    this.refs.trackers.addTracker(
-      new Tracker({
-        _id: 'test',
-        title: 'New one',
-        type: 1,
-        iconId: 'marker'
-      }), () => {
-        this.state.opacityHub.setValue(0);
-        this.state.moveXHub.setValue(0);
+  async _acceptNewTracker() {
+    let tracker = this.refs.newTrackerCell.tracker;
 
-        Animated.parallel([
-          Animated.timing(this.state.opacityHub, {
-            toValue: 1
-          }),
-          Animated.timing(this.state.opacityNew, {
-            toValue: 0
-          })
-        ]).start(() => {
-          this.setState({
-            rightNavBtn: this._getNewBtn(this._onNewTracker),
-            leftNavBtn: this._getMenuBtn(this._onMenuToggle)
-          });
-        });
+    tracker = await Tracker.addAt(
+      tracker, this._trackerIndex + 1);
+
+    this.refs.trackers.addTracker(tracker, () => {
+        this.trackersView.opacity.setValue(0);
+        this.trackersView.posX.setValue(0);
+
+        this._exchangeViews(this.trackersView, this.newTrackerView,
+          this._setMainViewBtns.bind(this));
       });
   }
 
   _cancelNewTracker() {
-    Animated.parallel([
-      Animated.timing(this.state.moveXHub, {
-        duration: 1000,
-        toValue: 0
-      }),
-      Animated.timing(this.state.moveXNew, {
-        duration: 1000,
-        toValue: 0
-      }),
-    ]).start(() => {
-      this.setState({
-        rightNavBtn: this._getNewBtn(this._onNewTracker),
-        leftNavBtn: this._getMenuBtn(this._onMenuToggle)
-      });
-    });
+    this._moveToRight(this.trackersView, this.newTrackerView,
+      this._setMainViewBtns.bind(this));
   }
 
   _onNewTracker() {
-    this.state.moveXNew.setValue(0);
-    this.state.opacityNew.setValue(1);
+    this._moveToLeft(this.trackersView, this.newTrackerView,
+      this._setNewTrackerBtns.bind(this));
+  }
+
+  // Common
+
+  _moveToLeft(view1, view2, callback) {
+    view2.posX.setValue(1);
+    view2.opacity.setValue(1);
 
     Animated.parallel([
-      Animated.timing(this.state.moveXHub, {
+      Animated.timing(view1.posX, {
         duration: 1000,
-        toValue: 1
+        toValue: -1
       }),
-      Animated.timing(this.state.moveXNew, {
+      Animated.timing(view2.posX, {
+        duration: 1000,
+        toValue: 0
+      }),
+    ]).start(() => {
+      if (callback) {
+        callback();
+      }
+    });
+  }
+
+  _moveToRight(view1, view2, callback) {
+    view1.posX.setValue(-1);
+    view1.opacity.setValue(1);
+
+    Animated.parallel([
+      Animated.timing(view1.posX, {
+        duration: 1000,
+        toValue: 0
+      }),
+      Animated.timing(view2.posX, {
         duration: 1000,
         toValue: 1
       }),
     ]).start(() => {
-      this.setState({
-        rightNavBtn: this._getAccetpBtn(
-          this._acceptNewTracker),
-        leftNavBtn: this._getCancelBtn(
-          this._cancelNewTracker)
-      });
+      if (callback) {
+        callback();
+      }
+    });
+  }
+
+  _exchangeViews(view1, view2, callback) {
+    Animated.parallel([
+      Animated.timing(view1.opacity, {
+        toValue: 1
+      }),
+      Animated.timing(view2.opacity, {
+        toValue: 0
+      })
+    ]).start(() => {
+      if (callback) {
+        callback();
+      }
     });
   }
 
@@ -158,39 +230,54 @@ class MainScreen extends Component {
     }
   }
 
+  get trackersView() {
+    return this.refs.trackersView;
+  }
+
+  get newTrackerView() {
+    return this.refs.newTrackerView;
+  }
+
+  get trackTypesView() {
+    return this.refs.trackerTypesView;
+  }
+
   _renderContent() {
     return (
       <View style={styles.root}>
-        <Animated.View style={[
-            styles.viewContainer, {
-              opacity: this.state.opacityHub,
-              transform: [{
-                  translateX: this.state.moveXHub.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -400]
-                })
-              }]
-            }
-          ]}>
-          <TrackerHub
-            ref='trackers'
-            onTrackerEdit={this._onTrackerEdit.bind(this)} />
-        </Animated.View>
-        <Animated.View style={[
-            styles.viewContainer, {
-              opacity: this.state.opacityNew,
-              transform: [{
-                translateX: this.state.moveXNew.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [400, 0]
-                })
-              }]
-            }
-          ]}>
-          <NewTrackerCell ref='newTracker' />
-        </Animated.View>
+        <ScreenView
+          ref='trackersView'
+          posX={0}
+          content={
+            <TrackerHub
+              ref='trackers'
+              onIconEdit={this._onIconEdit.bind(this)}
+              onTrackerSlideChange={this._onSlideChange.bind(this)}
+              onTrackerEdit={this._onTrackerEdit.bind(this)} />
+          } />
+
+        <ScreenView
+          ref='newTrackerView'
+          posX={1}
+          content={
+            <NewTrackerCell
+              ref='newTrackerCell'
+              onIconEdit={this._onIconEdit.bind(this)}
+              trackerType={this.state.newTrackerType}
+              onTypeClick={this._onTypeClick.bind(this)} />
+          } />
+
+        <ScreenView
+          ref='trackerTypesView'
+          posX={1}
+          content={
+            <TrackerTypesCell
+              ref='trackerTypesCell' />
+          } />
+
+        <IconsDlg ref='iconDlg' />
       </View>
-    )
+    );
   }
 
   render() {
@@ -198,7 +285,7 @@ class MainScreen extends Component {
     return (
       <Screen
         navigator={navigator}
-        title='HabMeter'
+        navTitle={this.state.navTitle}
         leftBtn={this.state.leftNavBtn}
         rightBtn={this.state.rightNavBtn}
         content={this._renderContent()} />
@@ -213,13 +300,6 @@ MainScreen.contextTypes = {
 const styles = StyleSheet.create({
   root: {
     flex: 1
-  },
-  viewContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: 0,
   }
 });
 

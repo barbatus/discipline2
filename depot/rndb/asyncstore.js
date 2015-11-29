@@ -1,34 +1,32 @@
 'use strict';
 
-var { AsyncStorage } = require('react-native');
+const { AsyncStorage } = require('react-native');
 
-var dbName = 'db_store';
+const dbName = 'db_store';
 
-var reactNativeStore = {
+const reactNativeStore = {
   createDataBase: async function() {
-    var db = {};
+    let db = {};
     await AsyncStorage.setItem(dbName, JSON.stringify(db));
     return db;
   },
 
   saveTable: async function(tableName, tableData) {
-    var db = await this.getItem(dbName);
+    let db = await this.getItem(dbName);
     db[tableName] = tableData || {
       'totalrows': 0,
       'autoinc': 1,
-      'rows': {}
+      'rows': []
     };
     await AsyncStorage.setItem(dbName, JSON.stringify(db));
     return db[tableName];
   },
 
   table: async function(tableName) {
-    var db = await this.getItem(dbName);
-    if (!db) {
-      db = await this.createDataBase();
-    }
+    let db = await this.getItem(dbName);
+    if (!db) db = await this.createDataBase();
 
-    var tableData = db[tableName];
+    let tableData = db[tableName];
     if (!db[tableName]) {
       tableData = await this.saveTable(tableName);
     }
@@ -37,7 +35,7 @@ var reactNativeStore = {
   },
 
   getItem: async function(key) {
-    var result = await AsyncStorage.getItem(key);
+    let result = await AsyncStorage.getItem(key);
     return JSON.parse(result);
   }
 }

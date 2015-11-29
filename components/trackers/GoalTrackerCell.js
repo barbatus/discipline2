@@ -20,7 +20,7 @@ const GoalTrackerCell = React.createClass({
     };
   },
 
-  componentDidMount() {
+  componentWillMount() {
     this._loadInitialState();
   },
 

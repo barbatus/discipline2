@@ -1,25 +1,28 @@
 'use strict';
 
-var db = require('./rndb/db');
-var table = db.create_table('ticks');
+const db = require('./rndb/db');
 
 var ticks = {
-  get_all: async function() {
-    var rows = await table.get_all();
-    return rows;
+  getAll: async function(trackId) {
+    let table = db.getTable(trackId);
+    return await table.getAll();
   },
 
-  count: async function() {
-    var rows = await table.get_all();
+  count: async function(trackId) {
+    let table = db.getTable(trackId);
+    let rows = await table.getAll();
     return rows.length;
   },
 
   add: async function(tick) {
-    await table.add(tick);
+    let table = db.getTable(tick.trackId);
+    return await table.add(tick);
   },
 
-  getByTrackId: async function(trackId, opt_minDateMs, opt_maxDateMs) {
-    return await table.get({trackId: trackId});
+  getByTrackId: async function(
+    trackId, opt_minDateMs, opt_maxDateMs) {
+    let table = db.getTable(trackId);
+    return await table.getAll();
   }
 };
 

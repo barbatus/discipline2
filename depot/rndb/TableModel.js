@@ -1,10 +1,12 @@
-var reactNativeStore = require('./asyncstore');
+'use strict';
+
+const reactNativeStore = require('./asyncstore');
 
 class TableModel {
   constructor(tableData) {
     this._data = tableData;
-    this._where = null;
-    this._limit = 100;
+    this._where = undefined;
+    this._limit = undefined;
     this._offset = 0;
   }
 
@@ -13,11 +15,11 @@ class TableModel {
   }
 
   get rows() {
-    var rows = [];
-    for (var row in this._data['rows']) {
-      rows.push(this._data['rows'][row]);
-    }
-    return rows;
+    // var rows = [];
+    // for (var row in this._data['rows']) {
+    //   rows.push(this._data['rows'][row]);
+    // }
+    return this._data['rows'];
   }
 
   where(where) {
@@ -36,29 +38,25 @@ class TableModel {
   }
 
   reset() {
-    this._where = null;
-    this._limit = 100;
+    this._where = undefined;
+    this._limit = undefined;
     this._offset = 0;
     return this;
   }
 
   update(rowData) {
-    var updatedIds = [];
-    var hasWhere = false;
+    let updatedIds = [];
     if (this._where) {
-      hasWhere = true;
-    }
-    if (hasWhere) {
-      for (var row of this.rows) {
-        var isMatch = true;
-        for (var key in this._where) {
+      for (let row of this.rows) {
+        let isMatch = true;
+        for (let key in this._where) {
           if (row[key] != this._where[key]) {
             isMatch = false;
             break;
           }
         }
         if (isMatch) {
-          for (var prop in rowData) {
+          for (let prop in rowData) {
             row[prop] = rowData[prop];
           }
           updatedIds.push(row._id);
@@ -76,11 +74,7 @@ class TableModel {
 
   remove() {
     var removedIds = [];
-    var hasWhere = false;
     if (this._where) {
-      hasWhere = true;
-    }
-    if (hasWhere) {
       for (var row of this.rows) {
         var isMatch = true;
         for (var key in this._where) {
@@ -112,28 +106,30 @@ class TableModel {
   }
 
   add(newRow) {
-    var autoinc = this._data.autoinc;
+    return this.addAt(newRow);
+  }
+
+  addAt(newRow, opt_index) {
+    let autoinc = this._data.autoinc;
     newRow._id = autoinc;
-    this._data.rows[autoinc] = newRow;
+    let nextIndex = _.isUndefined(opt_index) ? 
+      this._data.rows.length : opt_index;
+    this._data.rows.splice(nextIndex, 0, newRow);
     this._data.autoinc += 1;
     this._data.totalrows += 1;
     return autoinc;
   }
 
   get(rowId) {
-    return this.where({ _id: rowId }).find(1);
+    return this.where({ _id: rowId }).find()[0];
   }
 
   find() {
-    var result = [];
-    var hasWhere = false;
+    let result = [];
     if (this._where) {
-      hasWhere = true;
-    }
-    if (hasWhere) {
-      for (var row of this.rows) {
-        var isMatch = true;
-        for (var key in this._where) {
+      for (let row of this.rows) {
+        let isMatch = true;
+        for (let key in this._where) {
           if (row[key] != this._where[key]) {
             isMatch = false;
             break;
@@ -144,16 +140,18 @@ class TableModel {
         }
       }
     } else {
-      for (var row of rows) {
+      for (let row of rows) {
         result.push(row);
       }
     }
-    this.reset();
 
     if (_.isNumber(this._limit)) {
-      return result.slice(this._offset,
+      result = result.slice(this._offset,
         this._limit + this._offset);
     }
+
+    this.reset();
+
     return result;
   }
 }

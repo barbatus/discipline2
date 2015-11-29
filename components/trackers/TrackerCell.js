@@ -61,7 +61,7 @@ const TrackerCell = React.createClass({
 
   render() {
     return (
-      <View style={trackerStyles.slide}>
+      <View style={trackerStyles.cell}>
         <View style={trackerStyles.container}>
           <TrackerView
             style={{
@@ -88,9 +88,11 @@ const TrackerCell = React.createClass({
                 })
               }]
             }}
+            showType={false}
             delete={true}
             icon={this.props.icon}
             title={this.props.title}
+            onIconEdit={this.props.onIconEdit}
           />
         </View>
       </View>
