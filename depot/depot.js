@@ -2,6 +2,7 @@
 
 const trackers = require('./trackers');
 const ticks = require('./ticks');
+const { TrackerType } = require('./consts');
 const consts = require('./consts');
 
 const depot = {
@@ -12,22 +13,22 @@ const depot = {
   initTestData: async function() {
     await depot.trackers.add({
       title: 'Morning Run',
-      type: consts.COUNTER,
+      typeId: TrackerType.COUNTER.valueOf(),
       iconId: 'sneakers'
     });
     await depot.trackers.add({
       title: 'Cup of Coffee',
-      type: consts.GOAL_TRACKER,
+      typeId: TrackerType.GOAL_TRACKER.valueOf(),
       iconId: 'coffee'
     });
     await depot.trackers.add({
       title: 'Spent on Food',
-      type: consts.GOAL_TRACKER,
+      typeId: TrackerType.GOAL_TRACKER.valueOf(),
       iconId: 'pizza'
     });
     await depot.trackers.add({
       title: 'Reading',
-      type: consts.COUNTER, 
+      typeId: TrackerType.COUNTER.valueOf(), 
       iconId: 'stopwatch'
     });
   },

@@ -1,4 +1,5 @@
 const React = require('react-native');
+
 const {
   StyleSheet,
   View,
@@ -30,6 +31,7 @@ class Screen extends Component {
       colorBottom: '#BA4699',
       colorTop: '#E68C7D'
     }];
+    this.state = {};
 
     // let color = this.colors[(index + inc) % this.colors.length];
     // this.setState({
@@ -38,11 +40,30 @@ class Screen extends Component {
     // });
   }
 
+  getChildContext() {
+    return {
+      navBar: this.navBar
+    }
+  }
+
+  get navBar() {
+    return {
+      setButtons: (leftBtn, rightBtn) => {
+        this.setState({
+          leftBtn,
+          rightBtn
+        });
+      },
+      setTitle: navTitle => {
+        this.setState({
+          navTitle
+        });
+      }
+    };
+  }
+
   render() {
     let {
-      leftBtn,
-      rightBtn,
-      title,
       content,
       navigator
     } = this.props;
@@ -54,13 +75,14 @@ class Screen extends Component {
           style={styles.gradient} />
         <View style={styles.navbar}>
           <NavigationBar
+            ref='navBar'
             tintColor='transparent'
             navigator={navigator}
             title={
-              <NavTitle title={this.props.navTitle} />
+              <NavTitle title={this.state.navTitle} />
             }
-            leftButton={leftBtn}
-            rightButton={rightBtn} />
+            leftButton={this.state.leftBtn}
+            rightButton={this.state.rightBtn} />
         </View>
         <View style={styles.content}>
           {{content}}
@@ -69,6 +91,10 @@ class Screen extends Component {
     );
   }
 }
+
+Screen.childContextTypes = {
+  navBar: React.PropTypes.object.isRequired
+};
 
 const Dimensions = require('Dimensions');
 const window = Dimensions.get('window');

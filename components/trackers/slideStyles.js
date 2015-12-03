@@ -8,8 +8,8 @@ const {
 const Dimensions = require('Dimensions');
 const window = Dimensions.get('window');
 
-const cellDef = {
-  cell: {
+const slideDef = {
+  slide: {
     flex: 1,
     paddingTop: 20,
     paddingBottom: 40,
@@ -38,12 +38,7 @@ const cellDef = {
   },
   headerContainer: {
     flex: 0.2,
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: 'transparent',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    backgroundColor: 'white'
   },
   bodyContainer: {
     flex: 0.5,
@@ -51,7 +46,16 @@ const cellDef = {
   },
   footerContainer: {
     flex: 0.3,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
+  },
+  borderTopRadius: {
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: 'transparent',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0
+  },
+  borderBottomRadius: {
     borderWidth: 1,
     borderRadius: 3,
     borderColor: 'transparent',
@@ -60,9 +64,19 @@ const cellDef = {
   }
 };
 
-const cellStyles = StyleSheet.create(cellDef);
+const slideStyles = StyleSheet.create({
+  ...slideDef,
+  headerContainer: {
+    ...slideDef.headerContainer,
+    ...slideDef.borderTopRadius,
+  },
+  footerContainer: {
+    ...slideDef.footerContainer,
+    ...slideDef.borderBottomRadius,
+  }
+});
 
 module.exports = {
-  cellStyles: cellStyles,
-  cellDef: cellDef
+  slideStyles,
+  slideDef
 };

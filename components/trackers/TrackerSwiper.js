@@ -10,12 +10,14 @@ const {
 const Swiper = require('../swiper/Swiper');
 const LinearGradient = require('react-native-linear-gradient');
 
-const GoalTrackerCell = require('./GoalTrackerCell');
-const CounterCell = require('./CounterCell');
+const GoalTrackerSlide = require('./GoalTrackerSlide');
+const CounterSlide = require('./CounterSlide');
 
-const Tracker = require('../../trackers/Tracker');
+const Trackers = require('../../trackers/Trackers');
 
-class TrackerHub extends Component {
+const { TrackerType } = require('../../depot/consts');
+
+class TrackerSwiper extends Component {
   constructor(props) {
     super(props);
     this._trackerIndex = 0;
@@ -32,9 +34,19 @@ class TrackerHub extends Component {
     return this.state.trackers[this._trackerIndex];
   }
 
-  toggleTracker(callback) {
+  showEdit(callback) {
     let trackerId = this.currentTracker._id;
-    this.refs[trackerId].toggleView(callback);
+    this.refs[trackerId].showEdit(callback);
+  }
+
+  saveEdit(callback) {
+    let trackerId = this.currentTracker._id;
+    this.refs[trackerId].saveEdit(callback);
+  }
+
+  cancelEdit(callback) {
+    let trackerId = this.currentTracker._id;
+    this.refs[trackerId].cancelEdit(callback);
   }
 
   addTracker(tracker, callback) {
@@ -56,7 +68,7 @@ class TrackerHub extends Component {
       await depot.initTestData();
     }
     let start = time.getDateMs();
-    let trackers = await Tracker.getAll();
+    let trackers = await Trackers.getAll();
     this.setState({
       trackers: trackers
     });
@@ -70,19 +82,19 @@ class TrackerHub extends Component {
 
   _renderTracker(tracker: Object) {
     let type = tracker.type;
-    return type === depot.consts.GOAL_TRACKER ?
-      <GoalTrackerCell
+    return type === TrackerType.GOAL_TRACKER ?
+      <GoalTrackerSlide
         ref={tracker._id}
         key={tracker._id}
         onIconEdit={this.props.onIconEdit}
-        onEdit={this.props.onTrackerEdit}
+        onEdit={this.props.onEdit}
         tracker={tracker}
       /> :
-      <CounterCell
+      <CounterSlide
         ref={tracker._id}
         key={tracker._id}
         onIconEdit={this.props.onIconEdit}
-        onEdit={this.props.onTrackerEdit}
+        onEdit={this.props.onEdit}
         tracker={tracker}
       />;
   }
@@ -90,8 +102,8 @@ class TrackerHub extends Component {
   _onSlideChange(event, index) {
     this._trackerIndex = index;
 
-    if (this.props.onTrackerSlideChange) {
-      this.props.onTrackerSlideChange(index);
+    if (this.props.onSlideChange) {
+      this.props.onSlideChange(index);
     }
   }
 
@@ -105,9 +117,7 @@ class TrackerHub extends Component {
       <Swiper
         ref='swiper'
         //index={this.state.trackerIndex}
-        onSlideChange={
-          this._onSlideChange.bind(this)
-        }>
+        onSlideChange={this._onSlideChange.bind(this)}>
         {trackerSlides}
       </Swiper> : null;
 
@@ -125,4 +135,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = TrackerHub;
+module.exports = TrackerSwiper;

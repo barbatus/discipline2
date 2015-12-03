@@ -11,11 +11,13 @@ const {
 } = React;
 
 const { trackerStyles } = require('./trackerStyles');
-const TrackerCell = require('./TrackerCell');
+const TrackerSlide = require('./TrackerSlide');
 
-const GoalTrackerCell = React.createClass({
+const GoalTrackerSlide = React.createClass({
   getInitialState() {
     return {
+      iconId: this.props.tracker.iconId,
+      title: this.props.tracker.title,
       checked: false
     };
   },
@@ -24,8 +26,16 @@ const GoalTrackerCell = React.createClass({
     this._loadInitialState();
   },
 
-  toggleView(callback) {
-    this.refs.cell.toggleView(callback);
+  showEdit(callback) {
+    this.refs.slide.showEdit(callback);
+  },
+
+  saveEdit(callback) {
+    this.refs.slide.saveEdit(callback);
+  },
+
+  cancelEdit(callback) {
+    this.refs.slide.cancelEdit(callback);
   },
 
   _loadInitialState: async function() {
@@ -58,16 +68,14 @@ const GoalTrackerCell = React.createClass({
   },
 
   render() {
-    let tracker = this.props.tracker;
     return (
-      <TrackerCell
-        ref='cell'
-        icon={tracker.icon}
-        title={tracker.title}
+      <TrackerSlide
+        ref='slide'
+        tracker={this.props.tracker}
         controls={this._getControls()}
         onEdit={this.props.onEdit} />
     );
   }
 });
 
-module.exports = GoalTrackerCell;
+module.exports = GoalTrackerSlide;

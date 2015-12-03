@@ -1,13 +1,27 @@
 'use strict';
 
-var BasicTracker = require('./BasicTracker');
+const Tracker = require('./Tracker');
 
 class Trackers {
   static async getAll() {
-    var trackers = await depot.trackers.get_all(function(trackDoc) {
-      return new BasicTracker(trackDoc);
+    let trackers = await depot.trackers.getAll();
+    return trackers.map(trackDoc => {
+      return new Tracker(trackDoc);
     });
-    return trackers;
+  }
+
+  static async getOne(trackId) {
+    let trackDoc = await depot.trackers.getOne(trackId);
+    return new Tracker(trackDoc);
+  }
+
+  static async addAt(tracker, index) {
+    let trackId = await depot.trackers.addAt(tracker, index);
+    return await Trackers.getOne(trackId);
+  }
+
+  static create({ title, typeId, iconId }) {
+    
   }
 }
 

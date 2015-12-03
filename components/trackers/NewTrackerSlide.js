@@ -19,16 +19,17 @@ const TrackerEditView = require('./TrackerEditView');
 
 const consts = require('../../depot/consts');
 
-class NewTrackerCell extends Component {
+class NewTrackerSlide extends Component {
   constructor(props) {
     super(props);
   }
 
   get tracker() {
+    let editView = this.refs.editView;
     return {
-      title: 'test',
-      type: consts.COUNTER,
-      iconId: 'sneakers'
+      title: editView.getTitle(),
+      typeId: editView.getTypeId(),
+      iconId: editView.getIconId()
     };
   }
 
@@ -38,9 +39,9 @@ class NewTrackerCell extends Component {
         <View style={trackerStyles.container}>
           <TrackerEditView
             ref='editView'
-            trackerType={this.props.trackerType}
+            typeId={this.props.typeId}
             onIconEdit={this.props.onIconEdit}
-            onTypeClick={this.props.onTypeClick}
+            onTypeChange={this.props.onTypeChange}
             style={styles.editView} />
         </View>
       </View>
@@ -55,4 +56,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = NewTrackerCell;
+module.exports = NewTrackerSlide;

@@ -10,6 +10,8 @@ const {
   Modal
 } = React;
 
+const IconsGrid = require('../icons/IconsGrid');
+
 let IconsDlg = React.createClass({
   getInitialState() {
     return {
@@ -29,6 +31,12 @@ let IconsDlg = React.createClass({
     });
   },
 
+  _onIconChosen(iconId) {
+    if (this.props.onIconChosen) {
+      this.props.onIconChosen(iconId);
+    }
+  },
+
   render() {
     return (
       <View>
@@ -45,6 +53,9 @@ let IconsDlg = React.createClass({
               </TouchableOpacity>
             </View>
             <View style={styles.bodyContainer}>
+              <IconsGrid
+                ref='iconsGrid'
+                onIconChosen={this._onIconChosen} />
             </View>
           </View>
         </Modal>

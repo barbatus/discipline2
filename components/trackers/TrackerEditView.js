@@ -20,9 +20,14 @@ const {
 
 const { TrackerType } = require('../../depot/consts');
 
+const UserIconsStore = require('../../icons/UserIconsStore');
+
+const IconsDlg = require('../screens/IconsDlg');
+
 const TrackerEditView = React.createClass({
   getInitialState() {
     return {
+      iconId: this.props.iconId,
       sendNotif: false,
       saveGoog: false
     };
@@ -34,9 +39,42 @@ const TrackerEditView = React.createClass({
     }
   },
 
-  _getMainIcon() {
-    return this.props.icon ?
-      this.props.icon : getIcon('oval');
+  reset() {
+    this.setState({
+      iconId: this.props.iconId
+    });
+  },
+
+  getIconId() {
+    return this.state.iconId;
+  },
+
+  getTypeId() {
+    return this.props.typeId;
+  },
+
+  getTitle() {
+    return this.state.title;
+  },
+
+  _onIconEdit() {
+    this.refs.iconDlg.show();
+  },
+
+  _onIconChosen(iconId) {
+    this.setState({
+      iconId: iconId
+    }, () => {
+      this.refs.iconDlg.hide();
+    });
+  },
+
+  _getMainIcon(iconId) {
+    let userIcon = UserIconsStore.get(iconId);
+    if (userIcon) {
+      return userIcon.pngLarge;
+    }
+    return getIcon('oval');
   },
 
   _renderDeleteRow() {
@@ -54,7 +92,7 @@ const TrackerEditView = React.createClass({
   },
 
   render() {
-    let typeEnum = TrackerType.fromValue(this.props.trackerType);
+    let typeEnum = TrackerType.fromValue(this.props.typeId);
 
     return (
       <Animated.View style={[propsStyles.innerView, this.props.style]}>
@@ -62,7 +100,7 @@ const TrackerEditView = React.createClass({
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
               style={styles.textBox}
-              onPress={this.props.onIconEdit}>
+              onPress={this._onIconEdit}>
               <Text style={styles.text}>
                 Change Icon
               </Text>
@@ -70,7 +108,7 @@ const TrackerEditView = React.createClass({
           </View>
           <View style={propsStyles.iconContainer}>
             <Image
-              source={this._getMainIcon()}
+              source={this._getMainIcon(this.state.iconId)}
               style={trackerStyles.mainIcon}
             />
           </View>
@@ -79,6 +117,8 @@ const TrackerEditView = React.createClass({
               placeholder='Add a title'
               style={[propsStyles.inputTitle, styles.inputTitle]}
               defaultValue={this.props.title}
+              onChangeText={title => this.setState({title})}
+              value={this.state.title}
             />
           </View>
         </View>
@@ -93,7 +133,7 @@ const TrackerEditView = React.createClass({
                 </View>
                 <TouchableOpacity
                     style={propsStyles.colRight}
-                    onPress={this.props.onTypeClick}>
+                    onPress={this.props.onTypeChange}>
                   <Text style={[propsStyles.colText, styles.trackTypeText]}>
                     {typeEnum ? typeEnum.title : 'Select'}
                   </Text>
@@ -131,6 +171,10 @@ const TrackerEditView = React.createClass({
           </View>
           {this._renderDeleteRow()}
         </View>
+
+        <IconsDlg
+          ref='iconDlg' 
+          onIconChosen={this._onIconChosen} />
       </Animated.View>
     );
   }

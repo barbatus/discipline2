@@ -1,28 +1,19 @@
 'use strict';
 
+const { TrackerType } = require('../depot/consts');
+
+const UserIconsStore = require('../icons/UserIconsStore');
+
 class Tracker {
   constructor(tracker) {
     this._id = tracker._id;
     this.title = tracker.title;
     this.iconId = tracker.iconId;
-    this.type = tracker.type;
+    this.typeId = tracker.typeId;
   }
 
-  static async getAll() {
-    let trackers = await depot.trackers.getAll();
-    return trackers.map(trackDoc => {
-      return new Tracker(trackDoc);
-    });
-  }
-
-  static async getOne(trackId) {
-    let trackDoc = await depot.trackers.getOne(trackId);
-    return new Tracker(trackDoc);
-  }
-
-  static async addAt(tracker, index) {
-    let trackId = await depot.trackers.addAt(tracker, index);
-    return await Tracker.getOne(trackId);
+  get type() {
+    return TrackerType.fromValue(this.typeId);
   }
 
   get value() {
@@ -30,7 +21,7 @@ class Tracker {
   }
 
   get icon() {
-    return getIcon(this.iconId);
+    return UserIconsStore.get(this.iconId);
   }
 
   get lastTick() {

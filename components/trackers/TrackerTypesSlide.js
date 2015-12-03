@@ -12,11 +12,11 @@ const {
   Component
 } = React;
 
-const { cellStyles } = require('./cellStyles');
+const { slideStyles } = require('./slideStyles');
 
 const { TrackerType } = require('../../depot/consts');
 
-class TrackerTypesCell extends Component {
+class TrackerTypesSlide extends Component {
   constructor(props) {
     super(props);
     this._types = TrackerType.symbols();
@@ -26,13 +26,12 @@ class TrackerTypesCell extends Component {
   }
 
   _onTypeChosen(type) {
-    let typeEnum = TrackerType.fromValue(type);
     this.setState({
-      type: typeEnum
+      type: type
     });
   }
 
-  get chosenType() {
+  get typeId() {
     return this.state.type.valueOf();
   }
 
@@ -43,7 +42,8 @@ class TrackerTypesCell extends Component {
           this._types.map(type => {
             return (
                 <TouchableOpacity
-                onPress={this._onTypeChosen.bind(this, type.valueOf())}
+                key={type.valueOf()}
+                onPress={this._onTypeChosen.bind(this, type)}
                 style={this.state.type === type ?
                   [styles.type, styles.selected] : styles.type}>
                 <View style={styles.typeIconContainer}>
@@ -65,11 +65,11 @@ class TrackerTypesCell extends Component {
 
   render() {
     return (
-      <View style={cellStyles.cell}>
-        <View style={cellStyles.container}>
-          <View style={cellStyles.innerView}>
+      <View style={slideStyles.slide}>
+        <View style={slideStyles.container}>
+          <View style={slideStyles.innerView}>
             <View style={[
-                cellStyles.headerContainer,
+                slideStyles.headerContainer,
                 styles.headerContainer
               ]}>
               <Text style={styles.title}>
@@ -77,7 +77,7 @@ class TrackerTypesCell extends Component {
               </Text>
             </View>
             <View style={[
-                cellStyles.bodyContainer,
+                slideStyles.bodyContainer,
                 styles.bodyContainer
               ]}>
               <Text style={styles.desc}>
@@ -85,7 +85,7 @@ class TrackerTypesCell extends Component {
               </Text>
             </View>
             <View style={[
-                cellStyles.footerContainer,
+                slideStyles.footerContainer,
                 styles.footerContainer
               ]}>
               {this._renderTypes()}
@@ -172,4 +172,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = TrackerTypesCell;
+module.exports = TrackerTypesSlide;

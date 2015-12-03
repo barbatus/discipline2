@@ -11,9 +11,9 @@ const {
 } = React;
 
 const { trackerStyles } = require('./trackerStyles');
-const TrackerCell = require('./TrackerCell');
+const TrackerSlide = require('./TrackerSlide');
 
-const CounterCell = React.createClass({
+const CounterSlide = React.createClass({
   getInitialState() {
     return {count: 0};
   },
@@ -22,8 +22,16 @@ const CounterCell = React.createClass({
     this._loadInitialState();
   },
 
-  toggleView(callback) {
-    this.refs.cell.toggleView(callback);
+  showEdit(callback) {
+    this.refs.slide.showEdit(callback);
+  },
+
+  saveEdit(callback) {
+    this.refs.slide.saveEdit(callback);
+  },
+
+  cancelEdit(callback) {
+    this.refs.slide.cancelEdit(callback);
   },
 
   _loadInitialState: async function() {
@@ -48,32 +56,32 @@ const CounterCell = React.createClass({
   },
 
   _getControls() {
-    return [
-      <TouchableOpacity onPress={this._onMinus}>
-        <Image
-          source={getIcon('minus')}
-          style={trackerStyles.circleBtn}
-        />
-      </TouchableOpacity>,
-      <Text style={styles.countText} numberOfLines={1}>
-        {this.state.count}
-      </Text>,
-      <TouchableOpacity onPress={this._onPlus}>
-        <Image
-          source={getIcon('plus')}
-          style={trackerStyles.circleBtn}
-        />
-      </TouchableOpacity>
-    ];
+    return (
+      <View style={styles.controls}>
+        <TouchableOpacity onPress={this._onMinus}>
+          <Image
+            source={getIcon('minus')}
+            style={trackerStyles.circleBtn}
+          />
+        </TouchableOpacity>
+        <Text style={styles.countText} numberOfLines={1}>
+          {this.state.count}
+        </Text>
+        <TouchableOpacity onPress={this._onPlus}>
+          <Image
+            source={getIcon('plus')}
+            style={trackerStyles.circleBtn}
+          />
+        </TouchableOpacity>
+      </View>
+    );
   },
 
   render() {
-    let tracker = this.props.tracker;
     return (
-      <TrackerCell
-        ref='cell'
-        icon={tracker.icon}
-        title={tracker.title}
+      <TrackerSlide
+        ref='slide'
+        tracker={this.props.tracker}
         controls={this._getControls()}
         onIconEdit={this.props.onIconEdit}
         onEdit={this.props.onEdit} />
@@ -82,6 +90,11 @@ const CounterCell = React.createClass({
 });
 
 const styles = StyleSheet.create({
+  controls: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
   countText: {
     fontSize: 54,
     fontWeight: '300',
@@ -89,4 +102,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = CounterCell;
+module.exports = CounterSlide;

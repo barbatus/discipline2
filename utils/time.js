@@ -1,11 +1,11 @@
 'user strict';
 
-var moment = require('moment');
+const moment = require('moment');
 
-var time = {
+const time = {
   getDateMs: function() {
-    var now = moment();
-    var dateMs = moment([
+    let now = moment();
+    let dateMs = moment([
       now.year(),
       now.month(),
       now.date()

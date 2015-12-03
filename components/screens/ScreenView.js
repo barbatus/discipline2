@@ -13,9 +13,10 @@ class ScreenView extends Component {
     super(props);
 
     let posX = props.posX || 0;
+    let opacity = posX === 0 ? 1 : 0;
     this.state = {
       moveX: new Animated.Value(posX),
-      opacity: new Animated.Value(1)
+      opacity: new Animated.Value(opacity)
     };
   }
 
@@ -29,7 +30,9 @@ class ScreenView extends Component {
 
   render() {
     return (
-      <Animated.View style={[
+      <Animated.View
+        shouldRasterizeIOS={true}
+        style={[
           styles.viewContainer, {
             opacity: this.state.opacity,
             transform: [{
@@ -45,6 +48,10 @@ class ScreenView extends Component {
     );
   }
 }
+
+ScreenView.contextTypes = {
+  navBar: React.PropTypes.object.isRequired
+};
 
 const styles = StyleSheet.create({
   viewContainer: {

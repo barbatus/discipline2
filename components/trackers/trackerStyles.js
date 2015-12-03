@@ -8,18 +8,24 @@ const {
 const Dimensions = require('Dimensions');
 const window = Dimensions.get('window');
 
-const { cellDef } = require('./cellStyles');
+const { slideDef } = require('./slideStyles');
 
 const trackerDef = {
-  ...cellDef,
+  ...slideDef,
   headerContainer: {
-    ...cellDef.headerContainer,
+    ...slideDef.headerContainer,
+    ...slideDef.borderTopRadius,
     flex: 0.4,
     backgroundColor: '#F5F5F5'
   },
   bodyContainer: {
-    ...cellDef.bodyContainer,
-    flex: 0.6
+    ...slideDef.bodyContainer,
+    flex: 0.5
+  },
+  footerContainer: {
+    ...slideDef.footerContainer,
+    ...slideDef.borderBottomRadius,
+    flex: 0.1
   },
   controls: {
     flex: 1,
@@ -95,7 +101,8 @@ const editDef = {
   bodyContainer: {
     ...trackerDef.bodyContainer,
     flex: 0.55,
-    backgroundColor: '#F5F5F5'
+    backgroundColor: '#F5F5F5',
+    ...trackerDef.borderBottomRadius
   },
   barContainer: {
     ...trackerDef.barContainer,
@@ -132,8 +139,7 @@ const editDef = {
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.1)',
     borderLeftWidth: 0,
-    borderRightWidth: 0,
-    fontWeight: '400'
+    borderRightWidth: 0
   },
   colLeft: {
     flex: 0.5,

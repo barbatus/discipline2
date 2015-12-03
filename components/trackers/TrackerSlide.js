@@ -21,9 +21,11 @@ const {
 const TrackerView = require('./TrackerView');
 const TrackerEditView = require('./TrackerEditView');
 
-const TrackerCell = React.createClass({
+const TrackerSlide = React.createClass({
   getInitialState() {
     return {
+      iconId: this.props.tracker.iconId,
+      title: this.props.tracker.title,
       rotY: new Animated.Value(0),
       opacity1: new Animated.Value(1),
       opacity2: new Animated.Value(0)
@@ -49,19 +51,29 @@ const TrackerCell = React.createClass({
     });
   },
 
-  toggleView(callback) {
-    if (this.state.rotY._value === 1) {
-      this._animateFlip(0, 1, 0,
-        value => value <= 0.5, callback);
-    } else {
-      this._animateFlip(1, 0, 1,
-        value => value > 0.5, callback);
-    }
+  showEdit(callback) {
+    this._animateFlip(1, 0, 1,
+      value => value > 0.5, callback);
+  },
+
+  saveEdit(callback) {
+    this._animateFlip(0, 1, 0,
+      value => value <= 0.5, callback);
+  },
+
+  cancelEdit(callback) {
+    this._animateFlip(0, 1, 0,
+      value => value <= 0.5, () => {
+        this.refs.editView.reset();
+        if (callback) {
+          callback();
+        }
+      });
   },
 
   render() {
     return (
-      <View style={trackerStyles.cell}>
+      <View style={trackerStyles.slide}>
         <View style={trackerStyles.container}>
           <TrackerView
             style={{
@@ -73,12 +85,13 @@ const TrackerCell = React.createClass({
                 })
               }]
             }}
-            icon={this.props.icon}
-            title={this.props.title}
+            iconId={this.state.iconId}
+            title={this.state.title}
             controls={this.props.controls}
             onEdit={this.props.onEdit}
           />
           <TrackerEditView
+            ref='editView'
             style={{
               opacity: this.state.opacity2,
               transform: [{
@@ -90,8 +103,8 @@ const TrackerCell = React.createClass({
             }}
             showType={false}
             delete={true}
-            icon={this.props.icon}
-            title={this.props.title}
+            iconId={this.state.iconId}
+            title={this.state.title}
             onIconEdit={this.props.onIconEdit}
           />
         </View>
@@ -100,4 +113,4 @@ const TrackerCell = React.createClass({
   }
 });
 
-module.exports = TrackerCell;
+module.exports = TrackerSlide;

@@ -1,11 +1,11 @@
+'use strict';
+
+// Requires order is important here.
 
 global._ = require('underscore');
 
-var getIcon = require('./icons/getIcon');
-global.getIcon = getIcon;
+global.getIcon = require('./icons/icons').getIcon;
 
-var depot = require('./depot/depot');
-global.depot = depot;
+global.depot = require('./depot/depot');
 
-var time = require('./utils/time');
-global.time = time;
+global.time = require('./utils/time');

@@ -14,7 +14,17 @@ const {
 
 const { trackerStyles } = require('./trackerStyles');
 
+const UserIconsStore = require('../../icons/UserIconsStore');
+
 const TrackerView = React.createClass({
+  _getMainIcon(iconId) {
+    let userIcon = UserIconsStore.get(iconId);
+    if (userIcon) {
+      return userIcon.png;
+    }
+    return getIcon('oval');
+  },
+
   render() {
     return (
       <Animated.View style={[trackerStyles.innerView, this.props.style]}>
@@ -29,7 +39,7 @@ const TrackerView = React.createClass({
           </View>
           <View style={trackerStyles.iconContainer}>
             <Image
-              source={this.props.icon}
+              source={this._getMainIcon(this.props.iconId)}
               style={trackerStyles.mainIcon}
             />
           </View>
@@ -43,6 +53,9 @@ const TrackerView = React.createClass({
           <View style={trackerStyles.controls}>
             {this.props.controls}
           </View>
+        </View>
+        <View style={trackerStyles.footerContainer}>
+          
         </View>
       </Animated.View>
     );
