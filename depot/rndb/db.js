@@ -25,6 +25,12 @@ function DbTable(tableName) {
     return table.rows;
   };
 
+  this.getLast = async function() {
+    let dbTable = await ReactNativeStore.table(tableName);
+    let table = new TableModel(dbTable);
+    return table.lastRow;
+  };
+
   this.add = async function(newRow) {
     return await this.addAt(newRow);
   };
@@ -42,6 +48,7 @@ function DbTable(tableName) {
   this.remove = async function(where) {
     let dbTable = await ReactNativeStore.table(tableName);
     let table = new TableModel(dbTable);
+
     let removedIds = table.where(where).remove();
     if (removedIds.length) {
       await ReactNativeStore.saveTable(tableName, table.data);
@@ -50,9 +57,10 @@ function DbTable(tableName) {
     return removedIds; 
   };
 
-  this.removeId = async function(rowId) {
+  this.removeById = async function(rowId) {
     let dbTable = await ReactNativeStore.table(tableName);
     let table = new TableModel(dbTable);
+
     let removed = table.removeById(rowId);
     if (removed) {
       await ReactNativeStore.saveTable(tableName, table.data);
@@ -62,19 +70,11 @@ function DbTable(tableName) {
     return removed;
   };
 
-  this.erase_db = async function() {
-    let dbTable = await ReactNativeStore.table(tableName);
-    let table = new TableModel(dbTable);
-    let removedIds = table.remove();
-    await ReactNativeStore.saveTable(tableName, table.data);
-
-    events.emit('all');
-  }
-
   this.update = async function(where, rowData) {
     let dbTable = await ReactNativeStore.table(tableName);
     let table = new TableModel(dbTable);
     let updatedIds = table.where(where).update(rowData);
+
     if (updatedIds.length) {
       await ReactNativeStore.saveTable(tableName, table.data);
     }
@@ -83,9 +83,10 @@ function DbTable(tableName) {
     return updatedIds;
   };
 
-  this.updateId = async function(rowId, rowData) {
+  this.updateById = async function(rowId, rowData) {
     let dbTable = await ReactNativeStore.table(tableName);
     let table = new TableModel(dbTable);
+
     let updated = table.updateById(rowId, rowData);
     if (updated) {
       await ReactNativeStore.saveTable(tableName, table.data);
@@ -95,17 +96,14 @@ function DbTable(tableName) {
     return updated;
   };
 
-  this.removeId = async function(rowId) {
+  this.erase = async function() {
     let dbTable = await ReactNativeStore.table(tableName);
     let table = new TableModel(dbTable);
-    let removed = table.removeById(rowId);
-    if (removed) {
-      await ReactNativeStore.saveTable(tableName, table.data);
-    }
+    let removedIds = table.remove();
+    await ReactNativeStore.saveTable(tableName, table.data);
 
     events.emit('all');
-    return removed;
-  };
+  }
 };
 
 let db = {

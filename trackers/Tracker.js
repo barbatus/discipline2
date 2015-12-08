@@ -16,6 +16,10 @@ class Tracker {
     return TrackerType.fromValue(this.typeId);
   }
 
+  set type(type) {
+    this.typeId = type.valueOf();
+  }
+
   get value() {
     return depot.trackers.getTodayValue(this._id);
   }
@@ -24,8 +28,12 @@ class Tracker {
     return UserIconsStore.get(this.iconId);
   }
 
-  get lastTick() {
-    return depot.trackers.getLastTick(this._id);
+  set icon(icon) {
+    this.iconId = icon.id;
+  }
+
+  async getLastTick() {
+    return await depot.trackers.getLastTick(this._id);
   }
 
   async getCount() {
@@ -33,7 +41,7 @@ class Tracker {
   }
 
   async getChecked() {
-    var count = await this.getCount();
+    let count = await this.getCount();
     return count != 0;
   }
 
@@ -42,13 +50,25 @@ class Tracker {
       opt_onResult = opt_value;
       opt_value = null;
     }
-    var tickId = await this.addTick(opt_value);
+    let tickId = await this.addTick(opt_value);
     return tickId;
+  }
+
+  async save() {
+    return await depot.trackers.update(this._id, {
+      title: this.title,
+      iconId: this.iconId
+    });
   }
 
   async addTick(opt_value) {
     return await depot.trackers.addTick(this._id,
       time.getDateTimeMs(), opt_value);
+  }
+
+  async removeLastTick() {
+    let tick = await this.getLastTick();
+    await depot.ticks.remove(this._id, tick._id);
   }
 
   async getTicks(startDateMs) {

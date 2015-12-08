@@ -33,9 +33,13 @@ class NewTrackerSlide extends Component {
     };
   }
 
+  reset() {
+    this.refs.editView.reset();
+  }
+
   render() {
     return (
-      <View style={trackerStyles.cell}>
+      <View style={trackerStyles.slide}>
         <View style={trackerStyles.container}>
           <TrackerEditView
             ref='editView'

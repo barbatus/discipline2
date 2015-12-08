@@ -1,10 +1,8 @@
 'use strict';
 
-const assert = require('assert');
-
 class EnumSymbol {
   constructor(key: String, props: Object) {
-    //check(key, String);
+    check.assert.string(key);
     assert(_.has(props, 'value'));
 
     this.key = key;

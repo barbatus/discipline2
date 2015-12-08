@@ -35,23 +35,27 @@ const CounterSlide = React.createClass({
   },
 
   _loadInitialState: async function() {
-    var tracker = this.props.tracker;
-    var count = await tracker.getCount();
+    let tracker = this.props.tracker;
+    let count = await tracker.getCount();
     this.setState({count: count});
   },
 
   _onPlus: async function() {
-    var tracker = this.props.tracker;
+    let tracker = this.props.tracker;
     await tracker.click();
 
-    var count = this.state.count;
+    let count = this.state.count;
     this.setState({count: count + 1});
   },
 
-  _onMinus() {
-    var count = this.state.count;
+  _onMinus: async function() {
+    let count = this.state.count;
     if (count > 0) {
-      this.setState({count: count - 1});
+      let tracker = this.props.tracker;
+      await tracker.removeLastTick();
+      console.log('test');
+      let count = await tracker.getCount();
+      this.setState({count: count});
     }
   },
 

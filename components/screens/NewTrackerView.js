@@ -40,16 +40,12 @@ class NewTrackerView extends Component {
     this._newTrackerView.posX.setValue(1);
     this._newTrackerView.opacity.setValue(1);
 
+    this._setNewTrackerBtns();
+
     Animated.timing(this._newTrackerView.posX, {
       duration: 1000,
       toValue: 0
-    }).start(() => {
-      this._setNewTrackerBtns();
-
-      if (callback) {
-        callback();
-      }
-    });
+    }).start(callback);
   }
 
   moveRight(callback) {
@@ -64,8 +60,15 @@ class NewTrackerView extends Component {
       Animated.timing(this._newTrackerView.opacity, {
         duration: 1000,
         toValue: value
-      }).start(callback);
+      }).start(() => {
+        this.refs.newTrackerSlide.reset();
+
+        if (callback) {
+          callback();
+        }
+      });
     } else {
+      this.refs.newTrackerSlide.reset();
       this._newTrackerView.opacity.setValue(value);
     }
   }

@@ -1,10 +1,10 @@
 'use strict';
 
-var ticks = require('./ticks');
-var db = require('./rndb/db');
-var table = db.createTable('trackers');
+const ticks = require('./ticks');
+const db = require('./rndb/db');
+const table = db.createTable('trackers');
 
-var trackers = {
+const trackers = {
   getAll: async function() {
     return await table.getAll();
   },
@@ -19,6 +19,8 @@ var trackers = {
   },
 
   addAt: async function(tracker, index) {
+    check.assert.number(index);
+
     return await table.addAt(tracker, index);
   },
 
@@ -26,7 +28,16 @@ var trackers = {
     return await table.add(tracker);
   },
 
+  update: async function(trackId, tracker) {
+    check.assert.number(trackId);
+
+    return await table.updateById(trackId, tracker);
+  },
+
   addTick: async function(trackId, dateTimeMs, opt_value) {
+    check.assert.number(trackId);
+    check.assert.number(dateTimeMs);
+
     return await ticks.add({
       trackId: trackId,
       value: opt_value,
@@ -39,12 +50,16 @@ var trackers = {
       trackId, opt_minDateMs, opt_maxDateMs);
   },
 
+  getLastTick: async function(trackId) {
+    return await ticks.getLast(trackId);
+  },
+
   getTodayTicks: async function(trackId) {
     return await trackers.getTicks(trackId, time.getDateMs());
   },
 
   getTodayCount: async function(trackId) {
-    var rows = await trackers.getTodayTicks(trackId);
+    let rows = await trackers.getTodayTicks(trackId);
     return rows.length;
   }
 };

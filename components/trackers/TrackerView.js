@@ -17,6 +17,13 @@ const { trackerStyles } = require('./trackerStyles');
 const UserIconsStore = require('../../icons/UserIconsStore');
 
 const TrackerView = React.createClass({
+  getInitialState() {
+    let opacity = this.props.shown ? 1 : 0; 
+    return {
+      opacity: new Animated.Value(opacity)
+    };
+  },
+
   _getMainIcon(iconId) {
     let userIcon = UserIconsStore.get(iconId);
     if (userIcon) {
@@ -25,9 +32,18 @@ const TrackerView = React.createClass({
     return getIcon('oval');
   },
 
+  toggleView() {
+    this.state.opacity.setValue(
+      this.state.opacity._value ? 0 : 1);
+  },
+
   render() {
     return (
-      <Animated.View style={[trackerStyles.innerView, this.props.style]}>
+      <Animated.View style={[
+          trackerStyles.innerView,
+          {opacity: this.state.opacity},
+          this.props.style
+        ]}>
         <View style={trackerStyles.headerContainer}>
           <View style={trackerStyles.barContainer}>
             <TouchableOpacity onPress={this.props.onEdit}>

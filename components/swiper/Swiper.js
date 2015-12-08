@@ -14,10 +14,6 @@ const Dimensions = require('Dimensions');
 
 const { width, height } = Dimensions.get('window');
 
-/**
- * Default styles
- * @type {StyleSheetPropType}
- */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -64,22 +60,21 @@ const styles = StyleSheet.create({
     width: 250,
     backgroundColor: 'transparent',
   },
-  dot: {
+  basicDot: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     width: 7,
     height: 7,
     borderRadius: 4,
-    marginLeft: 5,
-    marginRight: 5,
     marginTop: 3,
-    marginBottom: 3
+    marginBottom: 3,
+    marginRight: 5
   },
   activeDot: {
     backgroundColor: 'rgb(255, 255, 255)'
   }
 });
 
-var Swiper = React.createClass({
+const Swiper = React.createClass({
   propTypes: {
     children: React.PropTypes.node.isRequired,
     style: View.propTypes.style,
@@ -116,8 +111,6 @@ var Swiper = React.createClass({
    * @return {object} states
    */
   getInitialState() {
-    let props = this.props;
-
     let {
       children,
       index
@@ -131,14 +124,15 @@ var Swiper = React.createClass({
       Math.max(state.total - 1, 0)) : 0;
 
     state.inc = 1;
-    state.width = props.width || width;
-    state.height = props.height || height;
+    state.width = this.props.width || width;
+    state.height = this.props.height || height;
     state.offset = state.width * state.index;
 
     return state;
   },
 
   _onTouchMove(e) {
+
   },
 
   _onScrollEnd(e) {
@@ -211,10 +205,11 @@ var Swiper = React.createClass({
     if (size <= 1) return null;
 
     let dots = [];
+    let basicDot = [styles.basicDot, this._scaleDot(size)];
     for(let i = 0; i < size; i++) {
       let dotStyle = i === this.state.index ? 
-        [styles.dot, styles.activeDot] : styles.dot;
-      dots.push(<View style={dotStyle} />);
+        [basicDot, styles.activeDot] : basicDot;
+      dots.push(<View key={i} style={dotStyle} />);
     }
 
     return (
@@ -227,9 +222,26 @@ var Swiper = React.createClass({
   },
 
   /**
-   * Default render
-   * @return {object} react-dom
+   * Scales dot radius.
+   * Basic radius 7px, with scaling
+   * propor. to the number of slides.
    */
+  _scaleDot(size) {
+    let radius = 7, margin = 5;
+    if (size >= 18) {
+      let ratio = 18 / size;
+      radius = (7 * ratio) << 0;
+      margin = (5 * ratio) << 0;
+    }
+
+    return {
+      width: radius,
+      height: radius,
+      borderRadius: radius / 2,
+      marginRight: margin
+    };
+  },
+
   render() {
     let state = this.state;
     let props = this.props;

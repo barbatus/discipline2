@@ -23,6 +23,16 @@ var ticks = {
     trackId, opt_minDateMs, opt_maxDateMs) {
     let table = db.getTable(trackId);
     return await table.getAll();
+  },
+
+  getLast: async function(trackId) {
+    let table = db.getTable(trackId);
+    return await table.getLast();
+  },
+
+  remove: async function(trackId, tickId) {
+    let table = db.getTable(trackId);
+    return await table.removeById(tickId);
   }
 };
 

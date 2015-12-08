@@ -26,7 +26,10 @@ const IconsDlg = require('../screens/IconsDlg');
 
 const TrackerEditView = React.createClass({
   getInitialState() {
+    let opacity = this.props.shown ? 1 : 0; 
     return {
+      opacity: new Animated.Value(opacity),
+      title: this.props.title,
       iconId: this.props.iconId,
       sendNotif: false,
       saveGoog: false
@@ -40,9 +43,17 @@ const TrackerEditView = React.createClass({
   },
 
   reset() {
+    this.refs.title.blur();
     this.setState({
-      iconId: this.props.iconId
+      iconId: this.props.iconId,
+      title: this.props.title
     });
+  },
+
+  toggleView() {
+    this.refs.title.blur();
+    this.state.opacity.setValue(
+      this.state.opacity._value ? 0 : 1);
   },
 
   getIconId() {
@@ -95,7 +106,11 @@ const TrackerEditView = React.createClass({
     let typeEnum = TrackerType.fromValue(this.props.typeId);
 
     return (
-      <Animated.View style={[propsStyles.innerView, this.props.style]}>
+      <Animated.View style={[
+          propsStyles.innerView,
+          {opacity: this.state.opacity},
+          this.props.style
+        ]}>
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
@@ -114,9 +129,9 @@ const TrackerEditView = React.createClass({
           </View>
           <View style={propsStyles.textContainer}>
             <TextInput
+              ref='title'
               placeholder='Add a title'
               style={[propsStyles.inputTitle, styles.inputTitle]}
-              defaultValue={this.props.title}
               onChangeText={title => this.setState({title})}
               value={this.state.title}
             />

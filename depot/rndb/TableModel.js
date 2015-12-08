@@ -15,11 +15,11 @@ class TableModel {
   }
 
   get rows() {
-    // var rows = [];
-    // for (var row in this._data['rows']) {
-    //   rows.push(this._data['rows'][row]);
-    // }
     return this._data['rows'];
+  }
+
+  get lastRow() {
+    return _.last(this._data['rows']);
   }
 
   where(where) {
@@ -44,65 +44,72 @@ class TableModel {
     return this;
   }
 
+  _scanRows(where) {
+    let rows = [], indice = [];
+    this.rows.forEach((row, index) => {
+      for (let key in where) {
+        if (row[key] != where[key]) {
+          return;
+        }
+      }
+      indice.push(index);
+      rows.push(row);
+    });
+
+    return { rows, indice };
+  }
+
   update(rowData) {
     let updatedIds = [];
     if (this._where) {
-      for (let row of this.rows) {
-        let isMatch = true;
-        for (let key in this._where) {
-          if (row[key] != this._where[key]) {
-            isMatch = false;
-            break;
-          }
+      let { rows } = this._scanRows(this._where);
+      for (let row of rows) {
+        for (let prop in rowData) {
+          row[prop] = rowData[prop];
         }
-        if (isMatch) {
-          for (let prop in rowData) {
-            row[prop] = rowData[prop];
-          }
-          updatedIds.push(row._id);
-        }
+        updatedIds.push(row._id);
       }
     }
+
     this.reset();
+
     return updatedIds;
   }
 
   updateById(rowId, rowData) {
-    var removedIds = this.where({ _id: rowId }).update(rowData);
+    let removedIds = this.where({ _id: rowId }).update(rowData);
     return removedIds.length != 0;
   }
 
   remove() {
-    var removedIds = [];
+    let removeInd = [];
     if (this._where) {
-      for (var row of this.rows) {
-        var isMatch = true;
-        for (var key in this._where) {
-          if (row[key] != this._where[key]) {
-            isMatch = false;
-            break;
-          }
-        }
-        if (isMatch) {
-          delete this._data[row._id];
-          this._data['totalrows']--;
-          removedIds.push(row._id);
-        }
-      }
+      let { indice } = this._scanRows(this._where);
+      removeInd = indice.reverse();
     } else {
-      for (var row of this.rows) {
-        delete this._data[row._id];
-        this._data['totalrows']--;
-        removedIds.push(row._id);
-      }
+      let indice = _.range(this.rows.length);
+      removeInd = indice.reverse();
     }
+
+    let removedIds = [];
+    for (let index of removeInd) {
+      removedIds.push(this.rows[index]._id);
+      this.rows.splice(index, 1);
+    }
+
     this.reset();
+
     return removedIds;
-  };
+  }
+
+  _removeRow(rowId) {
+    delete this._data[rowId];
+    this._data['totalrows']--;
+  }
 
   removeById(rowId) {
-    var removedIds = this.where({ _id: rowId }).remove();
-    return removedIds.length != 0;
+    let removedIds = this.where({ _id: rowId }).remove();
+    return removedIds.length !== 0;
   }
 
   add(newRow) {
@@ -127,22 +134,11 @@ class TableModel {
   find() {
     let result = [];
     if (this._where) {
-      for (let row of this.rows) {
-        let isMatch = true;
-        for (let key in this._where) {
-          if (row[key] != this._where[key]) {
-            isMatch = false;
-            break;
-          }
-        }
-        if (isMatch) {
-          result.push(row);
-        }
-      }
+      let { rows } = this._scanRows(this._where);
+      result = rows;
     } else {
-      for (let row of rows) {
-        result.push(row);
-      }
+      let rows = this.rows.slice();
+      result = rows;
     }
 
     if (_.isNumber(this._limit)) {

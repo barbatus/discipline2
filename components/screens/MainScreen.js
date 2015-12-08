@@ -64,23 +64,13 @@ class MainScreen extends Component {
     }
   }
 
-  // Tracker edit events.
-
-  // _onIconEdit() {
-  //   this.refs.iconDlg.show();
-  // }
-
-  // _onIconChosen(iconId) {
-  //   this.setState({
-  //     newIcon: iconId
-  //   }, () => {
-  //     this.refs.iconDlg.hide();
-  //   });
-  // }
-
   // Edit tracker events.
 
   _cancelTrackerEdit() {
+    this._setMainViewBtns();
+  }
+
+  _saveTrackerEdit() {
     this._setMainViewBtns();
   }
 
@@ -90,18 +80,19 @@ class MainScreen extends Component {
     tracker = await Trackers.addAt(
       tracker, this._slideIndex + 1);
 
+    this._setMainViewBtns();
+
     this.trackersView.addTracker(tracker, () => {
       this.trackersView.setOpacity(0, false);
       this.trackersView.moveRight(true);
       this.newTrackerView.setOpacity(0, true);
-      this.trackersView.setOpacity(1, true,
-        this._setMainViewBtns.bind(this));
+      this.trackersView.setOpacity(1, true);
     });
   }
 
   _cancelNewTracker() {
-    this._moveToRight(this.trackersView, this.newTrackerView,
-      this._setMainViewBtns.bind(this));
+    this._setMainViewBtns();
+    this._moveToRight(this.trackersView, this.newTrackerView);
   }
 
   _onNewTracker() {
@@ -146,6 +137,7 @@ class MainScreen extends Component {
           ref='trackersView'
           posX={0}
           onSlideChange={this._onSlideChange.bind(this)}
+          onSave={this._saveTrackerEdit.bind(this)}
           onCancel={this._cancelTrackerEdit.bind(this)} />
 
         <NewTrackerView

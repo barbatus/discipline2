@@ -4,7 +4,8 @@ const {
   StyleSheet,
   View,
   Component,
-  Text
+  Text,
+  Animated
 } = React;
 
 const NavigationBar = require('react-native-navbar');
@@ -31,7 +32,10 @@ class Screen extends Component {
       colorBottom: '#BA4699',
       colorTop: '#E68C7D'
     }];
-    this.state = {};
+
+    this.state = {
+      opacity: new Animated.Value(1)
+    };
 
     // let color = this.colors[(index + inc) % this.colors.length];
     // this.setState({
@@ -49,9 +53,13 @@ class Screen extends Component {
   get navBar() {
     return {
       setButtons: (leftBtn, rightBtn) => {
-        this.setState({
-          leftBtn,
-          rightBtn
+        this._hideButtons(() => {
+          this.setState({
+            leftBtn,
+            rightBtn
+          });
+
+          this._showButtons();
         });
       },
       setTitle: navTitle => {
@@ -60,6 +68,28 @@ class Screen extends Component {
         });
       }
     };
+  }
+
+  _hideButtons(callback) {
+    Animated.timing(this.state.opacity, {
+      duration: 500,
+      toValue: 0
+    }).start(callback);
+  }
+
+  _showButtons(callback) {
+    Animated.timing(this.state.opacity, {
+      duration: 500,
+      toValue: 1
+    }).start();
+  }
+
+  _getAnimatedBtn(button) {
+    return (
+      <Animated.View style={{opacity: this.state.opacity}}>
+        {button}
+      </Animated.View>
+    );
   }
 
   render() {
@@ -81,8 +111,8 @@ class Screen extends Component {
             title={
               <NavTitle title={this.state.navTitle} />
             }
-            leftButton={this.state.leftBtn}
-            rightButton={this.state.rightBtn} />
+            leftButton={this._getAnimatedBtn(this.state.leftBtn)}
+            rightButton={this._getAnimatedBtn(this.state.rightBtn)} />
         </View>
         <View style={styles.content}>
           {{content}}

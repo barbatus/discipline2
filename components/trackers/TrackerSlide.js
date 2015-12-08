@@ -13,6 +13,8 @@ const {
   SwitchIOS
 } = React;
 
+let NativeMethodsMixin = require('NativeMethodsMixin');
+
 const {
   trackerStyles,
   propsStyles
@@ -21,14 +23,16 @@ const {
 const TrackerView = require('./TrackerView');
 const TrackerEditView = require('./TrackerEditView');
 
+const UserIconsStore = require('../../icons/UserIconsStore');
+
 const TrackerSlide = React.createClass({
+  mixins: [NativeMethodsMixin],
+
   getInitialState() {
     return {
       iconId: this.props.tracker.iconId,
       title: this.props.tracker.title,
-      rotY: new Animated.Value(0),
-      opacity1: new Animated.Value(1),
-      opacity2: new Animated.Value(0)
+      rotY: new Animated.Value(0)
     };
   },
 
@@ -37,18 +41,14 @@ const TrackerSlide = React.createClass({
     let id = this.state.rotY.addListener(({value}) => {
       if (opCondition(value)) {
         this.state.rotY.removeListener(id);
-        this.state.opacity1.setValue(op1);
-        this.state.opacity2.setValue(op2);
+        this.refs.trackerView.toggleView();
+        this.refs.editView.toggleView();
       }
     });
     Animated.timing(this.state.rotY, {
       duration: 1000,
       toValue: stopVal
-    }).start(() => {
-      if (callback) {
-        callback();
-      }
-    });
+    }).start(callback);
   },
 
   showEdit(callback) {
@@ -57,6 +57,18 @@ const TrackerSlide = React.createClass({
   },
 
   saveEdit(callback) {
+    let title = this.refs.editView.getTitle();
+    let iconId = this.refs.editView.getIconId();
+    let icon = UserIconsStore.get(iconId);
+    this.props.tracker.title = title;
+    this.props.tracker.icon = icon;
+    this.props.tracker.save();
+
+    this.setState({
+      title: this.refs.editView.getTitle(),
+      iconId: this.refs.editView.getIconId()
+    });
+
     this._animateFlip(0, 1, 0,
       value => value <= 0.5, callback);
   },
@@ -76,8 +88,9 @@ const TrackerSlide = React.createClass({
       <View style={trackerStyles.slide}>
         <View style={trackerStyles.container}>
           <TrackerView
+            ref='trackerView'
+            shown={true}
             style={{
-              opacity: this.state.opacity1,
               transform: [{
                 rotateY: this.state.rotY.interpolate({
                   inputRange: [0, 1],
@@ -92,8 +105,8 @@ const TrackerSlide = React.createClass({
           />
           <TrackerEditView
             ref='editView'
+            shown={false}
             style={{
-              opacity: this.state.opacity2,
               transform: [{
                 rotateY: this.state.rotY.interpolate({
                   inputRange: [0, 1],

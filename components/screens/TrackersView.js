@@ -95,7 +95,7 @@ class TrackersView extends Component {
       navBar.setTitle('Edit Tracker');
       navBar.setButtons(
         this._getCancelBtn(this._cancelEdit),
-        this._getAccetpBtn(() => {}));
+        this._getAccetpBtn(this._saveEdit));
     }
   }
 
@@ -103,6 +103,7 @@ class TrackersView extends Component {
     this.setState({
       slideIndex: index
     });
+
     if (this.props.onSlideChange) {
       this.props.onSlideChange(index);
     }
@@ -111,13 +112,24 @@ class TrackersView extends Component {
   // Edit tracker events.
 
   _cancelEdit() {
-    this.refs.trackers.cancelEdit(
-      this.props.onCancel);
+    this.refs.trackers.cancelEdit();
+
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
   }
 
   _onEdit() {
-    this.refs.trackers.showEdit(
-      this._setEditTrackerBtns.bind(this));
+    this._setEditTrackerBtns();
+    this.refs.trackers.showEdit();
+  }
+
+  _saveEdit() {
+    this.refs.trackers.saveEdit();
+
+    if (this.props.onSave) {
+      this.props.onSave();
+    }
   }
 
   get _trackersView() {
