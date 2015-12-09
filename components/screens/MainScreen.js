@@ -74,12 +74,13 @@ class MainScreen extends Component {
     this._setMainViewBtns();
   }
 
+  _removeTrackerEdit() {
+    this._setMainViewBtns();
+  }
+
   // New tracker events.
 
   async _onAccept(tracker) {
-    tracker = await Trackers.addAt(
-      tracker, this._slideIndex + 1);
-
     this._setMainViewBtns();
 
     this.trackersView.addTracker(tracker, () => {
@@ -137,6 +138,7 @@ class MainScreen extends Component {
           ref='trackersView'
           posX={0}
           onSlideChange={this._onSlideChange.bind(this)}
+          onRemove={this._removeTrackerEdit.bind(this)}
           onSave={this._saveTrackerEdit.bind(this)}
           onCancel={this._cancelTrackerEdit.bind(this)} />
 

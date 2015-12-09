@@ -28,6 +28,12 @@ const trackers = {
     return await table.add(tracker);
   },
 
+  remove: async function(trackId) {
+    check.assert.number(trackId);
+
+    return await table.removeById(trackId);
+  },
+
   update: async function(trackId, tracker) {
     check.assert.number(trackId);
 

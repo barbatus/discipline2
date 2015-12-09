@@ -34,10 +34,14 @@ const CounterSlide = React.createClass({
     this.refs.slide.cancelEdit(callback);
   },
 
+  collapse(callback) {
+    this.refs.slide.collapse(callback);
+  },
+
   _loadInitialState: async function() {
     let tracker = this.props.tracker;
     let count = await tracker.getCount();
-    this.setState({count: count});
+    this.setState({ count });
   },
 
   _onPlus: async function() {
@@ -53,9 +57,8 @@ const CounterSlide = React.createClass({
     if (count > 0) {
       let tracker = this.props.tracker;
       await tracker.removeLastTick();
-      console.log('test');
       let count = await tracker.getCount();
-      this.setState({count: count});
+      this.setState({ count });
     }
   },
 
@@ -81,14 +84,23 @@ const CounterSlide = React.createClass({
     );
   },
 
+  _getFooter() {
+    return (
+      <Text style={trackerStyles.footerText}>
+        Tap to count the thing you've done
+      </Text>
+    );
+  },
+
   render() {
     return (
       <TrackerSlide
         ref='slide'
         tracker={this.props.tracker}
         controls={this._getControls()}
-        onIconEdit={this.props.onIconEdit}
-        onEdit={this.props.onEdit} />
+        footer={this._getFooter()}
+        onEdit={this.props.onEdit}
+        onRemove={this.props.onRemove} />
     );
   }
 });
@@ -96,7 +108,7 @@ const CounterSlide = React.createClass({
 const styles = StyleSheet.create({
   controls: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   countText: {

@@ -38,6 +38,10 @@ const GoalTrackerSlide = React.createClass({
     this.refs.slide.cancelEdit(callback);
   },
 
+  collapse(callback) {
+    this.refs.slide.collapse(callback);
+  },
+
   _loadInitialState: async function() {
     let tracker = this.props.tracker;
     let checked = await tracker.getChecked();
@@ -67,13 +71,23 @@ const GoalTrackerSlide = React.createClass({
     );
   },
 
+  _getFooter() {
+    return (
+      <Text style={trackerStyles.footerText}>
+        Tap when you've reached the goal
+      </Text>
+    );
+  },
+
   render() {
     return (
       <TrackerSlide
         ref='slide'
         tracker={this.props.tracker}
         controls={this._getControls()}
-        onEdit={this.props.onEdit} />
+        footer={this._getFooter()}
+        onEdit={this.props.onEdit}
+        onRemove={this.props.onRemove} />
     );
   }
 });

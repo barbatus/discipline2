@@ -20,6 +20,10 @@ class Trackers {
     return await Trackers.getOne(trackId);
   }
 
+  static async remove(tracker) {
+    return await depot.trackers.remove(tracker._id);
+  }
+
   static create({ title, typeId, iconId }) {
     
   }

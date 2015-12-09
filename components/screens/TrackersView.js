@@ -24,9 +24,6 @@ const Trackers = require('../../trackers/Trackers');
 class TrackersView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      slideIndex: 0
-    };
   }
 
   moveLeft(instantly, callback) {
@@ -72,7 +69,10 @@ class TrackersView extends Component {
     }
   }
 
-  addTracker(tracker, callback) {
+  async addTracker(tracker, callback) {
+    tracker = await Trackers.addAt(
+      tracker, this.refs.trackers.nextInd);
+
     this.refs.trackers.addTracker(tracker, callback);
   }
 
@@ -82,7 +82,7 @@ class TrackersView extends Component {
     );
   }
 
-  _getAccetpBtn(onPress) {
+  _getAcceptBtn(onPress) {
     return (
       <NavAcceptButton onPress={onPress.bind(this)} />
     );
@@ -95,15 +95,11 @@ class TrackersView extends Component {
       navBar.setTitle('Edit Tracker');
       navBar.setButtons(
         this._getCancelBtn(this._cancelEdit),
-        this._getAccetpBtn(this._saveEdit));
+        this._getAcceptBtn(this._saveEdit));
     }
   }
 
   _onSlideChange(index) {
-    this.setState({
-      slideIndex: index
-    });
-
     if (this.props.onSlideChange) {
       this.props.onSlideChange(index);
     }
@@ -122,6 +118,11 @@ class TrackersView extends Component {
   _onEdit() {
     this._setEditTrackerBtns();
     this.refs.trackers.showEdit();
+  }
+
+  _onRemove() {
+    this.refs.trackers.removeTracker(
+      this.props.onRemove);
   }
 
   _saveEdit() {
@@ -145,6 +146,7 @@ class TrackersView extends Component {
           <TrackerSwiper
             ref='trackers'
             onSlideChange={this._onSlideChange.bind(this)}
+            onRemove={this._onRemove.bind(this)}
             onEdit={this._onEdit.bind(this)} />
         } />
     );

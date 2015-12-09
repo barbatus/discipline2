@@ -32,19 +32,21 @@ const TrackerSlide = React.createClass({
     return {
       iconId: this.props.tracker.iconId,
       title: this.props.tracker.title,
+      scale: new Animated.Value(1),
       rotY: new Animated.Value(0)
     };
   },
 
   _animateFlip(stopVal, op1, op2, opCondition, callback) {
     this.state.rotY.removeAllListeners();
-    let id = this.state.rotY.addListener(({value}) => {
+    let id = this.state.rotY.addListener(({ value }) => {
       if (opCondition(value)) {
         this.state.rotY.removeListener(id);
         this.refs.trackerView.toggleView();
         this.refs.editView.toggleView();
       }
     });
+
     Animated.timing(this.state.rotY, {
       duration: 1000,
       toValue: stopVal
@@ -83,9 +85,27 @@ const TrackerSlide = React.createClass({
       });
   },
 
+  collapse(callback) {
+    Animated.timing(this.state.scale, {
+      duration: 500,
+      toValue: 0
+    }).start(() => {
+      this.refs.editView.reset();
+      if (callback) {
+        callback();
+      }
+    });
+  },
+
   render() {
     return (
-      <View style={trackerStyles.slide}>
+      <Animated.View style={[
+          trackerStyles.slide, {
+            transform: [{
+              scale: this.state.scale
+            }]
+          }
+        ]}>
         <View style={trackerStyles.container}>
           <TrackerView
             ref='trackerView'
@@ -101,6 +121,7 @@ const TrackerSlide = React.createClass({
             iconId={this.state.iconId}
             title={this.state.title}
             controls={this.props.controls}
+            footer={this.props.footer}
             onEdit={this.props.onEdit}
           />
           <TrackerEditView
@@ -118,10 +139,11 @@ const TrackerSlide = React.createClass({
             delete={true}
             iconId={this.state.iconId}
             title={this.state.title}
+            onRemove={this.props.onRemove}
             onIconEdit={this.props.onIconEdit}
           />
         </View>
-      </View>
+      </Animated.View>
     );
   }
 });

@@ -20,17 +20,13 @@ const trackerDef = {
   },
   bodyContainer: {
     ...slideDef.bodyContainer,
-    flex: 0.5
+    flex: 0.4
   },
   footerContainer: {
     ...slideDef.footerContainer,
     ...slideDef.borderBottomRadius,
-    flex: 0.1
-  },
-  controls: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flex: 0.2,
+    justifyContent: 'flex-start',
     alignItems: 'center'
   },
   barContainer: {
@@ -47,13 +43,20 @@ const trackerDef = {
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
-  textContainer: {
+  titleContainer: {
     flex: 0.35,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  title: {
+  controlsContainer: {
+    paddingTop: 25,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  titleText: {
     fontSize: 25,
     fontWeight: '300',
     textAlign: 'center'
@@ -82,6 +85,12 @@ const trackerDef = {
   },
   filledBtn: {
     backgroundColor: '#3DCF43'
+  },
+  footerText: {
+    color: '#C4C4C4',
+    fontSize: 15,
+    textAlign: 'center',
+    width: 150
   }
 };
 
@@ -114,8 +123,8 @@ const editDef = {
     alignItems: 'flex-end',
     flex: 0.4
   },
-  textContainer: {
-    ...trackerDef.textContainer,
+  titleContainer: {
+    ...trackerDef.titleContainer,
     alignItems: 'center',
     flex: 0.35
   },

@@ -20,7 +20,6 @@ const { TrackerType } = require('../../depot/consts');
 class TrackerSwiper extends Component {
   constructor(props) {
     super(props);
-    this._trackerIndex = 0;
     this.state = {
       trackers: []
     };
@@ -31,10 +30,14 @@ class TrackerSwiper extends Component {
   }
 
   get currentTracker() {
-    return this.state.trackers[this._trackerIndex];
+    let index = this.refs.swiper.getIndex();
+    return this.state.trackers[index];
   }
 
   showEdit(callback) {
+    this.setState({
+      scrollEnabled: false
+    });
     let trackerId = this.currentTracker._id;
     this.refs[trackerId].showEdit(callback);
   }
@@ -45,20 +48,53 @@ class TrackerSwiper extends Component {
   }
 
   cancelEdit(callback) {
+    this.setState({
+      scrollEnabled: true
+    });
     let trackerId = this.currentTracker._id;
     this.refs[trackerId].cancelEdit(callback);
   }
 
   addTracker(tracker, callback) {
     let trackers = this.state.trackers;
-    trackers.splice(this._trackerIndex + 1, 0, tracker);
+    let nextInd = this.refs.swiper.getNextIndex();
+    trackers.splice(nextInd, 0, tracker);
     this.setState({
       trackers: trackers
     }, () => {
       this.refs.swiper.scrollTo(1);
+
       if (callback) {
         callback();
       }
+    });
+  }
+
+  get nextInd() {
+    return this.refs.swiper.getNextIndex();
+  }
+
+  async removeTracker(callback) {
+    let trackerId = this.currentTracker._id;
+    await Trackers.remove(this.currentTracker);
+
+    if (callback) {
+      callback();
+    }
+
+    // TODO: optimize.
+    this.refs[trackerId].collapse(() => {
+      let index = this.refs.swiper.getIndex();
+      let trackers = this.state.trackers
+      trackers.splice(index, 1);
+      let diff = index > 0 ? -1 : 1;
+      this.refs.swiper.scrollTo(diff);
+      setTimeout(() => {
+        this.setState({
+          trackers: trackers,
+          scrollEnabled: true
+        });
+      }, 500);
     });
   }
 
@@ -88,6 +124,7 @@ class TrackerSwiper extends Component {
         key={tracker._id}
         onIconEdit={this.props.onIconEdit}
         onEdit={this.props.onEdit}
+        onRemove={this.props.onRemove}
         tracker={tracker}
       /> :
       <CounterSlide
@@ -95,13 +132,12 @@ class TrackerSwiper extends Component {
         key={tracker._id}
         onIconEdit={this.props.onIconEdit}
         onEdit={this.props.onEdit}
+        onRemove={this.props.onRemove}
         tracker={tracker}
       />;
   }
 
   _onSlideChange(event, index) {
-    this._trackerIndex = index;
-
     if (this.props.onSlideChange) {
       this.props.onSlideChange(index);
     }
@@ -113,13 +149,14 @@ class TrackerSwiper extends Component {
         return this._renderTracker(tracker);
       });
 
-    let swiperView = trackerSlides.length ? 
+    let swiperView = (
       <Swiper
         ref='swiper'
-        //index={this.state.trackerIndex}
+        slides={trackerSlides}
+        scrollEnabled={this.state.scrollEnabled}
         onSlideChange={this._onSlideChange.bind(this)}>
-        {trackerSlides}
-      </Swiper> : null;
+      </Swiper>
+    );
 
     return (
       <View style={[styles.root, this.props.style]}>

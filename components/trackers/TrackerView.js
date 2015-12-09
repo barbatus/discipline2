@@ -59,19 +59,19 @@ const TrackerView = React.createClass({
               style={trackerStyles.mainIcon}
             />
           </View>
-          <View style={trackerStyles.textContainer}>
-            <Text style={trackerStyles.title}>
+          <View style={trackerStyles.titleContainer}>
+            <Text style={trackerStyles.titleText}>
               {this.props.title}
             </Text>
           </View>
         </View>
         <View style={trackerStyles.bodyContainer}>
-          <View style={trackerStyles.controls}>
+          <View style={trackerStyles.controlsContainer}>
             {this.props.controls}
           </View>
         </View>
         <View style={trackerStyles.footerContainer}>
-          
+          {this.props.footer}
         </View>
       </Animated.View>
     );

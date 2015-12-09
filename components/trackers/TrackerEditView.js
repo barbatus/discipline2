@@ -92,11 +92,13 @@ const TrackerEditView = React.createClass({
     return this.props.delete ? (
       <View style={propsStyles.group}>
         <View style={[propsStyles.row]}>
-          <View style={propsStyles.colLeft}>
+          <TouchableOpacity
+            style={propsStyles.colLeft}
+            onPress={this.props.onRemove}>
             <Text style={[propsStyles.text, styles.deleteText]}>
               Delete
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     ) : null;
@@ -127,7 +129,7 @@ const TrackerEditView = React.createClass({
               style={trackerStyles.mainIcon}
             />
           </View>
-          <View style={propsStyles.textContainer}>
+          <View style={propsStyles.titleContainer}>
             <TextInput
               ref='title'
               placeholder='Add a title'
@@ -152,7 +154,8 @@ const TrackerEditView = React.createClass({
                   <Text style={[propsStyles.colText, styles.trackTypeText]}>
                     {typeEnum ? typeEnum.title : 'Select'}
                   </Text>
-                  <Image source={getIcon('next')}
+                  <Image
+                    source={getIcon('next')}
                     style={propsStyles.nextIcon} />
                 </TouchableOpacity>
               </View>

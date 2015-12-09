@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 
 const Swiper = React.createClass({
   propTypes: {
-    children: React.PropTypes.node.isRequired,
+    slides: React.PropTypes.node.isRequired,
     style: View.propTypes.style,
     pagingEnabled: React.PropTypes.bool,
     showsHorizontalScrollIndicator: React.PropTypes.bool,
@@ -102,7 +102,8 @@ const Swiper = React.createClass({
       removeClippedSubviews: true,
       automaticallyAdjustContentInsets: false,
       showsPagination: true,
-      index: 0
+      index: 0,
+      slides: []
     }
   },
 
@@ -112,21 +113,21 @@ const Swiper = React.createClass({
    */
   getInitialState() {
     let {
-      children,
+      slides,
       index
     } = this.props;
 
     this.isScrolling = false;
 
     let state = {};
-    state.total = children ? children.length : 0;
-    state.index = index ? Math.min(index,
-      Math.max(state.total - 1, 0)) : 0;
+    state.index = slides.length ?
+      Math.min(index, slides.length - 1) : 0;
 
     state.inc = 1;
     state.width = this.props.width || width;
     state.height = this.props.height || height;
-    state.offset = state.width * state.index;
+
+    this._offsetX = state.width * state.index;
 
     return state;
   },
@@ -152,7 +153,7 @@ const Swiper = React.createClass({
     this.isScrolling = true;
 
     let offset = e.nativeEvent.contentOffset;
-    let diff = offset - this.state.offset.x;
+    let diff = offset - this._offsetX;
     
     this.setState({
       inc: diff > 0 ? 1 : -1
@@ -171,7 +172,7 @@ const Swiper = React.createClass({
   updateIndex(offset) {
     let state = this.state;
     let index = state.index;
-    let diff = offset - state.offset;
+    let diff = offset - this._offsetX;
     let step = state.width;
 
     if (!diff) return;
@@ -180,28 +181,36 @@ const Swiper = React.createClass({
     // the variation of `index` more than 1.
     index = index + diff / step;
 
+    this._offsetX = this.state.width * index;
+
     this.setState({
-      index: index,
-      offset: offset
+      index: index
     });
   },
 
-  /**
-   * Scroll by index
-   * @param  {number} index offset index
-   */
-  scrollTo(index) {
-    if (this.isScrolling) return;
+  scrollTo(offset) {
+    if (this.isScrolling ||
+        this.props.slides.length <= 1) return;
 
     let state = this.state;
-    let diff = index + this.state.index;
-    let x = diff * state.width;
+    let next = offset + this.state.index; 
+    let size = this.props.slides.length; 
+    let x = Math.min(next, size - 1) * state.width;
     this.refs.scrollView.scrollTo(0, x);
 
     this.isScrolling = true;
   },
 
-  _renderPagination(size) {
+  getIndex() {
+    return this.state.index;
+  },
+
+  getNextIndex() {
+    return this.props.slides.length ? 
+      this.state.index + 1 : 0;
+  },
+
+  _renderPagination(size, index) {
     if (size <= 1) return null;
 
     let dots = [];
@@ -227,11 +236,11 @@ const Swiper = React.createClass({
    * propor. to the number of slides.
    */
   _scaleDot(size) {
-    let radius = 7, margin = 5;
+    let radius = 7, margin = 7;
     if (size >= 18) {
       let ratio = 18 / size;
       radius = (7 * ratio) << 0;
-      margin = (5 * ratio) << 0;
+      margin = (7 * ratio) << 0;
     }
 
     return {
@@ -245,12 +254,12 @@ const Swiper = React.createClass({
   render() {
     let state = this.state;
     let props = this.props;
-    let children = props.children;
+    let slides = props.slides;
 
-    let pageStyle = [{width: state.width}, styles.slide];
-    let pages = Object.keys(children).map((page, i) =>
-      <View style={pageStyle} key={i}>
-        {children[page]}
+    let style = [{width: state.width}, styles.slide];
+    slides = slides.map((slide, i) =>
+      <View style={style} key={i}>
+        {slide}
       </View>
     );
 
@@ -258,14 +267,16 @@ const Swiper = React.createClass({
       <View style={[styles.container, {width: state.width}]}>
         <ScrollView ref='scrollView'
           {...props}
+          pagingEnabled={true}
+          scrollEnabled={this.props.scrollEnabled}
           contentContainerStyle={[styles.wrapper, props.style]}
-          //contentOffset={this.state.offset}
+          contentOffset={{x: this._offsetX}}
           onTouchMove={this._onTouchMove}
           onMomentumScrollBegin={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}>
-          {pages}
+          {slides}
         </ScrollView>
-        {this._renderPagination(pages.length)}
+        {this._renderPagination(slides.length)}
       </View>
     );
   }

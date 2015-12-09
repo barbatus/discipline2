@@ -130,7 +130,7 @@ class NewTrackerView extends Component {
         duration: 1000,
         toValue: rightX
       }),
-    ]).start(callback.bind(this));
+    ]).start(callback);
   }
 
   _onAccept() {
@@ -142,14 +142,16 @@ class NewTrackerView extends Component {
   }
 
   _onTypeChange() {
-    this._moveSlides(-1, 0, this._setTrackerTypeBtns);
+    this._setTrackerTypeBtns();
+    this._moveSlides(-1, 0);
   }
 
   _onBack() {
     this.setState({
       trackerTypeId: this._typeSlide.typeId
     }, () => {
-      this._moveSlides(0, 1, this._setNewTrackerBtns);
+      this._setNewTrackerBtns();
+      this._moveSlides(0, 1);
     });
   }
 
