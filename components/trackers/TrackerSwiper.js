@@ -12,10 +12,13 @@ const LinearGradient = require('react-native-linear-gradient');
 
 const GoalTrackerSlide = require('./GoalTrackerSlide');
 const CounterSlide = require('./CounterSlide');
+const SumTrackerSlide = require('./SumTrackerSlide');
 
 const Trackers = require('../../trackers/Trackers');
 
 const { TrackerType } = require('../../depot/consts');
+
+const { commonStyles } = require('../styles/common');
 
 class TrackerSwiper extends Component {
   constructor(props) {
@@ -37,22 +40,33 @@ class TrackerSwiper extends Component {
   showEdit(callback) {
     this.setState({
       scrollEnabled: false
+    }, () => {
+      let trackerId = this.currentTracker._id;
+      this.refs[trackerId].showEdit(callback);
     });
-    let trackerId = this.currentTracker._id;
-    this.refs[trackerId].showEdit(callback);
+  }
+
+  _onCancelEdit(callback) {
+    this.setState({
+      scrollEnabled: true
+    });
+    if (callback) {
+      callback();
+    }
   }
 
   saveEdit(callback) {
     let trackerId = this.currentTracker._id;
-    this.refs[trackerId].saveEdit(callback);
+    return this.refs[trackerId].saveEdit(() => {
+      this._onCancelEdit(callback);
+    });
   }
 
   cancelEdit(callback) {
-    this.setState({
-      scrollEnabled: true
-    });
     let trackerId = this.currentTracker._id;
-    this.refs[trackerId].cancelEdit(callback);
+    return this.refs[trackerId].cancelEdit(() => {
+      this._onCancelEdit(callback);
+    });
   }
 
   addTracker(tracker, callback) {
@@ -63,10 +77,7 @@ class TrackerSwiper extends Component {
       trackers: trackers
     }, () => {
       this.refs.swiper.scrollTo(1);
-
-      if (callback) {
-        callback();
-      }
+      this._onCancelEdit(callback);
     });
   }
 
@@ -118,28 +129,40 @@ class TrackerSwiper extends Component {
 
   _renderTracker(tracker: Object) {
     let type = tracker.type;
-    return type === TrackerType.GOAL_TRACKER ?
-      <GoalTrackerSlide
-        ref={tracker._id}
-        key={tracker._id}
-        onIconEdit={this.props.onIconEdit}
-        onEdit={this.props.onEdit}
-        onRemove={this.props.onRemove}
-        tracker={tracker}
-      /> :
-      <CounterSlide
-        ref={tracker._id}
-        key={tracker._id}
-        onIconEdit={this.props.onIconEdit}
-        onEdit={this.props.onEdit}
-        onRemove={this.props.onRemove}
-        tracker={tracker}
-      />;
-  }
-
-  _onSlideChange(event, index) {
-    if (this.props.onSlideChange) {
-      this.props.onSlideChange(index);
+    switch (type) {
+      case TrackerType.GOAL_TRACKER:
+        return (
+          <GoalTrackerSlide
+            ref={tracker._id}
+            key={tracker._id}
+            onIconEdit={this.props.onIconEdit}
+            onEdit={this.props.onEdit}
+            onRemove={this.props.onRemove}
+            tracker={tracker}
+          />
+        );
+      case TrackerType.COUNTER:
+        return (
+          <CounterSlide
+            ref={tracker._id}
+            key={tracker._id}
+            onIconEdit={this.props.onIconEdit}
+            onEdit={this.props.onEdit}
+            onRemove={this.props.onRemove}
+            tracker={tracker}
+          />
+        );
+      case TrackerType.SUM:
+        return (
+          <SumTrackerSlide
+            ref={tracker._id}
+            key={tracker._id}
+            onIconEdit={this.props.onIconEdit}
+            onEdit={this.props.onEdit}
+            onRemove={this.props.onRemove}
+            tracker={tracker}
+          />
+        );
     }
   }
 
@@ -153,23 +176,19 @@ class TrackerSwiper extends Component {
       <Swiper
         ref='swiper'
         slides={trackerSlides}
+        onTouchMove={this.props.onScroll}
         scrollEnabled={this.state.scrollEnabled}
-        onSlideChange={this._onSlideChange.bind(this)}>
+        onSlideChange={this.props.onSlideChange}
+        onSlideNoChange={this.props.onSlideNoChange}>
       </Swiper>
     );
 
     return (
-      <View style={[styles.root, this.props.style]}>
+      <View style={[commonStyles.flexFilled, this.props.style]}>
         {swiperView}
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1
-  }
-});
 
 module.exports = TrackerSwiper;

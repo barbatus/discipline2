@@ -31,6 +31,11 @@ const depot = {
       typeId: TrackerType.COUNTER.valueOf(), 
       iconId: 'stopwatch'
     });
+    await depot.trackers.add({
+      title: 'Spent on Lunch',
+      typeId: TrackerType.SUM.valueOf(), 
+      iconId: 'pizza'
+    });
   },
 
   hasTestData: async function() {

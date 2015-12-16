@@ -4,6 +4,7 @@ const appIcons = {
   back: require('./files/app/back.png'),
   check: require('./files/app/check.png'),
   plus: require('./files/app/plus.png'),
+  plus_sm: require('./files/app/plus_sm.png'),
   minus: require('./files/app/minus.png'),
   info: require('./files/app/info.png'),
   menu: require('./files/app/menu.png'),

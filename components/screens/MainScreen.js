@@ -30,6 +30,10 @@ const IconsDlg = require('./IconsDlg');
 
 const Trackers = require('../../trackers/Trackers');
 
+const GradientSlider = require('../common/GradientSlider');
+
+const { commonStyles } = require('../styles/common');
+
 class MainScreen extends Component {
   constructor(props) {
     super(props);
@@ -119,8 +123,17 @@ class MainScreen extends Component {
     }
   }
 
-  _onSlideChange(index) {
+  _onSlideChange(index, dir) {
     this._slideIndex = index;
+    this.refs.gradient.finishSlide(dir);
+  }
+
+  _onSlideNoChange(dir) {
+    this.refs.gradient.finishNoSlide(dir);
+  }
+
+  _onScroll(dx) {
+    this.refs.gradient.slide(dx);
   }
 
   get trackersView() {
@@ -133,10 +146,12 @@ class MainScreen extends Component {
 
   _renderContent() {
     return (
-      <View style={styles.root}>
+      <View style={commonStyles.flexFilled}>
         <TrackersView
           ref='trackersView'
           posX={0}
+          onScroll={this._onScroll.bind(this)}
+          onSlideNoChange={this._onSlideNoChange.bind(this)}
           onSlideChange={this._onSlideChange.bind(this)}
           onRemove={this._removeTrackerEdit.bind(this)}
           onSave={this._saveTrackerEdit.bind(this)}
@@ -154,10 +169,16 @@ class MainScreen extends Component {
   render() {
     let { navigator } = this.props;
 
+    let gradient = (
+      <GradientSlider
+        ref='gradient'
+        style={commonStyles.absoluteFilled} />
+    );
     return (
       <Screen
         ref='screen'
         navigator={navigator}
+        background={gradient}
         content={this._renderContent()} />
     );
   }
@@ -166,11 +187,5 @@ class MainScreen extends Component {
 MainScreen.contextTypes = {
   menuActions: React.PropTypes.object.isRequired
 };
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1
-  }
-});
 
 module.exports = MainScreen;

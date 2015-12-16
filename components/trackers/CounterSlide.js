@@ -23,15 +23,15 @@ const CounterSlide = React.createClass({
   },
 
   showEdit(callback) {
-    this.refs.slide.showEdit(callback);
+    return this.refs.slide.showEdit(callback);
   },
 
   saveEdit(callback) {
-    this.refs.slide.saveEdit(callback);
+    return this.refs.slide.saveEdit(callback);
   },
 
   cancelEdit(callback) {
-    this.refs.slide.cancelEdit(callback);
+    return this.refs.slide.cancelEdit(callback);
   },
 
   collapse(callback) {
@@ -64,22 +64,24 @@ const CounterSlide = React.createClass({
 
   _getControls() {
     return (
-      <View style={styles.controls}>
-        <TouchableOpacity onPress={this._onMinus}>
-          <Image
-            source={getIcon('minus')}
-            style={trackerStyles.circleBtn}
-          />
-        </TouchableOpacity>
-        <Text style={styles.countText} numberOfLines={1}>
-          {this.state.count}
-        </Text>
-        <TouchableOpacity onPress={this._onPlus}>
-          <Image
-            source={getIcon('plus')}
-            style={trackerStyles.circleBtn}
-          />
-        </TouchableOpacity>
+      <View style={trackerStyles.controls}>
+        <View style={styles.controls}>
+          <TouchableOpacity onPress={this._onMinus}>
+            <Image
+              source={getIcon('minus')}
+              style={trackerStyles.circleBtn}
+            />
+          </TouchableOpacity>
+          <Text style={styles.countText} numberOfLines={1}>
+            {this.state.count}
+          </Text>
+          <TouchableOpacity onPress={this._onPlus}>
+            <Image
+              source={getIcon('plus')}
+              style={trackerStyles.circleBtn}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   },
@@ -107,8 +109,9 @@ const CounterSlide = React.createClass({
 
 const styles = StyleSheet.create({
   controls: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
   countText: {

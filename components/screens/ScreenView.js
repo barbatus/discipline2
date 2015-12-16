@@ -8,6 +8,8 @@ const {
   Animated
 } = React;
 
+const { commonStyles } = require('../styles/common');
+
 class ScreenView extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +35,7 @@ class ScreenView extends Component {
       <Animated.View
         shouldRasterizeIOS={true}
         style={[
-          styles.viewContainer, {
+          commonStyles.absoluteFilled, {
             opacity: this.state.opacity,
             transform: [{
                 translateX: this.state.moveX.interpolate({
@@ -52,15 +54,5 @@ class ScreenView extends Component {
 ScreenView.contextTypes = {
   navBar: React.PropTypes.object.isRequired
 };
-
-const styles = StyleSheet.create({
-  viewContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: 0,
-  }
-});
 
 module.exports = ScreenView;

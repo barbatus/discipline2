@@ -9,39 +9,16 @@ const {
 } = React;
 
 const NavigationBar = require('react-native-navbar');
-const LinearGradient = require('react-native-linear-gradient');
 
 const NavTitle = require('../nav/Title');
 
 class Screen extends Component {
   constructor(props) {
     super(props);
-    this.colors = [{
-      colorBottom: '#E97490',
-      colorTop: '#FBDDB7'
-    }, {
-      colorBottom: '#FBDDB7',
-      colorTop: '#FFA878'
-    }, {
-      colorBottom: '#FA9E72',
-      colorTop: '#9FC1E7'
-    }, {
-      colorBottom: '#96BAEF',
-      colorTop: '#B454A6'
-    }, {
-      colorBottom: '#BA4699',
-      colorTop: '#E68C7D'
-    }];
 
     this.state = {
       opacity: new Animated.Value(1)
     };
-
-    // let color = this.colors[(index + inc) % this.colors.length];
-    // this.setState({
-    //   colorTop: color.colorTop,
-    //   colorBottom: color.colorBottom
-    // });
   }
 
   getChildContext() {
@@ -95,14 +72,15 @@ class Screen extends Component {
   render() {
     let {
       content,
+      background,
       navigator
     } = this.props;
 
     return (
       <View style={styles.container}>
-        <LinearGradient
-          colors={['#FBDDB7', '#E97490']}
-          style={styles.gradient} />
+        <View style={styles.background}>
+          {{background}}
+        </View>
         <View style={styles.navbar}>
           <NavigationBar
             ref='navBar'
@@ -138,16 +116,14 @@ const styles = StyleSheet.create({
     width: window.width,
     backgroundColor: 'transparent'
   },
+  background: {
+    position: 'absolute',
+    height: window.height,
+    width: window.width
+  },
   content: {
     height: window.height - 64,
     width: window.width
-  },
-  gradient: {
-    position: 'absolute',
-    bottom: 0,
-    top: 0,
-    left: 0,
-    right: 0
   }
 });
 

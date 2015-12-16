@@ -17,7 +17,7 @@ const slideDef = {
   },
   container: {
     flex: 1,
-    width: window.width - 50
+    width: window.width - 40
   },
   innerView: {
     position: 'absolute',

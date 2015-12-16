@@ -29,6 +29,7 @@ const TrackerSlide = React.createClass({
   mixins: [NativeMethodsMixin],
 
   getInitialState() {
+    this._isAnimated = false;
     return {
       iconId: this.props.tracker.iconId,
       title: this.props.tracker.title,
@@ -53,36 +54,60 @@ const TrackerSlide = React.createClass({
     }).start(callback);
   },
 
+  _onAnimationDone(callback) {
+    this._isAnimated = false;
+    if (callback) {
+      callback();
+    }
+  },
+
   showEdit(callback) {
-    this._animateFlip(1, 0, 1,
-      value => value > 0.5, callback);
+    if (!this._isAnimated) {
+      this._isAnimated = true;
+      this._animateFlip(1, 0, 1,
+        value => value > 0.5, () => {
+          this._onAnimationDone(callback);
+        });
+      return true;
+    }
+    return false;
   },
 
   saveEdit(callback) {
-    let title = this.refs.editView.getTitle();
-    let iconId = this.refs.editView.getIconId();
-    let icon = UserIconsStore.get(iconId);
-    this.props.tracker.title = title;
-    this.props.tracker.icon = icon;
-    this.props.tracker.save();
+    if (!this._isAnimated) {
+      let title = this.refs.editView.getTitle();
+      let iconId = this.refs.editView.getIconId();
+      let icon = UserIconsStore.get(iconId);
+      this.props.tracker.title = title;
+      this.props.tracker.icon = icon;
+      this.props.tracker.save();
 
-    this.setState({
-      title: this.refs.editView.getTitle(),
-      iconId: this.refs.editView.getIconId()
-    });
+      this.setState({
+        title: this.refs.editView.getTitle(),
+        iconId: this.refs.editView.getIconId()
+      });
 
-    this._animateFlip(0, 1, 0,
-      value => value <= 0.5, callback);
+      this._isAnimated = true;
+      this._animateFlip(0, 1, 0,
+        value => value <= 0.5, () => {
+          this._onAnimationDone(callback);
+        });
+      return true;
+    }
+    return false;
   },
 
   cancelEdit(callback) {
-    this._animateFlip(0, 1, 0,
-      value => value <= 0.5, () => {
-        this.refs.editView.reset();
-        if (callback) {
-          callback();
-        }
-      });
+    if (!this._isAnimated) {
+      this._isAnimated = true;
+      this._animateFlip(0, 1, 0,
+        value => value <= 0.5, () => {
+          this.refs.editView.reset();
+          this._onAnimationDone(callback);
+        });
+      return true;
+    }
+    return false;
   },
 
   collapse(callback) {

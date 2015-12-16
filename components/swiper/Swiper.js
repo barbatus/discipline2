@@ -117,62 +117,78 @@ const Swiper = React.createClass({
       index
     } = this.props;
 
-    this.isScrolling = false;
+    this._isScrolling = false;
+    this._isMoving = false;
 
     let state = {};
     state.index = slides.length ?
       Math.min(index, slides.length - 1) : 0;
 
-    state.inc = 1;
     state.width = this.props.width || width;
     state.height = this.props.height || height;
 
     this._offsetX = state.width * state.index;
+    this._pageX = state.width;
+    this._prevInd = state.index;
+    this._dir = 1;
 
     return state;
   },
 
-  _onTouchMove(e) {
+  _onTouchStart(e) {
+    this._isMoving = true;
+    this._pageX = e.nativeEvent.pageX;
+  },
 
+  _onTouchEnd(e) {
+    this._isMoving = false;
+  },
+
+  _onTouchMove(e) {
+    let dx = this._pageX - e.nativeEvent.pageX;
+    this._pageX = e.nativeEvent.pageX;
+
+    let size = this.getSize();
+    let { index } = this.state;
+    if (index === 0 && dx <= 0) return;
+    if (index === size - 1 && dx >= 0) return;
+
+    if (this.props.onTouchMove) {
+      this.props.onTouchMove(dx);
+    }
   },
 
   _onScrollEnd(e) {
-    this.isScrolling = false;
+    this._isScrolling = false;
+    //this._isMoving = false;
 
-    this.updateIndex(e.nativeEvent.contentOffset.x);
+    this._updateIndex(e.nativeEvent.contentOffset.x);
 
-    // Note: `this.setState` is async, so I call the `onMomentumScrollEnd`
-    // in setTimeout to ensure synchronous update `index`
-    this.setTimeout(() => {
+    if (this._prevInd != this.state.index) {
+      this._prevInd = this.state.index;
       this.props.onSlideChange &&
-        this.props.onSlideChange(e, this.state.index);
-    });
+        this.props.onSlideChange(this.state.index, this._dir);
+    } else {
+      this.props.onSlideNoChange &&
+        this.props.onSlideNoChange(this._dir);
+    }
   },
 
   _onScrollBegin(e) {
-    this.isScrolling = true;
+    this._isScrolling = true;
 
-    let offset = e.nativeEvent.contentOffset;
-    let diff = offset - this._offsetX;
-    
-    this.setState({
-      inc: diff > 0 ? 1 : -1
-    });
+    let offsetX = e.nativeEvent.contentOffset.x;
+    let diff = offsetX - this._offsetX;
+    this._dir = diff > 0 ? 1 : -1;
 
-    this.setTimeout(() => {
-      this.props.onSlideBegin &&
-        this.props.onSlideBegin(e, this.state, this);
-    });
+    this.props.onSlideBegin &&
+      this.props.onSlideBegin(e, this.state, this);
   },
 
-  /**
-   * Update index after scroll
-   * @param  {object} offset content offset
-   */
-  updateIndex(offset) {
+  _updateIndex(offsetX) {
     let state = this.state;
     let index = state.index;
-    let diff = offset - this._offsetX;
+    let diff = offsetX - this._offsetX;
     let step = state.width;
 
     if (!diff) return;
@@ -188,17 +204,20 @@ const Swiper = React.createClass({
     });
   },
 
-  scrollTo(offset) {
-    if (this.isScrolling ||
-        this.props.slides.length <= 1) return;
+  scrollTo(offsetInd) {
+    if (this._isScrolling || this.getSize() <= 1) return;
 
     let state = this.state;
-    let next = offset + this.state.index; 
-    let size = this.props.slides.length; 
-    let x = Math.min(next, size - 1) * state.width;
-    this.refs.scrollView.scrollTo(0, x);
+    let next = offsetInd + this.state.index; 
+    let size = this.getSize();
+    let offsetX = Math.min(next, size - 1) * state.width;
+    this.refs.scrollView.scrollTo(0, offsetX);
 
-    this.isScrolling = true;
+    this._isScrolling = true;
+  },
+
+  getSize() {
+    return this.props.slides.length;
   },
 
   getIndex() {
@@ -271,6 +290,8 @@ const Swiper = React.createClass({
           scrollEnabled={this.props.scrollEnabled}
           contentContainerStyle={[styles.wrapper, props.style]}
           contentOffset={{x: this._offsetX}}
+          onTouchStart={this._onTouchStart}
+          onTouchEnd={this._onTouchEnd}
           onTouchMove={this._onTouchMove}
           onMomentumScrollBegin={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}>

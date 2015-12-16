@@ -23,6 +23,8 @@ const TrackerTypesSlide = require('../trackers/TrackerTypesSlide');
 
 const Trackers = require('../../trackers/Trackers');
 
+const { commonDef, commonStyles } = require('../styles/common');
+
 class NewTrackerView extends Component {
   constructor(props) {
     super(props);
@@ -161,7 +163,7 @@ class NewTrackerView extends Component {
         ref='newTrackerView'
         posX={this.props.posX}
         content={
-          <View style={styles.content}>
+          <View style={commonStyles.flexFilled}>
             <Animated.View
               shouldRasterizeIOS={true}
               style={[
@@ -207,15 +209,8 @@ NewTrackerView.contextTypes = {
 };
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1
-  },
   slideContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: 0,
+    ...commonDef.absoluteFilled
   }
 });
 

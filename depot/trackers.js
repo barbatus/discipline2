@@ -67,6 +67,11 @@ const trackers = {
   getTodayCount: async function(trackId) {
     let rows = await trackers.getTodayTicks(trackId);
     return rows.length;
+  },
+
+  getTodayValues: async function(trackId) {
+    let rows = await trackers.getTodayTicks(trackId);
+    return rows.map(row => row.value);
   }
 };
 

@@ -99,19 +99,13 @@ class TrackersView extends Component {
     }
   }
 
-  _onSlideChange(index) {
-    if (this.props.onSlideChange) {
-      this.props.onSlideChange(index);
-    }
-  }
-
   // Edit tracker events.
 
   _cancelEdit() {
-    this.refs.trackers.cancelEdit();
-
-    if (this.props.onCancel) {
-      this.props.onCancel();
+    if (this.refs.trackers.cancelEdit()) {
+      if (this.props.onCancel) {
+        this.props.onCancel();
+      }
     }
   }
 
@@ -126,10 +120,10 @@ class TrackersView extends Component {
   }
 
   _saveEdit() {
-    this.refs.trackers.saveEdit();
-
-    if (this.props.onSave) {
-      this.props.onSave();
+    if (this.refs.trackers.saveEdit()) {
+      if (this.props.onSave) {
+        this.props.onSave();
+      }
     }
   }
 
@@ -145,7 +139,9 @@ class TrackersView extends Component {
         content={
           <TrackerSwiper
             ref='trackers'
-            onSlideChange={this._onSlideChange.bind(this)}
+            onScroll={this.props.onScroll}
+            onSlideChange={this.props.onSlideChange}
+            onSlideNoChange={this.props.onSlideNoChange}
             onRemove={this._onRemove.bind(this)}
             onEdit={this._onEdit.bind(this)} />
         } />
@@ -156,11 +152,5 @@ class TrackersView extends Component {
 TrackersView.contextTypes = {
   navBar: React.PropTypes.object.isRequired
 };
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1
-  }
-});
 
 module.exports = TrackersView;

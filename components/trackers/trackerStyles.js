@@ -15,7 +15,7 @@ const trackerDef = {
   headerContainer: {
     ...slideDef.headerContainer,
     ...slideDef.borderTopRadius,
-    flex: 0.4,
+    flex: 0.45,
     backgroundColor: '#F5F5F5'
   },
   bodyContainer: {
@@ -25,7 +25,7 @@ const trackerDef = {
   footerContainer: {
     ...slideDef.footerContainer,
     ...slideDef.borderBottomRadius,
-    flex: 0.2,
+    flex: 0.15,
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
@@ -34,7 +34,7 @@ const trackerDef = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
-    padding: 5,
+    padding: 10,
     paddingBottom: 0
   },
   iconContainer: {
@@ -50,11 +50,14 @@ const trackerDef = {
     alignItems: 'flex-start',
   },
   controlsContainer: {
-    paddingTop: 25,
+    flex: 1
+  },
+  controls: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+    paddingBottom: 40
   },
   titleText: {
     fontSize: 25,
@@ -76,6 +79,13 @@ const trackerDef = {
     borderRadius: 25,
     height: 50
   },
+  circleBtnSm: {
+    resizeMode: 'contain',
+    backgroundColor: 'white',
+    borderRadius: 18,
+    width: 35,
+    height: 35
+  },
   checkBtn: {
     resizeMode: 'contain',
     backgroundColor: 'white',
@@ -90,7 +100,8 @@ const trackerDef = {
     color: '#C4C4C4',
     fontSize: 15,
     textAlign: 'center',
-    width: 150
+    width: 150,
+    fontWeight: '200'
   }
 };
 
@@ -142,7 +153,7 @@ const editDef = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: window.width - 51,
+    width: slideDef.container.width - 1,
     height: 45,
     backgroundColor: 'white',
     borderWidth: 1,
@@ -186,6 +197,7 @@ const propsStyles = StyleSheet.create({
 });
 
 module.exports = {
+  trackerDef,
   trackerStyles,
   propsStyles
 };

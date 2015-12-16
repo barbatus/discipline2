@@ -20,10 +20,6 @@ class Tracker {
     this.typeId = type.valueOf();
   }
 
-  get value() {
-    return depot.trackers.getTodayValue(this._id);
-  }
-
   get icon() {
     return UserIconsStore.get(this.iconId);
   }
@@ -43,6 +39,13 @@ class Tracker {
   async getChecked() {
     let count = await this.getCount();
     return count != 0;
+  }
+
+  async getValue() {
+    let values = await depot.trackers.getTodayValues(this._id);
+    return values.reduceRight((prevVal, nextVal) => {
+      return prevVal + nextVal;
+    }, 0);
   }
 
   async click(opt_value, opt_onResult) {

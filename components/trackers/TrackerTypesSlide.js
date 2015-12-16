@@ -137,8 +137,6 @@ const styles = StyleSheet.create({
   type: {
     flex: 0.33,
     flexDirection: 'column',
-    //borderTopWidth: 1,
-    //borderTopColor: '#B9B9B9'
     borderTopWidth: 4,
     borderColor: 'trasparent',
     shadowColor: 'rgba(185, 185, 185, 0.4)',

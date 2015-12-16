@@ -27,15 +27,15 @@ const GoalTrackerSlide = React.createClass({
   },
 
   showEdit(callback) {
-    this.refs.slide.showEdit(callback);
+    return this.refs.slide.showEdit(callback);
   },
 
   saveEdit(callback) {
-    this.refs.slide.saveEdit(callback);
+    return this.refs.slide.saveEdit(callback);
   },
 
   cancelEdit(callback) {
-    this.refs.slide.cancelEdit(callback);
+    return this.refs.slide.cancelEdit(callback);
   },
 
   collapse(callback) {
@@ -45,7 +45,7 @@ const GoalTrackerSlide = React.createClass({
   _loadInitialState: async function() {
     let tracker = this.props.tracker;
     let checked = await tracker.getChecked();
-    this.setState({checked: checked});
+    this.setState({ checked });
   },
 
   _onCheck: async function() {
@@ -62,12 +62,14 @@ const GoalTrackerSlide = React.createClass({
 
   _getControls() {
     return (
-      <TouchableOpacity onPress={this._onCheck}>
-        <Image
-          source={getIcon('check')}
-          style={this._getCheckStyle()}
-        />
-      </TouchableOpacity>
+      <View style={trackerStyles.controls}>
+        <TouchableOpacity onPress={this._onCheck}>
+          <Image
+            source={getIcon('check')}
+            style={this._getCheckStyle()}
+          />
+        </TouchableOpacity>
+      </View>
     );
   },
 
