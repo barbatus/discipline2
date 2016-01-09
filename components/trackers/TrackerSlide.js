@@ -13,7 +13,9 @@ const {
   SwitchIOS
 } = React;
 
-let NativeMethodsMixin = require('NativeMethodsMixin');
+const Easing = require('Easing');
+
+const NativeMethodsMixin = require('NativeMethodsMixin');
 
 const {
   trackerStyles,
@@ -30,6 +32,8 @@ const TrackerSlide = React.createClass({
 
   getInitialState() {
     this._isAnimated = false;
+    this._moveView = new Animated.Value(0);
+    this._moveEdit = new Animated.Value(1);
     return {
       iconId: this.props.tracker.iconId,
       title: this.props.tracker.title,
@@ -43,14 +47,15 @@ const TrackerSlide = React.createClass({
     let id = this.state.rotY.addListener(({ value }) => {
       if (opCondition(value)) {
         this.state.rotY.removeListener(id);
-        this.refs.trackerView.toggleView();
-        this.refs.editView.toggleView();
+        this.refs.trackerView.setOpacity(op1);
+        this.refs.editView.setOpacity(op2);
       }
     });
 
     Animated.timing(this.state.rotY, {
       duration: 1000,
-      toValue: stopVal
+      toValue: stopVal,
+      easing: Easing.inOut(Easing.sin)
     }).start(callback);
   },
 
@@ -64,10 +69,15 @@ const TrackerSlide = React.createClass({
   showEdit(callback) {
     if (!this._isAnimated) {
       this._isAnimated = true;
+
+      this._moveEdit.setValue(0);
+
       this._animateFlip(1, 0, 1,
         value => value > 0.5, () => {
+          this._moveView.setValue(1);
           this._onAnimationDone(callback);
         });
+
       return true;
     }
     return false;
@@ -75,6 +85,7 @@ const TrackerSlide = React.createClass({
 
   saveEdit(callback) {
     if (!this._isAnimated) {
+      this._isAnimated = true;
       let title = this.refs.editView.getTitle();
       let iconId = this.refs.editView.getIconId();
       let icon = UserIconsStore.get(iconId);
@@ -87,11 +98,15 @@ const TrackerSlide = React.createClass({
         iconId: this.refs.editView.getIconId()
       });
 
-      this._isAnimated = true;
+      this._moveView.setValue(0);
+
       this._animateFlip(0, 1, 0,
         value => value <= 0.5, () => {
+          this._moveEdit.setValue(1);
+          this.refs.editView.reset();
           this._onAnimationDone(callback);
         });
+
       return true;
     }
     return false;
@@ -100,11 +115,16 @@ const TrackerSlide = React.createClass({
   cancelEdit(callback) {
     if (!this._isAnimated) {
       this._isAnimated = true;
+
+      this._moveView.setValue(0);
+
       this._animateFlip(0, 1, 0,
         value => value <= 0.5, () => {
+          this._moveEdit.setValue(1);
           this.refs.editView.reset();
           this._onAnimationDone(callback);
         });
+
       return true;
     }
     return false;
@@ -134,14 +154,22 @@ const TrackerSlide = React.createClass({
         <View style={trackerStyles.container}>
           <TrackerView
             ref='trackerView'
-            shown={true}
+            opacity={1}
             style={{
-              transform: [{
-                rotateY: this.state.rotY.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0deg', '-180deg']
-                })
-              }]
+              transform: [
+                {
+                  rotateY: this.state.rotY.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '-180deg']
+                  })
+                },
+                {
+                  translateY: this._moveView.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1000]
+                  })
+                }
+              ]
             }}
             iconId={this.state.iconId}
             title={this.state.title}
@@ -151,14 +179,22 @@ const TrackerSlide = React.createClass({
           />
           <TrackerEditView
             ref='editView'
-            shown={false}
+            opacity={0}
             style={{
-              transform: [{
-                rotateY: this.state.rotY.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['-180deg', '0deg']
-                })
-              }]
+              transform: [
+                {
+                  rotateY: this.state.rotY.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['-180deg', '0deg']
+                  })
+                },
+                {
+                  translateY: this._moveEdit.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1000]
+                  })
+                }
+              ]
             }}
             showType={false}
             delete={true}

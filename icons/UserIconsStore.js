@@ -31,7 +31,7 @@ class UserIconsStore {
     return null;
   }
 
-  static getAll() {
+  static getAll(): Array<UserIcon> {
     return UserIcons.symbols().map(
       icon => new UserIcon(icon));
   }

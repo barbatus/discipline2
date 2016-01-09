@@ -15,12 +15,16 @@ const styles = StyleSheet.create({
   navBarIcon: {
     marginVertical: 10,
     resizeMode: 'contain',
-    height: 20,
-    width: 20
+    height: 23,
+    width: 23
   },
-  menuIcon: {
-    height: 17,
-    width: 24
+  // menuIcon: {
+  //   height: 17,
+  //   width: 24
+  // },
+  backIcon: {
+    height: 30,
+    width: 15
   },
   navBarTitleText: {
     color: 'black',

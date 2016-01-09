@@ -2,6 +2,9 @@
 
 const React = require('react-native');
 
+const Dimensions = require('Dimensions');
+const window = Dimensions.get('window');
+
 const UserIconsStore = require('../../icons/UserIconsStore');
 
 const {
@@ -22,25 +25,24 @@ let IconsGrid = React.createClass({
       return { ds };
     },
 
-    _getIcons() {
+    _getIcons(): Array<Array<UserIcon>> {
       let icons = UserIconsStore.getAll();
 
-      let rows = [], row = [];
-      let index = 1;
-      for (let icon of icons) {
-        row.push(icon);
-        if (index % 4 === 0) {
-          rows.push(row);
-          row = [];
+      let iconRows = [], iconRow = [];
+      let { count } = this._getColSize();
+      icons.forEach((icon, index) => {
+        iconRow.push(icon);
+        if ((index + 1) % count === 0) {
+          iconRows.push(iconRow);
+          iconRow = [];
         }
-        index++;
+      });
+
+      if (iconRow.length) {
+        iconRows.push(iconRow);
       }
 
-      if (row.length) {
-        rows.push(row);
-      }
-
-      return rows;
+      return iconRows;
     },
 
     _onIconChosen(icon) {
@@ -49,16 +51,33 @@ let IconsGrid = React.createClass({
       }
     },
 
-    _renderIcon(icon) {
+    _getColSize() {
+      let count = 5;
+
+      // For iPhone 5.
+      if (window.width <= 320) {
+        count = 4;
+      }
+
+      let pad = (count * 10);
+      let width = ((window.width - pad) / count) >> 0;
+
+      return { width, count };
+    },
+
+    _renderIcon(icon: UserIcon) {
+      let { width } = this._getColSize();
+
       return (
         <TouchableOpacity
+          key={icon.id}
           style={styles.col}
           onPress={
             this._onIconChosen.bind(this, icon)
           }>
           <Image
             source={icon.png}
-            style={styles.icon}
+            style={[styles.icon, { width }]}
           />
         </TouchableOpacity>
       );
@@ -97,17 +116,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginBottom: 20
+    marginBottom: 15
   },
   col: {
-    width: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 5
+    padding: 5
   },
   icon: {
     resizeMode: 'contain',
-    height: 38
+    width: 40,
+    height: 40
   }
 });
 

@@ -2,31 +2,37 @@
 
 require('./globals');
 
-var React = require('react-native');
-var {
+const React = require('react-native');
+const {
   AppRegistry,
   Navigator,
   StyleSheet,
   Component
 } = React;
 
-var SideMenu = require('react-native-side-menu');
-var MainScreen = require('./components/screens/MainScreen');
-var Menu = require('./components/nav/Menu');
+const SideMenu = require('react-native-side-menu');
+const MainScreen = require('./components/screens/MainScreen');
+const Menu = require('./components/nav/Menu');
 
 class DisciplineApp extends Component {
   constructor(props) {
     super(props);
-    this.state = { touchToClose: false };
+    this.state = { touchToClose: false, isOpen: false };
   }
 
   renderScene(route, navigator) {
-    var Component = route.component;
-    var menu = <Menu navigator={navigator} />;
+    const Component = route.component;
+    const menu = <Menu navigator={navigator} />;
 
     return (
-      <SideMenu disableGestures={true} menu={menu}>
-        <Component navigator={navigator} route={route} />
+      <SideMenu
+        disableGestures={true}
+        menu={menu}
+        isOpen={this.state.isOpen}>
+        <Component
+          navigator={navigator}
+          route={route}
+          onMenu={() => this.setState({isOpen: true})} />
       </SideMenu>
     );
   }
@@ -38,13 +44,13 @@ class DisciplineApp extends Component {
         initialRoute={{
           component: MainScreen
         }}
-        renderScene={this.renderScene}
+        renderScene={this.renderScene.bind(this)}
       />
     );
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'

@@ -15,6 +15,8 @@ const {
   NavAcceptButton
 } = require('../nav/buttons');
 
+const Easing = require('Easing');
+
 const ScreenView = require('./ScreenView');
 
 const TrackerSwiper = require('../trackers/TrackerSwiper');
@@ -34,12 +36,14 @@ class TrackersView extends Component {
 
     if (instantly) {
       this._trackersView.posX.setValue(-1);
-    } else {
-      Animated.timing(this._trackersView.posX, {
-        duration: 1000,
-        toValue: -1
-      }).start(callback);
+      return;
     }
+
+    Animated.timing(this._trackersView.posX, {
+      duration: 1000,
+      toValue: -1,
+      easing: Easing.inOut(Easing.linear)
+    }).start(callback);
   }
 
   moveRight(instantly, callback) {
@@ -50,12 +54,13 @@ class TrackersView extends Component {
 
     if (instantly) {
       this._trackersView.posX.setValue(0);
-    } else {
-      Animated.timing(this._trackersView.posX, {
-        duration: 1000,
-        toValue: 0
-      }).start(callback);
     }
+
+    Animated.timing(this._trackersView.posX, {
+      duration: 1000,
+      toValue: 0,
+      easing: Easing.inOut(Easing.sin)
+    }).start(callback);
   }
 
   setOpacity(value, animated, callback) {

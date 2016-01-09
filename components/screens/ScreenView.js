@@ -16,18 +16,16 @@ class ScreenView extends Component {
 
     let posX = props.posX || 0;
     let opacity = posX === 0 ? 1 : 0;
-    this.state = {
-      moveX: new Animated.Value(posX),
-      opacity: new Animated.Value(opacity)
-    };
+    this._moveX = new Animated.Value(posX);
+    this._opacity = new Animated.Value(opacity);
   }
 
   get posX() {
-    return this.state.moveX;
+    return this._moveX;
   }
 
   get opacity() {
-    return this.state.opacity;
+    return this._opacity;
   }
 
   render() {
@@ -36,11 +34,11 @@ class ScreenView extends Component {
         shouldRasterizeIOS={true}
         style={[
           commonStyles.absoluteFilled, {
-            opacity: this.state.opacity,
+            opacity: this._opacity,
             transform: [{
-                translateX: this.state.moveX.interpolate({
-                  inputRange: [-1, 0, 1],
-                  outputRange: [-400, 0, 400]
+              translateX: this._moveX.interpolate({
+                inputRange: [-1, 0, 1],
+                outputRange: [-400, 0, 400]
               })
             }]
           }

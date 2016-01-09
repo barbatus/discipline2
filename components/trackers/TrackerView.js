@@ -20,7 +20,7 @@ const TrackerView = React.createClass({
   getInitialState() {
     let opacity = this.props.shown ? 1 : 0; 
     return {
-      opacity: new Animated.Value(opacity)
+      opacity: new Animated.Value(this.props.opacity)
     };
   },
 
@@ -32,7 +32,7 @@ const TrackerView = React.createClass({
     return getIcon('oval');
   },
 
-  toggleView() {
+  setOpacity(opacity: Number) {
     this.state.opacity.setValue(
       this.state.opacity._value ? 0 : 1);
   },

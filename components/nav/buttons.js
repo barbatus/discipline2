@@ -18,7 +18,7 @@ class NavButton extends Component {
         style={this.props.style}>
         <Image
           source={getIcon(this.props.icon)}
-          style={styles.navBarIcon} />
+          style={[styles.navBarIcon, this.props.iconStyle]} />
       </TouchableOpacity>
     );
   }
@@ -29,6 +29,7 @@ class NavAddButton extends Component {
     return (
       <NavButton {...this.props}
         icon={'new'}
+        iconStyle={styles.newIcon}
         style={styles.navBarRightButton} />
     );
   }
@@ -39,6 +40,7 @@ class NavBackButton extends Component {
     return (
       <NavButton {...this.props}
         icon={'back'}
+        iconStyle={styles.backIcon}
         style={styles.navBarLeftButton} />
     );
   }
@@ -49,6 +51,7 @@ class NavMenuButton extends Component {
     return (
       <NavButton {...this.props}
         icon={'menu'}
+        iconStyle={styles.menuIcon}
         style={styles.navBarLeftButton} />
     );
   }

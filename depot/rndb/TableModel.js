@@ -63,12 +63,12 @@ class TableModel {
     let updatedIds = [];
     if (this._where) {
       let { rows } = this._scanRows(this._where);
-      for (let row of rows) {
+      rows.forEach(row => {
         for (let prop in rowData) {
           row[prop] = rowData[prop];
         }
         updatedIds.push(row._id);
-      }
+      })
     }
 
     this.reset();
@@ -92,10 +92,12 @@ class TableModel {
     }
 
     let removedIds = [];
-    for (let index of removeInd) {
-      removedIds.push(this.rows[index]._id);
-      this.rows.splice(index, 1);
-    }
+    //for (let index of removeInd) {
+      removeInd.forEach(index => {
+        removedIds.push(this.rows[index]._id);
+        this.rows.splice(index, 1);
+      });
+    //}
 
     this.reset();
 

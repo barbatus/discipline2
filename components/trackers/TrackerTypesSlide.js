@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: -1,
       width: 0
-    },
+    }
   },
   typeIconContainer: {
     ...styleDef.centered,

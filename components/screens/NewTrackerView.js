@@ -16,6 +16,8 @@ const {
   NavBackButton
 } = require('../nav/buttons');
 
+const Easing = require('Easing');
+
 const ScreenView = require('./ScreenView');
 
 const NewTrackerSlide = require('../trackers/NewTrackerSlide');
@@ -30,15 +32,20 @@ class NewTrackerView extends Component {
     super(props);
 
     this.state = {
-      trackerTypeId: null,
-      newSlideX: new Animated.Value(0),
-      newSlideOp: new Animated.Value(1),
-      typeSlideX: new Animated.Value(1),
-      typeOp: new Animated.Value(1)
+      trackerTypeId: null
     }
+
+    this._typeOp = new Animated.Value(1);
+    this._newSlideX = new Animated.Value(0);
+    this._newSlideOp = new Animated.Value(1);
+    this._typeSlideX = new Animated.Value(1);
   }
 
   moveLeft(callback) {
+    this.setState({
+      trackerTypeId: null
+    });
+
     this._newTrackerView.posX.setValue(1);
     this._newTrackerView.opacity.setValue(1);
 
@@ -46,14 +53,16 @@ class NewTrackerView extends Component {
 
     Animated.timing(this._newTrackerView.posX, {
       duration: 1000,
-      toValue: 0
+      toValue: 0,
+      easing: Easing.inOut(Easing.sin)
     }).start(callback);
   }
 
   moveRight(callback) {
     Animated.timing(this._newTrackerView.posX, {
       duration: 1000,
-      toValue: 1
+      toValue: 1,
+      easing: Easing.inOut(Easing.linear)
     }).start(callback);
   }
 
@@ -123,14 +132,25 @@ class NewTrackerView extends Component {
   }
 
   _moveSlides(leftX, rightX, callback) {
+    let leftAnim = Easing.inOut(Easing.linear);
+    let rightAnim = Easing.inOut(Easing.sin);
+
+    // On the way back.
+    if (leftX === 0) {
+      leftAnim = Easing.inOut(Easing.sin);
+      rightAnim = Easing.inOut(Easing.linear);
+    }
+
     Animated.parallel([
-      Animated.timing(this.state.newSlideX, {
+      Animated.timing(this._newSlideX, {
         duration: 1000,
-        toValue: leftX
+        toValue: leftX,
+        easing: leftAnim
       }),
-      Animated.timing(this.state.typeSlideX, {
+      Animated.timing(this._typeSlideX, {
         duration: 1000,
-        toValue: rightX
+        toValue: rightX,
+        easing: rightAnim
       }),
     ]).start(callback);
   }
@@ -168,9 +188,9 @@ class NewTrackerView extends Component {
               shouldRasterizeIOS={true}
               style={[
                 styles.slideContainer, {
-                  opacity: this.state.newSlideOp,
+                  opacity: this._newSlideOp,
                   transform: [{
-                      translateX: this.state.newSlideX.interpolate({
+                      translateX: this._newSlideX.interpolate({
                         inputRange: [-1, 0, 1],
                         outputRange: [-400, 0, 400]
                     })
@@ -187,9 +207,9 @@ class NewTrackerView extends Component {
               shouldRasterizeIOS={true}
               style={[
                 styles.slideContainer, {
-                  opacity: this.state.typeOp,
+                  opacity: this._typeOp,
                   transform: [{
-                      translateX: this.state.typeSlideX.interpolate({
+                      translateX: this._typeSlideX.interpolate({
                         inputRange: [-1, 0, 1],
                         outputRange: [-400, 0, 400]
                     })

@@ -8,7 +8,6 @@ const {
 } = React;
 
 const Swiper = require('../swiper/Swiper');
-const LinearGradient = require('react-native-linear-gradient');
 
 const GoalTrackerSlide = require('./GoalTrackerSlide');
 const CounterSlide = require('./CounterSlide');
@@ -99,13 +98,17 @@ class TrackerSwiper extends Component {
       let trackers = this.state.trackers
       trackers.splice(index, 1);
       let diff = index > 0 ? -1 : 1;
-      this.refs.swiper.scrollTo(diff);
+      let timeout = 0;
+      if (index) {
+        this.refs.swiper.scrollTo(diff);
+        timeout = 500;
+      }
       setTimeout(() => {
         this.setState({
           trackers: trackers,
           scrollEnabled: true
         });
-      }, 500);
+      }, timeout);
     });
   }
 
@@ -116,15 +119,16 @@ class TrackerSwiper extends Component {
     }
     let start = time.getDateMs();
     let trackers = await Trackers.getAll();
-    this.setState({
-      trackers: trackers
-    });
 
-    // setTimeout(() => {
-    //   this.setState({
-    //     trackers: trackers
-    //   });
-    // });
+    if (trackers.length) {
+      this.setState({
+        trackers: [trackers[0]]
+      }, () => {
+        this.setState({
+          trackers: trackers
+        });
+      });
+    }
   }
 
   _renderTracker(tracker: Object) {

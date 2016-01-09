@@ -12,10 +12,10 @@
     "moment": "2.10.6",
     "promise": "7.0.4",
     "underscore": "1.8.3",
-    "react-native": "0.14.2",
+    "react-native": "0.17.0",
     "react-native-linear-gradient": "^1.1.0-alpha",
-    "react-native-navbar": "^1.0.7",
-    "react-native-side-menu": "^0.15.5",
+    "react-native-navbar": "^1.1.6",
+    "react-native-side-menu": "^0.17.2",
     "react-timer-mixin": "^0.13.3"
   },
   "devDependencies": {}

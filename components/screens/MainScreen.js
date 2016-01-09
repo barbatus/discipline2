@@ -90,7 +90,9 @@ class MainScreen extends Component {
     this.trackersView.addTracker(tracker, () => {
       this.trackersView.setOpacity(0, false);
       this.trackersView.moveRight(true);
-      this.newTrackerView.setOpacity(0, true);
+      this.newTrackerView.setOpacity(0, true, () => {
+        this.newTrackerView.moveRight(false);
+      });
       this.trackersView.setOpacity(1, true);
     });
   }
@@ -117,9 +119,8 @@ class MainScreen extends Component {
   }
 
   _onMenuToggle() {
-    let { menuActions } = this.context;
-    if (menuActions) {
-      menuActions.toggle();
+    if (this.props.onMenu) {
+      this.props.onMenu();
     }
   }
 
@@ -182,10 +183,6 @@ class MainScreen extends Component {
         content={this._renderContent()} />
     );
   }
-};
-
-MainScreen.contextTypes = {
-  menuActions: React.PropTypes.object.isRequired
 };
 
 module.exports = MainScreen;

@@ -8,17 +8,11 @@ const {
   Animated
 } = React;
 
-const NavigationBar = require('react-native-navbar');
-
-const NavTitle = require('../nav/Title');
+const NavBar = require('../nav/NavBar');
 
 class Screen extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      opacity: new Animated.Value(1)
-    };
   }
 
   getChildContext() {
@@ -30,43 +24,12 @@ class Screen extends Component {
   get navBar() {
     return {
       setButtons: (leftBtn, rightBtn) => {
-        this._hideButtons(() => {
-          this.setState({
-            leftBtn,
-            rightBtn
-          });
-
-          this._showButtons();
-        });
+        this.refs.navBar.setButtons(leftBtn, rightBtn);
       },
       setTitle: navTitle => {
-        this.setState({
-          navTitle
-        });
+        this.refs.navBar.setTitle(navTitle);
       }
     };
-  }
-
-  _hideButtons(callback) {
-    Animated.timing(this.state.opacity, {
-      duration: 500,
-      toValue: 0
-    }).start(callback);
-  }
-
-  _showButtons(callback) {
-    Animated.timing(this.state.opacity, {
-      duration: 500,
-      toValue: 1
-    }).start();
-  }
-
-  _getAnimatedBtn(button) {
-    return (
-      <Animated.View style={{opacity: this.state.opacity}}>
-        {button}
-      </Animated.View>
-    );
   }
 
   render() {
@@ -79,21 +42,11 @@ class Screen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.background}>
-          {{background}}
+          {background}
         </View>
-        <View style={styles.navbar}>
-          <NavigationBar
-            ref='navBar'
-            tintColor='transparent'
-            navigator={navigator}
-            title={
-              <NavTitle title={this.state.navTitle} />
-            }
-            leftButton={this._getAnimatedBtn(this.state.leftBtn)}
-            rightButton={this._getAnimatedBtn(this.state.rightBtn)} />
-        </View>
+        <NavBar ref='navBar' />
         <View style={styles.content}>
-          {{content}}
+          {content}
         </View>
       </View>
     );
@@ -109,11 +62,6 @@ const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent'
-  },
-  navbar: {
-    height: 64,
-    width: window.width,
     backgroundColor: 'transparent'
   },
   background: {
