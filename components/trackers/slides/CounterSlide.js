@@ -10,7 +10,7 @@ const {
   StyleSheet
 } = React;
 
-const { trackerStyles } = require('./trackerStyles');
+const { trackerStyles } = require('../styles/trackerStyles');
 const TrackerSlide = require('./TrackerSlide');
 
 const CounterSlide = React.createClass({
@@ -98,6 +98,7 @@ const CounterSlide = React.createClass({
     return (
       <TrackerSlide
         ref='slide'
+        scale={this.props.scale}
         tracker={this.props.tracker}
         controls={this._getControls()}
         footer={this._getFooter()}

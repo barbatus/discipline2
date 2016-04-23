@@ -20,8 +20,8 @@ const Easing = require('Easing');
 
 const ScreenView = require('./ScreenView');
 
-const NewTrackerSlide = require('../trackers/NewTrackerSlide');
-const TrackerTypesSlide = require('../trackers/TrackerTypesSlide');
+const NewTrackerSlide = require('../trackers/slides/NewTrackerSlide');
+const TrackerTypesSlide = require('../trackers/slides/TrackerTypesSlide');
 
 const Trackers = require('../../trackers/Trackers');
 

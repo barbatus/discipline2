@@ -16,13 +16,13 @@ const {
 const {
   trackerStyles,
   propsStyles
-} = require('./trackerStyles');
+} = require('../../styles/trackerStyles');
 
-const { TrackerType } = require('../../depot/consts');
+const { TrackerType } = require('../../../../depot/consts');
 
-const UserIconsStore = require('../../icons/UserIconsStore');
+const UserIconsStore = require('../../../../icons/UserIconsStore');
 
-const IconsDlg = require('../screens/IconsDlg');
+const IconsDlg = require('../../../screens/IconsDlg');
 
 const TrackerEditView = React.createClass({
   getInitialState() {

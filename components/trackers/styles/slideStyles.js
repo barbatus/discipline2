@@ -34,7 +34,7 @@ const slideDef = {
     },
     opacity: 1,
     transform: [{rotateY: '0deg'}],
-    backgroundColor: 'transparent'
+    backgroundColor: 'white',
   },
   headerContainer: {
     flex: 0.2,
@@ -48,17 +48,16 @@ const slideDef = {
     flex: 0.3,
     backgroundColor: 'white'
   },
-  borderTopRadius: {
+  borderRadius: {
     borderWidth: 1,
     borderRadius: 3,
-    borderColor: 'transparent',
+    borderColor: 'transparent'
+  },
+  borderTopRadius: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0
   },
   borderBottomRadius: {
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: 'transparent',
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0
   }
@@ -66,12 +65,18 @@ const slideDef = {
 
 const slideStyles = StyleSheet.create({
   ...slideDef,
+  innerView: {
+    ...slideDef.innerView,
+    ...slideDef.borderRadius
+  },
   headerContainer: {
     ...slideDef.headerContainer,
+    ...slideDef.borderRadius,
     ...slideDef.borderTopRadius,
   },
   footerContainer: {
     ...slideDef.footerContainer,
+    ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
   }
 });

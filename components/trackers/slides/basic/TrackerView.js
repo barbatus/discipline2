@@ -12,9 +12,9 @@ const {
   Animated
 } = React;
 
-const { trackerStyles } = require('./trackerStyles');
+const { trackerStyles } = require('../../styles/trackerStyles');
 
-const UserIconsStore = require('../../icons/UserIconsStore');
+const UserIconsStore = require('../../../../icons/UserIconsStore');
 
 const TrackerView = React.createClass({
   getInitialState() {

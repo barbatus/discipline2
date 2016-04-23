@@ -69,18 +69,20 @@ class GradientSlider extends Component {
   slide(dx) {
     if (this._isAnimated) return;
 
-    let rightVal = this.state.right.move._value;
-    let rightDx = rightVal - dx;
+    let left = this.state[this._slides[0]];
+    let leftVal = left.move._value;
+    let leftDx = Math.min(leftVal - dx, 0);
+    left.move.setValue(leftDx);
 
-    //if (rightDx >= 0) {
-      let leftVal = this.state.left.move._value;
-      this.state.left.move.setValue(leftVal - dx);
+    let center = this.state[this._slides[1]];
+    let centerVal = center.move._value;
+    let centerDx = centerVal - dx;
+    center.move.setValue(centerDx);
 
-      let centerVal = this.state.center.move._value;
-      this.state.center.move.setValue(centerVal - dx);
-
-      this.state.right.move.setValue(rightDx);
-    //}
+    let right = this.state[this._slides[2]];
+    let rightVal = right.move._value;
+    let rightDx = Math.max(rightVal - dx, 0);
+    right.move.setValue(rightDx);
   }
 
   finishSlide(dir) {

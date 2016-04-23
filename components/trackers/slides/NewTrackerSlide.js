@@ -11,13 +11,11 @@ const {
   Component
 } = React;
 
-const {
-  trackerStyles
-} = require('./trackerStyles');
+const { trackerStyles } = require('../styles/trackerStyles');
 
-const TrackerEditView = require('./TrackerEditView');
+const TrackerEditView = require('./basic/TrackerEditView');
 
-const consts = require('../../depot/consts');
+const consts = require('../../../depot/consts');
 
 class NewTrackerSlide extends Component {
   constructor(props) {

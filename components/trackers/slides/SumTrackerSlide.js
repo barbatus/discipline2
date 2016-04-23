@@ -8,14 +8,24 @@ const {
   Image,
   Text,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  DeviceEventEmitter
 } = React;
 
-const { trackerDef, trackerStyles } = require('./trackerStyles');
+const TimerMixin = require('react-timer-mixin');
+
+const {
+  trackerDef,
+  trackerStyles
+} = require('../styles/trackerStyles');
 const TrackerSlide = require('./TrackerSlide');
 
 const SumTrackerSlide = React.createClass({
+  mixins: [TimerMixin],
+
   getInitialState() {
+    this._summing = false;
+
     return {
       iconId: this.props.tracker.iconId,
       title: this.props.tracker.title,
@@ -25,6 +35,13 @@ const SumTrackerSlide = React.createClass({
 
   componentWillMount() {
     this._loadInitialState();
+    DeviceEventEmitter.addListener(
+      'keyboardWillHide', this._keyboardWillHide);
+  },
+
+  componentWillUnmount() {
+    DeviceEventEmitter.removeListener(
+      'keyboardWillHide', this._keyboardWillHide);
   },
 
   showEdit(callback) {
@@ -55,12 +72,20 @@ const SumTrackerSlide = React.createClass({
         trackerStyles.checkBtn;
   },
 
-  _onPlus: async function() {
-    let tracker = this.props.tracker;
-    let added = parseFloat(this.state.added);
-    await tracker.click(added);
-    let sum = await tracker.getValue();
-    this.setState({sum: sum, added: ''});
+  _onPlus: function() {
+    this.refs.added.blur();
+    this._summing = true;
+  },
+
+  _keyboardWillHide: async function() {
+    if (this._summing) {
+      let tracker = this.props.tracker;
+      let added = parseFloat(this.state.added);
+      await tracker.click(added);
+      let sum = await tracker.getValue();
+      this.setState({sum: sum, added: ''});
+      this._summing = false;
+    }
   },
 
   _onChangeText(sumAdded) {
@@ -74,10 +99,11 @@ const SumTrackerSlide = React.createClass({
           <View style={styles.inputContainer}>
              <TextInput
               ref='added'
-              keyboardType={'numeric'}
+              placeholder='Enter value'
               style={styles.sumInput}
               onChangeText={added => this._onChangeText(added)}
               value={this.state.added}
+              onSubmitEditing={this._onPlus}
             />
             <TouchableOpacity onPress={this._onPlus}>
               <Image
@@ -108,6 +134,7 @@ const SumTrackerSlide = React.createClass({
     return (
       <TrackerSlide
         ref='slide'
+        scale={this.props.scale}
         tracker={this.props.tracker}
         controls={this._getControls()}
         footer={this._getFooter()}
@@ -121,6 +148,7 @@ const width = trackerDef.container.width - 40;
 
 const styles = StyleSheet.create({
   controlsContainer: {
+    flex: 1,
     alignItems: 'flex-start',
     paddingTop: 25
   },
@@ -132,7 +160,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 0.7,
-    width: width,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -141,15 +168,16 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   sumInput: {
-    flex: 0.8,
-    marginRight: 40,
-    fontSize: 46,
+    height: 50,
+    width: width - 40,
+    paddingRight: 20,
+    fontSize: 42,
     color: '#4A4A4A',
     textAlign: 'right',
     fontWeight: '100'
   },
   circleBtnSm: {
-    flex: 0.2
+    width: 40
   },
   textContainer: {
     flex: 0.3,

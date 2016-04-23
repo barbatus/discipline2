@@ -12,9 +12,9 @@ const {
   Component
 } = React;
 
-const { slideStyles } = require('./slideStyles');
+const { slideStyles } = require('../styles/slideStyles');
 
-const { TrackerType } = require('../../depot/consts');
+const { TrackerType } = require('../../../depot/consts');
 
 class TrackerTypesSlide extends Component {
   constructor(props) {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 0.33,
     flexDirection: 'column',
     borderTopWidth: 4,
-    borderColor: 'trasparent',
+    borderColor: 'transparent',
     shadowColor: 'rgba(185, 185, 185, 0.4)',
     shadowOpacity: 1,
     shadowRadius: 0,

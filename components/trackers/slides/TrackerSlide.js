@@ -17,15 +17,18 @@ const Easing = require('Easing');
 
 const NativeMethodsMixin = require('NativeMethodsMixin');
 
+const Dimensions = require('Dimensions');
+const { width } = Dimensions.get('window');
+
 const {
   trackerStyles,
   propsStyles
-} = require('./trackerStyles');
+} = require('../styles/trackerStyles');
 
-const TrackerView = require('./TrackerView');
-const TrackerEditView = require('./TrackerEditView');
+const TrackerView = require('./basic/TrackerView');
+const TrackerEditView = require('./basic/TrackerEditView');
 
-const UserIconsStore = require('../../icons/UserIconsStore');
+const UserIconsStore = require('../../../icons/UserIconsStore');
 
 const TrackerSlide = React.createClass({
   mixins: [NativeMethodsMixin],
@@ -37,7 +40,7 @@ const TrackerSlide = React.createClass({
     return {
       iconId: this.props.tracker.iconId,
       title: this.props.tracker.title,
-      scale: new Animated.Value(1),
+      scale: new Animated.Value(this.props.scale),
       rotY: new Animated.Value(0)
     };
   },

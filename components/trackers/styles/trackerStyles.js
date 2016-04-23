@@ -12,8 +12,13 @@ const { slideDef } = require('./slideStyles');
 
 const trackerDef = {
   ...slideDef,
+  innerView: {
+    ...slideDef.innerView,
+    ...slideDef.borderRadius
+  },
   headerContainer: {
     ...slideDef.headerContainer,
+    ...slideDef.borderRadius,
     ...slideDef.borderTopRadius,
     flex: 0.45,
     backgroundColor: '#F5F5F5'
@@ -24,6 +29,7 @@ const trackerDef = {
   },
   footerContainer: {
     ...slideDef.footerContainer,
+    ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
     flex: 0.15,
     justifyContent: 'flex-start',
@@ -111,8 +117,7 @@ const editDef = {
   innerView: {
     ...trackerDef.innerView,
     opacity: 0,
-    transform: [{rotateY: '-180deg'}],
-    backgroundColor: 'transparent'
+    transform: [{rotateY: '-180deg'}]
   },
   headerContainer: {
     ...trackerDef.headerContainer,

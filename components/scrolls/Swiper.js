@@ -11,22 +11,17 @@ const {
 } = require('react-native');
 
 const TimerMixin = require('react-timer-mixin');
-const Dimensions = require('Dimensions');
 
-const { width, height } = Dimensions.get('window');
+const Dimensions = require('Dimensions');
+const window = Dimensions.get('window');
+const screenWidth = window.width;
+
+const { commonStyles } = require('../styles/common');
 
 const stylesDef = {
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent'
-  },
-  wrapper: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
   slide: {
     flex: 1,
-    backgroundColor: 'transparent',
+    width: screenWidth
   },
   dots: {
     position: 'absolute',
@@ -38,17 +33,6 @@ const stylesDef = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor:'transparent',
-  },
-  title: {
-    height: 30,
-    justifyContent: 'center',
-    position: 'absolute',
-    paddingLeft: 10,
-    bottom: -30,
-    left: 0,
-    flexWrap: 'nowrap',
-    width: 250,
-    backgroundColor: 'transparent',
   },
   basicDot: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -72,7 +56,6 @@ const Swiper = React.createClass({
     style: View.propTypes.style,
     pagingEnabled: React.PropTypes.bool,
     showsHorizontalScrollIndicator: React.PropTypes.bool,
-    showsVerticalScrollIndicator: React.PropTypes.bool,
     bounces: React.PropTypes.bool,
     scrollsToTop: React.PropTypes.bool,
     removeClippedSubviews: React.PropTypes.bool,
@@ -89,7 +72,6 @@ const Swiper = React.createClass({
       horizontal: true,
       pagingEnabled: true,
       showsHorizontalScrollIndicator: false,
-      showsVerticalScrollIndicator: false,
       bounces: false,
       scrollsToTop: false,
       removeClippedSubviews: true,
@@ -102,108 +84,37 @@ const Swiper = React.createClass({
     }
   },
 
-  /**
-   * Init states
-   * @return {object} states
-   */
   getInitialState() {
-    let {
-      slides,
-      index
-    } = this.props;
-
-    this._isScrolling = false;
-    this._isMoving = false;
-
-    let state = {};
-    this._index = slides.length ?
-      Math.min(index, slides.length - 1) : 0;
-
-    state.width = this.props.width || width;
-    state.height = this.props.height || height;
-
-    this._offsetX = state.width * this._index;
-    this._pageX = state.width;
+    this._index = this.props.index;
     this._prevInd = this._index;
-    this._dir = 1;
-
-    return state;
-  },
-
-  _onTouchStart(e) {
-    this._isMoving = true;
-    this._pageX = e.nativeEvent.pageX;
-  },
-
-  _onTouchEnd(e) {
-    this._isMoving = false;
-  },
-
-  _onTouchMove(e) {
-    let dx = this._pageX - e.nativeEvent.pageX;
-    this._pageX = e.nativeEvent.pageX;
-
-    let size = this.getSize();
-    if (this._index === 0 && dx <= 0) return;
-    if (this._index === size - 1 && dx >= 0) return;
-
-    if (this.props.onTouchMove) {
-      this.props.onTouchMove(dx);
-    }
-  },
-
-  _onScrollEnd(e) {
+    this._offsetX = screenWidth * this._index;
+    this._pageX = screenWidth;
+    this._diraction = 1;
     this._isScrolling = false;
+    this._onScrollToCb = null;
 
-    this._updateIndex(e.nativeEvent.contentOffset.x);
-
-    if (this._prevInd !== this._index) {
-      this._setActiveDot(this._index, this._prevInd);
-
-      this._prevInd = this._index;
-      this.props.onSlideChange &&
-        this.props.onSlideChange(this._index, this._dir);
-    } else {
-      this.props.onSlideNoChange &&
-        this.props.onSlideNoChange(this._dir);
+    return {
+      opacity: new Animated.Value(1),
+      scale: new Animated.Value(1)
     }
   },
 
-  _onScrollBegin(e) {
-    this._isScrolling = true;
-
-    let offsetX = e.nativeEvent.contentOffset.x;
-    let diff = offsetX - this._offsetX;
-    this._dir = diff > 0 ? 1 : -1;
-
-    this.props.onSlideBegin &&
-      this.props.onSlideBegin(e, this.state, this);
-  },
-
-  _updateIndex(offsetX) {
-    let state = this.state;
-    let diff = offsetX - this._offsetX;
-    let step = state.width;
-
-    if (!diff) return;
-
-    // Note: if touch very very quickly and continuous,
-    // the variation of `index` more than 1.
-    this._index = this._index + diff / step;
-
-    this._offsetX = this.state.width * this._index;
-  },
-
-  scrollTo(offsetInd) {
+  scrollTo(index, callback, animated) {
     if (this._isScrolling || this.getSize() <= 1) return;
 
-    let state = this.state;
-    let next = offsetInd + this._index; 
-    let size = this.getSize();
-    let offsetX = Math.min(next, size - 1) * state.width;
-    this.refs.scrollView.scrollTo(0, offsetX);
-
+    this._onScrollToCb = callback;
     this._isScrolling = true;
+    let size = this.getSize();
+    let offsetX = Math.min(index, size - 1) * screenWidth;
+    this.refs.scrollView.scrollTo({
+      x: offsetX,
+      y: 0,
+      animated: animated !== false
+    });
+
+    if (animated === false) {
+      this._endScrolling(offsetX);
+    }
   },
 
   getSize() {
@@ -215,7 +126,84 @@ const Swiper = React.createClass({
   },
 
   getNextIndex() {
-    return this.props.slides.length ? this._index + 1 : 0;
+    return this.getSize() ? this.getIndex() + 1 : 0;
+  },
+
+  getPrevIndex() {
+    let index = this.getIndex();
+    let diff = index > 0 ? -1 : 1;
+    return index + diff;
+  },
+
+  _onTouchStart(event) {
+    this._pageX = event.nativeEvent.pageX;
+  },
+
+  _onTouchEnd(e) {
+  },
+
+  _onTouchMove(event) {
+    let dx = this._pageX - event.nativeEvent.pageX;
+    this._pageX = event.nativeEvent.pageX;
+
+    let size = this.getSize();
+    if (this._index === 0 && dx <= 0) return;
+    if (this._index === size - 1 && dx >= 0) return;
+
+    if (this.props.onTouchMove) {
+      this.props.onTouchMove(dx);
+    }
+  },
+
+  _onScrollEnd(event) {
+    let offsetX = event.nativeEvent.contentOffset.x;
+    this._endScrolling(offsetX);
+  },
+
+  _endScrolling(offsetX) {
+    this._isScrolling = false;
+    this._updateSlideIndex(offsetX);
+
+    if (this._prevInd === this._index) {
+      if (this.props.onSlideNoChange) {
+        this.props.onSlideNoChange(this._diraction);
+      }
+    }
+
+    if (this._prevInd !== this._index) {
+      this._setActiveDot(this._index, this._prevInd);
+
+      this._prevInd = this._index;
+      if (this.props.onSlideChange) {
+        this.props.onSlideChange(this._index, this._diraction);
+      }    
+    }
+
+    if (this._onScrollToCb) {
+      this._onScrollToCb();
+      this._onScrollToCb = null;
+    }
+  },
+
+  _onScrollBegin(event) {
+    this._isScrolling = true;
+
+    let offsetX = event.nativeEvent.contentOffset.x;
+    let diff = offsetX - this._offsetX;
+    this._diraction = diff > 0 ? 1 : -1;
+
+    if (this.props.onSlideBegin) {
+      this.props.onSlideBegin(event, this.state, this);
+    }
+  },
+
+  _updateSlideIndex(offsetX) {
+    let diff = offsetX - this._offsetX;
+
+    if (!diff) return;
+
+    this._index = this._index + (diff / screenWidth);
+    this._offsetX = screenWidth * this._index;
   },
 
   _renderDots(size) {
@@ -254,6 +242,7 @@ const Swiper = React.createClass({
         }
       });
     }
+
     if (this.refs['page' + curInd]) {
       this.refs['page' + curInd].setNativeProps({
         style: {
@@ -284,28 +273,36 @@ const Swiper = React.createClass({
     };
   },
 
+  _renderSlide(slide, key) {
+    return (
+      <View style={styles.slide} key={key}>
+        {slide}
+      </View>
+    )
+  },
+
   render() {
     let state = this.state;
     let props = this.props;
     let slides = props.slides;
 
-    let style = [{width: state.width}, styles.slide];
     slides = slides.map((slide, i) =>
-      <View style={style} key={i}>
-        {slide}
-      </View>
+      this._renderSlide(slide, i)
     );
 
-    let dots = this.props.scrollEnabled ?
+    let dots = props.scrollEnabled ?
       this._renderDots(slides.length) : null;
 
     return (
-      <View style={[styles.container, {width: state.width}]}>
+      <View
+        style={commonStyles.flexFilled}>
         <ScrollView ref='scrollView'
           {...props}
-          scrollEnabled={this.props.scrollEnabled}
-          contentContainerStyle={[styles.wrapper, props.style]}
-          contentOffset={{x: 0}}
+          onScroll={this._onScroll}
+          keyboardShouldPersistTaps={true}
+          scrollEnabled={props.scrollEnabled}
+          contentContainerStyle={commonStyles.flexFilled}
+          contentOffset={{x: this._offsetX}}
           onTouchStart={this._onTouchStart}
           onTouchEnd={this._onTouchEnd}
           onTouchMove={this._onTouchMove}
@@ -313,7 +310,7 @@ const Swiper = React.createClass({
           onMomentumScrollEnd={this._onScrollEnd}>
           {slides}
         </ScrollView>
-          {dots}
+        {dots}
       </View>
     );
   }
