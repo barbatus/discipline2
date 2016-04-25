@@ -62,8 +62,8 @@ const trackerDef = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    paddingBottom: 40
+    alignItems: 'center',
+    paddingTop: 20
   },
   titleText: {
     fontSize: 25,
@@ -108,6 +108,9 @@ const trackerDef = {
     textAlign: 'center',
     width: 150,
     fontWeight: '200'
+  },
+  hintText: {
+    color: '#DFDFDF'
   }
 };
 
@@ -146,9 +149,9 @@ const editDef = {
   },
   inputTitle: {
     width: 200,
-    fontSize: 25,
+    fontSize: 28,
     textAlign: 'center',
-    fontWeight: '300'
+    fontWeight: '100'
   },
   group: {
     marginTop: 20

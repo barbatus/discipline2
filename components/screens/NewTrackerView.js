@@ -27,78 +27,50 @@ const Trackers = require('../../trackers/Trackers');
 
 const { commonDef, commonStyles } = require('../styles/common');
 
-class NewTrackerView extends Component {
+class NewTrackerView extends ScreenView {
   constructor(props) {
     super(props);
 
     this.state = {
       trackerTypeId: null
     }
-
-    this._typeOp = new Animated.Value(1);
-    this._newSlideX = new Animated.Value(0);
-    this._newSlideOp = new Animated.Value(1);
-    this._typeSlideX = new Animated.Value(1);
   }
 
-  moveLeft(callback) {
+  moveLeft(instantly, callback) {
     this.setState({
       trackerTypeId: null
     });
 
-    this._newTrackerView.posX.setValue(1);
-    this._newTrackerView.opacity.setValue(1);
-
     this._setNewTrackerBtns();
 
-    Animated.timing(this._newTrackerView.posX, {
-      duration: 1000,
-      toValue: 0,
-      easing: Easing.inOut(Easing.sin)
-    }).start(callback);
+    super.moveLeft(instantly, callback);
   }
 
-  moveRight(callback) {
-    Animated.timing(this._newTrackerView.posX, {
-      duration: 1000,
-      toValue: 1,
-      easing: Easing.inOut(Easing.linear)
-    }).start(callback);
+  moveRight(instantly, callback) {
+    this.refs.newTrackerSlide.reset();
+    this.refs.typeSlide.reset();
+
+    super.moveRight(instantly, callback);
   }
 
   setOpacity(value, animated, callback) {
-    if (animated) {
-      Animated.timing(this._newTrackerView.opacity, {
-        duration: 1000,
-        toValue: value
-      }).start(() => {
-        this.refs.newTrackerSlide.reset();
-
-        if (callback) {
-          callback();
-        }
-      });
-    } else {
+    super.setOpacity(value, animated, () => {
       this.refs.newTrackerSlide.reset();
-      this._newTrackerView.opacity.setValue(value);
-    }
+      if (callback) {
+        callback();
+      }
+    });
   }
 
   _getCancelBtn(onPress) {
     return (
-      <NavCancelButton onPress={onPress} />
+      <NavCancelButton onPress={onPress.bind(this)} />
     );
   }
 
   _getAcceptBtn(onPress) {
     return (
       <NavAcceptButton onPress={onPress.bind(this)} />
-    );
-  }
-
-  _getBackBtn(onPress) {
-    return (
-      <NavBackButton onPress={onPress.bind(this)} />
     );
   }
 
@@ -119,40 +91,19 @@ class NewTrackerView extends Component {
     if (navBar) {
       navBar.setTitle('Choose Type');
       navBar.setButtons(
-        this._getBackBtn(this._onBack), <View />);
+        this._getCancelBtn(this._onTypeCancel),
+        this._getAcceptBtn(this._onTypeAccept));
     }
   }
 
-  get _newTrackerView() {
-    return this.refs.newTrackerView;
+  _moveLeft() {
+    this.refs.newTracker.moveLeft();
+    this.refs.trackerType.moveLeft();
   }
 
-  get _typeSlide() {
-    return this.refs.typeSlide;
-  }
-
-  _moveSlides(leftX, rightX, callback) {
-    let leftAnim = Easing.inOut(Easing.linear);
-    let rightAnim = Easing.inOut(Easing.sin);
-
-    // On the way back.
-    if (leftX === 0) {
-      leftAnim = Easing.inOut(Easing.sin);
-      rightAnim = Easing.inOut(Easing.linear);
-    }
-
-    Animated.parallel([
-      Animated.timing(this._newSlideX, {
-        duration: 1000,
-        toValue: leftX,
-        easing: leftAnim
-      }),
-      Animated.timing(this._typeSlideX, {
-        duration: 1000,
-        toValue: rightX,
-        easing: rightAnim
-      }),
-    ]).start(callback);
+  _moveRight() {
+    this.refs.newTracker.moveRight();
+    this.refs.trackerType.moveRight();
   }
 
   _onAccept() {
@@ -163,63 +114,49 @@ class NewTrackerView extends Component {
     }
   }
 
-  _onTypeChange() {
-    this._setTrackerTypeBtns();
-    this._moveSlides(-1, 0);
+  _onTypeCancel() {
+    this._setNewTrackerBtns();
+    this._moveRight();
   }
 
-  _onBack() {
+  _onTypeChange() {
+    this._setTrackerTypeBtns();
+    this._moveLeft();
+  }
+
+  _onTypeAccept() {
     this.setState({
-      trackerTypeId: this._typeSlide.typeId
+      trackerTypeId: this.refs.typeSlide.typeId
     }, () => {
       this._setNewTrackerBtns();
-      this._moveSlides(0, 1);
+      this._moveRight();
     });
   }
 
-  render() {
+  get content() {
     return (
-      <ScreenView
-        ref='newTrackerView'
-        posX={this.props.posX}
-        content={
-          <View style={commonStyles.flexFilled}>
-            <Animated.View
-              shouldRasterizeIOS={true}
-              style={[
-                styles.slideContainer, {
-                  opacity: this._newSlideOp,
-                  transform: [{
-                      translateX: this._newSlideX.interpolate({
-                        inputRange: [-1, 0, 1],
-                        outputRange: [-400, 0, 400]
-                    })
-                  }]
-                }
-              ]}>
-              <NewTrackerSlide
-                ref='newTrackerSlide'
-                typeId={this.state.trackerTypeId}
-                onTypeChange={this._onTypeChange.bind(this)}
-              />
-            </Animated.View>
-            <Animated.View
-              shouldRasterizeIOS={true}
-              style={[
-                styles.slideContainer, {
-                  opacity: this._typeOp,
-                  transform: [{
-                      translateX: this._typeSlideX.interpolate({
-                        inputRange: [-1, 0, 1],
-                        outputRange: [-400, 0, 400]
-                    })
-                  }]
-                }
-              ]}>
-              <TrackerTypesSlide ref='typeSlide' />
-            </Animated.View>
-          </View>
-        } />
+      <View style={commonStyles.flexFilled}>
+        <ScreenView
+          ref='newTracker'
+          posX={0}
+          content={
+            <NewTrackerSlide
+              ref='newTrackerSlide'
+              typeId={this.state.trackerTypeId}
+              onTypeChange={this._onTypeChange.bind(this)}
+            />
+          }
+        />
+        <ScreenView
+          ref='trackerType'
+          posX={1}
+          content={
+            <TrackerTypesSlide
+              ref='typeSlide'
+            />
+          }
+        />
+      </View>
     );
   }
 };

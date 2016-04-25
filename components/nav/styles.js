@@ -33,10 +33,14 @@ const styles = StyleSheet.create({
   },
   navBarLeftButton: {
     paddingLeft: 20,
+    paddingRight: 10,
+    paddingBottom: 10,
     marginTop: 0
   },
   navBarRightButton: {
     paddingRight: 20,
+    paddingLeft: 10,
+    paddingBottom: 10,
     marginTop: 0
   },
   navBarButtonText: {

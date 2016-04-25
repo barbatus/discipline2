@@ -85,13 +85,15 @@ class MainScreen extends Component {
   // New tracker events.
 
   async _onAccept(tracker) {
-    this._setMainViewBtns();
-
     this.trackersView.addTracker(tracker, () => {
+      this._setMainViewBtns();
+
       this.trackersView.setOpacity(0, false);
       this.trackersView.moveRight(true);
       this.newTrackerView.setOpacity(0, true, () => {
-        this.newTrackerView.moveRight(false);
+        this.newTrackerView.moveRight(false, () => {
+          this.newTrackerView.setOpacity(1);
+        });
       });
       this.trackersView.setOpacity(1, true);
     });

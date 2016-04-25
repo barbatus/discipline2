@@ -39,10 +39,10 @@ const SumTrackerSlide = React.createClass({
       'keyboardWillHide', this._keyboardWillHide);
   },
 
-  componentWillUnmount() {
-    DeviceEventEmitter.removeListener(
-      'keyboardWillHide', this._keyboardWillHide);
-  },
+  // componentWillUnmount() {
+  //   DeviceEventEmitter.removeListener(
+  //     'keyboardWillHide', this._keyboardWillHide);
+  // },
 
   showEdit(callback) {
     return this.refs.slide.showEdit(callback);
@@ -100,6 +100,7 @@ const SumTrackerSlide = React.createClass({
              <TextInput
               ref='added'
               placeholder='Enter value'
+              placeholderTextColor={trackerDef.hintText.color}
               style={styles.sumInput}
               onChangeText={added => this._onChangeText(added)}
               value={this.state.added}
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   sumInput: {
-    height: 50,
+    height: 40,
     width: width - 40,
     paddingRight: 20,
     fontSize: 42,

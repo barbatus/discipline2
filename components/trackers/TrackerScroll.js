@@ -25,50 +25,42 @@ const TrackerRenderMixin = require('./TrackerRenderMixin');
 const TrackerScroll = React.createClass({
   mixins: [TrackerRenderMixin],
 
-  getInitialState() {
+  componentWillMount() {
     this._opacity = new Animated.Value(0);
-
-    return {
-      trackers: []
-    }
   },
 
   getDefaultProps() {
     return {
-      index: 0
+      index: 0,
+      trackers: []
     }
   },
 
-  componentWillMount() {
-    this._loadInitialState();
-  },
-
-  hide() {
-    this._opacity.setValue(0);
+  hide(callback) {
+    Animated.timing(this._opacity, {
+      duration: 500,
+      toValue: 0
+    }).start(callback);
   },
 
   setOpacity(opacity) {
     this._opacity.setValue(opacity);
   },
 
-  show(index, callback) {
-    this._opacity.setValue(1);
-    this.refs.scroll.scrollTo(index, callback, false);
+  scrollTo(index, callback, animated) {
+    this.refs.scroll.scrollTo(index, callback, animated);
   },
 
-  async _loadInitialState() {
-    let hasTestData = await depot.hasTestData();
-    if (!hasTestData) {
-      await depot.initTestData();
-    }
-    let trackers = await Trackers.getAll();
-    this.setState({
-      trackers: trackers
-    });
+  show(callback) {
+    this._opacity.setValue(1);
+  },
+
+  isShown() {
+    return this._opacity._value === 1;
   },
 
   render() {
-    let trackerSlides = this.state.trackers.map(
+    let trackerSlides = this.props.trackers.map(
       tracker => {
         return this.renderTracker(tracker, 0.5);
       });

@@ -31,6 +31,9 @@ const grads = [{
   }, {
     start: '#B454A6',
     end: '#E68C7D'
+  }, {
+    start: '#E68C7D',
+    end: '#60C2E3'
   }
 ];
 

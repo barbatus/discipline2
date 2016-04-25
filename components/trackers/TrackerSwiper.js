@@ -16,6 +16,8 @@ const Swiper = require('../scrolls/Swiper');
 
 const Trackers = require('../../trackers/Trackers');
 
+const { ScaleResponder } = require('./responders');
+
 const { commonStyles } = require('../styles/common');
 
 const TrackerRenderMixin = require('./TrackerRenderMixin');
@@ -30,56 +32,49 @@ const TrackerSwiper = React.createClass({
     return {
       scale: new Animated.Value(1),
       moveY: new Animated.Value(0),
-      index: 0,
+      index: 0
+    }
+  },
+
+  getDefaultProps() {
+    return {
       trackers: []
     }
   },
 
   componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return gestureState.dy < -20;
-      },
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return gestureState.dy < -20;
-      },
-      onPanResponderMove: (e: Object, gestureState: Object) => {
-        if (gestureState.vy > 0) return;
-
-        let dy = Math.abs(gestureState.dy) * 2;
-        let scale = (screenHeight - dy) / screenHeight;
-        scale = Math.max(0.5, scale);
-
-        this.state.scale.setValue(scale);
-
-        if (this.props.onMoveUp) {
-          this.props.onMoveUp(scale - 0.5);
-        }
-      },
-      onPanResponderGrant: (e: Object, gestureState: Object) => {
-        if (this.props.onMoveUpStart) {
-          this.props.onMoveUpStart();
-        }
-      },
-      onPanResponderRelease: (e: Object, gestureState: Object) => {
+    let scaleResponder = new ScaleResponder(screenHeight);
+    scaleResponder.subscribe(scale => {
+      this.state.scale.setValue(scale);
+      if (this.props.onMoveUp) {
+        this.props.onMoveUp(scale - 0.5);
+      }
+    },
+    this.props.onMoveUpStart,
+    () => {
+      if (this.state.scale._value <= 0.5) {
         if (this.props.onMoveUpDone) {
           this.props.onMoveUpDone();
         }
+        return;
       }
+
+      Animated.timing(this.state.scale, {
+        duration: 200,
+        toValue: 0.5
+      }).start(this.props.onMoveUpDone);
     });
 
-    this._loadInitialState();
+    this._scaleHandlers = scaleResponder.panHandlers;
   },
 
   currentTracker() {
     let index = this.refs.swiper.getIndex();
-    return this.state.trackers[index];
+    return this.props.trackers[index];
   },
 
   showEdit(callback) {
-    this.setState({
-      scrollEnabled: false
-    }, () => {
+    this._startEdit(() => {
       let trackerId = this.currentTracker()._id;
       this.refs[trackerId].showEdit(callback);
     });
@@ -111,13 +106,13 @@ const TrackerSwiper = React.createClass({
     return this.refs.swiper.getPrevIndex();
   },
 
-  hide() {
+  hide(callback) {
     this.state.moveY.setValue(1);
   },
 
   show(index, callback) {
     this.state.moveY.setValue(0);
-    this.refs.swiper.scrollTo(index, () => {
+    this.scrollTo(index, () => {
       Animated.timing(this.state.scale, {
         duration: 500,
         toValue: 1
@@ -125,50 +120,40 @@ const TrackerSwiper = React.createClass({
     }, false);
   },
 
-  async addTracker(tracker, callback) {
-    tracker = await Trackers.addAt(
-      tracker, this.getNextIndex());
-
-    let trackers = this.state.trackers;
-    let nextInd = this.getNextIndex();
-    trackers.splice(nextInd, 0, tracker);
-    this.setState({
-      trackers: trackers
-    }, () => {
-      this.refs.swiper.scrollTo(nextInd, () => {
-        this._onCancelEdit(callback);
-      });
-    });
-
-    return tracker;
+  isShown() {
+    return this.state.moveY._value === 0;
   },
 
-  async removeTracker(callback) {
+  scrollTo(index, callback, animated) {
+    this.refs.swiper.scrollTo(index, callback, animated);
+  },
+
+  addTracker(callback) {},
+
+  removeTracker(callback) {
     let trackerId = this.currentTracker()._id;
-    await Trackers.remove(this.currentTracker());
 
-    if (callback) {
-      callback();
-    }
-
-    // TODO: optimize.
     this.refs[trackerId].collapse(() => {
       let index = this.getIndex();
-      let setTrackers = () => {
-        let trackers = this.state.trackers
-        trackers.splice(index, 1);
-        this.setState({
-          trackers: trackers,
-          scrollEnabled: true
-        });
-      };
       if (index) {
-        this.refs.swiper.scrollTo(
-          this.getPrevIndex(), setTrackers);
+        this.scrollTo(this.getPrevIndex(),
+          this._endEdit.bind(this, callback));
         return;
       }
-      setTrackers();
+      this._endEdit(callback);
     });
+  },
+
+  _startEdit(callback) {
+    this.setState({
+      scrollEnabled: false
+    }, callback);
+  },
+
+  _endEdit(callback) {
+    this.setState({
+      scrollEnabled: true
+    }, callback);
   },
 
   _onCancelEdit(callback) {
@@ -180,28 +165,8 @@ const TrackerSwiper = React.createClass({
     }
   },
 
-  async _loadInitialState() {
-    let hasTestData = await depot.hasTestData();
-    if (!hasTestData) {
-      await depot.initTestData();
-    }
-    let trackers = await Trackers.getAll();
-
-    if (trackers.length) {
-      this.setState({
-        trackers: [trackers[0]]
-      }, () => {
-        setTimeout(() => {
-          this.setState({
-            trackers: trackers
-          });
-        });
-      });
-    }
-  },
-
   render() {
-    let trackerSlides = this.state.trackers.map(
+    let trackerSlides = this.props.trackers.map(
       tracker => {
         return this.renderTracker(tracker, 1);
       });
@@ -232,7 +197,7 @@ const TrackerSwiper = React.createClass({
               })
             }
           ]
-        }]} {...this._panResponder.panHandlers}>
+        }]} {...this._scaleHandlers}>
         {swiperView}
       </Animated.View>
     );

@@ -15,7 +15,8 @@ const {
 
 const {
   trackerStyles,
-  propsStyles
+  propsStyles,
+  trackerDef
 } = require('../../styles/trackerStyles');
 
 const { TrackerType } = require('../../../../depot/consts');
@@ -49,12 +50,6 @@ const TrackerEditView = React.createClass({
       title: this.props.title
     });
   },
-
-  // toggleView() {
-  //   this.refs.title.blur();
-  //   this.state.opacity.setValue(
-  //     this.state.opacity._value ? 0 : 1);
-  // },
 
   setOpacity(opacity: Number) {
     this.state.opacity.setValue(
@@ -138,6 +133,7 @@ const TrackerEditView = React.createClass({
             <TextInput
               ref='title'
               placeholder='Add a title'
+              placeholderTextColor={trackerDef.hintText.color}
               style={[propsStyles.inputTitle, styles.inputTitle]}
               onChangeText={title => this.setState({title})}
               value={this.state.title}

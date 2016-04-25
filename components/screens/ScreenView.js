@@ -8,6 +8,8 @@ const {
   Animated
 } = React;
 
+const Easing = require('Easing');
+
 const { commonStyles } = require('../styles/common');
 
 class ScreenView extends Component {
@@ -15,9 +17,8 @@ class ScreenView extends Component {
     super(props);
 
     let posX = props.posX || 0;
-    let opacity = posX === 0 ? 1 : 0;
     this._moveX = new Animated.Value(posX);
-    this._opacity = new Animated.Value(opacity);
+    this._opacity = new Animated.Value(1);
   }
 
   get posX() {
@@ -26,6 +27,64 @@ class ScreenView extends Component {
 
   get opacity() {
     return this._opacity;
+  }
+
+  moveLeft(instantly, callback) {
+    if (_.isFunction(instantly)) {
+      callback = instantly;
+      instantly = false;
+    }
+
+    let value = this.posX._value;
+    if (instantly) {
+      this.posX.setValue(value - 1);
+      if (callback) {
+        callback();
+      }
+      return;
+    }
+
+    Animated.timing(this.posX, {
+      duration: 500,
+      toValue: value - 1,
+      easing: Easing.inOut(Easing.linear)
+    }).start(callback);
+  }
+
+  moveRight(instantly, callback) {
+    if (_.isFunction(instantly)) {
+      callback = instantly;
+      instantly = false;
+    }
+
+    let value = this.posX._value;
+    if (instantly) {
+      this.posX.setValue(value + 1);
+      if (callback) {
+        callback();
+      }
+      return;
+    }
+
+    Animated.timing(this.posX, {
+      duration: 500,
+      toValue: value + 1,
+      easing: Easing.inOut(Easing.linear)
+    }).start(callback);
+  }
+
+  setOpacity(value, animated, callback) {
+    if (animated) {
+      Animated.timing(this.opacity, {
+        duration: 1000,
+        toValue: value
+      }).start(callback);
+    } else {
+      this.opacity.setValue(value);
+      if (callback) {
+        callback();
+      }
+    }
   }
 
   render() {
@@ -43,7 +102,7 @@ class ScreenView extends Component {
             }]
           }
         ]}>
-        {this.props.content}
+        {this.props.content || this.content}
       </Animated.View>
     );
   }

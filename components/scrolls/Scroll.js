@@ -13,39 +13,20 @@ const {
 
 const { commonStyles } = require('../styles/common');
 
+const BaseScroll = require('./BaseScroll');
+
 const Scroll = React.createClass({
   propTypes: {
-    slides: React.PropTypes.node.isRequired,
-    horizontal: React.PropTypes.bool,
-    style: View.propTypes.style,
-    pagingEnabled: React.PropTypes.bool,
-    showsHorizontalScrollIndicator: React.PropTypes.bool,
-    bounces: React.PropTypes.bool,
-    scrollsToTop: React.PropTypes.bool,
-    removeClippedSubviews: React.PropTypes.bool,
-    automaticallyAdjustContentInsets: React.PropTypes.bool,
-    keyboardDismissMode: React.PropTypes.string
+    slides: React.PropTypes.array.isRequired,
+    slideWidth: React.PropTypes.number.isRequired,
+    scrollEnabled: React.PropTypes.bool
   },
 
   getDefaultProps() {
     return {
       slides: [],
-      horizontal: true,
-      pagingEnabled: false,
-      showsHorizontalScrollIndicator: false,
-      bounces: false,
-      scrollsToTop: false,
-      removeClippedSubviews: true,
-      automaticallyAdjustContentInsets: false,
-      keyboardDismissMode: 'on-drag'
+      scrollEnabled: true
     }
-  },
-
-  getInitialState() {
-    this._onScrollToCb = null;
-    this._isScrolling = false;
-
-    return {};
   },
 
   getSize() {
@@ -53,47 +34,16 @@ const Scroll = React.createClass({
   },
 
   scrollTo(index, callback, animated) {
-    let { slideWidth } = this.props;
-
-    let size = this.getSize();
-    if (this._isScrolling || size <= 1) return;
-
-    this._onScrollToCb = callback;
-    this._isScrolling = true;
-    let offsetX = Math.min(index, size - 1) * slideWidth;
-    this.refs.scrollView.scrollTo({
-      x: offsetX,
-      y: 0,
-      animated: animated !== false
-    });
-
-    if (animated === false) {
-      this._endScrolling();
-    }
-  },
-
-  _onScrollEnd(event) {
-    this._endScrolling();
-  },
-
-  _endScrolling() {
-    this._isScrolling = false;
-
-    if (this._onScrollToCb) {
-      this._onScrollToCb();
-      this._onScrollToCb = null;
-    }
+    this.refs.scroll.scrollTo(index, callback, animated);
   },
 
   _onSlide(index) {
-    let { slideWidth} = this.props;
-
-    let offset = slideWidth * index;
-    this.refs.scrollView.scrollTo({x: offset});
-
-    if (this.props.onSlideClick) {
-      this.props.onSlideClick(index);
-    }
+    this.scrollTo(index, () => {
+      console.log('onSlideClick');
+      if (this.props.onSlideClick) {
+        this.props.onSlideClick(index);
+      }
+    });
   },
 
   render() {
@@ -110,7 +60,6 @@ const Scroll = React.createClass({
       </View>
     );
 
-    let offset = slideWidth * index;
     let scrollStyle = [
       commonStyles.flexFilled,
       {
@@ -120,15 +69,15 @@ const Scroll = React.createClass({
     ];
 
     return (
-      <View style={commonStyles.flexFilled}>
-        <ScrollView ref='scrollView'
-          horizontal={true}
-          contentContainerStyle={scrollStyle}
-          contentOffset={{x: offset}}
-          onMomentumScrollEnd={this._onScrollEnd}>
-          {slides}
-        </ScrollView>
-      </View>
+      <BaseScroll
+        ref='scroll'
+        slides={slides}
+        pagingEnabled={false}
+        style={commonStyles.flexFilled}
+        slideWidth={this.props.slideWidth}
+        scrollEnabled={this.props.scrollEnabled}
+        contentStyle={scrollStyle}>
+      </BaseScroll>
     );
   }
 });

@@ -3,6 +3,7 @@
 const React = require('react-native');
 const {
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   Image,
   Text,
@@ -16,13 +17,28 @@ const { slideStyles } = require('../styles/slideStyles');
 
 const { TrackerType } = require('../../../depot/consts');
 
+const { commonStyles } = require('../../styles/common');
+
 class TrackerTypesSlide extends Component {
   constructor(props) {
     super(props);
-    this._types = TrackerType.symbols();
     this.state = {
-      type: this._types[0]
+      type: this.types[0]
     };
+  }
+
+  get types() {
+    return TrackerType.symbols();
+  }
+
+  reset() {
+    this.setState({
+      type: this.types[0]
+    });
+  }
+
+  get typeId() {
+    return this.state.type.valueOf();
   }
 
   _onTypeChosen(type) {
@@ -31,31 +47,30 @@ class TrackerTypesSlide extends Component {
     });
   }
 
-  get typeId() {
-    return this.state.type.valueOf();
-  }
-
   _renderTypes() {
     return (
       <View style={styles.types}>
         {
-          this._types.map(type => {
+          this.types.map(type => {
             return (
-                <TouchableOpacity
-                key={type.valueOf()}
-                onPress={this._onTypeChosen.bind(this, type)}
-                style={this.state.type === type ?
-                  [styles.type, styles.selected] : styles.type}>
-                <View style={styles.typeIconContainer}>
-                  <Image source={getIcon(type.valueOf())}
-                    style={[styles.typeIcon]} />
+                <TouchableWithoutFeedback
+                  key={type.valueOf()}
+                  style={commonStyles.flexFilled}
+                  onPress={this._onTypeChosen.bind(this, type)}>
+                <View
+                  style={this.state.type === type ?
+                    [styles.type, styles.selected] : styles.type}>
+                    <View style={styles.typeIconContainer}>
+                      <Image source={getIcon(type.valueOf())}
+                        style={[styles.typeIcon]} />
+                    </View>
+                    <View style={styles.typeTitleContainer}>
+                      <Text style={styles.typeTitle}>
+                        {type.title}
+                      </Text>
+                    </View>
                 </View>
-                <View style={styles.typeTitleContainer}>
-                  <Text style={styles.typeTitle}>
-                    {type.title}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             )
           })
         }

@@ -80,10 +80,7 @@ const TrackerSlide = React.createClass({
           this._moveView.setValue(1);
           this._onAnimationDone(callback);
         });
-
-      return true;
     }
-    return false;
   },
 
   saveEdit(callback) {
@@ -94,25 +91,24 @@ const TrackerSlide = React.createClass({
       let icon = UserIconsStore.get(iconId);
       this.props.tracker.title = title;
       this.props.tracker.icon = icon;
-      this.props.tracker.save();
+      let saved = this.props.tracker.save();
 
-      this.setState({
-        title: this.refs.editView.getTitle(),
-        iconId: this.refs.editView.getIconId()
-      });
-
-      this._moveView.setValue(0);
-
-      this._animateFlip(0, 1, 0,
-        value => value <= 0.5, () => {
-          this._moveEdit.setValue(1);
-          this.refs.editView.reset();
-          this._onAnimationDone(callback);
+      if (saved) {
+        this.setState({
+          title: this.refs.editView.getTitle(),
+          iconId: this.refs.editView.getIconId()
         });
 
-      return true;
+        this._moveView.setValue(0);
+
+        this._animateFlip(0, 1, 0,
+          value => value <= 0.5, () => {
+            this._moveEdit.setValue(1);
+            this.refs.editView.reset();
+            this._onAnimationDone(callback);
+          });
+      }
     }
-    return false;
   },
 
   cancelEdit(callback) {
@@ -127,10 +123,7 @@ const TrackerSlide = React.createClass({
           this.refs.editView.reset();
           this._onAnimationDone(callback);
         });
-
-      return true;
     }
-    return false;
   },
 
   collapse(callback) {

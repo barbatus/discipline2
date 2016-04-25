@@ -77,8 +77,8 @@ class TableModel {
   }
 
   updateById(rowId, rowData) {
-    let removedIds = this.where({ _id: rowId }).update(rowData);
-    return removedIds.length != 0;
+    let updatedIds = this.where({ _id: rowId }).update(rowData);
+    return updatedIds.length !== 0;
   }
 
   remove() {
