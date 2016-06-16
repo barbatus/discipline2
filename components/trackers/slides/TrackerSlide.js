@@ -1,7 +1,8 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -11,47 +12,62 @@ const {
   StyleSheet,
   Animated,
   SwitchIOS
-} = React;
+} from 'react-native';
 
-const Easing = require('Easing');
+import Easing from 'Easing';
 
-const NativeMethodsMixin = require('NativeMethodsMixin');
-
-const Dimensions = require('Dimensions');
-const { width } = Dimensions.get('window');
-
-const {
+import {
   trackerStyles,
   propsStyles
-} = require('../styles/trackerStyles');
+} from '../styles/trackerStyles';
 
-const TrackerView = require('./basic/TrackerView');
-const TrackerEditView = require('./basic/TrackerEditView');
+import TrackerView from './basic/TrackerView';
+import TrackerEditView from './basic/TrackerEditView';
 
-const UserIconsStore = require('../../../icons/UserIconsStore');
+import UserIconsStore from '../../../icons/UserIconsStore';
 
-const TrackerSlide = React.createClass({
-  mixins: [NativeMethodsMixin],
+export default class TrackerSlide extends Component {
+  constructor(props) {
+    super(props);
 
-  getInitialState() {
     this._isAnimated = false;
     this._moveView = new Animated.Value(0);
     this._moveEdit = new Animated.Value(1);
-    return {
-      iconId: this.props.tracker.iconId,
-      title: this.props.tracker.title,
-      scale: new Animated.Value(this.props.scale),
+
+    let { tracker, scale } = props;
+    this.state = {
+      iconId: tracker.iconId,
+      title: tracker.title,
+      scale: new Animated.Value(scale),
       rotY: new Animated.Value(0)
     };
-  },
+  }
+
+  componentWillMount() {
+    this.onChange();
+    let { tracker } = this.props;
+    tracker.onChange(this.onChange.bind(this));
+  }
+
+  onChange() {
+    throw new Error('onChange is not implemented');
+  }
+
+  get controls() {
+    throw new Error('controls is not implemented');
+  }
+
+  get footer() {
+    throw new Error('footer is not implemented');
+  }
 
   _animateFlip(stopVal, op1, op2, opCondition, callback) {
     this.state.rotY.removeAllListeners();
     let id = this.state.rotY.addListener(({ value }) => {
       if (opCondition(value)) {
         this.state.rotY.removeListener(id);
-        this.refs.trackerView.setOpacity(op1);
-        this.refs.editView.setOpacity(op2);
+        this.refs.trackerView.opacity = op1;
+        this.refs.editView.opacity = op2;
       }
     });
 
@@ -60,14 +76,14 @@ const TrackerSlide = React.createClass({
       toValue: stopVal,
       easing: Easing.inOut(Easing.sin)
     }).start(callback);
-  },
+  }
 
   _onAnimationDone(callback) {
     this._isAnimated = false;
     if (callback) {
       callback();
     }
-  },
+  }
 
   showEdit(callback) {
     if (!this._isAnimated) {
@@ -81,13 +97,13 @@ const TrackerSlide = React.createClass({
           this._onAnimationDone(callback);
         });
     }
-  },
+  }
 
   saveEdit(callback) {
     if (!this._isAnimated) {
       this._isAnimated = true;
-      let title = this.refs.editView.getTitle();
-      let iconId = this.refs.editView.getIconId();
+      let title = this.refs.editView.title;
+      let iconId = this.refs.editView.iconId;
       let icon = UserIconsStore.get(iconId);
       this.props.tracker.title = title;
       this.props.tracker.icon = icon;
@@ -95,8 +111,8 @@ const TrackerSlide = React.createClass({
 
       if (saved) {
         this.setState({
-          title: this.refs.editView.getTitle(),
-          iconId: this.refs.editView.getIconId()
+          title: title,
+          iconId: iconId
         });
 
         this._moveView.setValue(0);
@@ -109,7 +125,7 @@ const TrackerSlide = React.createClass({
           });
       }
     }
-  },
+  }
 
   cancelEdit(callback) {
     if (!this._isAnimated) {
@@ -124,7 +140,7 @@ const TrackerSlide = React.createClass({
           this._onAnimationDone(callback);
         });
     }
-  },
+  }
 
   collapse(callback) {
     Animated.timing(this.state.scale, {
@@ -136,7 +152,7 @@ const TrackerSlide = React.createClass({
         callback();
       }
     });
-  },
+  }
 
   render() {
     return (
@@ -150,7 +166,7 @@ const TrackerSlide = React.createClass({
         <View style={trackerStyles.container}>
           <TrackerView
             ref='trackerView'
-            opacity={1}
+            shown={true}
             style={{
               transform: [
                 {
@@ -169,13 +185,14 @@ const TrackerSlide = React.createClass({
             }}
             iconId={this.state.iconId}
             title={this.state.title}
-            controls={this.props.controls}
-            footer={this.props.footer}
+            controls={this.controls}
+            footer={this.footer}
+            onClick={this.onClick}
             onEdit={this.props.onEdit}
           />
           <TrackerEditView
             ref='editView'
-            opacity={0}
+            shown={false}
             style={{
               transform: [
                 {
@@ -203,6 +220,4 @@ const TrackerSlide = React.createClass({
       </Animated.View>
     );
   }
-});
-
-module.exports = TrackerSlide;
+};

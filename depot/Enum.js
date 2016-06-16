@@ -23,7 +23,7 @@ class EnumSymbol {
   }
 }
 
-class Enum {
+export default class Enum {
   constructor(enumLiterals) {
     for (let key in enumLiterals) {
       this[key] = new EnumSymbol(key, enumLiterals[key]);
@@ -56,5 +56,3 @@ class Enum {
     return this[key];
   }
 }
-
-module.exports = Enum;

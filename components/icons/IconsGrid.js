@@ -1,20 +1,20 @@
 'use strict';
 
-const React = require('react-native');
+import React from 'react';
 
-const Dimensions = require('Dimensions');
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
-const UserIconsStore = require('../../icons/UserIconsStore');
+import UserIconsStore from '../../icons/UserIconsStore';
 
-const {
+import {
   TouchableHighlight,
   TouchableOpacity,
   View,
   StyleSheet,
   ListView,
   Image
-} = React;
+} from 'react-native';
 
 let IconsGrid = React.createClass({
     getInitialState: function() {

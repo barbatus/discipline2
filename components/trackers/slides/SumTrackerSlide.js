@@ -1,7 +1,8 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -10,91 +11,58 @@ const {
   TextInput,
   StyleSheet,
   DeviceEventEmitter
-} = React;
+} from 'react-native';
 
-const TimerMixin = require('react-timer-mixin');
-
-const {
+import {
   trackerDef,
   trackerStyles
-} = require('../styles/trackerStyles');
-const TrackerSlide = require('./TrackerSlide');
+} from '../styles/trackerStyles';
 
-const SumTrackerSlide = React.createClass({
-  mixins: [TimerMixin],
+import TrackerSlide from './TrackerSlide';
 
-  getInitialState() {
-    this._summing = false;
+import Keyboard from '../../../utils/keyboard';
 
-    return {
-      iconId: this.props.tracker.iconId,
-      title: this.props.tracker.title,
-      sum: 0
-    };
-  },
-
-  componentWillMount() {
-    this._loadInitialState();
-    DeviceEventEmitter.addListener(
-      'keyboardWillHide', this._keyboardWillHide);
-  },
-
-  // componentWillUnmount() {
-  //   DeviceEventEmitter.removeListener(
-  //     'keyboardWillHide', this._keyboardWillHide);
-  // },
-
-  showEdit(callback) {
-    return this.refs.slide.showEdit(callback);
-  },
+export default class SumTrackerSlide extends TrackerSlide {
+  cancelEdit(callback) {
+    super.cancelEdit(callback);
+    Keyboard.dismiss();
+  }
 
   saveEdit(callback) {
-    return this.refs.slide.saveEdit(callback);
-  },
+    super.saveEdit(callback);
+    Keyboard.dismiss();
+  }
 
-  cancelEdit(callback) {
-    return this.refs.slide.cancelEdit(callback);
-  },
+  showEdit(callback) {
+    super.showEdit(callback);
+    Keyboard.dismiss();
+  }
 
   collapse(callback) {
-    this.refs.slide.collapse(callback);
-  },
+    super.collapse(callback);
+    Keyboard.dismiss();
+  }
 
-  _loadInitialState: async function() {
-    let tracker = this.props.tracker;
-    let sum = await tracker.getValue();
-    this.setState({ sum });
-  },
+  onChange() {
+    let { tracker } = this.props;
+    this.setState({
+      iconId: tracker.iconId,
+      title: tracker.title,
+      added: null,
+      sum: tracker.value
+    });
+  }
 
-  _getCheckStyle() {
-    return this.state.checked ?
-      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
-        trackerStyles.checkBtn;
-  },
+  onClick() {
+    Keyboard.dismiss();
+  }
 
-  _onPlus: function() {
-    this.refs.added.blur();
-    this._summing = true;
-  },
-
-  _keyboardWillHide: async function() {
-    if (this._summing) {
-      let tracker = this.props.tracker;
-      let added = parseFloat(this.state.added);
-      await tracker.click(added);
-      let sum = await tracker.getValue();
-      this.setState({sum: sum, added: ''});
-      this._summing = false;
-    }
-  },
-
-  _onChangeText(sumAdded) {
-    this.setState({added: sumAdded});
-  },
-
-  _getControls() {
+  get controls() {
     return (
-      <View style={[trackerStyles.controls, styles.controlsContainer]}>
+      <View style={[
+        trackerStyles.controls,
+        styles.controlsContainer
+      ]}>
         <View style={styles.controls}>
           <View style={styles.inputContainer}>
              <TextInput
@@ -104,9 +72,9 @@ const SumTrackerSlide = React.createClass({
               style={styles.sumInput}
               onChangeText={added => this._onChangeText(added)}
               value={this.state.added}
-              onSubmitEditing={this._onPlus}
+              onSubmitEditing={this._onPlus.bind(this)}
             />
-            <TouchableOpacity onPress={this._onPlus}>
+            <TouchableOpacity onPress={this._onPlus.bind(this)}>
               <Image
                 source={getIcon('plus_sm')}
                 style={[trackerStyles.circleBtnSm, styles.circleBtnSm]} />
@@ -121,29 +89,33 @@ const SumTrackerSlide = React.createClass({
         </View>
       </View>
     );
-  },
+  }
 
-  _getFooter() {
+  get footer() {
     return (
       <Text style={trackerStyles.footerText}>
         Shake to undo
       </Text>
     );
-  },
-
-  render() {
-    return (
-      <TrackerSlide
-        ref='slide'
-        scale={this.props.scale}
-        tracker={this.props.tracker}
-        controls={this._getControls()}
-        footer={this._getFooter()}
-        onEdit={this.props.onEdit}
-        onRemove={this.props.onRemove} />
-    );
   }
-});
+
+  _getCheckStyle() {
+    return this.state.checked ?
+      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
+        trackerStyles.checkBtn;
+  }
+
+  _onPlus() {
+    Keyboard.dismiss();
+    let tracker = this.props.tracker;
+    let added = parseFloat(this.state.added);
+    tracker.click(added);
+  }
+
+  _onChangeText(sumAdded) {
+    this.setState({ added: sumAdded });
+  }
+};
 
 const width = trackerDef.container.width - 40;
 
@@ -194,5 +166,3 @@ const styles = StyleSheet.create({
     fontWeight: '300'
   }
 });
-
-module.exports = SumTrackerSlide;

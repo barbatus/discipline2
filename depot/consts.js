@@ -1,8 +1,10 @@
+ /* @flow */
+
 'use strict';
 
-const Enum = require('./Enum');
+import Enum from './Enum';
 
-const TrackerType = new Enum({
+export const TrackerType = new Enum({
   GOAL_TRACKER: {
     title: 'Daily Goal',
     value: 'goal',
@@ -24,7 +26,3 @@ const TrackerType = new Enum({
           'e.g, an amount you spend on lunch.'
   }
 });
-
-module.exports = {
-  TrackerType
-};

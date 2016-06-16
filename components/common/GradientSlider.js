@@ -1,16 +1,12 @@
 'use strict';
 
-const React = require('react-native');
-const {
-  StyleSheet,
-  View,
-  Component,
-  Animated
-} = React;
+import React, { Component } from 'react';
 
-const LinearGradient = require('react-native-linear-gradient');
+import { StyleSheet, View, Animated } from 'react-native';
 
-const Dimensions = require('Dimensions');
+import LinearGradient from 'react-native-linear-gradient';
+
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
 const grads = [{

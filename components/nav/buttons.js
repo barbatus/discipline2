@@ -1,14 +1,10 @@
 'use strict';
 
-const React = require('react-native');
-const {
-  TouchableOpacity,
-  Text,
-  Image,
-  Component
-} = React;
+import React, { Component } from 'react';
 
-const styles = require('./styles');
+import { TouchableOpacity, Text, Image } from 'react-native';
+
+import styles from './styles';
 
 class NavButton extends Component {
   render() {

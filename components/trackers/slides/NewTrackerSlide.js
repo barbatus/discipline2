@@ -1,23 +1,23 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   View,
   Image,
   Text,
   TextInput,
   StyleSheet,
-  Animated,
-  Component
-} = React;
+  Animated
+} from 'react-native';
 
-const { trackerStyles } = require('../styles/trackerStyles');
+import { trackerStyles } from '../styles/trackerStyles';
 
-const TrackerEditView = require('./basic/TrackerEditView');
+import TrackerEditView from './basic/TrackerEditView';
 
-const consts = require('../../../depot/consts');
+import consts from '../../../depot/consts';
 
-class NewTrackerSlide extends Component {
+export default class NewTrackerSlide extends Component {
   constructor(props) {
     super(props);
   }
@@ -25,9 +25,9 @@ class NewTrackerSlide extends Component {
   get tracker() {
     let editView = this.refs.editView;
     return {
-      title: editView.getTitle(),
-      typeId: editView.getTypeId(),
-      iconId: editView.getIconId()
+      title: editView.title,
+      typeId: editView.typeId,
+      iconId: editView.iconId
     };
   }
 
@@ -54,8 +54,8 @@ class NewTrackerSlide extends Component {
 const styles = StyleSheet.create({
   editView: {
     opacity: 1,
-    transform: [{rotateY: '0deg'}]
+    transform: [{
+      rotateY: '0deg'
+    }]
   }
 });
-
-module.exports = NewTrackerSlide;

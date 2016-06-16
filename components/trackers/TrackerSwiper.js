@@ -1,46 +1,40 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   View,
   ListView,
   StyleSheet,
-  Component,
   Text,
   Animated,
-  PanResponder,
-  Dimensions
-} = React;
+  PanResponder
+} from 'react-native';
 
-const Swiper = require('../scrolls/Swiper');
+import Swiper from '../scrolls/Swiper';
 
-const Trackers = require('../../trackers/Trackers');
+import Trackers from '../../trackers/Trackers';
 
-const { ScaleResponder } = require('./responders');
+import { ScaleResponder } from './responders';
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
-const TrackerRenderMixin = require('./TrackerRenderMixin');
+import TrackerRenderer from './TrackerRenderer';
 
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 const screenHeight = window.height - 60;
 
-const TrackerSwiper = React.createClass({
-  mixins: [TrackerRenderMixin],
+export default class TrackerSwiper extends TrackerRenderer {
+  constructor(props) {
+    super(props);
 
-  getInitialState() {
-    return {
+    this.state = {
       scale: new Animated.Value(1),
       moveY: new Animated.Value(0),
       index: 0
-    }
-  },
-
-  getDefaultProps() {
-    return {
-      trackers: []
-    }
-  },
+    };
+  }
 
   componentWillMount() {
     let scaleResponder = new ScaleResponder(screenHeight);
@@ -66,49 +60,48 @@ const TrackerSwiper = React.createClass({
     });
 
     this._scaleHandlers = scaleResponder.panHandlers;
-  },
+  }
 
-  currentTracker() {
-    let index = this.refs.swiper.getIndex();
-    return this.props.trackers[index];
-  },
+  get current() {
+    return this.props.trackers[this.index];
+  }
 
   showEdit(callback) {
     this._startEdit(() => {
-      let trackerId = this.currentTracker()._id;
+      let trackerId = this.current.id;
       this.refs[trackerId].showEdit(callback);
     });
-  },
+  }
 
   saveEdit(callback) {
-    let trackerId = this.currentTracker()._id;
+    let trackerId = this.current.id;
     return this.refs[trackerId].saveEdit(() => {
       this._onCancelEdit(callback);
     });
-  },
+  }
 
   cancelEdit(callback) {
-    let trackerId = this.currentTracker()._id;
+    let trackerId = this.current.id;
     return this.refs[trackerId].cancelEdit(() => {
       this._onCancelEdit(callback);
     });
-  },
+  }
 
-  getIndex() {
+  get index() {
     return this.refs.swiper.getIndex();
-  },
+  }
 
-  getNextIndex() {
+  get nextIndex() {
     return this.refs.swiper.getNextIndex();
-  },
+  }
 
-  getPrevIndex() {
+  get prevIndex() {
     return this.refs.swiper.getPrevIndex();
-  },
+  }
 
   hide(callback) {
     this.state.moveY.setValue(1);
-  },
+  }
 
   show(index, callback) {
     this.state.moveY.setValue(0);
@@ -118,55 +111,48 @@ const TrackerSwiper = React.createClass({
         toValue: 1
       }).start(callback);
     }, false);
-  },
+  }
 
-  isShown() {
+  get shown() {
     return this.state.moveY._value === 0;
-  },
+  }
 
   scrollTo(index, callback, animated) {
     this.refs.swiper.scrollTo(index, callback, animated);
-  },
+  }
 
-  addTracker(callback) {},
+  addTracker(callback) {}
 
   removeTracker(callback) {
-    let trackerId = this.currentTracker()._id;
+    let trackerId = this.current.id;
 
     this.refs[trackerId].collapse(() => {
-      let index = this.getIndex();
-      if (index) {
-        this.scrollTo(this.getPrevIndex(),
+      if (this.index) {
+        this.scrollTo(this.prevIndex,
           this._endEdit.bind(this, callback));
         return;
       }
       this._endEdit(callback);
     });
-  },
+  }
 
   _startEdit(callback) {
-    this.setState({
-      scrollEnabled: false
-    }, callback);
-  },
+    this.refs.swiper.setEnabled(false, callback);
+  }
 
   _endEdit(callback) {
-    this.setState({
-      scrollEnabled: true
-    }, callback);
-  },
+    this.refs.swiper.setEnabled(true, callback);
+  }
 
   _onCancelEdit(callback) {
-    this.setState({
-      scrollEnabled: true
-    });
+    this.refs.swiper.setEnabled(true);
     if (callback) {
       callback();
     }
-  },
+  }
 
   render() {
-    let trackerSlides = this.props.trackers.map(
+    let slides = this.props.trackers.map(
       tracker => {
         return this.renderTracker(tracker, 1);
       });
@@ -174,7 +160,7 @@ const TrackerSwiper = React.createClass({
     let swiperView = (
       <Swiper
         ref='swiper'
-        slides={trackerSlides}
+        slides={slides}
         onTouchMove={this.props.onScroll}
         scrollEnabled={this.state.scrollEnabled}
         onSlideChange={this.props.onSlideChange}
@@ -202,6 +188,8 @@ const TrackerSwiper = React.createClass({
       </Animated.View>
     );
   }
-});
+};
 
-module.exports = TrackerSwiper;
+TrackerSwiper.defaultProps = {
+  trackers: []
+};

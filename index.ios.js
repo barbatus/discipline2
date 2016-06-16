@@ -1,26 +1,33 @@
+ /* @flow */
+
 'use strict';
 
-require('./globals');
+import './globals';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   AppRegistry,
   Navigator,
-  StyleSheet,
-  Component
-} = React;
+  StyleSheet
+} from 'react-native';
 
-const SideMenu = require('react-native-side-menu');
-const MainScreen = require('./components/screens/MainScreen');
-const Menu = require('./components/nav/Menu');
+import SideMenu from 'react-native-side-menu';
+import MainScreen from './components/screens/MainScreen';
+import Menu from './components/nav/Menu';
 
-class DisciplineApp extends Component {
-  constructor(props) {
+export default class DisciplineApp extends Component {
+  state: any;
+
+  constructor(props: any) {
     super(props);
-    this.state = { touchToClose: false, isOpen: false };
+    this.state = {
+      touchToClose: false,
+      isOpen: false
+    };
   }
 
-  renderScene(route, navigator) {
+  renderScene(route: any, navigator: any) {
     const Component = route.component;
     const menu = <Menu navigator={navigator} />;
 
@@ -58,5 +65,3 @@ const styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('Discipline', () => DisciplineApp);
-
-module.exports = DisciplineApp;

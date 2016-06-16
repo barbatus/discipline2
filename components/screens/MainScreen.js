@@ -1,47 +1,41 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, {Component} from 'react';
+
+import {
   ScrollView,
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
-  Component,
   Animated
-} = React;
+} from 'react-native';
 
-const {
+import {
   NavAddButton,
   NavMenuButton,
   NavCancelButton,
   NavAcceptButton,
   NavBackButton
-} = require('../nav/buttons');
+} from '../nav/buttons';
 
-const Screen = require('./Screen');
-const ScreenView = require('./ScreenView');
+import Screen from './Screen';
 
-const TrackersView = require('./TrackersView');
+import ScreenView from './ScreenView';
 
-const NewTrackerView = require('./NewTrackerView');
+import TrackersView from './TrackersView';
 
-const IconsDlg = require('./IconsDlg');
+import NewTrackerView from './NewTrackerView';
 
-const Trackers = require('../../trackers/Trackers');
+import IconsDlg from './IconsDlg';
 
-const GradientSlider = require('../common/GradientSlider');
+import Trackers from '../../trackers/Trackers';
 
-const { commonStyles } = require('../styles/common');
+import GradientSlider from '../common/GradientSlider';
+
+import { commonStyles } from '../styles/common';
 
 class MainScreen extends Component {
-  constructor(props) {
-    super(props);
-    this._slideIndex = 0;
-
-    this.state = {};
-  }
-
   componentDidMount() {
     this._setMainViewBtns();
   }
@@ -84,7 +78,7 @@ class MainScreen extends Component {
 
   // New tracker events.
 
-  async _onAccept(tracker) {
+  _onAccept(tracker) {
     this.trackersView.addTracker(tracker, () => {
       this._setMainViewBtns();
 
@@ -127,7 +121,6 @@ class MainScreen extends Component {
   }
 
   _onSlideChange(index, dir) {
-    this._slideIndex = index;
     this.refs.gradient.finishSlide(dir);
   }
 

@@ -4,7 +4,7 @@ const AppIconsStore = require('./AppIconsStore');
 
 const UserIconsStore = require('./UserIconsStore');
 
-const { IconSize } = require('./consts');
+import { IconSize } from './consts';
 
 function getIcon(iconId) {
   let icon = AppIconsStore.get(iconId);

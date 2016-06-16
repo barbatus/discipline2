@@ -1,7 +1,8 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -10,38 +11,33 @@ const {
   TextInput,
   StyleSheet,
   Animated,
-  SwitchIOS
-} = React;
+  SwitchIOS,
+  TouchableWithoutFeedback
+} from 'react-native';
 
-const {
+import {
   trackerStyles,
   propsStyles,
   trackerDef
-} = require('../../styles/trackerStyles');
+} from '../../styles/trackerStyles';
 
-const { TrackerType } = require('../../../../depot/consts');
+import { TrackerType } from '../../../../depot/consts';
 
-const UserIconsStore = require('../../../../icons/UserIconsStore');
+import IconsDlg from '../../../screens/IconsDlg';
 
-const IconsDlg = require('../../../screens/IconsDlg');
+import BaseTrackerView from './BaseTrackerView';
 
-const TrackerEditView = React.createClass({
-  getInitialState() {
-    let opacity = this.props.opacity ? 1 : 0;
-    return {
-      opacity: new Animated.Value(this.props.opacity),
-      title: this.props.title,
-      iconId: this.props.iconId,
+export default class TrackerEditView extends BaseTrackerView {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      title: props.title,
+      iconId: props.iconId,
       sendNotif: false,
       saveGoog: false
     };
-  },
-
-  getDefaultProps() {
-    return {
-      showType: true
-    }
-  },
+  }
 
   reset() {
     this.refs.title.blur();
@@ -49,28 +45,23 @@ const TrackerEditView = React.createClass({
       iconId: this.props.iconId,
       title: this.props.title
     });
-  },
+  }
 
-  setOpacity(opacity: Number) {
-    this.state.opacity.setValue(
-      this.state.opacity._value ? 0 : 1);
-  },
-
-  getIconId() {
+  get iconId() {
     return this.state.iconId;
-  },
+  }
 
-  getTypeId() {
+  get typeId() {
     return this.props.typeId;
-  },
+  }
 
-  getTitle() {
+  get title() {
     return this.state.title;
-  },
+  }
 
   _onIconEdit() {
     this.refs.iconDlg.show();
-  },
+  }
 
   _onIconChosen(iconId) {
     this.setState({
@@ -78,15 +69,7 @@ const TrackerEditView = React.createClass({
     }, () => {
       this.refs.iconDlg.hide();
     });
-  },
-
-  _getMainIcon(iconId) {
-    let userIcon = UserIconsStore.get(iconId);
-    if (userIcon) {
-      return userIcon.pngLarge;
-    }
-    return getIcon('oval');
-  },
+  }
 
   _renderDeleteRow() {
     return this.props.delete ? (
@@ -102,7 +85,7 @@ const TrackerEditView = React.createClass({
         </View>
       </View>
     ) : null;
-  },
+  }
 
   render() {
     let typeEnum = TrackerType.fromValue(this.props.typeId);
@@ -110,14 +93,14 @@ const TrackerEditView = React.createClass({
     return (
       <Animated.View style={[
           propsStyles.innerView,
-          {opacity: this.state.opacity},
+          {opacity: this.opacity},
           this.props.style
         ]}>
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
               style={styles.textBox}
-              onPress={this._onIconEdit}>
+              onPress={this._onIconEdit.bind(this)}>
               <Text style={styles.text}>
                 Change Icon
               </Text>
@@ -125,7 +108,7 @@ const TrackerEditView = React.createClass({
           </View>
           <View style={propsStyles.iconContainer}>
             <Image
-              source={this._getMainIcon(this.state.iconId)}
+              source={this.getMainIcon(this.state.iconId)}
               style={trackerStyles.mainIcon}
             />
           </View>
@@ -193,11 +176,11 @@ const TrackerEditView = React.createClass({
 
         <IconsDlg
           ref='iconDlg' 
-          onIconChosen={this._onIconChosen} />
+          onIconChosen={this._onIconChosen.bind(this)} />
       </Animated.View>
     );
   }
-});
+};
 
 const styles = StyleSheet.create({
   barContainer: {
@@ -228,4 +211,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = TrackerEditView;
+TrackerEditView.defaultProps = { showType: true };

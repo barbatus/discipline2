@@ -1,16 +1,17 @@
-const React = require('react-native');
+'use strict';
 
-const {
+import React, { Component } from 'react';
+
+import {
   StyleSheet,
   View,
-  Component,
   Text,
   Animated
-} = React;
+} from 'react-native';
 
-const NavTitle = require('./Title');
+import NavTitle from './Title';
 
-const NavigationBar = require('react-native-navbar');
+import NavigationBar from 'react-native-navbar';
 
 class NavBar extends Component {
   constructor(props) {
@@ -77,7 +78,7 @@ class NavBar extends Component {
   }
 };
 
-const Dimensions = require('Dimensions');
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({

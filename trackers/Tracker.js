@@ -2,14 +2,25 @@
 
 const { TrackerType } = require('../depot/consts');
 
+const { Tracker } = require('../depot/interfaces');
+
 const UserIconsStore = require('../icons/UserIconsStore');
 
-class Tracker {
-  constructor(tracker) {
-    this._id = tracker._id;
+export default class TrackerDAO {
+  id: number;
+  title: string;
+  iconId: string;
+  typeId: string;
+
+  _changeCbs: Array<Function> = [];
+
+  constructor(tracker: Tracker) {
+    this.id = tracker.id;
     this.title = tracker.title;
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
+
+    this._subscribe();
   }
 
   get type() {
@@ -28,63 +39,105 @@ class Tracker {
     this.iconId = icon.id;
   }
 
-  async getLastTick() {
-    return await depot.trackers.getLastTick(this._id);
+  get lastTick() {
+    return depot.trackers.getLastTick(this.id);
   }
 
-  async getCount() {
-    return await depot.trackers.getTodayCount(this._id);
+  get count() {
+    return depot.trackers.getTodayCount(this.id);
   }
 
-  async getChecked() {
-    let count = await this.getCount();
+  get checked() {
+    let count = this.count;
     return count != 0;
   }
 
-  async getValue() {
-    let values = await depot.trackers.getTodayValues(this._id);
+  get value() {
+    let values = depot.trackers.getTodayValues(this.id);
     return values.reduceRight((prevVal, nextVal) => {
       return prevVal + nextVal;
     }, 0);
   }
 
-  async click(opt_value, opt_onResult) {
+  click(opt_value, opt_onResult) {
     if (_.isFunction(opt_value)) {
       opt_onResult = opt_value;
       opt_value = null;
     }
-    let tickId = await this.addTick(opt_value);
-    return tickId;
+    return this.addTick(opt_value);
   }
 
-  async save() {
-    return await depot.trackers.update(this._id, {
+  undo() {
+    let tick = this.lastTick;
+    depot.ticks.remove(tick.id);
+  }
+
+  save() {
+    return depot.trackers.update({
+      id: this.id,
       title: this.title,
+      typeId: this.typeId,
       iconId: this.iconId
     });
   }
 
-  async addTick(opt_value) {
-    return await depot.trackers.addTick(this._id,
+  remove() {
+    depot.trackers.remove(this.id);
+    this.destroy();
+    return true;
+  }
+
+  addTick(opt_value) {
+    return depot.trackers.addTick(this.id,
       time.getDateTimeMs(), opt_value);
   }
 
-  async removeLastTick() {
-    let tick = await this.getLastTick();
-    await depot.ticks.remove(this._id, tick._id);
+  getTicks(startDateMs) {
+    return depot.trackers.getTicks(this.id, startDateMs);
   }
 
-  async getTicks(startDateMs) {
-    return await depot.trackers.getTicks(this._id, startDateMs);
+  getTodayTicks() {
+    return depot.trackers.getTodayTicks(this.id);
   }
 
-  async getDayTicks(dayMs) {
-    return await depot.trackers.getDayTicks(this._id, dayMs);
+  destroy() {
+    this._unsubscribe();
+    this._changeCbs = null;
   }
 
-  async getTodayTicks() {
-    return await depot.trackers.getTodayTicks(this._id);
-  }
-};
+  onChange(cb: Function) {
+    check.assert.function(cb);
 
-module.exports = Tracker;
+    this._changeCbs.push(cb);
+  }
+
+  _unsubscribe() {
+    depot.trackers.events.removeListener('updated',
+      this._onUpdated.bind(this));
+    depot.ticks.events.removeListener('added',
+      this._onTicks.bind(this));
+    depot.ticks.events.removeListener('removed',
+      this._onTicks.bind(this));
+  }
+
+  _subscribe() {
+    depot.trackers.events.on('updated',
+      this._onUpdated.bind(this));
+    depot.ticks.events.on('added',
+      this._onTicks.bind(this));
+    depot.ticks.events.on('removed',
+      this._onTicks.bind(this));
+  }
+
+  _onTicks(event) {
+    if (event.trackerId === this.id) {
+      this._changeCbs.forEach(cb => cb());
+    }
+  }
+
+  _onUpdated(event) {
+    if (event.trackerId === this.id) {
+      this._changeCbs.forEach(cb => cb());
+    }
+  }
+}

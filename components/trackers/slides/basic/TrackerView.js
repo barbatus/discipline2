@@ -1,7 +1,8 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -9,62 +10,45 @@ const {
   Text,
   TextInput,
   StyleSheet,
-  Animated
-} = React;
+  Animated,
+  TouchableWithoutFeedback
+} from 'react-native';
 
-const { trackerStyles } = require('../../styles/trackerStyles');
+import { trackerStyles } from '../../styles/trackerStyles';
 
-const UserIconsStore = require('../../../../icons/UserIconsStore');
+import BaseTrackerView from './BaseTrackerView';
 
-const TrackerView = React.createClass({
-  getInitialState() {
-    let opacity = this.props.shown ? 1 : 0; 
-    return {
-      opacity: new Animated.Value(this.props.opacity)
-    };
-  },
-
-  _getMainIcon(iconId) {
-    let userIcon = UserIconsStore.get(iconId);
-    if (userIcon) {
-      return userIcon.png;
-    }
-    return getIcon('oval');
-  },
-
-  setOpacity(opacity: Number) {
-    this.state.opacity.setValue(
-      this.state.opacity._value ? 0 : 1);
-  },
-
+class TrackerView extends BaseTrackerView {
   render() {
     return (
       <Animated.View style={[
           trackerStyles.innerView,
-          {opacity: this.state.opacity},
+          {opacity: this.opacity},
           this.props.style
         ]}>
-        <View style={trackerStyles.headerContainer}>
-          <View style={trackerStyles.barContainer}>
-            <TouchableOpacity onPress={this.props.onEdit}>
+        <TouchableWithoutFeedback onPress={this.props.onClick}>
+          <View style={trackerStyles.headerContainer}>
+            <View style={trackerStyles.barContainer}>
+              <TouchableOpacity onPress={this.props.onEdit}>
+                <Image
+                  source={getIcon('info')}
+                  style={trackerStyles.infoIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={trackerStyles.iconContainer}>
               <Image
-                source={getIcon('info')}
-                style={trackerStyles.infoIcon}
+                source={this.getMainIcon(this.props.iconId)}
+                style={trackerStyles.mainIcon}
               />
-            </TouchableOpacity>
+            </View>
+            <View style={trackerStyles.titleContainer}>
+              <Text style={trackerStyles.titleText}>
+                {this.props.title}
+              </Text>
+            </View>
           </View>
-          <View style={trackerStyles.iconContainer}>
-            <Image
-              source={this._getMainIcon(this.props.iconId)}
-              style={trackerStyles.mainIcon}
-            />
-          </View>
-          <View style={trackerStyles.titleContainer}>
-            <Text style={trackerStyles.titleText}>
-              {this.props.title}
-            </Text>
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
         <View style={trackerStyles.bodyContainer}>
           <View style={trackerStyles.controlsContainer}>
             {this.props.controls}
@@ -76,6 +60,6 @@ const TrackerView = React.createClass({
       </Animated.View>
     );
   }
-});
+};
 
 module.exports = TrackerView;

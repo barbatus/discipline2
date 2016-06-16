@@ -1,31 +1,31 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, {Component} from 'react';
+
+import {
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
-  Component,
   Animated
-} = React;
+} from 'react-native';
 
-const {
+import {
   NavCancelButton,
   NavAcceptButton,
   NavBackButton
-} = require('../nav/buttons');
+} from '../nav/buttons';
 
-const Easing = require('Easing');
+import Easing from 'Easing';
 
-const ScreenView = require('./ScreenView');
+import ScreenView from './ScreenView';
 
-const NewTrackerSlide = require('../trackers/slides/NewTrackerSlide');
-const TrackerTypesSlide = require('../trackers/slides/TrackerTypesSlide');
+import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
+import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
-const Trackers = require('../../trackers/Trackers');
+import Trackers from '../../trackers/Trackers';
 
-const { commonDef, commonStyles } = require('../styles/common');
+import { commonDef, commonStyles } from '../styles/common';
 
 class NewTrackerView extends ScreenView {
   constructor(props) {

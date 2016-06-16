@@ -1,7 +1,8 @@
 'use strict'
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   StyleSheet,
   Text,
   View,
@@ -9,11 +10,11 @@ const {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Animated
-} = require('react-native');
+} from 'react-native';
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
-const BaseScroll = require('./BaseScroll');
+import BaseScroll from './BaseScroll';
 
 const Scroll = React.createClass({
   propTypes: {
@@ -39,7 +40,6 @@ const Scroll = React.createClass({
 
   _onSlide(index) {
     this.scrollTo(index, () => {
-      console.log('onSlideClick');
       if (this.props.onSlideClick) {
         this.props.onSlideClick(index);
       }

@@ -1,14 +1,15 @@
-const React = require('react-native');
+'use strict';
 
-const {
+import React, {Component} from 'react';
+
+import {
   StyleSheet,
   View,
-  Component,
   Text,
   Animated
-} = React;
+} from 'react-native';
 
-const NavBar = require('../nav/NavBar');
+import NavBar from '../nav/NavBar';
 
 class Screen extends Component {
   constructor(props) {

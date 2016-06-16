@@ -1,11 +1,10 @@
 'use strict';
 
-const React = require('react-native');
-const {
-  PanResponder
-} = React;
+import React from 'react';
 
-class ScaleResponder {
+import { PanResponder } from 'react-native';
+
+export class ScaleResponder {
   constructor(height) {
     this._height = height;
     this._panHandlers =
@@ -54,6 +53,3 @@ class ScaleResponder {
     });
   }
 }
-
-exports.ScaleResponder = ScaleResponder;
-

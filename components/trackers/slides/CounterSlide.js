@@ -1,72 +1,34 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   View,
   TouchableHighlight,
   TouchableOpacity,
   Image,
   Text,
   StyleSheet
-} = React;
+} from 'react-native';
 
-const { trackerStyles } = require('../styles/trackerStyles');
-const TrackerSlide = require('./TrackerSlide');
+import { trackerStyles } from '../styles/trackerStyles';
+import TrackerSlide from './TrackerSlide';
 
-const CounterSlide = React.createClass({
-  getInitialState() {
-    return {count: 0};
-  },
+export default class CounterSlide extends TrackerSlide {
+  onChange() {
+    let { tracker } = this.props;
+    this.setState({
+      iconId: tracker.iconId,
+      title: tracker.title,
+      count: tracker.count
+    });
+  }
 
-  componentWillMount() {
-    this._loadInitialState();
-  },
-
-  showEdit(callback) {
-    return this.refs.slide.showEdit(callback);
-  },
-
-  saveEdit(callback) {
-    return this.refs.slide.saveEdit(callback);
-  },
-
-  cancelEdit(callback) {
-    return this.refs.slide.cancelEdit(callback);
-  },
-
-  collapse(callback) {
-    this.refs.slide.collapse(callback);
-  },
-
-  _loadInitialState: async function() {
-    let tracker = this.props.tracker;
-    let count = await tracker.getCount();
-    this.setState({ count });
-  },
-
-  _onPlus: async function() {
-    let tracker = this.props.tracker;
-    await tracker.click();
-
-    let count = this.state.count;
-    this.setState({count: count + 1});
-  },
-
-  _onMinus: async function() {
-    let count = this.state.count;
-    if (count > 0) {
-      let tracker = this.props.tracker;
-      await tracker.removeLastTick();
-      let count = await tracker.getCount();
-      this.setState({ count });
-    }
-  },
-
-  _getControls() {
+  get controls() {
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TouchableOpacity onPress={this._onMinus}>
+          <TouchableOpacity onPress={this._onMinus.bind(this)}>
             <Image
               source={getIcon('minus')}
               style={trackerStyles.circleBtn}
@@ -75,7 +37,7 @@ const CounterSlide = React.createClass({
           <Text style={styles.countText} numberOfLines={1}>
             {this.state.count}
           </Text>
-          <TouchableOpacity onPress={this._onPlus}>
+          <TouchableOpacity onPress={this._onPlus.bind(this)}>
             <Image
               source={getIcon('plus')}
               style={trackerStyles.circleBtn}
@@ -84,29 +46,29 @@ const CounterSlide = React.createClass({
         </View>
       </View>
     );
-  },
+  }
 
-  _getFooter() {
+  get footer() {
     return (
       <Text style={trackerStyles.footerText}>
         Tap to count the thing you've done
       </Text>
     );
-  },
-
-  render() {
-    return (
-      <TrackerSlide
-        ref='slide'
-        scale={this.props.scale}
-        tracker={this.props.tracker}
-        controls={this._getControls()}
-        footer={this._getFooter()}
-        onEdit={this.props.onEdit}
-        onRemove={this.props.onRemove} />
-    );
   }
-});
+
+  _onPlus() {
+    let { tracker } = this.props;
+    tracker.click();
+  }
+
+  _onMinus() {
+    let count = this.state.count;
+    if (count > 0) {
+      let { tracker } = this.props;
+      tracker.undo();
+    }
+  }
+};
 
 const styles = StyleSheet.create({
   controls: {
@@ -121,5 +83,3 @@ const styles = StyleSheet.create({
     color: '#4A4A4A'
   }
 });
-
-module.exports = CounterSlide;

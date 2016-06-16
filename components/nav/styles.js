@@ -1,7 +1,6 @@
 'use strict';
 
-const React = require('react-native');
-const { StyleSheet } = React;
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   navTitle: {

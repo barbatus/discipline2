@@ -1,16 +1,12 @@
 'use strict';
 
-const React = require('react-native');
-const {
-  StyleSheet,
-  View,
-  Component,
-  Animated
-} = React;
+import React, {Component} from 'react';
 
-const Easing = require('Easing');
+import { StyleSheet, View, Animated } from 'react-native';
 
-const { commonStyles } = require('../styles/common');
+import Easing from 'Easing';
+
+import { commonStyles } from '../styles/common';
 
 class ScreenView extends Component {
   constructor(props) {

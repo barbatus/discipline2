@@ -1,32 +1,31 @@
 'use strict';
 
-const Tracker = require('./Tracker');
+import TrackerDAO from './Tracker';
 
-class Trackers {
-  static async getAll() {
-    let trackers = await depot.trackers.getAll();
+export default class Trackers {
+  static getAll() {
+    let trackers = depot.trackers.getAll();
     return trackers.map(trackDoc => {
-      return new Tracker(trackDoc);
+      return new TrackerDAO(trackDoc);
     });
   }
 
-  static async getOne(trackId) {
-    let trackDoc = await depot.trackers.getOne(trackId);
-    return new Tracker(trackDoc);
+  static getOne(trackId) {
+    let trackDoc = depot.trackers.getOne(trackId);
+    return new TrackerDAO(trackDoc);
   }
 
-  static async addAt(tracker, index) {
-    let trackId = await depot.trackers.addAt(tracker, index);
-    return await Trackers.getOne(trackId);
+  static add(tracker) {
+    let trackDoc = depot.trackers.add(tracker);
+    return new TrackerDAO(trackDoc);
   }
 
-  static async remove(tracker) {
-    return await depot.trackers.remove(tracker._id);
+  static addAt(tracker, index) {
+    let trackDoc = depot.trackers.addAt(tracker, index);
+    return new TrackerDAO(trackDoc);
   }
 
-  static create({ title, typeId, iconId }) {
-    
+  static remove(tracker) {
+    return depot.trackers.remove(tracker.id);
   }
 }
-
-module.exports = Trackers;

@@ -1,10 +1,6 @@
 'use strict';
 
-const IconSize = {
+export const IconSize = {
   NORMAL: 'normal',
   LARGE: 'large'
 };
-
-module.exports = {
-  IconSize
-}

@@ -1,16 +1,16 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
-  Component,
   Modal
-} = React;
+} from 'react-native';
 
-const IconsGrid = require('../icons/IconsGrid');
+import IconsGrid from '../icons/IconsGrid';
 
 let IconsDlg = React.createClass({
   getInitialState() {
@@ -41,7 +41,7 @@ let IconsDlg = React.createClass({
     return (
       <View>
         <Modal
-          animated={true}
+          animationType={'slide'}
           transparent={false}
           visible={this.state.modalVisible}>
           <View style={styles.innerView}>

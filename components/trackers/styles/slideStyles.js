@@ -1,11 +1,10 @@
 'use strict';
 
-const React = require('react-native');
-const {
-  StyleSheet
-} = React;
+import React from 'react';
 
-const Dimensions = require('Dimensions');
+import { StyleSheet } from 'react-native';
+
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
 const slideDef = {

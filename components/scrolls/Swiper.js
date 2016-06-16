@@ -1,24 +1,25 @@
 'use strict'
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
   Animated
-} = require('react-native');
+} from 'react-native';
 
-const TimerMixin = require('react-timer-mixin');
+import TimerMixin from 'react-timer-mixin';
 
-const Dimensions = require('Dimensions');
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 const screenWidth = window.width;
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
-const BaseScroll = require('./BaseScroll');
+import BaseScroll from './BaseScroll';
 
 const stylesDef = {
   slide: {
@@ -82,8 +83,11 @@ const Swiper = React.createClass({
   },
 
   isEnabled() {
-    return this.getSize() >= 2 &&
-      this.props.scrollEnabled;
+    return this.refs.scroll.isEnabled();
+  },
+
+  setEnabled(enabled, callback) {
+    this.refs.scroll.setEnabled(enabled, callback);
   },
 
   getIndex() {
@@ -196,7 +200,7 @@ const Swiper = React.createClass({
       this._renderSlide(slide, i)
     );
 
-    let dots = this.isEnabled() ?
+    let dots = slides.length >= 2 ?
       this._renderDots(slides.length) : null;
 
     return (

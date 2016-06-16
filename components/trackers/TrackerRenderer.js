@@ -1,22 +1,50 @@
 'use strict';
 
-const React = require('react-native');
+import React, { Component } from 'react';
 
-const GoalTrackerSlide = require('./slides/GoalTrackerSlide');
-const CounterSlide = require('./slides/CounterSlide');
-const SumTrackerSlide = require('./slides/SumTrackerSlide');
+import { Animated } from 'react-native';
 
-const { TrackerType } = require('../../depot/consts');
+import GoalTrackerSlide from './slides/GoalTrackerSlide';
+import CounterSlide from './slides/CounterSlide';
+import SumTrackerSlide from './slides/SumTrackerSlide';
 
-let TrackerRenderMixin = {
+import { TrackerType } from '../../depot/consts';
+
+export default class TrackerRenderer extends Component {
+  constructor(props) {
+    super(props);
+
+    this._opacity = new Animated.Value(0);
+  }
+
+  get opacity() {
+    return this._opacity;
+  }
+
+  set opacity(value) {
+    this._opacity.setValue(value);
+  }
+
+  hide(callback) {
+    this._opacity.setValue(0);
+  }
+
+  show(index, callback) {
+    this._opacity.setValue(1);
+  }
+
+  get shown() {
+    return this._opacity._value === 1;
+  }
+
   renderTracker(tracker: Object, scale: Number) {
     let type = tracker.type;
     switch (type) {
       case TrackerType.GOAL_TRACKER:
         return (
           <GoalTrackerSlide
-            ref={tracker._id}
-            key={tracker._id}
+            ref={tracker.id}
+            key={tracker.id}
             scale={scale}
             onIconEdit={this.props.onIconEdit}
             onEdit={this.props.onEdit}
@@ -27,8 +55,8 @@ let TrackerRenderMixin = {
       case TrackerType.COUNTER:
         return (
           <CounterSlide
-            ref={tracker._id}
-            key={tracker._id}
+            ref={tracker.id}
+            key={tracker.id}
             scale={scale}
             onIconEdit={this.props.onIconEdit}
             onEdit={this.props.onEdit}
@@ -39,8 +67,8 @@ let TrackerRenderMixin = {
       case TrackerType.SUM:
         return (
           <SumTrackerSlide
-            ref={tracker._id}
-            key={tracker._id}
+            ref={tracker.id}
+            key={tracker.id}
             scale={scale}
             onIconEdit={this.props.onIconEdit}
             onEdit={this.props.onEdit}
@@ -51,5 +79,3 @@ let TrackerRenderMixin = {
     }
   }
 };
-
-module.exports = TrackerRenderMixin;

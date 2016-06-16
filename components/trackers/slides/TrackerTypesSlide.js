@@ -1,7 +1,8 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -9,19 +10,19 @@ const {
   Text,
   TextInput,
   StyleSheet,
-  Animated,
-  Component
-} = React;
+  Animated
+} from 'react-native';
 
-const { slideStyles } = require('../styles/slideStyles');
+import { slideStyles } from '../styles/slideStyles';
 
-const { TrackerType } = require('../../../depot/consts');
+import { TrackerType } from '../../../depot/consts';
 
-const { commonStyles } = require('../../styles/common');
+import { commonStyles } from '../../styles/common';
 
-class TrackerTypesSlide extends Component {
+export default class TrackerTypesSlide extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       type: this.types[0]
     };
@@ -184,5 +185,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#E6E6E6'
   }
 });
-
-module.exports = TrackerTypesSlide;

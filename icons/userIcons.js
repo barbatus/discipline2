@@ -1,8 +1,8 @@
 'use strict';
 
-const { IconSize } = require('./consts');
+import { IconSize } from './consts';
 
-const Enum = require('../depot/Enum');
+import Enum from '../depot/Enum';
 
 const UserIcons = new Enum({
   COFFEE: {

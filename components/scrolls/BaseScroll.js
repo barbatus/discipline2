@@ -1,15 +1,16 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React from 'react';
+
+import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   Animated
-} = React
+} from 'react-native';
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
 const BaseScroll = React.createClass({
   propTypes: {
@@ -41,6 +42,13 @@ const BaseScroll = React.createClass({
       removeClippedSubviews: true,
       automaticallyAdjustContentInsets: false,
       keyboardDismissMode: 'on-drag'
+    }
+  },
+
+  getInitialState() {
+    let { scrollEnabled } = this.props;
+    return {
+      scrollEnabled: scrollEnabled
     }
   },
 
@@ -101,7 +109,13 @@ const BaseScroll = React.createClass({
 
   isEnabled() {
     return this.getSize() >= 2 &&
-      this.props.scrollEnabled;
+      this.state.scrollEnabled;
+  },
+
+  setEnabled(enabled, callback) {
+    this.setState({
+      scrollEnabled: enabled
+    }, callback);
   },
 
   _onTouchStart(event) {

@@ -1,12 +1,10 @@
-const React = require('react-native');
-const {
-  View,
-  Text,
-  Image,
-  Component
-} = React;
+'use strict';
 
-const styles = require('./styles');
+import React, { Component } from 'react';
+
+import { View, Text, Image } from 'react-native';
+
+import styles from './styles';
 
 class NavTitle extends Component {
   constructor(props) {

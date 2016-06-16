@@ -1,25 +1,25 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
-  Component,
   Animated
-} = React;
+} from 'react-native';
 
-const {
+import {
   NavCancelButton,
   NavAcceptButton
-} = require('../nav/buttons');
+} from '../nav/buttons';
 
-const ScreenView = require('./ScreenView');
+import ScreenView from './ScreenView';
 
-const Trackers = require('../trackers/Trackers');
+import Trackers from '../trackers/Trackers';
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
 class TrackersView extends ScreenView {
   constructor(props) {

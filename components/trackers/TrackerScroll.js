@@ -1,73 +1,48 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   View,
   ListView,
   StyleSheet,
-  Component,
   Text,
   Animated
-} = React;
+} from 'react-native';
 
-const Scroll = require('../scrolls/Scroll');
+import Scroll from '../scrolls/Scroll';
 
-const Dimensions = require('Dimensions');
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 const screenWidth = window.width;
 
-const Trackers = require('../../trackers/Trackers');
+import Trackers from '../../trackers/Trackers';
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
-const TrackerRenderMixin = require('./TrackerRenderMixin');
+import TrackerRenderer from './TrackerRenderer';
 
-const TrackerScroll = React.createClass({
-  mixins: [TrackerRenderMixin],
-
-  componentWillMount() {
-    this._opacity = new Animated.Value(0);
-  },
-
-  getDefaultProps() {
-    return {
-      index: 0,
-      trackers: []
-    }
-  },
-
+export default class TrackerScroll extends TrackerRenderer {
   hide(callback) {
     Animated.timing(this._opacity, {
       duration: 500,
       toValue: 0
     }).start(callback);
-  },
-
-  setOpacity(opacity) {
-    this._opacity.setValue(opacity);
-  },
+  }
 
   scrollTo(index, callback, animated) {
     this.refs.scroll.scrollTo(index, callback, animated);
-  },
-
-  show(callback) {
-    this._opacity.setValue(1);
-  },
-
-  isShown() {
-    return this._opacity._value === 1;
-  },
+  }
 
   render() {
-    let trackerSlides = this.props.trackers.map(
+    let slides = this.props.trackers.map(
       tracker => {
         return this.renderTracker(tracker, 0.5);
       });
 
     return (
       <Animated.View style={[
-          commonStyles.flexFilled, 
+          commonStyles.flexFilled,
           this.props.style, {
           opacity: this._opacity
         }]}>
@@ -76,12 +51,15 @@ const TrackerScroll = React.createClass({
           slideWidth={screenWidth / 2}
           padding={screenWidth / 4}
           index={this.props.index}
-          slides={trackerSlides}
+          slides={slides}
           onSlideClick={this.props.onSlideClick}>
         </Scroll>
       </Animated.View>
     );
   }
-});
+};
 
-module.exports = TrackerScroll;
+TrackerScroll.defaultProps = {
+  index: 0,
+  trackers: []
+};

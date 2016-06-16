@@ -1,16 +1,16 @@
 'use strict';
 
-const React = require('react-native');
-const Dimensions = require('Dimensions');
-const {
+import React, { Component } from 'react';
+
+import {
   StyleSheet,
   ScrollView,
   View,
   Image,
-  Text,
-  Component
-} = React;
+  Text
+} from 'react-native';
 
+import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
 class Menu extends Component {

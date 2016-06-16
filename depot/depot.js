@@ -1,46 +1,47 @@
+ /* @flow */
+
 'use strict';
 
-const trackers = require('./trackers');
-const ticks = require('./ticks');
-const { TrackerType } = require('./consts');
-const consts = require('./consts');
+import trackers from './realm/trackers';
+import ticks from './realm/ticks';
+import { TrackerType } from './consts';
 
-const depot = {
-  trackers: trackers,
-  ticks: ticks,
-  consts: consts,
+class Depot {
+  trackers: ITrackersDepot = trackers;
+  ticks: ITicksDepot = ticks;
 
-  initTestData: async function() {
-    await depot.trackers.add({
+  initTestData() {
+    this.trackers.add({
       title: 'Morning Run',
       typeId: TrackerType.COUNTER.valueOf(),
       iconId: 'sneakers'
     });
-    await depot.trackers.add({
+    this.trackers.add({
       title: 'Cup of Coffee',
       typeId: TrackerType.GOAL_TRACKER.valueOf(),
       iconId: 'coffee'
     });
-    await depot.trackers.add({
+    this.trackers.add({
       title: 'Spent on Food',
       typeId: TrackerType.GOAL_TRACKER.valueOf(),
       iconId: 'pizza'
     });
-    await depot.trackers.add({
+    this.trackers.add({
       title: 'Reading',
       typeId: TrackerType.COUNTER.valueOf(), 
       iconId: 'stopwatch'
     });
-    await depot.trackers.add({
+    this.trackers.add({
       title: 'Spent on Lunch',
       typeId: TrackerType.SUM.valueOf(), 
       iconId: 'pizza'
     });
-  },
+  }
 
-  hasTestData: async function() {
-    return await depot.trackers.count();
+  hasTestData() {
+    return this.trackers.count();
   }
 };
 
+let depot = new Depot();
 module.exports = depot;

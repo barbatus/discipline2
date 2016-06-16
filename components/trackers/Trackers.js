@@ -1,24 +1,24 @@
 'use strict';
 
-const React = require('react-native');
-const {
+import React, { Component } from 'react';
+
+import {
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
-  Component,
   Animated
-} = React;
+} from 'react-native';
 
-const TrackerSwiper = require('./TrackerSwiper');
+import TrackerSwiper from './TrackerSwiper';
 
-const TrackerScroll = require('./TrackerScroll');
+import TrackerScroll from './TrackerScroll';
 
-const TrackerStore = require('../../trackers/Trackers');
+import TrackerStore from '../../trackers/Trackers';
 
-const { commonStyles } = require('../styles/common');
+import { commonStyles } from '../styles/common';
 
-class Trackers extends Component {
+export default class Trackers extends Component {
   constructor(props) {
     super(props);
 
@@ -31,13 +31,12 @@ class Trackers extends Component {
     this._loadInitialState();
   }
 
-  async addTracker(tracker, callback) {
+  addTracker(tracker, callback) {
     if (!tracker.typeId) return null;
 
-    let nextInd = this.swiper.getNextIndex();
+    let nextInd = this.swiper.nextIndex;
 
-    tracker = await TrackerStore.addAt(
-      tracker, nextInd);
+    tracker = TrackerStore.addAt(tracker, nextInd);
 
     if (callback) {
       callback();
@@ -48,7 +47,7 @@ class Trackers extends Component {
     this.setState({
       trackers: trackers
     }, () => {
-      if (this.swiper.isShown()) {
+      if (this.swiper.shown) {
         this.swiper.scrollTo(nextInd);
         return;
       }
@@ -80,12 +79,12 @@ class Trackers extends Component {
     }
   }
 
-  async _loadInitialState() {
-    let hasTestData = await depot.hasTestData();
+  _loadInitialState() {
+    let hasTestData = depot.hasTestData();
     if (!hasTestData) {
-      await depot.initTestData();
+      depot.initTestData();
     }
-    let trackers = await TrackerStore.getAll();
+    let trackers = TrackerStore.getAll();
 
     if (trackers.length) {
       this.setState({
@@ -107,16 +106,16 @@ class Trackers extends Component {
     }
   }
 
-  async _onRemove() {
-    let tracker = this.swiper.currentTracker();
-    let removed = await TrackerStore.remove(tracker);
+  _onRemove() {
+    let tracker = this.swiper.currentTracker;
+    let removed = tracker.remove();
 
     if (this.props.onRemove) {
       this.props.onRemove(removed);
     }
 
     if (removed) {
-      let index = this.swiper.getIndex();
+      let index = this.swiper.index;
       this.swiper.removeTracker(() => {
         let trackers = this.state.trackers;
         trackers.splice(index, 1);
@@ -128,13 +127,13 @@ class Trackers extends Component {
   }
 
   _onMoveUpStart() {
-    let index = this.swiper.getIndex();
+    let index = this.swiper.index;
     this.scroll.hide();
     this.scroll.scrollTo(index, false);
   }
 
   _onMoveUp(dv) {
-    this.scroll.setOpacity(1 - dv);
+    this.scroll.opacity = 1 - dv;
   }
 
   _onMoveUpDone() {
@@ -171,5 +170,3 @@ class Trackers extends Component {
     )
   }
 };
-
-module.exports = Trackers;
