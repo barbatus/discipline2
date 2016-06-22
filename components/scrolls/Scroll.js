@@ -16,6 +16,8 @@ import { commonStyles } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
+import { caller } from '../../utils/lang';
+
 const Scroll = React.createClass({
   propTypes: {
     slides: React.PropTypes.array.isRequired,
@@ -38,30 +40,22 @@ const Scroll = React.createClass({
     this.refs.scroll.scrollTo(index, callback, animated);
   },
 
-  _onSlide(index) {
-    this.scrollTo(index, () => {
-      if (this.props.onSlideClick) {
-        this.props.onSlideClick(index);
-      }
-    });
-  },
-
   render() {
     let { slides, slideWidth, index } = this.props;
 
     let slideStyle = { width: slideWidth };
     slides = slides.map((slide, i) =>
       <View style={slideStyle} key={i}>
-        <TouchableOpacity
-          style={commonStyles.flexFilled}
-          onPress={this._onSlide.bind(this, i)}>
           {slide}
-        </TouchableOpacity>
       </View>
     );
 
     let scrollStyle = [
       commonStyles.flexFilled,
+      {
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
       {
         paddingLeft: this.props.padding,
         paddingRight: this.props.padding

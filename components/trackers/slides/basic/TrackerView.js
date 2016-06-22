@@ -18,7 +18,7 @@ import { trackerStyles } from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';
 
-class TrackerView extends BaseTrackerView {
+export default class TrackerView extends BaseTrackerView {
   render() {
     return (
       <Animated.View style={[
@@ -26,40 +26,38 @@ class TrackerView extends BaseTrackerView {
           {opacity: this.opacity},
           this.props.style
         ]}>
-        <TouchableWithoutFeedback onPress={this.props.onClick}>
-          <View style={trackerStyles.headerContainer}>
-            <View style={trackerStyles.barContainer}>
-              <TouchableOpacity onPress={this.props.onEdit}>
+        <TouchableOpacity style={{flex: 1}} onPress={this.props.onTap}>
+            <View style={trackerStyles.headerContainer}>
+              <View style={trackerStyles.barContainer}>
+                <TouchableOpacity onPress={this.props.onEdit}>
+                  <Image
+                    source={getIcon('info')}
+                    style={trackerStyles.infoIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={trackerStyles.iconContainer}>
                 <Image
-                  source={getIcon('info')}
-                  style={trackerStyles.infoIcon}
+                  source={this.getMainIcon(this.props.iconId)}
+                  style={trackerStyles.mainIcon}
                 />
-              </TouchableOpacity>
+              </View>
+              <View style={trackerStyles.titleContainer}>
+                <Text style={trackerStyles.titleText}>
+                  {this.props.title}
+                </Text>
+              </View>
             </View>
-            <View style={trackerStyles.iconContainer}>
-              <Image
-                source={this.getMainIcon(this.props.iconId)}
-                style={trackerStyles.mainIcon}
-              />
-            </View>
-            <View style={trackerStyles.titleContainer}>
-              <Text style={trackerStyles.titleText}>
-                {this.props.title}
-              </Text>
+          <View style={trackerStyles.bodyContainer}>
+            <View style={trackerStyles.controlsContainer}>
+              {this.props.controls}
             </View>
           </View>
-        </TouchableWithoutFeedback>
-        <View style={trackerStyles.bodyContainer}>
-          <View style={trackerStyles.controlsContainer}>
-            {this.props.controls}
+          <View style={trackerStyles.footerContainer}>
+            {this.props.footer}
           </View>
-        </View>
-        <View style={trackerStyles.footerContainer}>
-          {this.props.footer}
-        </View>
+        </TouchableOpacity>
       </Animated.View>
     );
   }
 };
-
-module.exports = TrackerView;

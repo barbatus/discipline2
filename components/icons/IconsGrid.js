@@ -16,6 +16,8 @@ import {
   Image
 } from 'react-native';
 
+import { caller } from '../../utils/lang';
+
 let IconsGrid = React.createClass({
     getInitialState: function() {
       let ds = new ListView.DataSource({
@@ -46,9 +48,7 @@ let IconsGrid = React.createClass({
     },
 
     _onIconChosen(icon) {
-      if (this.props.onIconChosen) {
-        this.props.onIconChosen(icon.id);
-      }
+      caller(this.props.onIconChosen, icon.id);
     },
 
     _getColSize() {

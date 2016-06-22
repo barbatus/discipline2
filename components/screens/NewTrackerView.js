@@ -27,6 +27,8 @@ import Trackers from '../../trackers/Trackers';
 
 import { commonDef, commonStyles } from '../styles/common';
 
+import { caller } from '../../utils/lang';
+
 class NewTrackerView extends ScreenView {
   constructor(props) {
     super(props);
@@ -56,9 +58,7 @@ class NewTrackerView extends ScreenView {
   setOpacity(value, animated, callback) {
     super.setOpacity(value, animated, () => {
       this.refs.newTrackerSlide.reset();
-      if (callback) {
-        callback();
-      }
+      caller(callback);
     });
   }
 
@@ -108,10 +108,7 @@ class NewTrackerView extends ScreenView {
 
   _onAccept() {
     let tracker = this.refs.newTrackerSlide.tracker;
-
-    if (this.props.onAccept) {
-      this.props.onAccept(tracker);
-    }
+    caller(this.props.onAccept, tracker);
   }
 
   _onTypeCancel() {

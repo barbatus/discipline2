@@ -23,7 +23,7 @@ import {
 
 import { TrackerType } from '../../../../depot/consts';
 
-import IconsDlg from '../../../screens/IconsDlg';
+import registry, { DlgType } from '../../../dlg/registry';
 
 import BaseTrackerView from './BaseTrackerView';
 
@@ -60,14 +60,11 @@ export default class TrackerEditView extends BaseTrackerView {
   }
 
   _onIconEdit() {
-    this.refs.iconDlg.show();
-  }
-
-  _onIconChosen(iconId) {
-    this.setState({
-      iconId: iconId
-    }, () => {
-      this.refs.iconDlg.hide();
+    let dlg = registry.get(DlgType.ICONS);
+    dlg.show(iconId => {
+      this.setState({
+        iconId: iconId
+      }, () => dlg.hide());
     });
   }
 
@@ -173,10 +170,6 @@ export default class TrackerEditView extends BaseTrackerView {
           </View>
           {this._renderDeleteRow()}
         </View>
-
-        <IconsDlg
-          ref='iconDlg' 
-          onIconChosen={this._onIconChosen.bind(this)} />
       </Animated.View>
     );
   }

@@ -9,13 +9,16 @@ const window = Dimensions.get('window');
 
 const slideDef = {
   slide: {
-    flex: 1,
+    //flex: 1,
+    //width: window.width - 40,
+    height: window.height - 60,
     paddingTop: 20,
     paddingBottom: 40,
     alignItems: 'center'
   },
   container: {
     flex: 1,
+    //height: window.height - 60,
     width: window.width - 40
   },
   innerView: {

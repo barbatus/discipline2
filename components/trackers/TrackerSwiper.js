@@ -21,6 +21,8 @@ import { commonStyles } from '../styles/common';
 
 import TrackerRenderer from './TrackerRenderer';
 
+import { caller } from '../../utils/lang';
+
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 const screenHeight = window.height - 60;
@@ -146,9 +148,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   _onCancelEdit(callback) {
     this.refs.swiper.setEnabled(true);
-    if (callback) {
-      callback();
-    }
+    caller(callback);
   }
 
   render() {

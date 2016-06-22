@@ -53,11 +53,14 @@ export default class SumTrackerSlide extends TrackerSlide {
     });
   }
 
-  onClick() {
+  onTap() {
     Keyboard.dismiss();
+    super.onTap();
   }
 
   get controls() {
+    let { editable } = this.props;
+
     return (
       <View style={[
         trackerStyles.controls,
@@ -67,6 +70,7 @@ export default class SumTrackerSlide extends TrackerSlide {
           <View style={styles.inputContainer}>
              <TextInput
               ref='added'
+              editable={editable}
               placeholder='Enter value'
               placeholderTextColor={trackerDef.hintText.color}
               style={styles.sumInput}
@@ -74,7 +78,9 @@ export default class SumTrackerSlide extends TrackerSlide {
               value={this.state.added}
               onSubmitEditing={this._onPlus.bind(this)}
             />
-            <TouchableOpacity onPress={this._onPlus.bind(this)}>
+            <TouchableOpacity
+              disabled={editable}
+              onPress={this._onPlus.bind(this)}>
               <Image
                 source={getIcon('plus_sm')}
                 style={[trackerStyles.circleBtnSm, styles.circleBtnSm]} />
@@ -109,7 +115,9 @@ export default class SumTrackerSlide extends TrackerSlide {
     Keyboard.dismiss();
     let tracker = this.props.tracker;
     let added = parseFloat(this.state.added);
-    tracker.click(added);
+    if (added) {
+      tracker.click(added);
+    }
   }
 
   _onChangeText(sumAdded) {

@@ -2,7 +2,10 @@
 
 import React, { Component } from 'react';
 
-import { Animated } from 'react-native';
+import {
+  Animated,
+  StyleSheet
+} from 'react-native';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
 import CounterSlide from './slides/CounterSlide';
@@ -10,12 +13,10 @@ import SumTrackerSlide from './slides/SumTrackerSlide';
 
 import { TrackerType } from '../../depot/consts';
 
-export default class TrackerRenderer extends Component {
-  constructor(props) {
-    super(props);
+import { caller } from '../../utils/lang';
 
-    this._opacity = new Animated.Value(0);
-  }
+export default class TrackerRenderer extends Component {
+  _opacity = new Animated.Value(0);
 
   get opacity() {
     return this._opacity;
@@ -37,18 +38,31 @@ export default class TrackerRenderer extends Component {
     return this._opacity._value === 1;
   }
 
-  renderTracker(tracker: Object, scale: Number) {
+  onEdit(trackId) {
+    caller(this.props.onEdit, trackId);
+  }
+
+  onRemove(trackId) {
+    caller(this.props.onRemove, trackId);
+  }
+
+  onTap(trackId) {
+    caller(this.props.onTap, trackId);
+  }
+
+  renderTracker(tracker: Object, style) {
     let type = tracker.type;
+    let id = tracker.id;
     switch (type) {
       case TrackerType.GOAL_TRACKER:
         return (
           <GoalTrackerSlide
             ref={tracker.id}
             key={tracker.id}
-            scale={scale}
-            onIconEdit={this.props.onIconEdit}
-            onEdit={this.props.onEdit}
-            onRemove={this.props.onRemove}
+            style={StyleSheet.create(style)}
+            onEdit={this.onEdit.bind(this, id)}
+            onRemove={this.onRemove.bind(this, id)}
+            onTap={this.onTap.bind(this, id)}
             tracker={tracker}
           />
         );
@@ -57,10 +71,10 @@ export default class TrackerRenderer extends Component {
           <CounterSlide
             ref={tracker.id}
             key={tracker.id}
-            scale={scale}
-            onIconEdit={this.props.onIconEdit}
-            onEdit={this.props.onEdit}
-            onRemove={this.props.onRemove}
+            style={StyleSheet.create(style)}
+            onEdit={this.onEdit.bind(this, id)}
+            onRemove={this.onRemove.bind(this, id)}
+            onTap={this.onTap.bind(this, id)}
             tracker={tracker}
           />
         );
@@ -69,10 +83,10 @@ export default class TrackerRenderer extends Component {
           <SumTrackerSlide
             ref={tracker.id}
             key={tracker.id}
-            scale={scale}
-            onIconEdit={this.props.onIconEdit}
-            onEdit={this.props.onEdit}
-            onRemove={this.props.onRemove}
+            style={StyleSheet.create(style)}
+            onEdit={this.onEdit.bind(this, id)}
+            onRemove={this.onRemove.bind(this, id)}
+            onTap={this.onTap.bind(this, id)}
             tracker={tracker}
           />
         );

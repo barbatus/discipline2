@@ -12,10 +12,6 @@ import {
 import NavBar from '../nav/NavBar';
 
 class Screen extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   getChildContext() {
     return {
       navBar: this.navBar

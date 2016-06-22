@@ -27,7 +27,9 @@ import TrackersView from './TrackersView';
 
 import NewTrackerView from './NewTrackerView';
 
-import IconsDlg from './IconsDlg';
+import IconsDlg from '../dlg/IconsDlg';
+
+import registry, { DlgType } from '../dlg/registry';
 
 import Trackers from '../../trackers/Trackers';
 
@@ -35,8 +37,11 @@ import GradientSlider from '../common/GradientSlider';
 
 import { commonStyles } from '../styles/common';
 
+import { caller } from '../../utils/lang';
+
 class MainScreen extends Component {
   componentDidMount() {
+    registry.register(DlgType.ICONS, this.refs.iconDlg);
     this._setMainViewBtns();
   }
 
@@ -115,9 +120,7 @@ class MainScreen extends Component {
   }
 
   _onMenuToggle() {
-    if (this.props.onMenu) {
-      this.props.onMenu();
-    }
+    caller(this.props.onMenu);
   }
 
   _onSlideChange(index, dir) {
@@ -158,6 +161,8 @@ class MainScreen extends Component {
           posX={1}
           onAccept={this._onAccept.bind(this)}
           onCancel={this._cancelNewTracker.bind(this)} />
+
+        <IconsDlg ref='iconDlg' />
       </View>
     );
   }

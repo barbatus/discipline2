@@ -8,6 +8,8 @@ import Easing from 'Easing';
 
 import { commonStyles } from '../styles/common';
 
+import { caller } from '../../utils/lang';
+
 class ScreenView extends Component {
   constructor(props) {
     super(props);
@@ -34,9 +36,7 @@ class ScreenView extends Component {
     let value = this.posX._value;
     if (instantly) {
       this.posX.setValue(value - 1);
-      if (callback) {
-        callback();
-      }
+      caller(callback);
       return;
     }
 
@@ -56,9 +56,7 @@ class ScreenView extends Component {
     let value = this.posX._value;
     if (instantly) {
       this.posX.setValue(value + 1);
-      if (callback) {
-        callback();
-      }
+      caller(callback);
       return;
     }
 
@@ -70,17 +68,16 @@ class ScreenView extends Component {
   }
 
   setOpacity(value, animated, callback) {
-    if (animated) {
-      Animated.timing(this.opacity, {
-        duration: 1000,
-        toValue: value
-      }).start(callback);
-    } else {
+    if (!animated) {
       this.opacity.setValue(value);
-      if (callback) {
-        callback();
-      }
+      caller(callback);
+      return;
     }
+
+    Animated.timing(this.opacity, {
+      duration: 1000,
+      toValue: value
+    }).start(callback);
   }
 
   render() {

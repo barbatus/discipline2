@@ -25,10 +25,14 @@ export default class CounterSlide extends TrackerSlide {
   }
 
   get controls() {
+    let { editable } = this.props;
+
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TouchableOpacity onPress={this._onMinus.bind(this)}>
+          <TouchableOpacity
+            disabled={editable}
+            onPress={this._onMinus.bind(this)}>
             <Image
               source={getIcon('minus')}
               style={trackerStyles.circleBtn}
@@ -37,7 +41,9 @@ export default class CounterSlide extends TrackerSlide {
           <Text style={styles.countText} numberOfLines={1}>
             {this.state.count}
           </Text>
-          <TouchableOpacity onPress={this._onPlus.bind(this)}>
+          <TouchableOpacity
+            disabled={editable}
+            onPress={this._onPlus.bind(this)}>
             <Image
               source={getIcon('plus')}
               style={trackerStyles.circleBtn}

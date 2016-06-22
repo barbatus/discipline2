@@ -9,7 +9,7 @@ import {
 
 import UserIconsStore from '../../../../icons/UserIconsStore';
 
-class BaseTrackerView extends Component {
+export default class BaseTrackerView extends Component {
   constructor(props) {
     super(props);
 
@@ -32,6 +32,4 @@ class BaseTrackerView extends Component {
   get opacity() {
     return this._opacity;
   }
-}
-
-module.exports = BaseTrackerView;
+};

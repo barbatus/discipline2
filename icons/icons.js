@@ -1,8 +1,8 @@
 'use strict';
 
-const AppIconsStore = require('./AppIconsStore');
+import AppIconsStore from './AppIconsStore';
 
-const UserIconsStore = require('./UserIconsStore');
+import UserIconsStore from './UserIconsStore';
 
 import { IconSize } from './consts';
 

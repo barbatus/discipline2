@@ -18,6 +18,8 @@ import TrackerStore from '../../trackers/Trackers';
 
 import { commonStyles } from '../styles/common';
 
+import { caller } from '../../utils/lang';
+
 export default class Trackers extends Component {
   constructor(props) {
     super(props);
@@ -35,12 +37,9 @@ export default class Trackers extends Component {
     if (!tracker.typeId) return null;
 
     let nextInd = this.swiper.nextIndex;
-
     tracker = TrackerStore.addAt(tracker, nextInd);
 
-    if (callback) {
-      callback();
-    }
+    caller(callback);
 
     let trackers = this.state.trackers;
     trackers.splice(nextInd, 0, tracker);
@@ -61,15 +60,17 @@ export default class Trackers extends Component {
     return this.refs.swiper;
   }
 
-  get scroll() {
-    return this.refs.scroll;
+  get bscroll() {
+    return this.refs.bscroll;
+  }
+
+  get sscroll() {
+    return this.refs.sscroll;
   }
 
   cancelEdit() {
     this.swiper.cancelEdit();
-    if (this.props.onCancel) {
-      this.props.onCancel();
-    }
+    caller(this.props.onCancel);
   }
 
   saveEdit() {
@@ -101,20 +102,16 @@ export default class Trackers extends Component {
 
   _onEdit() {
     this.swiper.showEdit();
-    if (this.props.onEdit) {
-      this.props.onEdit();
-    }
+    caller(this.props.onEdit);
   }
 
   _onRemove() {
     let tracker = this.swiper.currentTracker;
     let removed = tracker.remove();
 
-    if (this.props.onRemove) {
-      this.props.onRemove(removed);
-    }
-
     if (removed) {
+      caller(this.props.onRemove, removed);
+
       let index = this.swiper.index;
       this.swiper.removeTracker(() => {
         let trackers = this.state.trackers;
@@ -128,31 +125,49 @@ export default class Trackers extends Component {
 
   _onMoveUpStart() {
     let index = this.swiper.index;
-    this.scroll.hide();
-    this.scroll.scrollTo(index, false);
+    this.bscroll.hide();
+    this.bscroll.scrollTo(index, false);
+    this.sscroll.scrollTo(index, false);
   }
 
   _onMoveUp(dv) {
-    this.scroll.opacity = 1 - dv;
+    this.bscroll.opacity = 1 - dv;
+    this.sscroll.opacity = 1 - dv;
   }
 
   _onMoveUpDone() {
-    this.scroll.show();
+    this.bscroll.show();
+    this.sscroll.show();
     this.swiper.hide();
   }
 
-  _onSlideClick(index) {
-    this.scroll.hide();
+  _onBigSlideTap(index) {
+    this.bscroll.hide();
+    this.sscroll.hide();
     this.swiper.show(index);
+  }
+
+  _onSmallSlideTap(index) {
+    this.bscroll.scrollTo(index, true);
+    this.sscroll.scrollTo(index, true);
   }
 
   render() {
     return (
       <View style={commonStyles.flexFilled}>
         <TrackerScroll
-          ref='scroll'
+          ref='bscroll'
+          style={styles.bigScroll}
           trackers={this.state.trackers}
-          onSlideClick={this._onSlideClick.bind(this)}
+          scale={1.6}
+          onSlideTap={this._onBigSlideTap.bind(this)}
+        />
+        <TrackerScroll
+          ref='sscroll'
+          style={styles.smallScroll}
+          trackers={this.state.trackers}
+          scale={4}
+          onSlideTap={this._onSmallSlideTap.bind(this)}
         />
         <TrackerSwiper
           ref='swiper'
@@ -170,3 +185,13 @@ export default class Trackers extends Component {
     )
   }
 };
+
+const styles = StyleSheet.create({
+  bigScroll: {
+    flex: 0.65
+  },
+  smallScroll: {
+    flex: 0.35
+  }
+});
+

@@ -1,14 +1,12 @@
 'use strict';
 
-const AppIconsStore = require('./AppIconsStore');
+import AppIconsStore from './AppIconsStore';
 
-const UserIconsStore = require('./UserIconsStore');
+import UserIconsStore from './UserIconsStore';
 
-function getIcon(iconId) {
+export default function getIcon(iconId) {
   let icon = AppIconsStore.get(iconId);
   if (icon) return icon;
 
   return UserIconsStore.get(iconId);
-}
-
-module.exports = getIcon;
+};

@@ -7,10 +7,14 @@ import {
   ListView,
   StyleSheet,
   Text,
-  Animated
+  Animated,
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 
 import Scroll from '../scrolls/Scroll';
+
+import BaseScroll from '../scrolls/BaseScroll';
 
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
@@ -21,6 +25,8 @@ import Trackers from '../../trackers/Trackers';
 import { commonStyles } from '../styles/common';
 
 import TrackerRenderer from './TrackerRenderer';
+
+import { caller } from '../../utils/lang';
 
 export default class TrackerScroll extends TrackerRenderer {
   hide(callback) {
@@ -34,26 +40,46 @@ export default class TrackerScroll extends TrackerRenderer {
     this.refs.scroll.scrollTo(index, callback, animated);
   }
 
+  onTap(trackId: string) {
+    let index = this.props.trackers.findIndex(
+      tracker => tracker.id === trackId);
+    this.scrollTo(index, () => {
+      caller(this.props.onSlideTap, index);
+    });
+  }
+
   render() {
+    let { style, scale, padding, index } = this.props;
+
     let slides = this.props.trackers.map(
-      tracker => {
-        return this.renderTracker(tracker, 0.5);
+      (tracker, index) => {
+        return this._scaleSlide(this.renderTracker(tracker), scale);
       });
 
     return (
-      <Animated.View style={[
-          commonStyles.flexFilled,
-          this.props.style, {
+      <Animated.View style={[style, {
           opacity: this._opacity
-        }]}>
+        }
+      ]}>
         <Scroll
           ref='scroll'
-          slideWidth={screenWidth / 2}
-          padding={screenWidth / 4}
-          index={this.props.index}
-          slides={slides}
-          onSlideClick={this.props.onSlideClick}>
+          slideWidth={screenWidth / scale}
+          padding={0}
+          index={index}
+          slides={slides}>
         </Scroll>
+      </Animated.View>
+    );
+  }
+
+  _scaleSlide(slide, scale) {
+    return (
+      <Animated.View style={{
+          transform: [{
+            scale: new Animated.Value(1 / scale)
+          }]
+        }}>
+        {slide}
       </Animated.View>
     );
   }

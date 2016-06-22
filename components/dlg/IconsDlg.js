@@ -12,30 +12,33 @@ import {
 
 import IconsGrid from '../icons/IconsGrid';
 
-let IconsDlg = React.createClass({
-  getInitialState() {
-    return {
-      modalVisible: false
-    };
-  },
+import { caller } from '../../utils/lang';
 
-  show() {
+export default class IconsDlg extends Component {
+  _cb: Function = null;
+  state: any = { modalVisible: false };
+
+  show(cb: Function) {
+    check.assert.null(this._cb,
+      'Dlg already shown');
+
     this.setState({
       modalVisible: true
     });
-  },
+    this._cb = cb;
+  }
 
   hide() {
     this.setState({
       modalVisible: false
     });
-  },
+    this._cb = null;
+  }
 
   _onIconChosen(iconId) {
-    if (this.props.onIconChosen) {
-      this.props.onIconChosen(iconId);
-    }
-  },
+    caller(this._cb, iconId);
+    caller(this.props.onIconChosen, iconId);
+  }
 
   render() {
     return (
@@ -55,14 +58,14 @@ let IconsDlg = React.createClass({
             <View style={styles.bodyContainer}>
               <IconsGrid
                 ref='iconsGrid'
-                onIconChosen={this._onIconChosen} />
+                onIconChosen={this._onIconChosen.bind(this)} />
             </View>
           </View>
         </Modal>
       </View>
     );
   }
-});
+};
 
 const styles = StyleSheet.create({
   innerView: {
@@ -89,5 +92,3 @@ const styles = StyleSheet.create({
     color: '#1A7CF9'
   }
 });
-
-module.exports = IconsDlg;

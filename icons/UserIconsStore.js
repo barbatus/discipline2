@@ -1,8 +1,8 @@
 'use strict';
 
-const UserIcons = require('./userIcons');
+import UserIcons from './userIcons';
 
-const { IconSize } = require('./consts');
+import { IconSize } from './consts';
 
 class UserIcon {
   constructor(iconEnum) {
@@ -22,7 +22,7 @@ class UserIcon {
   }
 };
 
-class UserIconsStore {
+export default class UserIconsStore {
   static get(iconId): UserIcon {
     let icon = UserIcons.fromValue(iconId);
     if (icon) {
@@ -36,5 +36,3 @@ class UserIconsStore {
       icon => new UserIcon(icon));
   }
 }
-
-module.exports = UserIconsStore;

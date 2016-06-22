@@ -21,14 +21,17 @@ import { commonStyles } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
+import { caller } from '../../utils/lang';
+
 const stylesDef = {
   slide: {
     flex: 1,
-    width: screenWidth
+    width: screenWidth,
+    alignItems: 'center'
   },
   dots: {
     position: 'absolute',
-    bottom: 15,
+    bottom: 12,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -186,9 +189,7 @@ const Swiper = React.createClass({
 
   _onSlideChange(index, previ, dir) {
     this._setActiveDot(index, previ);
-    if (this.props.onSlideChange) {
-      this.props.onSlideChange(index, dir);
-    }
+    caller(this.props.onSlideChange, index, dir);
   },
 
   render() {

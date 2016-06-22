@@ -1,11 +1,9 @@
 'use strict';
 
-const appIcons = require('./appIcons');
+import appIcons from './appIcons';
 
-class AppIconsStore {
+export default class AppIconsStore {
   static get(iconId) {
     return appIcons[iconId];
   }
 }
-
-module.exports = AppIconsStore;

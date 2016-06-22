@@ -25,9 +25,13 @@ export default class GoalTrackerSlide extends TrackerSlide {
   }
 
   get controls() {
+    let { editable } = this.props;
+
     return (
       <View style={trackerStyles.controls}>
-        <TouchableOpacity onPress={this._onCheck.bind(this)}>
+        <TouchableOpacity
+          disabled={editable}
+          onPress={this._onCheck.bind(this)}>
           <Image
             source={getIcon('check')}
             style={this._getCheckStyle()}

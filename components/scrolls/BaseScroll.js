@@ -12,6 +12,12 @@ import {
 
 import { commonStyles } from '../styles/common';
 
+import { caller } from '../../utils/lang';
+
+import Dimensions from 'Dimensions';
+const window = Dimensions.get('window');
+const screenWidth = window.width;
+
 const BaseScroll = React.createClass({
   propTypes: {
     slideWidth: React.PropTypes.number.isRequired,
@@ -70,20 +76,23 @@ const BaseScroll = React.createClass({
       callback = null;
     }
 
+    if (this.getSize() <= 1) {
+      caller(callback);
+      return;
+    }
+
     if (this._isScrolling) return;
 
-    if (this._index === index ||
-        this.getSize() <= 1) {
-      if (callback) {
-        callback();
-      }
+    index = Math.min(index, this.getSize() - 1);
+    let centerOffset = (screenWidth - this.getWidth()) / 2;
+    let offsetX = Math.max(index * this.getWidth() - centerOffset, 0);
+    if (this._offsetX === offsetX) {
+      caller(callback);
       return;
     }
 
     this._onScrollToCb = callback;
     this._isScrolling = true;
-    index = Math.min(index, this.getSize() - 1);
-    let offsetX = index * this.getWidth();
     this.refs.scrollView.scrollTo({
       x: offsetX,
       y: 0,
@@ -135,9 +144,7 @@ const BaseScroll = React.createClass({
     if (this._index === 0 && dx <= 0) return;
     if (this._index === size - 1 && dx >= 0) return;
 
-    if (this.props.onTouchMove) {
-      this.props.onTouchMove(dx);
-    }
+    caller(this.props.onTouchMove, dx);
   },
 
   _onScrollEnd(event) {
@@ -150,23 +157,17 @@ const BaseScroll = React.createClass({
     this._updateSlideIndex(offsetX);
 
     if (this._prevInd === this._index) {
-      if (this.props.onSlideNoChange) {
-        this.props.onSlideNoChange(this._diraction);
-      }
+      caller(this.props.onSlideNoChange, this._diraction);
     }
 
     if (this._prevInd !== this._index) {
-      if (this.props.onSlideChange) {
-        this.props.onSlideChange(this._index, this._prevInd,
-          this._diraction);
-      }
+      caller(this.props.onSlideChange, this._index,
+        this._prevInd, this._diraction);
       this._prevInd = this._index;
     }
 
-    if (this._onScrollToCb) {
-      this._onScrollToCb();
-      this._onScrollToCb = null;
-    }
+    caller(this._onScrollToCb);
+    this._onScrollToCb = null;
   },
 
   _onScrollBegin(event) {
@@ -176,9 +177,7 @@ const BaseScroll = React.createClass({
     let diff = offsetX - this._offsetX;
     this._diraction = diff > 0 ? 1 : -1;
 
-    if (this.props.onScrollBegin) {
-      this.props.onScrollBegin(event, this.state, this);
-    }
+    caller(this.props.onScrollBegin, event, this.state, this);
   },
 
   _updateSlideIndex(offsetX) {

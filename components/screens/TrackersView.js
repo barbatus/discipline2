@@ -21,11 +21,9 @@ import Trackers from '../trackers/Trackers';
 
 import { commonStyles } from '../styles/common';
 
-class TrackersView extends ScreenView {
-  constructor(props) {
-    super(props);
-  }
+import { caller } from '../../utils/lang';
 
+class TrackersView extends ScreenView {
   get content() {
     return (
       <Trackers
@@ -39,8 +37,8 @@ class TrackersView extends ScreenView {
     )
   }
 
-  async addTracker(tracker, callback) {
-    await this.refs.trackers.addTracker(tracker, callback);
+  addTracker(tracker, callback) {
+    this.refs.trackers.addTracker(tracker, callback);
   }
 
   _getCancelBtn(onPress) {
@@ -70,9 +68,7 @@ class TrackersView extends ScreenView {
 
   _cancelEdit() {
     this.refs.trackers.cancelEdit();
-    if (this.props.onCancel) {
-      this.props.onCancel();
-    }
+    caller(this.props.onCancel);
   }
 
   _onEdit() {
@@ -80,10 +76,8 @@ class TrackersView extends ScreenView {
   }
 
   _saveEdit() {
-   this.refs.trackers.saveEdit();
-    if (this.props.onSave) {
-      this.props.onSave();
-    }
+    this.refs.trackers.saveEdit();
+    caller(this.props.onSave);
   }
 };
 
