@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import { TextInput } from 'react-native';
+import {TextInput} from 'react-native';
 
-const { State: TextInputState } = TextInput;
+const {State: TextInputState} = TextInput;
 
 import {
   DeviceEventEmitter

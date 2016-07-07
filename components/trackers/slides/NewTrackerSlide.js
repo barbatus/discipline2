@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   View,
@@ -11,7 +11,7 @@ import {
   Animated
 } from 'react-native';
 
-import { trackerStyles } from '../styles/trackerStyles';
+import {trackerStyles} from '../styles/trackerStyles';
 
 import TrackerEditView from './basic/TrackerEditView';
 

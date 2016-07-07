@@ -11,7 +11,8 @@ import {
   StyleSheet
 } from 'react-native';
 
-import { trackerStyles } from '../styles/trackerStyles';
+import {trackerStyles} from '../styles/trackerStyles';
+
 import TrackerSlide from './TrackerSlide';
 
 export default class GoalTrackerSlide extends TrackerSlide {
@@ -24,13 +25,20 @@ export default class GoalTrackerSlide extends TrackerSlide {
     });
   }
 
+  onTick() {
+    let { tracker } = this.props;
+    this.setState({
+      checked: tracker.checked
+    });
+  }
+
   get controls() {
     let { editable } = this.props;
 
     return (
       <View style={trackerStyles.controls}>
         <TouchableOpacity
-          disabled={editable}
+          disabled={!editable}
           onPress={this._onCheck.bind(this)}>
           <Image
             source={getIcon('check')}
@@ -51,7 +59,7 @@ export default class GoalTrackerSlide extends TrackerSlide {
 
   _onCheck() {
     let { tracker } = this.props;
-    tracker.click();
+    tracker.tick();
   }
 
   _getCheckStyle() {

@@ -18,6 +18,8 @@ import {
   trackerStyles
 } from '../styles/trackerStyles';
 
+import {isPhone5} from '../../styles/common';
+
 import TrackerSlide from './TrackerSlide';
 
 import Keyboard from '../../../utils/keyboard';
@@ -53,6 +55,13 @@ export default class SumTrackerSlide extends TrackerSlide {
     });
   }
 
+  onTick() {
+    let { tracker } = this.props;
+    this.setState({
+      sum: tracker.value
+    });
+  }
+
   onTap() {
     Keyboard.dismiss();
     super.onTap();
@@ -79,7 +88,7 @@ export default class SumTrackerSlide extends TrackerSlide {
               onSubmitEditing={this._onPlus.bind(this)}
             />
             <TouchableOpacity
-              disabled={editable}
+              disabled={!editable}
               onPress={this._onPlus.bind(this)}>
               <Image
                 source={getIcon('plus_sm')}
@@ -113,10 +122,11 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   _onPlus() {
     Keyboard.dismiss();
-    let tracker = this.props.tracker;
+    let { tracker } = this.props;
     let added = parseFloat(this.state.added);
     if (added) {
-      tracker.click(added);
+      tracker.tick(added);
+      this.setState({ added: '' });
     }
   }
 
@@ -126,6 +136,8 @@ export default class SumTrackerSlide extends TrackerSlide {
 };
 
 const width = trackerDef.container.width - 40;
+
+const inFontSize = isPhone5() ? 32 : 42;
 
 const styles = StyleSheet.create({
   controlsContainer: {
@@ -152,7 +164,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: width - 40,
     paddingRight: 20,
-    fontSize: 42,
+    fontSize: inFontSize,
     color: '#4A4A4A',
     textAlign: 'right',
     fontWeight: '100'

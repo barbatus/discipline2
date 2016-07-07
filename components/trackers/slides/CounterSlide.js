@@ -11,7 +11,8 @@ import {
   StyleSheet
 } from 'react-native';
 
-import { trackerStyles } from '../styles/trackerStyles';
+import {trackerStyles} from '../styles/trackerStyles';
+
 import TrackerSlide from './TrackerSlide';
 
 export default class CounterSlide extends TrackerSlide {
@@ -24,6 +25,13 @@ export default class CounterSlide extends TrackerSlide {
     });
   }
 
+  onTick() {
+    let { tracker } = this.props;
+    this.setState({
+      count: tracker.count
+    });
+  }
+
   get controls() {
     let { editable } = this.props;
 
@@ -31,7 +39,7 @@ export default class CounterSlide extends TrackerSlide {
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
           <TouchableOpacity
-            disabled={editable}
+            disabled={!editable}
             onPress={this._onMinus.bind(this)}>
             <Image
               source={getIcon('minus')}
@@ -42,7 +50,7 @@ export default class CounterSlide extends TrackerSlide {
             {this.state.count}
           </Text>
           <TouchableOpacity
-            disabled={editable}
+            disabled={!editable}
             onPress={this._onPlus.bind(this)}>
             <Image
               source={getIcon('plus')}
@@ -64,11 +72,11 @@ export default class CounterSlide extends TrackerSlide {
 
   _onPlus() {
     let { tracker } = this.props;
-    tracker.click();
+    tracker.tick();
   }
 
   _onMinus() {
-    let count = this.state.count;
+    let { count } = this.state;
     if (count > 0) {
       let { tracker } = this.props;
       tracker.undo();
@@ -84,8 +92,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   countText: {
-    fontSize: 54,
-    fontWeight: '300',
+    fontSize: 56,
+    fontWeight: '200',
     color: '#4A4A4A'
   }
 });

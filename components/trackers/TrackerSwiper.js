@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   View,
@@ -15,47 +15,46 @@ import Swiper from '../scrolls/Swiper';
 
 import Trackers from '../../trackers/Trackers';
 
-import { ScaleResponder } from './responders';
+import {ScaleResponder} from './responders';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
 import TrackerRenderer from './TrackerRenderer';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 const screenHeight = window.height - 60;
 
 export default class TrackerSwiper extends TrackerRenderer {
+  _scale = new Animated.Value(1);
+  _moveY = new Animated.Value(0);
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      scale: new Animated.Value(1),
-      moveY: new Animated.Value(0),
-      index: 0
-    };
+    this.state = {};
   }
 
   componentWillMount() {
     let scaleResponder = new ScaleResponder(screenHeight);
     scaleResponder.subscribe(scale => {
-      this.state.scale.setValue(scale);
+      this._scale.setValue(scale);
       if (this.props.onMoveUp) {
         this.props.onMoveUp(scale - 0.5);
       }
     },
     this.props.onMoveUpStart,
     () => {
-      if (this.state.scale._value <= 0.5) {
+      if (this._scale._value <= 0.5) {
         if (this.props.onMoveUpDone) {
           this.props.onMoveUpDone();
         }
         return;
       }
 
-      Animated.timing(this.state.scale, {
+      Animated.timing(this._scale, {
         duration: 200,
         toValue: 0.5
       }).start(this.props.onMoveUpDone);
@@ -102,13 +101,13 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   hide(callback) {
-    this.state.moveY.setValue(1);
+    this._moveY.setValue(1);
   }
 
   show(index, callback) {
-    this.state.moveY.setValue(0);
+    this._moveY.setValue(0);
     this.scrollTo(index, () => {
-      Animated.timing(this.state.scale, {
+      Animated.timing(this._scale, {
         duration: 500,
         toValue: 1
       }).start(callback);
@@ -116,7 +115,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   get shown() {
-    return this.state.moveY._value === 0;
+    return this._moveY._value === 0;
   }
 
   scrollTo(index, callback, animated) {
@@ -154,7 +153,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   render() {
     let slides = this.props.trackers.map(
       tracker => {
-        return this.renderTracker(tracker, 1);
+        return this.renderTracker(tracker, true);
       });
 
     let swiperView = (
@@ -174,10 +173,10 @@ export default class TrackerSwiper extends TrackerRenderer {
         this.props.style, {
           transform: [
             {
-              scale: this.state.scale
+              scale: this._scale
             },
             {
-              translateY: this.state.moveY.interpolate({
+              translateY: this._moveY.interpolate({
                 inputRange: [0, 1],
                 outputRange: [0, 1000]
               })

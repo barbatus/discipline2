@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   View,
@@ -26,7 +26,7 @@ import TrackerEditView from './basic/TrackerEditView';
 
 import UserIconsStore from '../../../icons/UserIconsStore';
 
-import { caller } from '../../../utils/lang';
+import {caller} from '../../../utils/lang';
 
 export default class TrackerSlide extends Component {
   constructor(props) {
@@ -43,9 +43,14 @@ export default class TrackerSlide extends Component {
     this.onChange();
     let { tracker } = this.props;
     tracker.onChange(this.onChange.bind(this));
+    tracker.onTick(this.onTick.bind(this));
   }
 
   onChange() {
+    throw new Error('onChange is not implemented');
+  }
+
+  onTick() {
     throw new Error('onChange is not implemented');
   }
 
@@ -125,7 +130,7 @@ export default class TrackerSlide extends Component {
   }
 
   collapse(callback) {
-    Animated.timing(this.state.scale, {
+    Animated.timing(this._scale, {
       duration: 500,
       toValue: 0
     }).start(() => {

@@ -15,6 +15,7 @@ const appIcons = {
   goal: require('./files/app/goal.png'),
   counter: require('./files/app/counter.png'),
   sum: require('./files/app/sum.png'),
+  stopwatch: require('./files/app/stopwatch.png'),
   next: require('./files/app/next.png')
 };
 

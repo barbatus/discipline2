@@ -1,8 +1,8 @@
 'use strict';
 
-const { TrackerType } = require('../depot/consts');
+const {TrackerType} = require('../depot/consts');
 
-const { Tracker } = require('../depot/interfaces');
+const {Tracker} = require('../depot/interfaces');
 
 const UserIconsStore = require('../icons/UserIconsStore');
 
@@ -13,6 +13,8 @@ export default class TrackerDAO {
   typeId: string;
 
   _changeCbs: Array<Function> = [];
+
+  _ticksCbs: Array<Function> = [];
 
   constructor(tracker: Tracker) {
     this.id = tracker.id;
@@ -59,12 +61,12 @@ export default class TrackerDAO {
     }, 0);
   }
 
-  click(opt_value, opt_onResult) {
-    if (_.isFunction(opt_value)) {
-      opt_onResult = opt_value;
-      opt_value = null;
+  tick(value, onResult) {
+    if (_.isFunction(value)) {
+      onResult = value;
+      value = null;
     }
-    return this.addTick(opt_value);
+    return this.addTick(value);
   }
 
   undo() {
@@ -87,12 +89,12 @@ export default class TrackerDAO {
     return true;
   }
 
-  addTick(opt_value) {
+  addTick(value?: number) {
     return depot.trackers.addTick(this.id,
-      time.getDateTimeMs(), opt_value);
+      time.getDateTimeMs(), value);
   }
 
-  getTicks(startDateMs) {
+  getTicks(startDateMs: number) {
     return depot.trackers.getTicks(this.id, startDateMs);
   }
 
@@ -103,12 +105,19 @@ export default class TrackerDAO {
   destroy() {
     this._unsubscribe();
     this._changeCbs = null;
+    this._ticksCbs = null;
   }
 
   onChange(cb: Function) {
     check.assert.function(cb);
 
     this._changeCbs.push(cb);
+  }
+
+  onTick(cb: Function) {
+    check.assert.function(cb);
+
+    this._ticksCbs.push(cb);
   }
 
   _unsubscribe() {
@@ -131,7 +140,7 @@ export default class TrackerDAO {
 
   _onTicks(event) {
     if (event.trackerId === this.id) {
-      this._changeCbs.forEach(cb => cb());
+      this._ticksCbs.forEach(cb => cb());
     }
   }
 

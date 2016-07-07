@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
-import { trackerStyles } from '../../styles/trackerStyles';
+import {trackerStyles} from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';
 
@@ -26,7 +26,8 @@ export default class TrackerView extends BaseTrackerView {
           {opacity: this.opacity},
           this.props.style
         ]}>
-        <TouchableOpacity style={{flex: 1}} onPress={this.props.onTap}>
+        <TouchableWithoutFeedback style={{flex: 1}} onPress={this.props.onTap}>
+          <View style={{flex: 1}}>
             <View style={trackerStyles.headerContainer}>
               <View style={trackerStyles.barContainer}>
                 <TouchableOpacity onPress={this.props.onEdit}>
@@ -48,15 +49,16 @@ export default class TrackerView extends BaseTrackerView {
                 </Text>
               </View>
             </View>
-          <View style={trackerStyles.bodyContainer}>
-            <View style={trackerStyles.controlsContainer}>
-              {this.props.controls}
+            <View style={trackerStyles.bodyContainer}>
+              <View style={trackerStyles.controlsContainer}>
+                {this.props.controls}
+              </View>
+            </View>
+            <View style={trackerStyles.footerContainer}>
+              {this.props.footer}
             </View>
           </View>
-          <View style={trackerStyles.footerContainer}>
-            {this.props.footer}
-          </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </Animated.View>
     );
   }

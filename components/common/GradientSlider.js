@@ -1,8 +1,8 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { StyleSheet, View, Animated } from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 

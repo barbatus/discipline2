@@ -12,11 +12,11 @@ import {
   Animated
 } from 'react-native';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 const Scroll = React.createClass({
   propTypes: {
@@ -46,7 +46,7 @@ const Scroll = React.createClass({
     let slideStyle = { width: slideWidth };
     slides = slides.map((slide, i) =>
       <View style={slideStyle} key={i}>
-          {slide}
+        {slide}
       </View>
     );
 

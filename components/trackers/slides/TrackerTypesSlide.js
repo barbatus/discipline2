@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   TouchableOpacity,
@@ -13,11 +13,11 @@ import {
   Animated
 } from 'react-native';
 
-import { slideStyles } from '../styles/slideStyles';
+import {slideStyles} from '../styles/slideStyles';
 
-import { TrackerType } from '../../../depot/consts';
+import {commonStyles} from '../../styles/common';
 
-import { commonStyles } from '../../styles/common';
+import {TrackerType} from '../../../depot/consts';
 
 export default class TrackerTypesSlide extends Component {
   constructor(props) {

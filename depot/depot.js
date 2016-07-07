@@ -3,8 +3,10 @@
 'use strict';
 
 import trackers from './realm/trackers';
+
 import ticks from './realm/ticks';
-import { TrackerType } from './consts';
+
+import {TrackerType} from './consts';
 
 class Depot {
   trackers: ITrackersDepot = trackers;
@@ -34,6 +36,11 @@ class Depot {
     this.trackers.add({
       title: 'Spent on Lunch',
       typeId: TrackerType.SUM.valueOf(), 
+      iconId: 'pizza'
+    });
+    this.trackers.add({
+      title: 'Total reading time',
+      typeId: TrackerType.STOP_WATCH.valueOf(), 
       iconId: 'pizza'
     });
   }

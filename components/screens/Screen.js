@@ -23,8 +23,11 @@ class Screen extends Component {
       setButtons: (leftBtn, rightBtn) => {
         this.refs.navBar.setButtons(leftBtn, rightBtn);
       },
-      setTitle: navTitle => {
+      setTitle: (navTitle: string) => {
         this.refs.navBar.setTitle(navTitle);
+      },
+      setOpacity: (dp: number) => {
+        this.refs.navBar.setOpacity(dp);
       }
     };
   }

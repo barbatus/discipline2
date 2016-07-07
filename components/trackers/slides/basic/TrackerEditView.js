@@ -21,9 +21,9 @@ import {
   trackerDef
 } from '../../styles/trackerStyles';
 
-import { TrackerType } from '../../../../depot/consts';
+import {TrackerType} from '../../../../depot/consts';
 
-import registry, { DlgType } from '../../../dlg/registry';
+import registry, {DlgType} from '../../../dlg/registry';
 
 import BaseTrackerView from './BaseTrackerView';
 
@@ -204,4 +204,7 @@ const styles = StyleSheet.create({
   }
 });
 
-TrackerEditView.defaultProps = { showType: true };
+TrackerEditView.defaultProps = {
+  showType: true,
+  title: ''
+};

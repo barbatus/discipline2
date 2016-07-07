@@ -1,9 +1,10 @@
 'user strict';
 
-const moment = require('moment');
+import moment from 'moment';
+import 'moment-duration-format';
 
 const time = {
-  getDateMs: function() {
+  getDateMs: () => {
     let now = moment();
     let dateMs = moment([
       now.year(),
@@ -13,8 +14,18 @@ const time = {
     return dateMs;
   },
 
-  getDateTimeMs: function() {
+  getDateTimeMs: () => {
     return moment().valueOf();
+  },
+
+  formatTimeMs: (timeMs) => {
+    let format = moment
+      .duration(timeMs, 'ms')
+      .format('hh:mm:ss');
+    if (timeMs < 60000) {
+      return `00:${format}`;
+    }
+    return format;
   }
 };
 

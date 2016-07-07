@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   Animated,
@@ -10,10 +10,11 @@ import {
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
 import CounterSlide from './slides/CounterSlide';
 import SumTrackerSlide from './slides/SumTrackerSlide';
+import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
 
-import { TrackerType } from '../../depot/consts';
+import {TrackerType} from '../../depot/consts';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 export default class TrackerRenderer extends Component {
   _opacity = new Animated.Value(0);
@@ -50,46 +51,33 @@ export default class TrackerRenderer extends Component {
     caller(this.props.onTap, trackId);
   }
 
-  renderTracker(tracker: Object, style) {
+  renderTracker(tracker: Object, editable: boolean = true, style) {
+    let newSlide = (Component) => {
+      let id = tracker.id;
+      return (
+        <Component
+          ref={id}
+          key={id}
+          editable={editable}
+          style={StyleSheet.create(style)}
+          onEdit={this.onEdit.bind(this, id)}
+          onRemove={this.onRemove.bind(this, id)}
+          onTap={this.onTap.bind(this, id)}
+          tracker={tracker}
+        />
+      )
+    };
+
     let type = tracker.type;
-    let id = tracker.id;
     switch (type) {
       case TrackerType.GOAL_TRACKER:
-        return (
-          <GoalTrackerSlide
-            ref={tracker.id}
-            key={tracker.id}
-            style={StyleSheet.create(style)}
-            onEdit={this.onEdit.bind(this, id)}
-            onRemove={this.onRemove.bind(this, id)}
-            onTap={this.onTap.bind(this, id)}
-            tracker={tracker}
-          />
-        );
+        return newSlide(GoalTrackerSlide);
       case TrackerType.COUNTER:
-        return (
-          <CounterSlide
-            ref={tracker.id}
-            key={tracker.id}
-            style={StyleSheet.create(style)}
-            onEdit={this.onEdit.bind(this, id)}
-            onRemove={this.onRemove.bind(this, id)}
-            onTap={this.onTap.bind(this, id)}
-            tracker={tracker}
-          />
-        );
+        return newSlide(CounterSlide);
       case TrackerType.SUM:
-        return (
-          <SumTrackerSlide
-            ref={tracker.id}
-            key={tracker.id}
-            style={StyleSheet.create(style)}
-            onEdit={this.onEdit.bind(this, id)}
-            onRemove={this.onRemove.bind(this, id)}
-            onTap={this.onTap.bind(this, id)}
-            tracker={tracker}
-          />
-        );
+        return newSlide(SumTrackerSlide);
+      case TrackerType.STOP_WATCH:
+        return newSlide(StopWatchTrackerSlide);
     }
   }
 };

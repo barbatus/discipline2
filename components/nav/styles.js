@@ -1,14 +1,11 @@
 'use strict';
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  navTitle: {
-    marginVertical: -10
-  },
   navTitleText: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '300',
     color: '#FFF'
   },
   navBarIcon: {
@@ -17,10 +14,6 @@ const styles = StyleSheet.create({
     height: 23,
     width: 23
   },
-  // menuIcon: {
-  //   height: 17,
-  //   width: 24
-  // },
   backIcon: {
     height: 30,
     width: 15

@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -10,9 +10,6 @@ import {
   Text
 } from 'react-native';
 
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
-
 class Menu extends Component {
   render() {
     return (
@@ -21,6 +18,9 @@ class Menu extends Component {
     );
   }
 }
+
+import Dimensions from 'Dimensions';
+const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   menu: {

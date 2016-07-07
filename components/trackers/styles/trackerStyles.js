@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
-import { slideDef } from './slideStyles';
+import {slideDef} from './slideStyles';
 
 const trackerDef = {
   ...slideDef,

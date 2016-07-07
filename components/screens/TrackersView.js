@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   TouchableOpacity,
@@ -19,9 +19,9 @@ import ScreenView from './ScreenView';
 
 import Trackers from '../trackers/Trackers';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 class TrackersView extends ScreenView {
   get content() {
@@ -33,6 +33,8 @@ class TrackersView extends ScreenView {
         onSlideNoChange={this.props.onSlideNoChange}
         onEdit={this._onEdit.bind(this)}
         onRemove={this.props.onRemove}
+        onSwiperShow={this._onSwiperShow.bind(this)}
+        onSwiperHide={this._onSwiperHide.bind(this)}
       />
     )
   }
@@ -56,12 +58,20 @@ class TrackersView extends ScreenView {
   _setEditTrackerBtns() {
     let { navBar } = this.context;
 
-    if (navBar) {
-      navBar.setTitle('Edit Tracker');
-      navBar.setButtons(
-        this._getCancelBtn(this._cancelEdit),
-        this._getAcceptBtn(this._saveEdit));
-    }
+    navBar.setTitle('Edit Tracker');
+    navBar.setButtons(
+      this._getCancelBtn(this._cancelEdit),
+      this._getAcceptBtn(this._saveEdit));
+  }
+
+  _onSwiperShow(dx: number) {
+    let { navBar } = this.context;
+    navBar.setOpacity(dx);
+  }
+
+  _onSwiperHide(dx: number) {
+    let { navBar } = this.context;
+    navBar.setOpacity(dx);
   }
 
   // Edit tracker events.

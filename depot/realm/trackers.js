@@ -79,7 +79,7 @@ class TrackersDepot {
     }
 
     this.events.emit('removed', {
-      trackerId: tracker.id
+      trackerId: trackId
     });
 
     return !!tracker;

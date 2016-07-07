@@ -2,13 +2,13 @@
 
 import React, {Component} from 'react';
 
-import { StyleSheet, View, Animated } from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 
 import Easing from 'Easing';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 class ScreenView extends Component {
   constructor(props) {

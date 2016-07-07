@@ -29,20 +29,28 @@ import NewTrackerView from './NewTrackerView';
 
 import IconsDlg from '../dlg/IconsDlg';
 
-import registry, { DlgType } from '../dlg/registry';
+import registry, {DlgType} from '../dlg/registry';
 
 import Trackers from '../../trackers/Trackers';
 
 import GradientSlider from '../common/GradientSlider';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 class MainScreen extends Component {
   componentDidMount() {
     registry.register(DlgType.ICONS, this.refs.iconDlg);
     this._setMainViewBtns();
+  }
+
+  get trackersView() {
+    return this.refs.trackersView;
+  }
+
+  get newTrackerView() {
+    return this.refs.newTrackerView;
   }
 
   _getNewBtn(onPress) {
@@ -133,14 +141,6 @@ class MainScreen extends Component {
 
   _onScroll(dx) {
     this.refs.gradient.slide(dx);
-  }
-
-  get trackersView() {
-    return this.refs.trackersView;
-  }
-
-  get newTrackerView() {
-    return this.refs.newTrackerView;
   }
 
   _renderContent() {

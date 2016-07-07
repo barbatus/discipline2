@@ -1,6 +1,6 @@
 'use strict';
 
-import { IconSize } from './consts';
+import {IconSize} from './consts';
 
 import Enum from '../depot/Enum';
 

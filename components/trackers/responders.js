@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { PanResponder } from 'react-native';
+import {PanResponder} from 'react-native';
 
 export class ScaleResponder {
   constructor(height) {

@@ -25,9 +25,9 @@ import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 import Trackers from '../../trackers/Trackers';
 
-import { commonDef, commonStyles } from '../styles/common';
+import {commonDef, commonStyles} from '../styles/common';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 class NewTrackerView extends ScreenView {
   constructor(props) {

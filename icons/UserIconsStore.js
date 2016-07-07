@@ -2,7 +2,7 @@
 
 import UserIcons from './userIcons';
 
-import { IconSize } from './consts';
+import {IconSize} from './consts';
 
 class UserIcon {
   constructor(iconEnum) {

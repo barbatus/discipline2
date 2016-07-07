@@ -4,7 +4,7 @@ import AppIconsStore from './AppIconsStore';
 
 import UserIconsStore from './UserIconsStore';
 
-import { IconSize } from './consts';
+import {IconSize} from './consts';
 
 function getIcon(iconId) {
   let icon = AppIconsStore.get(iconId);

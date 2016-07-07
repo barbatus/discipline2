@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   View,
@@ -22,11 +22,11 @@ const screenWidth = window.width;
 
 import Trackers from '../../trackers/Trackers';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
 import TrackerRenderer from './TrackerRenderer';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 export default class TrackerScroll extends TrackerRenderer {
   hide(callback) {
@@ -49,11 +49,12 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   render() {
-    let { style, scale, padding, index } = this.props;
+    let { style, editable, scale, padding, index } = this.props;
 
     let slides = this.props.trackers.map(
       (tracker, index) => {
-        return this._scaleSlide(this.renderTracker(tracker), scale);
+        return this._scaleSlide(
+          this.renderTracker(tracker, editable), scale);
       });
 
     return (
@@ -87,5 +88,6 @@ export default class TrackerScroll extends TrackerRenderer {
 
 TrackerScroll.defaultProps = {
   index: 0,
-  trackers: []
+  trackers: [],
+  editable: true
 };

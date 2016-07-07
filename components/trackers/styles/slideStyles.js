@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
@@ -11,8 +11,8 @@ const slideDef = {
   slide: {
     //flex: 1,
     //width: window.width - 40,
-    height: window.height - 60,
-    paddingTop: 20,
+    height: window.height - 64,
+    paddingTop: 10,
     paddingBottom: 40,
     alignItems: 'center'
   },

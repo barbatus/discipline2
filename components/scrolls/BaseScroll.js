@@ -10,9 +10,9 @@ import {
   Animated
 } from 'react-native';
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
@@ -53,9 +53,7 @@ const BaseScroll = React.createClass({
 
   getInitialState() {
     let { scrollEnabled } = this.props;
-    return {
-      scrollEnabled: scrollEnabled
-    }
+    return { scrollEnabled };
   },
 
   componentWillMount() {

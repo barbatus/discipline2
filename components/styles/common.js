@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
-const commonDef = {
+export const commonDef = {
   flexFilled: {
     flex: 1
   },
@@ -20,11 +20,10 @@ const commonDef = {
   }
 };
 
-const commonStyles = StyleSheet.create({
+export const commonStyles = StyleSheet.create({
   ...commonDef
 });
 
-module.exports = {
-  commonStyles,
-  commonDef
-};
+export function isPhone5() {
+  return window.width <= 320;
+}

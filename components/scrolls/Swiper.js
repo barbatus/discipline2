@@ -17,44 +17,11 @@ import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 const screenWidth = window.width;
 
-import { commonStyles } from '../styles/common';
+import {commonStyles} from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
-import { caller } from '../../utils/lang';
-
-const stylesDef = {
-  slide: {
-    flex: 1,
-    width: screenWidth,
-    alignItems: 'center'
-  },
-  dots: {
-    position: 'absolute',
-    bottom: 12,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor:'transparent',
-  },
-  basicDot: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    marginTop: 3,
-    marginBottom: 3,
-    marginRight: 5
-  },
-  activeDot: {
-    backgroundColor: 'rgb(255, 255, 255)'
-  }
-};
-
-const styles = StyleSheet.create(stylesDef);
+import {caller} from '../../utils/lang';
 
 const Swiper = React.createClass({
   propTypes: {
@@ -123,13 +90,7 @@ const Swiper = React.createClass({
       dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
     }
 
-    let opacity = new Animated.Value(0);
-    this.setTimeout(() => {
-      Animated.timing(opacity, {
-        duration: 500,
-        toValue: 1
-      }).start();
-    });
+    let opacity = new Animated.Value(1);
 
     return (
       <Animated.View
@@ -222,5 +183,37 @@ const Swiper = React.createClass({
     );
   }
 });
+
+const stylesDef = {
+  slide: {
+    flex: 1,
+    width: screenWidth,
+    alignItems: 'center'
+  },
+  dots: {
+    position: 'absolute',
+    bottom: 12,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'transparent',
+  },
+  basicDot: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    marginBottom: 5,
+    marginRight: 5
+  },
+  activeDot: {
+    backgroundColor: 'rgb(255, 255, 255)'
+  }
+};
+
+const styles = StyleSheet.create(stylesDef);
 
 module.exports = Swiper;

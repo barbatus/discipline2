@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -14,12 +14,12 @@ import NavTitle from './Title';
 import NavigationBar from 'react-native-navbar';
 
 class NavBar extends Component {
+  _opacity = new Animated.Value(1);
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      opacity: new Animated.Value(1)
-    };
+    this.state = {};
   }
 
   setButtons(leftBtn, rightBtn) {
@@ -33,29 +33,35 @@ class NavBar extends Component {
     });
   }
 
-  setTitle(navTitle) {
+  setOpacity(dx: number) {
+    check.assert.number(dx);
+
+    this._opacity.setValue(dx);
+  }
+
+  setTitle(navTitle: string) {
     this.setState({
       navTitle
     });
   }
 
-  _hideButtons(callback) {
-    Animated.timing(this.state.opacity, {
+  _hideButtons(callback: Function) {
+    Animated.timing(this._opacity, {
       duration: 500,
       toValue: 0
     }).start(callback);
   }
 
-  _showButtons(callback) {
-    Animated.timing(this.state.opacity, {
+  _showButtons(callback: Function) {
+    Animated.timing(this._opacity, {
       duration: 500,
       toValue: 1
-    }).start();
+    }).start(callback);
   }
 
   _getAnimatedBtn(button) {
     return (
-      <Animated.View style={{opacity: this.state.opacity}}>
+      <Animated.View style={{opacity: this._opacity}}>
         {button}
       </Animated.View>
     );

@@ -16,7 +16,7 @@ import {
   Image
 } from 'react-native';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 let IconsGrid = React.createClass({
     getInitialState: function() {
