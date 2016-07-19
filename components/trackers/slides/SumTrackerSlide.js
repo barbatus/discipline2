@@ -18,6 +18,8 @@ import {
   trackerStyles
 } from '../styles/trackerStyles';
 
+import {slideWidth} from '../styles/slideStyles';
+
 import {isPhone5} from '../../styles/common';
 
 import TrackerSlide from './TrackerSlide';
@@ -85,11 +87,11 @@ export default class SumTrackerSlide extends TrackerSlide {
               style={styles.sumInput}
               onChangeText={added => this._onChangeText(added)}
               value={this.state.added}
-              onSubmitEditing={this._onPlus.bind(this)}
+              onSubmitEditing={::this._onPlus}
             />
             <TouchableOpacity
               disabled={!editable}
-              onPress={this._onPlus.bind(this)}>
+              onPress={::this._onPlus}>
               <Image
                 source={getIcon('plus_sm')}
                 style={[trackerStyles.circleBtnSm, styles.circleBtnSm]} />
@@ -114,12 +116,6 @@ export default class SumTrackerSlide extends TrackerSlide {
     );
   }
 
-  _getCheckStyle() {
-    return this.state.checked ?
-      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
-        trackerStyles.checkBtn;
-  }
-
   _onPlus() {
     Keyboard.dismiss();
     let { tracker } = this.props;
@@ -135,7 +131,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 };
 
-const width = trackerDef.container.width - 40;
+const width = slideWidth - 40;
 
 const inFontSize = isPhone5() ? 32 : 42;
 
@@ -152,13 +148,20 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   inputContainer: {
-    flex: 0.7,
     flexDirection: 'row',
+    width: width,
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderBottomWidth: 0.5,
     borderBottomColor: '#DADADA',
-    paddingBottom: 20
+    paddingBottom: 10,
+    marginBottom: 10
+  },
+  textContainer: {
+    width: width,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   sumInput: {
     height: 40,
@@ -171,14 +174,6 @@ const styles = StyleSheet.create({
   },
   circleBtnSm: {
     width: 40
-  },
-  textContainer: {
-    flex: 0.3,
-    width: width,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 8
   },
   sumText: {
     fontSize: 34,

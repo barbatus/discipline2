@@ -31,10 +31,10 @@ class TrackersView extends ScreenView {
         onScroll={this.props.onScroll}
         onSlideChange={this.props.onSlideChange}
         onSlideNoChange={this.props.onSlideNoChange}
-        onEdit={this._onEdit.bind(this)}
+        onEdit={::this._onEdit}
         onRemove={this.props.onRemove}
-        onSwiperShow={this._onSwiperShow.bind(this)}
-        onSwiperHide={this._onSwiperHide.bind(this)}
+        onSwiperShow={::this._onSwiperShow}
+        onSwiperHide={::this._onSwiperHide}
       />
     )
   }
@@ -45,13 +45,13 @@ class TrackersView extends ScreenView {
 
   _getCancelBtn(onPress) {
     return (
-      <NavCancelButton onPress={onPress.bind(this)} />
+      <NavCancelButton onPress={this::onPress} />
     );
   }
 
   _getAcceptBtn(onPress) {
     return (
-      <NavAcceptButton onPress={onPress.bind(this)} />
+      <NavAcceptButton onPress={this::onPress} />
     );
   }
 

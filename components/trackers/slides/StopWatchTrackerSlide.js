@@ -17,6 +17,8 @@ import {
   trackerStyles
 } from '../styles/trackerStyles';
 
+import {slideWidth} from '../styles/slideStyles';
+
 import TrackerSlide from './TrackerSlide';
 
 export default class StopWatchTrackerSlide extends TrackerSlide {
@@ -32,9 +34,9 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
   componentWillMount() {
     super.componentWillMount();
     let { tracker } = this.props;
-    tracker.onTicking(this.onTicking.bind(this));
-    tracker.onStop(this.onStop.bind(this));
-    tracker.onStart(this.onStart.bind(this));
+    tracker.onTicking(::this.onTicking);
+    tracker.onStop(::this.onStop);
+    tracker.onStart(::this.onStart);
   }
 
   onChange() {
@@ -73,12 +75,14 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
           <View style={styles.textContainer}>
-            <TextInput
-              ref='time'
-              style={styles.timeTextInput}
-              value={time.formatTimeMs(this.state.time)}
-              editable={false}>
-            </TextInput>
+            <View>
+              <TextInput
+                ref='time'
+                style={styles.timeTextInput}
+                value={time.formatTimeMs(this.state.time)}
+                editable={false}>
+              </TextInput>
+            </View>
           </View>
         </View>
       </View>
@@ -93,7 +97,7 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
         <TouchableOpacity
           style={styles.button}
           disabled={!editable}
-          onPress={this._onStartStop.bind(this)}>
+          onPress={::this._onStartStop}>
           <Text style={styles.btnText}>
             {this.state.leftBtnText}
           </Text>
@@ -101,7 +105,7 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
         <TouchableOpacity
           style={styles.button}
           disabled={!editable}
-          onPress={this._onLap.bind(this)}>
+          onPress={::this._onLap}>
           <Text style={styles.btnText}>
             {this.state.rightBtnText}
           </Text>
@@ -125,18 +129,15 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
   }
 };
 
-const width = trackerDef.container.width - 40;
-
 const styles = StyleSheet.create({
   controls: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   textContainer: {
-    flex: 0.5,
-    width: width,
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flex: 1,
-    width: width,
+    width: slideWidth,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'flex-start'
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
   },
   timeTextInput: {
     height: 40,
-    width: width,
+    width: slideWidth,
     fontSize: 52,
     color: '#4A4A4A',
     textAlign: 'center',

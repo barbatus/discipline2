@@ -18,26 +18,25 @@ import TrackerSwiper from './TrackerSwiper';
 
 import TrackerScroll from './TrackerScroll';
 
-import TrackerStore from '../../trackers/Trackers';
+import TrackerStore from '../../model/Trackers';
 
 import {commonStyles} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
 export default class Trackers extends Component {
+  _trackers = [];
+
   _opacity = new Animated.Value(0);
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      swiperTrackers: [],
-      scrollTrackers: []
-    };
+  componentWillMount() {
+    this._trackers = this._loadTrackers();
   }
 
-  componentWillMount() {
-    this._loadTrackers();
+  componentDidMount() {
+    if (this.trackers.length) {
+      this._renderInit(this.trackers);
+    }
   }
 
   addTracker(tracker, callback) {
@@ -53,16 +52,6 @@ export default class Trackers extends Component {
     this._renderAll(trackers, () => {
       this.swiper.scrollTo(nextInd);
     });
-
-    // this.setState({
-    //   swiperTrackers: trackers
-    // }, () => {
-    //   if (this.swiper.shown) {
-    //     this.swiper.scrollTo(nextInd);
-    //     return;
-    //   }
-    //   this.scroll.scrollTo(nextInd);
-    // });
 
     return tracker;
   }
@@ -80,7 +69,7 @@ export default class Trackers extends Component {
   }
 
   get trackers() {
-    return this.state.swiperTrackers;
+    return this._trackers;
   }
 
   cancelEdit() {
@@ -100,36 +89,27 @@ export default class Trackers extends Component {
     if (!hasTestData) {
       depot.initTestData();
     }
-    let trackers = TrackerStore.getAll();
 
-    if (trackers.length) {
-      this._renderSwiper([trackers[0]], () => {
-        Animated.timing(this._opacity, {
-          duration: 500,
-          toValue: 1
-        }).start(() => {
-          this._renderAll(trackers);
-        });
+    return TrackerStore.getAll();
+  }
+
+  _renderInit(trackers, callback) {
+    this.swiper.setTrackers(trackers.slice(0, 1), () => {
+      Animated.timing(this._opacity, {
+        duration: 500,
+        toValue: 1
+      }).start(() => {
+        this._renderAll(trackers);
       });
-    }
-  }
-
-  _renderSwiper(trackers, callback) {
-    this.setState({
-      swiperTrackers: trackers
-    }, callback);
-  }
-
-  _renderScrolls(trackers, callback) {
-    this.setState({
-      scrollTrackers: trackers
-    }, callback);
+    });
   }
 
   _renderAll(trackers, callback) {
-    this._renderSwiper(trackers, callback);
+    this.swiper.setTrackers(trackers, callback);
+
     this.setTimeout(() => {
-      this._renderScrolls(trackers);
+      this.bscroll.setTrackers(trackers);
+      this.sscroll.setTrackers(trackers);
     });
   }
 
@@ -145,11 +125,10 @@ export default class Trackers extends Component {
     if (removed) {
       caller(this.props.onRemove, removed);
 
-      let index = this.swiper.index;
-      this.swiper.removeTracker(() => {
+      this.swiper.removeTracker(index => {
         let trackers = this.trackers;
         trackers.splice(index, 1);
-        this._renderSwiper(trackers);
+        this._renderAll(trackers);
       });
     }
   }
@@ -194,30 +173,27 @@ export default class Trackers extends Component {
         <TrackerScroll
           ref='bscroll'
           style={styles.bigScroll}
-          trackers={this.state.scrollTrackers}
-          scale={1.6}
-          onSlideTap={this._onBigSlideTap.bind(this)}
+          scale={1 / 1.6}
+          onSlideTap={::this._onBigSlideTap}
         />
         <TrackerScroll
           ref='sscroll'
           style={styles.smallScroll}
-          trackers={this.state.scrollTrackers}
-          scale={4}
+          scale={1 / 4}
           editable={false}
-          onSlideTap={this._onSmallSlideTap.bind(this)}
+          onSlideTap={::this._onSmallSlideTap}
         />
         <TrackerSwiper
           ref='swiper'
-          trackers={this.state.swiperTrackers}
           style={commonStyles.absoluteFilled}
-          onMoveUpStart={this._onMoveUpStart.bind(this)}
-          onMoveUp={this._onMoveUp.bind(this)}
-          onMoveUpDone={this._onMoveUpDone.bind(this)}
           onScroll={this.props.onScroll}
           onSlideChange={this.props.onSlideChange}
           onSlideNoChange={this.props.onSlideNoChange}
-          onRemove={this._onRemove.bind(this)}
-          onEdit={this._onEdit.bind(this)} />
+          onMoveUpStart={::this._onMoveUpStart}
+          onMoveUp={::this._onMoveUp}
+          onMoveUpDone={::this._onMoveUpDone}
+          onRemove={::this._onRemove}
+          onEdit={::this._onEdit} />
       </Animated.View>
     )
   }

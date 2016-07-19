@@ -4,6 +4,8 @@ import React from 'react';
 
 import {PanResponder} from 'react-native';
 
+import {caller} from '../../utils/lang';
+
 export class ScaleResponder {
   constructor(height) {
     this._height = height;
@@ -51,5 +53,49 @@ export class ScaleResponder {
         }
       }
     });
+  }
+}
+
+import {Animated} from 'react-native';
+
+import {slideHeight} from './styles/slideStyles';
+
+import Animation from '../animation/Animation';
+
+export class ScaleResponderAnimation {
+  _scale = new Animated.Value(1);
+  _responder = new ScaleResponder(slideHeight);
+
+  constructor(onScale, onStart, onDone) {
+    this._responder.subscribe(scale => {
+      this._scale.setValue(scale);
+      caller(onScale, scale - 0.5);
+    }, onStart, () => {
+      if (this._scale._value <= 0.5) {
+        caller(onDone);
+        return;
+      }
+      Animation.timing(this._scale, 200, 0.5, onDone);
+    });
+  }
+
+  get style(): Object {
+    return {
+      transform: [{
+        scale: this._scale
+      }]
+    }
+  }
+
+  get panHandlers() {
+    return this._responder.panHandlers;
+  }
+
+  animateIn(callback) {
+    Animation.timing(this._scale, 500, 1, callback);
+  }
+
+  animateOut(callback) {
+    Animation.timing(this._scale, 500, 0, callback);
   }
 }

@@ -19,6 +19,12 @@ import {commonStyles} from '../../styles/common';
 
 import {TrackerType} from '../../../depot/consts';
 
+const clean = str => {
+  check.assert.string(str);
+
+  return str.replace(/\n/g, '').replace(/\s+/g, ' ');
+}
+
 export default class TrackerTypesSlide extends Component {
   constructor(props) {
     super(props);
@@ -43,9 +49,7 @@ export default class TrackerTypesSlide extends Component {
   }
 
   _onTypeChosen(type) {
-    this.setState({
-      type: type
-    });
+    this.setState({ type });
   }
 
   _renderTypes() {
@@ -54,10 +58,10 @@ export default class TrackerTypesSlide extends Component {
         {
           this.types.map(type => {
             return (
-                <TouchableWithoutFeedback
-                  key={type.valueOf()}
-                  style={commonStyles.flexFilled}
-                  onPress={this._onTypeChosen.bind(this, type)}>
+              <TouchableWithoutFeedback
+                key={type.valueOf()}
+                style={commonStyles.flexFilled}
+                onPress={this._onTypeChosen.bind(this, type)}>
                 <View
                   style={this.state.type === type ?
                     [styles.type, styles.selected] : styles.type}>
@@ -82,30 +86,28 @@ export default class TrackerTypesSlide extends Component {
   render() {
     return (
       <View style={slideStyles.slide}>
-        <View style={slideStyles.container}>
-          <View style={slideStyles.innerView}>
-            <View style={[
-                slideStyles.headerContainer,
-                styles.headerContainer
-              ]}>
-              <Text style={styles.title}>
-                {this.state.type.title}
-              </Text>
-            </View>
-            <View style={[
-                slideStyles.bodyContainer,
-                styles.bodyContainer
-              ]}>
-              <Text style={styles.desc}>
-                {this.state.type.desc}
-              </Text>
-            </View>
-            <View style={[
-                slideStyles.footerContainer,
-                styles.footerContainer
-              ]}>
-              {this._renderTypes()}
-            </View>
+        <View style={slideStyles.innerView}>
+          <View style={[
+              slideStyles.headerContainer,
+              styles.headerContainer
+            ]}>
+            <Text style={styles.title}>
+              {this.state.type.title}
+            </Text>
+          </View>
+          <View style={[
+              slideStyles.bodyContainer,
+              styles.bodyContainer
+            ]}>
+            <Text style={styles.desc}>
+              {clean(this.state.type.desc)}
+            </Text>
+          </View>
+          <View style={[
+              slideStyles.footerContainer,
+              styles.footerContainer
+            ]}>
+            {this._renderTypes()}
           </View>
         </View>
       </View>

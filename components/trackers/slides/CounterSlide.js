@@ -40,7 +40,7 @@ export default class CounterSlide extends TrackerSlide {
         <View style={styles.controls}>
           <TouchableOpacity
             disabled={!editable}
-            onPress={this._onMinus.bind(this)}>
+            onPress={::this._onMinus}>
             <Image
               source={getIcon('minus')}
               style={trackerStyles.circleBtn}
@@ -51,7 +51,7 @@ export default class CounterSlide extends TrackerSlide {
           </Text>
           <TouchableOpacity
             disabled={!editable}
-            onPress={this._onPlus.bind(this)}>
+            onPress={::this._onPlus}>
             <Image
               source={getIcon('plus')}
               style={trackerStyles.circleBtn}

@@ -41,36 +41,17 @@ const Scroll = React.createClass({
   },
 
   render() {
-    let { slides, slideWidth, index } = this.props;
-
-    let slideStyle = { width: slideWidth };
-    slides = slides.map((slide, i) =>
-      <View style={slideStyle} key={i}>
-        {slide}
-      </View>
-    );
-
-    let scrollStyle = [
-      commonStyles.flexFilled,
-      {
-        alignItems: 'center',
-        justifyContent: 'center'
-      },
-      {
-        paddingLeft: this.props.padding,
-        paddingRight: this.props.padding
-      }
-    ];
+    let { style, slides, slideWidth, scrollEnabled, index } = this.props;
 
     return (
       <BaseScroll
         ref='scroll'
         slides={slides}
         pagingEnabled={false}
-        style={commonStyles.flexFilled}
-        slideWidth={this.props.slideWidth}
-        scrollEnabled={this.props.scrollEnabled}
-        contentStyle={scrollStyle}>
+        style={style}
+        slideWidth={slideWidth}
+        scrollEnabled={scrollEnabled}
+        contentStyle={commonStyles.centered}>
       </BaseScroll>
     );
   }

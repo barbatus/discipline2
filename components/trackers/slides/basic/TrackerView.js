@@ -23,7 +23,6 @@ export default class TrackerView extends BaseTrackerView {
     return (
       <Animated.View style={[
           trackerStyles.innerView,
-          {opacity: this.opacity},
           this.props.style
         ]}>
         <TouchableWithoutFeedback style={{flex: 1}} onPress={this.props.onTap}>

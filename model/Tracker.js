@@ -1,12 +1,12 @@
 'use strict';
 
-const {TrackerType} = require('../depot/consts');
+import {TrackerType} from '../depot/consts';
 
-const {Tracker} = require('../depot/interfaces');
+import {Tracker as ITracker} from '../depot/interfaces';
 
-const UserIconsStore = require('../icons/UserIconsStore');
+import UserIconsStore from '../icons/UserIconsStore';
 
-export default class TrackerDAO {
+export default class Tracker {
   id: number;
   title: string;
   iconId: string;
@@ -16,7 +16,7 @@ export default class TrackerDAO {
 
   _ticksCbs: Array<Function> = [];
 
-  constructor(tracker: Tracker) {
+  constructor(tracker: ITracker) {
     this.id = tracker.id;
     this.title = tracker.title;
     this.iconId = tracker.iconId;

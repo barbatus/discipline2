@@ -17,6 +17,10 @@ export const commonDef = {
     right: 0,
     bottom: 0,
     top: 0
+  },
+  centered: {
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 };
 
@@ -27,3 +31,9 @@ export const commonStyles = StyleSheet.create({
 export function isPhone5() {
   return window.width <= 320;
 }
+
+export const navHeight = 64;
+
+export const screenWidth = window.width;
+
+export const screenHeight = window.height;

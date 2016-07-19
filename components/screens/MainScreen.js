@@ -31,7 +31,7 @@ import IconsDlg from '../dlg/IconsDlg';
 
 import registry, {DlgType} from '../dlg/registry';
 
-import Trackers from '../../trackers/Trackers';
+import Trackers from '../../model/Trackers';
 
 import GradientSlider from '../common/GradientSlider';
 
@@ -131,12 +131,13 @@ class MainScreen extends Component {
     caller(this.props.onMenu);
   }
 
-  _onSlideChange(index, dir) {
+  _onSlideChange(index, previ) {
+    let dir = Math.sign(index - previ);
     this.refs.gradient.finishSlide(dir);
   }
 
-  _onSlideNoChange(dir) {
-    this.refs.gradient.finishNoSlide(dir);
+  _onSlideNoChange() {
+    this.refs.gradient.finishNoSlide();
   }
 
   _onScroll(dx) {
@@ -149,18 +150,18 @@ class MainScreen extends Component {
         <TrackersView
           ref='trackersView'
           posX={0}
-          onScroll={this._onScroll.bind(this)}
-          onSlideNoChange={this._onSlideNoChange.bind(this)}
-          onSlideChange={this._onSlideChange.bind(this)}
-          onRemove={this._removeTrackerEdit.bind(this)}
-          onSave={this._saveTrackerEdit.bind(this)}
-          onCancel={this._cancelTrackerEdit.bind(this)} />
+          onScroll={::this._onScroll}
+          onSlideNoChange={::this._onSlideNoChange}
+          onSlideChange={::this._onSlideChange}
+          onRemove={::this._removeTrackerEdit}
+          onSave={::this._saveTrackerEdit}
+          onCancel={::this._cancelTrackerEdit} />
 
         <NewTrackerView
           ref='newTrackerView'
           posX={1}
-          onAccept={this._onAccept.bind(this)}
-          onCancel={this._cancelNewTracker.bind(this)} />
+          onAccept={::this._onAccept}
+          onCancel={::this._cancelNewTracker} />
 
         <IconsDlg ref='iconDlg' />
       </View>

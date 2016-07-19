@@ -4,29 +4,21 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
+import {screenWidth, screenHeight, navHeight} from '../../styles/common';
 
-const slideDef = {
+export const slideWidth = screenWidth - 40;
+
+export const slideHeight = screenHeight - navHeight - 35;
+
+export const slideDef = {
   slide: {
-    //flex: 1,
-    //width: window.width - 40,
-    height: window.height - 64,
-    paddingTop: 10,
-    paddingBottom: 40,
+    width: slideWidth,
+    height: slideHeight,
     alignItems: 'center'
   },
-  container: {
-    flex: 1,
-    //height: window.height - 60,
-    width: window.width - 40
-  },
   innerView: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+    width: slideWidth,
+    height: slideHeight,
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowRadius: 2,
@@ -65,7 +57,7 @@ const slideDef = {
   }
 };
 
-const slideStyles = StyleSheet.create({
+export const slideStyles = StyleSheet.create({
   ...slideDef,
   innerView: {
     ...slideDef.innerView,
@@ -83,7 +75,3 @@ const slideStyles = StyleSheet.create({
   }
 });
 
-module.exports = {
-  slideStyles,
-  slideDef
-};

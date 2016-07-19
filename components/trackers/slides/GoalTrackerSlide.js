@@ -39,10 +39,10 @@ export default class GoalTrackerSlide extends TrackerSlide {
       <View style={trackerStyles.controls}>
         <TouchableOpacity
           disabled={!editable}
-          onPress={this._onCheck.bind(this)}>
+          onPress={::this._onCheck}>
           <Image
             source={getIcon('check')}
-            style={this._getCheckStyle()}
+            style={this._checkStyle}
           />
         </TouchableOpacity>
       </View>
@@ -57,14 +57,14 @@ export default class GoalTrackerSlide extends TrackerSlide {
     );
   }
 
-  _onCheck() {
-    let { tracker } = this.props;
-    tracker.tick();
-  }
-
-  _getCheckStyle() {
+  get _checkStyle() {
     return this.state.checked ?
       [trackerStyles.checkBtn, trackerStyles.filledBtn] :
         trackerStyles.checkBtn;
+  }
+
+  _onCheck() {
+    let { tracker } = this.props;
+    tracker.tick();
   }
 };

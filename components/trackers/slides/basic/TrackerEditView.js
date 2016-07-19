@@ -41,9 +41,9 @@ export default class TrackerEditView extends BaseTrackerView {
 
   reset() {
     this.refs.title.blur();
+    let { iconId, title } = this.props;
     this.setState({
-      iconId: this.props.iconId,
-      title: this.props.title
+      iconId, title
     });
   }
 
@@ -64,7 +64,7 @@ export default class TrackerEditView extends BaseTrackerView {
     dlg.show(iconId => {
       this.setState({
         iconId: iconId
-      }, () => dlg.hide());
+      }, ::dlg.hide);
     });
   }
 
@@ -90,14 +90,13 @@ export default class TrackerEditView extends BaseTrackerView {
     return (
       <Animated.View style={[
           propsStyles.innerView,
-          {opacity: this.opacity},
           this.props.style
         ]}>
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
               style={styles.textBox}
-              onPress={this._onIconEdit.bind(this)}>
+              onPress={::this._onIconEdit}>
               <Text style={styles.text}>
                 Change Icon
               </Text>

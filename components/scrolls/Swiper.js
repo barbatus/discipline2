@@ -13,11 +13,7 @@ import {
 
 import TimerMixin from 'react-timer-mixin';
 
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
-const screenWidth = window.width;
-
-import {commonStyles} from '../styles/common';
+import {commonStyles, screenWidth} from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
@@ -41,13 +37,6 @@ const Swiper = React.createClass({
     }
   },
 
-  getInitialState() {
-    return {
-      opacity: new Animated.Value(1),
-      scale: new Animated.Value(1)
-    }
-  },
-
   getSize() {
     return this.props.slides.length;
   },
@@ -62,17 +51,6 @@ const Swiper = React.createClass({
 
   getIndex() {
     return this.refs.scroll.getIndex();
-  },
-
-  getNextIndex() {
-    let index = this.getIndex();
-    return index ? index + 1 : 0;
-  },
-
-  getPrevIndex() {
-    let index = this.getIndex();
-    let diff = index > 0 ? -1 : 1;
-    return index + diff;
   },
 
   scrollTo(index, callback, animated) {
@@ -90,13 +68,13 @@ const Swiper = React.createClass({
       dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
     }
 
-    let opacity = new Animated.Value(1);
-
     return (
       <Animated.View
         pointerEvents='none'
-        style={[styles.dots, { opacity }]}>
-        {dots}
+        style={styles.dotsContainer}>
+        <View style={styles.dots}>
+          {dots}
+        </View>
       </Animated.View>
     );
   },
@@ -148,35 +126,32 @@ const Swiper = React.createClass({
     )
   },
 
-  _onSlideChange(index, previ, dir) {
+  _onSlideChange(index, previ) {
     this._setActiveDot(index, previ);
-    caller(this.props.onSlideChange, index, dir);
+    caller(this.props.onSlideChange, index, previ);
   },
 
   render() {
-    let state = this.state;
-    let props = this.props;
-    let slides = props.slides;
-
-    slides = slides.map((slide, i) =>
-      this._renderSlide(slide, i)
-    );
+    let {
+      index, style, slides, onTouchMove,
+      scrollEnabled, onSlideNoChange
+    } = this.props;
 
     let dots = slides.length >= 2 ?
       this._renderDots(slides.length) : null;
 
     return (
-      <View
-        style={commonStyles.flexFilled}>
+      <View style={style}>
         <BaseScroll
           ref='scroll'
+          style={commonStyles.flexFilled}
+          index={index}
           slides={slides}
           slideWidth={screenWidth}
-          contentStyle={commonStyles.flexFilled}
-          onTouchMove={this.props.onScroll}
-          scrollEnabled={this.props.scrollEnabled}
+          onTouchMove={onTouchMove}
+          scrollEnabled={scrollEnabled}
           onSlideChange={this._onSlideChange}
-          onSlideNoChange={this.props.onSlideNoChange}>
+          onSlideNoChange={onSlideNoChange}>
         </BaseScroll>
         {dots}
       </View>
@@ -191,15 +166,17 @@ const stylesDef = {
     alignItems: 'center'
   },
   dots: {
-    position: 'absolute',
-    bottom: 12,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'transparent',
+    backgroundColor:'transparent'
+  },
+  dotsContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0
   },
   basicDot: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -216,4 +193,4 @@ const stylesDef = {
 
 const styles = StyleSheet.create(stylesDef);
 
-module.exports = Swiper;
+export default Swiper;

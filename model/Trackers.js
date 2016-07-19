@@ -1,6 +1,6 @@
 'use strict';
 
-import TrackerDAO from './Tracker';
+import Tracker from './Tracker';
 
 import {TrackerType} from '../depot/consts';
 
@@ -39,7 +39,7 @@ export default class Trackers {
       case TrackerType.STOP_WATCH.valueOf():
         return new StopWatchTracker(tracker);
       default:
-        return new TrackerDAO(tracker);
+        return new Tracker(tracker);
     }
   }
 }

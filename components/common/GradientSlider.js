@@ -158,7 +158,7 @@ class GradientSlider extends Component {
     }
   }
 
-  finishNoSlide(dir) {
+  finishNoSlide() {
     if (this._isAnimated) return;
 
     this._isAnimated = true;

@@ -16,13 +16,9 @@ import Scroll from '../scrolls/Scroll';
 
 import BaseScroll from '../scrolls/BaseScroll';
 
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
-const screenWidth = window.width;
+import {commonStyles, screenWidth} from '../styles/common';
 
-import Trackers from '../../trackers/Trackers';
-
-import {commonStyles} from '../styles/common';
+import {slideHeight} from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
 
@@ -41,7 +37,7 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   onTap(trackId: string) {
-    let index = this.props.trackers.findIndex(
+    let index = this.state.trackers.findIndex(
       tracker => tracker.id === trackId);
     this.scrollTo(index, () => {
       caller(this.props.onSlideTap, index);
@@ -51,10 +47,14 @@ export default class TrackerScroll extends TrackerRenderer {
   render() {
     let { style, editable, scale, padding, index } = this.props;
 
-    let slides = this.props.trackers.map(
+    let slideStyle = { width: screenWidth * scale, height: slideHeight * scale};
+    let slides = this.state.trackers.map(
       (tracker, index) => {
-        return this._scaleSlide(
-          this.renderTracker(tracker, editable), scale);
+        return (
+          <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
+            { this.renderTracker(tracker, editable, scale) }
+          </View>
+        );
       });
 
     return (
@@ -64,7 +64,8 @@ export default class TrackerScroll extends TrackerRenderer {
       ]}>
         <Scroll
           ref='scroll'
-          slideWidth={screenWidth / scale}
+          style={commonStyles.flexFilled}
+          slideWidth={screenWidth * scale}
           padding={0}
           index={index}
           slides={slides}>
@@ -72,22 +73,9 @@ export default class TrackerScroll extends TrackerRenderer {
       </Animated.View>
     );
   }
-
-  _scaleSlide(slide, scale) {
-    return (
-      <Animated.View style={{
-          transform: [{
-            scale: new Animated.Value(1 / scale)
-          }]
-        }}>
-        {slide}
-      </Animated.View>
-    );
-  }
 };
 
 TrackerScroll.defaultProps = {
   index: 0,
-  trackers: [],
   editable: true
 };

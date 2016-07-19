@@ -1,8 +1,8 @@
 'use strict';
 
-import TrackerDAO from './Tracker';
+import Tracker from './Tracker';
 
-export default class StopWatchTracker extends TrackerDAO {
+export default class StopWatchTracker extends Tracker {
   _hSetInterval = null;
   _interval: number = 100;
   _tickingCbs: Array<Function> = [];

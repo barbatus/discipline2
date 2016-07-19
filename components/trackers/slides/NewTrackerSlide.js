@@ -17,6 +17,8 @@ import TrackerEditView from './basic/TrackerEditView';
 
 import consts from '../../../depot/consts';
 
+import {commonStyles} from '../../styles/common';
+
 export default class NewTrackerSlide extends Component {
   constructor(props) {
     super(props);
@@ -36,16 +38,16 @@ export default class NewTrackerSlide extends Component {
   }
 
   render() {
+    let { typeId, onIconEdit, onTypeChange } = this.props;
+
     return (
       <View style={trackerStyles.slide}>
-        <View style={trackerStyles.container}>
-          <TrackerEditView
-            ref='editView'
-            typeId={this.props.typeId}
-            onIconEdit={this.props.onIconEdit}
-            onTypeChange={this.props.onTypeChange}
-            style={styles.editView} />
-        </View>
+        <TrackerEditView
+          ref='editView'
+          typeId={typeId}
+          onIconEdit={onIconEdit}
+          onTypeChange={onTypeChange}
+          style={styles.editView} />
       </View>
     );
   }

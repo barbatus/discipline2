@@ -19,6 +19,20 @@ import {caller} from '../../utils/lang';
 export default class TrackerRenderer extends Component {
   _opacity = new Animated.Value(0);
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      trackers: []
+    };
+  }
+
+  setTrackers(trackers, callback) {
+    this.setState({
+      trackers
+    }, callback);
+  }
+
   get opacity() {
     return this._opacity;
   }
@@ -28,15 +42,15 @@ export default class TrackerRenderer extends Component {
   }
 
   hide(callback) {
-    this._opacity.setValue(0);
+    this.opacity = 0;
   }
 
   show(index, callback) {
-    this._opacity.setValue(1);
+    this.opacity = 1;
   }
 
   get shown() {
-    return this._opacity._value === 1;
+    return this.opacity._value === 1;
   }
 
   onEdit(trackId) {
@@ -51,15 +65,17 @@ export default class TrackerRenderer extends Component {
     caller(this.props.onTap, trackId);
   }
 
-  renderTracker(tracker: Object, editable: boolean = true, style) {
+  renderTracker(tracker: Object,
+                editable: boolean = true,
+                scale: number = 1) {
     let newSlide = (Component) => {
-      let id = tracker.id;
+      let { id } = tracker;
       return (
         <Component
           ref={id}
           key={id}
           editable={editable}
-          style={StyleSheet.create(style)}
+          scale={scale}
           onEdit={this.onEdit.bind(this, id)}
           onRemove={this.onRemove.bind(this, id)}
           onTap={this.onTap.bind(this, id)}

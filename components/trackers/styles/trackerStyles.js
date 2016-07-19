@@ -4,10 +4,7 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
-
-import {slideDef} from './slideStyles';
+import {slideDef, slideWidth} from './slideStyles';
 
 const trackerDef = {
   ...slideDef,
@@ -61,8 +58,7 @@ const trackerDef = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingTop: 20
+    alignItems: 'center'
   },
   titleText: {
     fontSize: 25,
@@ -161,7 +157,7 @@ const editDef = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: slideDef.container.width - 1,
+    width: slideWidth - 1,
     height: 45,
     backgroundColor: 'white',
     borderWidth: 1,

@@ -4,14 +4,8 @@ import React, {Component} from 'react';
 
 import {
   View,
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
-  Text,
-  TextInput,
   StyleSheet,
-  Animated,
-  SwitchIOS
+  Animated
 } from 'react-native';
 
 import Easing from 'Easing';
@@ -21,29 +15,34 @@ import {
   propsStyles
 } from '../styles/trackerStyles';
 
+import {commonStyles} from '../../styles/common';
+
+import {slideWidth, slideHeight} from '../styles/slideStyles';
+
 import TrackerView from './basic/TrackerView';
 import TrackerEditView from './basic/TrackerEditView';
 
 import UserIconsStore from '../../../icons/UserIconsStore';
+
+import Animation from '../../animation/Animation';
+import FlipAnimation from '../../animation/FlipAnimation';
+import ScaleAnimation from '../../animation/ScaleAnimation';
 
 import {caller} from '../../../utils/lang';
 
 export default class TrackerSlide extends Component {
   constructor(props) {
     super(props);
-
-    this._isAnimated = false;
-    this._moveView = new Animated.Value(0);
-    this._moveEdit = new Animated.Value(1);
-    this._scale = new Animated.Value(props.scale);
-    this._rotY = new Animated.Value(0);
+    let { scale } = props;
+    this._flip = new FlipAnimation();
+    this._scale = new ScaleAnimation(scale);
   }
 
   componentWillMount() {
     this.onChange();
     let { tracker } = this.props;
-    tracker.onChange(this.onChange.bind(this));
-    tracker.onTick(this.onTick.bind(this));
+    tracker.onChange(::this.onChange);
+    tracker.onTick(::this.onTick);
   }
 
   onChange() {
@@ -79,85 +78,53 @@ export default class TrackerSlide extends Component {
   }
 
   showEdit(callback) {
-    if (!this._isAnimated) {
-      this._isAnimated = true;
-
-      this._moveEdit.setValue(0);
-
-      this._animateFlip(1, 0, 1,
-        value => value > 0.5, () => {
-          this._moveView.setValue(1);
-          this._onAnimationDone(callback);
-        });
-    }
+    this._flip.animateIn(callback);
   }
 
   saveEdit(callback) {
-    if (!this._isAnimated) {
-      this._isAnimated = true;
+    if (!Animation.on) {
       let { title, iconId } = this.refs.editView;
       let icon = UserIconsStore.get(iconId);
-      this.props.tracker.title = title;
-      this.props.tracker.icon = icon;
-      let saved = this.props.tracker.save();
+      let { tracker } = this.props;
+      tracker.title = title;
+      tracker.icon = icon;
+      let saved = tracker.save();
 
       if (saved) {
-        this._moveView.setValue(0);
-
-        this._animateFlip(0, 1, 0,
-          value => value <= 0.5, () => {
-            this._moveEdit.setValue(1);
-            this.refs.editView.reset();
-            this._onAnimationDone(callback);
-          });
+        this._flip.animateOut(() => {
+          this.refs.editView.reset();
+          caller(callback);
+        });
       }
     }
   }
 
   cancelEdit(callback) {
-    if (!this._isAnimated) {
-      this._isAnimated = true;
-
-      this._moveView.setValue(0);
-
-      this._animateFlip(0, 1, 0,
-        value => value <= 0.5, () => {
-          this._moveEdit.setValue(1);
-          this.refs.editView.reset();
-          this._onAnimationDone(callback);
-        });
-    }
+    this._flip.animateOut(() => {
+      this.refs.editView.reset();
+      caller(callback);
+    });
   }
 
   collapse(callback) {
-    Animated.timing(this._scale, {
-      duration: 500,
-      toValue: 0
-    }).start(() => {
+    this._scale.animateOut(() => {
       this.refs.editView.reset();
       caller(callback);
     });
   }
 
   render() {
-    let { style } = this.props;
+    let { scale, style } = this.props;
 
+    let slideStyle = [trackerStyles.slide, style];
     return (
-      <Animated.View style={[
-          trackerStyles.slide, style, {
-            transform: [{
-              scale: this._scale
-            }]
-          }
-        ]}>
-        <View style={[trackerStyles.container]}>
-          {
-            this._renderFrontView()
-          }
-          {
-            this._renderBackView()
-          }
-        </View>
+      <Animated.View style={[slideStyle, this._scale.style]}>
+        {
+          this._renderFrontView()
+        }
+        {
+          this._renderBackView()
+        }
       </Animated.View>
     );
   }
@@ -165,35 +132,19 @@ export default class TrackerSlide extends Component {
   _renderBackView() {
     let { tracker, editable } = this.props;
 
-    return  (
-      editable ? 
+    if (editable) {
+      return (
         <TrackerEditView
           ref='editView'
-          shown={false}
-          style={{
-            transform: [
-              {
-                rotateY: this._rotY.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['-180deg', '0deg']
-                })
-              },
-              {
-                translateY: this._moveEdit.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 1000]
-                })
-              }
-            ]
-          }}
+          style={[commonStyles.absoluteFilled, this._flip.style2]}
           showType={false}
           delete={true}
           iconId={tracker.iconId}
           title={tracker.title}
-          onRemove={this.onRemove.bind(this)}
+          onRemove={::this.onRemove}
         />
-      : null
-    );
+      );
+    }
   }
 
   _renderFrontView() {
@@ -202,53 +153,15 @@ export default class TrackerSlide extends Component {
     return (
       <TrackerView
         ref='trackerView'
-        shown={true}
-        style={{
-          transform: [
-            {
-              rotateY: this._rotY.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0deg', '-180deg']
-              })
-            },
-            {
-              translateY: this._moveView.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1000]
-              })
-            }
-          ]
-        }}
+        style={this._flip.style1}
         iconId={tracker.iconId}
         title={tracker.title}
         controls={this.controls}
         footer={this.footer}
-        onTap={this.onTap.bind(this)}
-        onEdit={this.onEdit.bind(this)}
+        onTap={::this.onTap}
+        onEdit={::this.onEdit}
       />
     );
-  }
-
-  _animateFlip(stopVal, op1, op2, opCondition, callback) {
-    this._rotY.removeAllListeners();
-    let id = this._rotY.addListener(({ value }) => {
-      if (opCondition(value)) {
-        this._rotY.removeListener(id);
-        this.refs.trackerView.opacity = op1;
-        this.refs.editView.opacity = op2;
-      }
-    });
-
-    Animated.timing(this._rotY, {
-      duration: 1000,
-      toValue: stopVal,
-      easing: Easing.inOut(Easing.sin)
-    }).start(callback);
-  }
-
-  _onAnimationDone(callback) {
-    this._isAnimated = false;
-    caller(callback);
   }
 };
 

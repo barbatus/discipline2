@@ -23,13 +23,13 @@ import ScreenView from './ScreenView';
 import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
 import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
-import Trackers from '../../trackers/Trackers';
+import Trackers from '../../model/Trackers';
 
 import {commonDef, commonStyles} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
-class NewTrackerView extends ScreenView {
+export default class NewTrackerView extends ScreenView {
   constructor(props) {
     super(props);
 
@@ -137,20 +137,22 @@ class NewTrackerView extends ScreenView {
           ref='newTracker'
           posX={0}
           content={
-            <NewTrackerSlide
-              ref='newTrackerSlide'
-              typeId={this.state.trackerTypeId}
-              onTypeChange={this._onTypeChange.bind(this)}
-            />
+            <View style={styles.slideContainer}>
+              <NewTrackerSlide
+                ref='newTrackerSlide'
+                typeId={this.state.trackerTypeId}
+                onTypeChange={::this._onTypeChange}
+              />
+            </View>
           }
         />
         <ScreenView
           ref='trackerType'
           posX={1}
           content={
-            <TrackerTypesSlide
-              ref='typeSlide'
-            />
+            <View style={styles.slideContainer}>
+              <TrackerTypesSlide ref='typeSlide' />
+            </View>
           }
         />
       </View>
@@ -164,8 +166,7 @@ NewTrackerView.contextTypes = {
 
 const styles = StyleSheet.create({
   slideContainer: {
-    ...commonDef.absoluteFilled
+    ...commonDef.flexFilled,
+    alignItems: 'center'
   }
 });
-
-module.exports = NewTrackerView;
