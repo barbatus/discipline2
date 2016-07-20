@@ -9,7 +9,8 @@ import {
   Image,
   Text,
   StyleSheet,
-  TextInput
+  TextInput,
+  Vibration
 } from 'react-native';
 
 import {
@@ -26,46 +27,16 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     super(props);
 
     this.state = {
-      leftBtnText: 'START',
-      rightBtnText: 'LAP'
+      ticking: false
     };
   }
 
   componentWillMount() {
     super.componentWillMount();
     let { tracker } = this.props;
-    tracker.onTicking(::this.onTicking);
-    tracker.onStop(::this.onStop);
-    tracker.onStart(::this.onStart);
-  }
-
-  onChange() {
-    let { tracker } = this.props;
-    this.setState({
-      iconId: tracker.iconId,
-      title: tracker.title,
-      time: tracker.value
-    });
-  }
-
-  onTick() {}
-
-  onStart() {
-    this.setState({
-      leftBtnText: 'STOP'
-    });
-  }
-
-  onTicking(value) {
-    this.refs.time.setNativeProps({
-      text: time.formatTimeMs(value)
-    });
-  }
-
-  onStop() {
-    this.setState({
-      leftBtnText: 'START'
-    });
+    tracker.onTicking(::this._onTicking);
+    tracker.onStart(::this._onStart);
+    tracker.onStop(::this._onStop);
   }
 
   get controls() {
@@ -92,36 +63,68 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
   get footer() {
     let { editable } = this.props;
 
+    let renderBtn = (label, onPress) => {
+      return (
+        <TouchableOpacity
+          style={styles.button}
+          disabled={!editable}
+          onPress={this::onPress}>
+          <Text style={styles.btnText}>
+            {label}
+          </Text>
+        </TouchableOpacity>
+      );
+    };
+
+    let ticking = this.state.ticking;
     return (
       <View style={styles.footerContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          disabled={!editable}
-          onPress={::this._onStartStop}>
-          <Text style={styles.btnText}>
-            {this.state.leftBtnText}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          disabled={!editable}
-          onPress={::this._onLap}>
-          <Text style={styles.btnText}>
-            {this.state.rightBtnText}
-          </Text>
-        </TouchableOpacity>
+        { ticking ? renderBtn('STOP', this._onStopBtn) :
+                    renderBtn('START', this._onStartBtn) }
+        { renderBtn('LAP', this._onLap) }
       </View>
     );
   }
 
-  _onStartStop() {
+  onChange() {
     let { tracker } = this.props;
+    this.setState({
+      iconId: tracker.iconId,
+      title: tracker.title,
+      time: tracker.value
+    });
+  }
 
-    if (tracker.isTicking) {
-      tracker.stop();
-      return;
-    }
+  onTick() {}
+
+  _onTicking(value) {
+    this.refs.time.setNativeProps({
+      text: time.formatTimeMs(value)
+    });
+  }
+
+  _onStart() {
+    Vibration.vibrate();
+
+    this.setState({
+      ticking: true
+    });
+  }
+
+  _onStartBtn() {
+    let { tracker } = this.props;
     tracker.tick();
+  }
+
+  _onStop() {
+    this.setState({
+      ticking: false
+    }); 
+  }
+
+  _onStopBtn() {
+    let { tracker } = this.props;
+    tracker.stop();
   }
 
   _onLap() {
@@ -169,6 +172,7 @@ const styles = StyleSheet.create({
     fontWeight: '100'
   },
   timeTextInput: {
+    fontFamily: 'Courier',
     height: 40,
     width: slideWidth,
     fontSize: 52,

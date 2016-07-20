@@ -7,14 +7,16 @@ import {Tracker as ITracker} from '../depot/interfaces';
 import UserIconsStore from '../icons/UserIconsStore';
 
 export default class Tracker {
-  id: number;
-  title: string;
-  iconId: string;
-  typeId: string;
+  id: Number;
+  title: String;
+  iconId: String;
+  typeId: String;
 
   _changeCbs: Array<Function> = [];
 
-  _ticksCbs: Array<Function> = [];
+  _tickCbs: Array<Function> = [];
+
+  _undoCbs: Array<Function> = [];
 
   constructor(tracker: ITracker) {
     this.id = tracker.id;
@@ -71,7 +73,9 @@ export default class Tracker {
 
   undo() {
     let tick = this.lastTick;
-    depot.ticks.remove(tick.id);
+    if (tick) {
+      depot.ticks.remove(tick.id);
+    }
   }
 
   save() {
@@ -105,7 +109,7 @@ export default class Tracker {
   destroy() {
     this._unsubscribe();
     this._changeCbs = null;
-    this._ticksCbs = null;
+    this._tickCbs = null;
   }
 
   onChange(cb: Function) {
@@ -117,30 +121,42 @@ export default class Tracker {
   onTick(cb: Function) {
     check.assert.function(cb);
 
-    this._ticksCbs.push(cb);
+    this._tickCbs.push(cb);
+  }
+
+  onUndo(cb: Function) {
+    check.assert.function(cb);
+
+    this._undoCbs.push(cb);
   }
 
   _unsubscribe() {
     depot.trackers.events.removeListener('updated',
-      this._onUpdated.bind(this));
+      ::this._onUpdated);
     depot.ticks.events.removeListener('added',
-      this._onTicks.bind(this));
+      ::this._onTicks);
     depot.ticks.events.removeListener('removed',
-      this._onTicks.bind(this));
+      ::this._onUndos);
   }
 
   _subscribe() {
     depot.trackers.events.on('updated',
-      this._onUpdated.bind(this));
+      ::this._onUpdated);
     depot.ticks.events.on('added',
-      this._onTicks.bind(this));
+      ::this._onTicks);
     depot.ticks.events.on('removed',
-      this._onTicks.bind(this));
+      ::this._onUndos);
   }
 
   _onTicks(event) {
     if (event.trackerId === this.id) {
-      this._ticksCbs.forEach(cb => cb());
+      this._tickCbs.forEach(cb => cb());
+    }
+  }
+
+  _onUndos(event) {
+    if (event.trackerId === this.id) {
+      this._undoCbs.forEach(cb => cb());
     }
   }
 

@@ -10,7 +10,7 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  DeviceEventEmitter
+  Vibration
 } from 'react-native';
 
 import {
@@ -47,6 +47,11 @@ export default class SumTrackerSlide extends TrackerSlide {
     Keyboard.dismiss();
   }
 
+  shake() {
+    let { tracker } = this.props;
+    tracker.undo();
+  }
+
   onChange() {
     let { tracker } = this.props;
     this.setState({
@@ -58,6 +63,15 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   onTick() {
+    Vibration.vibrate();
+
+    let { tracker } = this.props;
+    this.setState({
+      sum: tracker.value
+    });
+  }
+
+  onUndo() {
     let { tracker } = this.props;
     this.setState({
       sum: tracker.value
@@ -65,8 +79,8 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   onTap() {
-    Keyboard.dismiss();
     super.onTap();
+    Keyboard.dismiss();
   }
 
   get controls() {

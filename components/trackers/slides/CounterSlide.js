@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  StyleSheet
+  StyleSheet,
+  Vibration
 } from 'react-native';
 
 import {trackerStyles} from '../styles/trackerStyles';
@@ -26,6 +27,15 @@ export default class CounterSlide extends TrackerSlide {
   }
 
   onTick() {
+    Vibration.vibrate();
+
+    let { tracker } = this.props;
+    this.setState({
+      count: tracker.count
+    });
+  }
+
+  onUndo() {
     let { tracker } = this.props;
     this.setState({
       count: tracker.count
@@ -76,11 +86,8 @@ export default class CounterSlide extends TrackerSlide {
   }
 
   _onMinus() {
-    let { count } = this.state;
-    if (count > 0) {
-      let { tracker } = this.props;
-      tracker.undo();
-    }
+    let { tracker } = this.props;
+    tracker.undo();
   }
 };
 

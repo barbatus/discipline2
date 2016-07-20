@@ -11,6 +11,8 @@ import {
   PanResponder
 } from 'react-native';
 
+import RNShakeEventIOS from 'react-native-shake-event-ios';
+
 import Swiper from '../scrolls/Swiper';
 
 import {ScaleResponder, ScaleResponderAnimation} from './responders';
@@ -27,7 +29,6 @@ import TrackerRenderer from './TrackerRenderer';
 
 import {caller} from '../../utils/lang';
 
-// TODO: destroy responders on unmount
 export default class TrackerSwiper extends TrackerRenderer {
   _index = 0;
 
@@ -37,11 +38,24 @@ export default class TrackerSwiper extends TrackerRenderer {
     super(props);
 
     let { onMoveUp, onMoveUpDone, onMoveUpStart } = props;
-    this._scale = new ScaleResponderAnimation(onMoveUp, onMoveUpStart, onMoveUpDone);
+    this._scale = new ScaleResponderAnimation(
+      onMoveUp, onMoveUpStart, onMoveUpDone);
+  }
+
+  componentWillMount() {
+    RNShakeEventIOS.addEventListener('shake', ::this.shakeCurrent);
+  }
+
+  componentWillUnmount() {
+    RNShakeEventIOS.removeEventListener('shake');
   }
 
   get current() {
     return this.state.trackers[this.index];
+  }
+
+  shakeCurrent() {
+    this.current.shake();
   }
 
   showEdit(callback) {

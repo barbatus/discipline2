@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  StyleSheet
+  StyleSheet,
+  Vibration
 } from 'react-native';
 
 import {trackerStyles} from '../styles/trackerStyles';
@@ -26,6 +27,8 @@ export default class GoalTrackerSlide extends TrackerSlide {
   }
 
   onTick() {
+    Vibration.vibrate();
+
     let { tracker } = this.props;
     this.setState({
       checked: tracker.checked

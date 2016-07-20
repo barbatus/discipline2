@@ -8,16 +8,12 @@ import {
   Animated
 } from 'react-native';
 
-import Easing from 'Easing';
-
 import {
   trackerStyles,
   propsStyles
 } from '../styles/trackerStyles';
 
 import {commonStyles} from '../../styles/common';
-
-import {slideWidth, slideHeight} from '../styles/slideStyles';
 
 import TrackerView from './basic/TrackerView';
 import TrackerEditView from './basic/TrackerEditView';
@@ -43,30 +39,7 @@ export default class TrackerSlide extends Component {
     let { tracker } = this.props;
     tracker.onChange(::this.onChange);
     tracker.onTick(::this.onTick);
-  }
-
-  onChange() {
-    throw new Error('onChange is not implemented');
-  }
-
-  onTick() {
-    throw new Error('onChange is not implemented');
-  }
-
-  onTap() {
-    caller(this.props.onTap);
-  }
-
-  onEdit() {
-    if (this.props.editable) {
-      caller(this.props.onEdit);
-    }
-  }
-
-  onRemove() {
-    if (this.props.editable) {
-      caller(this.props.onRemove);
-    }
+    tracker.onUndo(::this.onUndo);
   }
 
   get controls() {
@@ -113,6 +86,8 @@ export default class TrackerSlide extends Component {
     });
   }
 
+  shake(callback) {}
+
   render() {
     let { scale, style } = this.props;
 
@@ -127,6 +102,34 @@ export default class TrackerSlide extends Component {
         }
       </Animated.View>
     );
+  }
+
+  onChange() {
+    throw new Error('onChange is not implemented');
+  }
+
+  onTick() {
+    throw new Error('onTick is not implemented');
+  }
+
+  onUndo() {
+    throw new Error('onUndo is not implemented');
+  }
+
+  onTap() {
+    caller(this.props.onTap);
+  }
+
+  onEdit() {
+    if (this.props.editable) {
+      caller(this.props.onEdit);
+    }
+  }
+
+  onRemove() {
+    if (this.props.editable) {
+      caller(this.props.onRemove);
+    }
   }
 
   _renderBackView() {
