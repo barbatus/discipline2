@@ -13,12 +13,16 @@ import {screenHeight} from '../styles/common';
 export default class ScreenInOutAnimation {
   _moveY = new Animated.Value(0);
 
+  constructor(scaleFactor = 1) {
+    this._scaleFactor = scaleFactor;
+  }
+
   get style(): Object {
     return {
       transform: [{
         translateY: this._moveY.interpolate({
           inputRange: [0, 1],
-          outputRange: [0, 2 * screenHeight]
+          outputRange: [0, screenHeight / this._scaleFactor]
         })
       }]
     }

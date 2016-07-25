@@ -79,9 +79,7 @@ export default class Trackers extends Component {
 
   saveEdit() {
     this.swiper.saveEdit();
-    if (this.props.onSave) {
-      this.props.onSave();
-    }
+    caller(this.props.onSave);
   }
 
   _loadTrackers() {
@@ -155,7 +153,10 @@ export default class Trackers extends Component {
   _onBigSlideTap(index) {
     this.bscroll.hide();
     this.sscroll.hide();
-    this.swiper.show(index);
+
+    this.swiper.scrollTo(index, () => {
+      this.swiper.show();
+    }, false);
     caller(this.props.onSwiperShow, 1);
   }
 

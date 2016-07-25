@@ -15,7 +15,7 @@ import RNShakeEventIOS from 'react-native-shake-event-ios';
 
 import Swiper from '../scrolls/Swiper';
 
-import {ScaleResponder, ScaleResponderAnimation} from './responders';
+import {minScale, ScaleResponderAnimation} from '../animation/ScaleResponderAnimation';
 
 import Animation from '../animation/Animation';
 
@@ -32,13 +32,13 @@ import {caller} from '../../utils/lang';
 export default class TrackerSwiper extends TrackerRenderer {
   _index = 0;
 
-  _inOut = new ScreenInOutAnimation();
+  _inOut = new ScreenInOutAnimation(minScale);
 
   constructor(props) {
     super(props);
 
     let { onMoveUp, onMoveUpDone, onMoveUpStart } = props;
-    this._scale = new ScaleResponderAnimation(
+    this._scale = new ScaleResponderAnimation(slideHeight,
       onMoveUp, onMoveUpStart, onMoveUpDone);
   }
 
@@ -102,10 +102,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   show(index, callback) {
     this._inOut.animateIn();
-
-    this.scrollTo(index, () => {
-      this._scale.animateIn(callback);
-    }, false);
+    this._scale.animateIn(callback);
   }
 
   get shown() {

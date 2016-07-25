@@ -30,7 +30,7 @@ export default class FlipAnimation {
         {
           translateY: this._move1.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, screenWidth + 1]
+            outputRange: [0, 1000]
           })
         }
       ]

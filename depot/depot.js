@@ -16,7 +16,7 @@ class Depot {
     this.trackers.add({
       title: 'Morning Run',
       typeId: TrackerType.COUNTER.valueOf(),
-      iconId: 'sneakers'
+      iconId: 'trainers'
     });
     this.trackers.add({
       title: 'Cup of Coffee',
@@ -29,9 +29,9 @@ class Depot {
       iconId: 'pizza'
     });
     this.trackers.add({
-      title: 'Reading',
+      title: 'Books read',
       typeId: TrackerType.COUNTER.valueOf(), 
-      iconId: 'stopwatch'
+      iconId: 'book_shelf'
     });
     this.trackers.add({
       title: 'Spent on Lunch',
@@ -39,9 +39,9 @@ class Depot {
       iconId: 'pizza'
     });
     this.trackers.add({
-      title: 'Total reading time',
+      title: 'Reading time',
       typeId: TrackerType.STOP_WATCH.valueOf(), 
-      iconId: 'pizza'
+      iconId: 'reading'
     });
   }
 

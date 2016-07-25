@@ -20,6 +20,8 @@ import TrackerEditView from './basic/TrackerEditView';
 
 import UserIconsStore from '../../../icons/UserIconsStore';
 
+import Tracker from '../../../model/Tracker';
+
 import Animation from '../../animation/Animation';
 import FlipAnimation from '../../animation/FlipAnimation';
 import ScaleAnimation from '../../animation/ScaleAnimation';
@@ -171,4 +173,11 @@ export default class TrackerSlide extends Component {
 TrackerSlide.defaultProps = {
   scale: 1,
   editable: true
+};
+
+TrackerSlide.propTypes = {
+  index: React.PropTypes.number,
+  editable: React.PropTypes.bool,
+  style: View.propTypes.style,
+  tracker: React.PropTypes.instanceOf(Tracker)
 };

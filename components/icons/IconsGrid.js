@@ -59,7 +59,7 @@ let IconsGrid = React.createClass({
         count = 4;
       }
 
-      let pad = (count * 10);
+      let pad = (count * 0);
       let width = ((window.width - pad) / count) >> 0;
 
       return { width, count };
@@ -116,17 +116,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginBottom: 15
+    marginBottom: 8
   },
   col: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 5
+    padding: 0
   },
   icon: {
     resizeMode: 'contain',
-    width: 40,
-    height: 40
+    width: 50,
+    height: 50
   }
 });
 
