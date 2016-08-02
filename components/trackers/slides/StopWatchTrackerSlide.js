@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
 
 import {
   View,
@@ -9,7 +9,6 @@ import {
   Image,
   Text,
   StyleSheet,
-  TextInput,
   Vibration
 } from 'react-native';
 
@@ -22,21 +21,15 @@ import {slideWidth} from '../styles/slideStyles';
 
 import TrackerSlide from './TrackerSlide';
 
+import TimeLabel from './TimeLabel';
+
 export default class StopWatchTrackerSlide extends TrackerSlide {
   constructor(props) {
     super(props);
 
     this.state = {
-      ticking: false
+      active: false
     };
-  }
-
-  componentWillMount() {
-    super.componentWillMount();
-    let { tracker } = this.props;
-    tracker.onTicking(::this._onTicking);
-    tracker.onStart(::this._onStart);
-    tracker.onStop(::this._onStop);
   }
 
   get controls() {
@@ -44,17 +37,11 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
 
     return (
       <View style={trackerStyles.controls}>
-        <View style={styles.controls}>
-          <View style={styles.textContainer}>
-            <View>
-              <TextInput
-                ref='time'
-                style={styles.timeTextInput}
-                value={time.formatTimeMs(this.state.time)}
-                editable={false}>
-              </TextInput>
-            </View>
-          </View>
+        <View style={styles.controls}>       
+          <TimeLabel
+            ref='time'
+            width={slideWidth - 100}
+            time={this.state.time} />
         </View>
       </View>
     );
@@ -76,11 +63,11 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
       );
     };
 
-    let ticking = this.state.ticking;
+    let active = this.state.active;
     return (
       <View style={styles.footerContainer}>
-        { ticking ? renderBtn('STOP', this._onStopBtn) :
-                    renderBtn('START', this._onStartBtn) }
+        { active ? renderBtn('STOP', this._onStopBtn) :
+                   renderBtn('START', this._onStartBtn) }
         { renderBtn('LAP', this._onLap) }
       </View>
     );
@@ -95,31 +82,27 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     });
   }
 
-  onTick() {}
-
-  _onTicking(value) {
-    this.refs.time.setNativeProps({
-      text: time.formatTimeMs(value)
-    });
-  }
-
-  _onStart() {
+  onTick() {
     Vibration.vibrate();
 
     this.setState({
-      ticking: true
+      active: true
+    });
+  }
+
+  onValue(value) {
+    this.refs.time.setTime(value);
+  }
+
+  onStop() {
+    this.setState({
+      active: false
     });
   }
 
   _onStartBtn() {
     let { tracker } = this.props;
     tracker.tick();
-  }
-
-  _onStop() {
-    this.setState({
-      ticking: false
-    }); 
   }
 
   _onStopBtn() {
@@ -137,19 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  timeText: {
-    fontSize: 56,
-    textAlign: 'center',
-    color: '#4A4A4A',
-    fontWeight: '200'
+    alignItems: 'center'
   },
   footerContainer: {
     flex: 1,
@@ -169,15 +140,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 15,
     color: '#9B9B9B',
-    fontWeight: '100'
-  },
-  timeTextInput: {
-    fontFamily: 'Courier',
-    height: 40,
-    width: slideWidth,
-    fontSize: 52,
-    color: '#4A4A4A',
-    textAlign: 'center',
     fontWeight: '100'
   }
 });

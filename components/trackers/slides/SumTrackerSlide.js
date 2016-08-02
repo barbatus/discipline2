@@ -174,24 +174,25 @@ const styles = StyleSheet.create({
   textContainer: {
     width: width,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   sumInput: {
-    height: 40,
+    height: 50,
     width: width - 40,
     paddingRight: 20,
+    //paddingBottom: 20,
     fontSize: inFontSize,
     color: '#4A4A4A',
-    textAlign: 'right',
+    textAlign: 'center',
     fontWeight: '100'
   },
   circleBtnSm: {
     width: 40
   },
   sumText: {
-    fontSize: 34,
+    fontSize: 35,
     color: '#9B9B9B',
-    fontWeight: '300'
+    fontWeight: '200'
   }
 });

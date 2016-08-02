@@ -22,7 +22,9 @@ export class ScaleResponderAnimation {
         caller(onDone);
         return;
       }
-      Animation.timing(this._scale, 200, minScale, null, onDone);
+      if (this._scale._value < 1) {
+        Animation.timing(this._scale, 200, minScale, null, onDone);
+      }
     });
   }
 

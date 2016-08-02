@@ -61,8 +61,8 @@ const trackerDef = {
     alignItems: 'center'
   },
   titleText: {
-    fontSize: 25,
-    fontWeight: '300',
+    fontSize: 28,
+    fontWeight: '200',
     textAlign: 'center'
   },
   mainIcon: {

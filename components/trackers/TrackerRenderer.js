@@ -11,6 +11,7 @@ import GoalTrackerSlide from './slides/GoalTrackerSlide';
 import CounterSlide from './slides/CounterSlide';
 import SumTrackerSlide from './slides/SumTrackerSlide';
 import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
+import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 
 import {TrackerType} from '../../depot/consts';
 
@@ -86,14 +87,16 @@ export default class TrackerRenderer extends Component {
 
     let type = tracker.type;
     switch (type) {
-      case TrackerType.GOAL_TRACKER:
+      case TrackerType.GOAL:
         return newSlide(GoalTrackerSlide);
       case TrackerType.COUNTER:
         return newSlide(CounterSlide);
       case TrackerType.SUM:
         return newSlide(SumTrackerSlide);
-      case TrackerType.STOP_WATCH:
+      case TrackerType.STOPWATCH:
         return newSlide(StopWatchTrackerSlide);
+      case TrackerType.DISTANCE:
+        return newSlide(DistanceTrackerSlide);
     }
   }
 };

@@ -20,12 +20,12 @@ class Depot {
     });
     this.trackers.add({
       title: 'Cup of Coffee',
-      typeId: TrackerType.GOAL_TRACKER.valueOf(),
+      typeId: TrackerType.GOAL.valueOf(),
       iconId: 'coffee'
     });
     this.trackers.add({
       title: 'Spent on Food',
-      typeId: TrackerType.GOAL_TRACKER.valueOf(),
+      typeId: TrackerType.GOAL.valueOf(),
       iconId: 'pizza'
     });
     this.trackers.add({
@@ -40,8 +40,13 @@ class Depot {
     });
     this.trackers.add({
       title: 'Reading time',
-      typeId: TrackerType.STOP_WATCH.valueOf(), 
+      typeId: TrackerType.STOPWATCH.valueOf(), 
       iconId: 'reading'
+    });
+    this.trackers.add({
+      title: 'Morning Run',
+      typeId: TrackerType.DISTANCE.valueOf(), 
+      iconId: 'trainers'
     });
   }
 
@@ -50,5 +55,4 @@ class Depot {
   }
 };
 
-let depot = new Depot();
-module.exports = depot;
+module.exports = new Depot();

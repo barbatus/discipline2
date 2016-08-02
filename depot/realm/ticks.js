@@ -26,8 +26,13 @@ class TicksDepot {
 
     let ticks = DB.objects('Tick');
     return ticks
-      .filtered(`trackerId = ${trackId}`)
+      .filtered(`trackId = ${trackId}`)
       .sorted('dateTimeMs');
+  }
+
+  getData(schema: string, tickId: number) {
+    let data = DB.objects(schema);
+    return data.filtered(`tickId = ${tickId}`)[0];
   }
 
   getForPeriod(trackId: number,
@@ -37,7 +42,7 @@ class TicksDepot {
     check.assert.number(minDateMs);
 
     let ticks = DB.objects('Tick');
-    let query = `trackerId = ${trackId} AND dateTimeMs >= ${minDateMs}`;
+    let query = `trackId = ${trackId} AND dateTimeMs >= ${minDateMs}`;
 
     if (maxDateMs) {
       query = `${query} AND dateTimeMs < ${maxDateMs}`;
@@ -71,10 +76,39 @@ class TicksDepot {
 
     this.events.emit('added', {
       id: tick.id,
-      trackerId: tick.trackerId
+      trackId: tick.trackId
     });
 
     return tick;
+  }
+
+  addData(schema: string, data: Object) {
+    DB.write(() => {
+      data.tickId = this._table.nextId;
+      DB.create(schema, data);
+    });
+  }
+
+  update(tickId: number, value: number) {
+    check.assert.number(tickId);
+
+    let ticks = DB.objects('Tick');
+    let tick = ticks.filtered(`id = ${tickId}`)[0];
+    DB.write(() => {
+      tick.value = value;
+    });
+  }
+
+  updateData(schema: string, tickId: number, data: Object) {
+    check.assert.number(tickId);
+
+    let dataObj = DB.objects(schema);
+    let tickData = dataObj.filtered(`tickId = ${tickId}`)[0];
+    DB.write(() => {
+      for (let prop in data) {
+        tickData[prop] = data[prop];
+      }
+    });
   }
 
   remove(tickId: number): boolean {
@@ -82,12 +116,12 @@ class TicksDepot {
 
     let ticks = DB.objects('Tick');
     let tick = ticks.filtered(`id = ${tickId}`)[0];
-    let { id, trackerId } = tick;
+    let { id, trackId } = tick;
     DB.write(() => {
       DB.delete(tick);
     });
 
-    this.events.emit('removed', { id, trackerId });
+    this.events.emit('removed', { id, trackId });
 
     return tick !== null;
   }

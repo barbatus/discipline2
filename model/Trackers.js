@@ -6,6 +6,8 @@ import {TrackerType} from '../depot/consts';
 
 import StopWatchTracker from './StopWatchTracker';
 
+import DistanceTracker from './DistanceTracker';
+
 export default class Trackers {
   static getAll() {
     let trackers = depot.trackers.getAll();
@@ -36,8 +38,10 @@ export default class Trackers {
   static create(tracker) {
     let type = tracker.typeId;
     switch (type) {
-      case TrackerType.STOP_WATCH.valueOf():
+      case TrackerType.STOPWATCH.valueOf():
         return new StopWatchTracker(tracker);
+      case TrackerType.DISTANCE.valueOf():
+        return new DistanceTracker(tracker);
       default:
         return new Tracker(tracker);
     }

@@ -39,9 +39,20 @@ export default class TrackerSlide extends Component {
   componentWillMount() {
     this.onChange();
     let { tracker } = this.props;
-    tracker.onChange(::this.onChange);
-    tracker.onTick(::this.onTick);
-    tracker.onUndo(::this.onUndo);
+    tracker.events.on('change', ::this.onChange);
+    tracker.events.on('tick', ::this.onTick);
+    tracker.events.on('undo', ::this.onUndo);
+    tracker.events.on('value', ::this.onValue);
+    tracker.events.on('stop', ::this.onStop);
+  }
+
+  componentWillUnmount() {
+    let { tracker } = this.props;
+    tracker.events.removeListener('change', ::this.onChange);
+    tracker.events.removeListener('tick', ::this.onTick);
+    tracker.events.removeListener('undo', ::this.onUndo);
+    tracker.events.removeListener('value', ::this.onValue);
+    tracker.events.removeListener('stop', ::this.onStop);
   }
 
   get controls() {
@@ -50,6 +61,10 @@ export default class TrackerSlide extends Component {
 
   get footer() {
     throw new Error('footer is not implemented');
+  }
+
+  get backImg () {
+    return null;
   }
 
   showEdit(callback) {
@@ -118,6 +133,14 @@ export default class TrackerSlide extends Component {
     throw new Error('onUndo is not implemented');
   }
 
+  onValue() {
+    throw new Error('onValue is not implemented');
+  }
+
+  onStop() {
+    throw new Error('onStop is not implemented');
+  }
+
   onTap() {
     caller(this.props.onTap);
   }
@@ -161,6 +184,7 @@ export default class TrackerSlide extends Component {
         style={this._flip.style1}
         iconId={tracker.iconId}
         title={tracker.title}
+        backImg={this.backImg}
         controls={this.controls}
         footer={this.footer}
         onTap={::this.onTap}

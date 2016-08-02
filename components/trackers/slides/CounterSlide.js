@@ -94,6 +94,8 @@ export default class CounterSlide extends TrackerSlide {
 const styles = StyleSheet.create({
   controls: {
     flex: 1,
+    paddingRight: 10,
+    paddingLeft: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'

@@ -23,10 +23,6 @@ class TrackersDepot {
     this._table = table[0];
   }
 
-  get _trackers() {
-    return this._table.trackers;
-  }
-
   getAll(): Array<Tracker> {
     return this._trackers.map(tracker => tracker);
   }
@@ -61,7 +57,7 @@ class TrackersDepot {
     });
 
     this.events.emit('added', {
-      trackerId: tracker.id
+      trackId: tracker.id
     });
 
     return tracker;
@@ -78,9 +74,7 @@ class TrackersDepot {
       });
     }
 
-    this.events.emit('removed', {
-      trackerId: trackId
-    });
+    this.events.emit('removed', { trackId });
 
     return !!tracker;
   }
@@ -95,7 +89,7 @@ class TrackersDepot {
     }
 
     this.events.emit('updated', {
-      trackerId: tracker.id
+      trackId: tracker.id
     });
 
     return !!tracker;
@@ -108,7 +102,7 @@ class TrackersDepot {
     check.assert.number(dateTimeMs);
 
     return ticksDB.add({
-      trackerId: trackId,
+      trackId: trackId,
       dateTimeMs: dateTimeMs,
       value: value
     });
@@ -128,6 +122,12 @@ class TrackersDepot {
     return ticksDB.getLast(trackId);
   }
 
+  updLastTick(trackId: number, value: number) {
+    let tick = this.getLastTick(trackId);
+    ticksDB.update(tick.id, value);
+    return tick;
+  }
+
   getTodayTicks(trackId: number): Array<Tick> {
     check.assert.number(trackId);
 
@@ -142,6 +142,10 @@ class TrackersDepot {
   getTodayValues(trackId: number): Array<number> {
     let ticks = this.getTodayTicks(trackId);
     return ticks.map(tick => tick.value ? tick.value : 0);
+  }
+
+  get _trackers() {
+    return this._table.trackers;
   }
 };
 

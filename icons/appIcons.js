@@ -16,7 +16,8 @@ const appIcons = {
   counter: require('./files/app/counter.png'),
   sum: require('./files/app/sum.png'),
   stopwatch: require('./files/app/stopwatch.png'),
-  next: require('./files/app/next.png')
+  next: require('./files/app/next.png'),
+  map: require('./files/app/map.png')
 };
 
 module.exports = appIcons;

@@ -36,11 +36,11 @@ export const slideDef = {
   },
   bodyContainer: {
     flex: 0.5,
-    backgroundColor: 'white'
+    //backgroundColor: 'white'
   },
   footerContainer: {
     flex: 0.3,
-    backgroundColor: 'white'
+    //backgroundColor: 'white'
   },
   borderRadius: {
     borderWidth: 1,

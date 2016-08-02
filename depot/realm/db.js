@@ -45,7 +45,7 @@ const TickSchema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
-    trackerId: {
+    trackId: {
       type: 'int',
       indexed: true
     },
@@ -60,5 +60,20 @@ const TickSchema = {
   }
 };
 
-let DB = new Realm({ schema: [TrackersSchema, TrackerSchema, TickSchema, TicksSchema] });
+const DistanceDataSchema = {
+  name: 'DistData',
+  properties: {
+    tickId: {
+      type: 'int',
+      indexed: true
+    },
+    time: {
+      type: 'int'
+    }
+  }
+};
+
+let DB = new Realm({ schema: [
+  TrackersSchema, TrackerSchema, TickSchema, TicksSchema, DistanceDataSchema
+] });
 export default DB;

@@ -2,59 +2,40 @@
 
 import Tracker from './Tracker';
 
+const timeInterval = 100; // ms
+
+const saveInterval = 1000; // ms
+
 export default class StopWatchTracker extends Tracker {
-  _hSetInterval = null;
-  _interval: number = 100;
-  _tickingCbs: Array<Function> = [];
-  _startCbs: Array<Function> = [];
-  _stopCbs: Array<Function> = [];
-  _tickValue: number = 0;
+  _hInterval = null;
+
+  _time: number = 0;
 
   tick() {
-    if (this._hSetInterval) return;
+    if (this._hInterval) return;
 
     let value = this.value;
-    let tickPeriod = this._interval;
-    this._tickValue = 0;
-    this._startCbs.forEach(cb => cb(value));
-    this._hSetInterval = setInterval(() => {
-      this._tickValue += tickPeriod;
-      tickPeriod += this._interval;
-      this._tickingCbs.forEach(cb => cb(
-        value + this._tickValue));
-    }, this._interval);
+    super.tick();
+    this._hInterval = setInterval(() => {
+      this._time += timeInterval;
+      this.fireValue(value + this._time);
+
+      if (this._inval % saveInterval === 0) {
+        this.updLastTick(this._time);
+      }
+    }, timeInterval);
   }
 
   stop() {
-    super.tick(this._tickValue);
-    this._tickValue = 0;
+    this.updLastTick(this._time);
+    this._time = 0;
 
-    if (this._hSetInterval) {
-      clearInterval(this._hSetInterval);
-      this._hSetInterval = null;
-      this._stopCbs.forEach(cb => cb());
-    }
+    clearInterval(this._hInterval);
+    this._hInterval = null;
+    this.fireStop();
   }
 
-  get isTicking() {
-    return !!this._hSetInterval;
-  }
-
-  onTicking(cb: Function) {
-    check.assert.function(cb);
-
-    this._tickingCbs.push(cb);
-  }
-
-  onStop(cb: Function) {
-    check.assert.function(cb);
-
-    this._stopCbs.push(cb);
-  }
-
-  onStart(cb: Function) {
-    check.assert.function(cb);
-
-    this._startCbs.push(cb);
+  get isActive() {
+    return !!this._hInterval;
   }
 }

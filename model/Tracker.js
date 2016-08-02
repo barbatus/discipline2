@@ -6,17 +6,15 @@ import {Tracker as ITracker} from '../depot/interfaces';
 
 import UserIconsStore from '../icons/UserIconsStore';
 
+import EventEmitter from 'eventemitter3';
+
 export default class Tracker {
-  id: Number;
-  title: String;
-  iconId: String;
-  typeId: String;
+  id: number;
+  title: string;
+  iconId: string;
+  typeId: string;
 
-  _changeCbs: Array<Function> = [];
-
-  _tickCbs: Array<Function> = [];
-
-  _undoCbs: Array<Function> = [];
+  events: EventEmitter = new EventEmitter();
 
   constructor(tracker: ITracker) {
     this.id = tracker.id;
@@ -58,16 +56,12 @@ export default class Tracker {
 
   get value() {
     let values = depot.trackers.getTodayValues(this.id);
-    return values.reduceRight((prevVal, nextVal) => {
-      return prevVal + nextVal;
+    return values.reduceRight((p, n) => {
+      return p + n;
     }, 0);
   }
 
-  tick(value, onResult) {
-    if (_.isFunction(value)) {
-      onResult = value;
-      value = null;
-    }
+  tick(value?: number) {
     return this.addTick(value);
   }
 
@@ -98,6 +92,10 @@ export default class Tracker {
       time.getDateTimeMs(), value);
   }
 
+  updLastTick(value: number) {
+    return depot.trackers.updLastTick(this.id, value);
+  }
+
   getTicks(startDateMs: number) {
     return depot.trackers.getTicks(this.id, startDateMs);
   }
@@ -108,26 +106,18 @@ export default class Tracker {
 
   destroy() {
     this._unsubscribe();
-    this._changeCbs = null;
-    this._tickCbs = null;
   }
 
-  onChange(cb: Function) {
-    check.assert.function(cb);
-
-    this._changeCbs.push(cb);
+  fireValue(value) {
+    this.events.emit('value', value);
   }
 
-  onTick(cb: Function) {
-    check.assert.function(cb);
-
-    this._tickCbs.push(cb);
+  fireStop() {
+    this.events.emit('stop');
   }
 
-  onUndo(cb: Function) {
-    check.assert.function(cb);
-
-    this._undoCbs.push(cb);
+  get isActive() {
+    return false;
   }
 
   _unsubscribe() {
@@ -149,20 +139,20 @@ export default class Tracker {
   }
 
   _onTicks(event) {
-    if (event.trackerId === this.id) {
-      this._tickCbs.forEach(cb => cb());
+    if (event.trackId === this.id) {
+      this.events.emit('tick');
     }
   }
 
   _onUndos(event) {
-    if (event.trackerId === this.id) {
-      this._undoCbs.forEach(cb => cb());
+    if (event.trackId === this.id) {
+      this.events.emit('undo');
     }
   }
 
   _onUpdated(event) {
-    if (event.trackerId === this.id) {
-      this._changeCbs.forEach(cb => cb());
+    if (event.trackId === this.id) {
+      this.events.emit('change');
     }
   }
 }

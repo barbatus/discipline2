@@ -18,18 +18,22 @@ import {trackerStyles} from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';
 
+import {slideWidth, slideHeight} from '../../styles/slideStyles';
+
 export default class TrackerView extends BaseTrackerView {
   render() {
+    const { backImg, onTap, onEdit, iconId, controls, footer } = this.props;
+
     return (
       <Animated.View style={[
           trackerStyles.innerView,
           this.props.style
         ]}>
-        <TouchableWithoutFeedback style={{flex: 1}} onPress={this.props.onTap}>
+        <TouchableWithoutFeedback style={{flex: 1}} onPress={onTap}>
           <View style={{flex: 1}}>
             <View style={trackerStyles.headerContainer}>
               <View style={trackerStyles.barContainer}>
-                <TouchableOpacity onPress={this.props.onEdit}>
+                <TouchableOpacity onPress={onEdit}>
                   <Image
                     source={getIcon('info')}
                     style={trackerStyles.infoIcon}
@@ -38,7 +42,7 @@ export default class TrackerView extends BaseTrackerView {
               </View>
               <View style={trackerStyles.iconContainer}>
                 <Image
-                  source={this.getMainIcon(this.props.iconId)}
+                  source={this.getMainIcon(iconId)}
                   style={trackerStyles.mainIcon}
                 />
               </View>
@@ -48,17 +52,45 @@ export default class TrackerView extends BaseTrackerView {
                 </Text>
               </View>
             </View>
-            <View style={trackerStyles.bodyContainer}>
-              <View style={trackerStyles.controlsContainer}>
-                {this.props.controls}
-              </View>
-            </View>
-            <View style={trackerStyles.footerContainer}>
-              {this.props.footer}
-            </View>
+            {
+              this._renderBody(backImg)
+            }
           </View>
         </TouchableWithoutFeedback>
       </Animated.View>
     );
   }
+
+  _renderBody(backImg) {
+    let { controls, footer } = this.props;
+
+    let body = (
+      <View style={{flex: 0.55}}>
+        <View style={trackerStyles.bodyContainer}>
+          {controls}
+        </View>
+        <View style={trackerStyles.footerContainer}>
+          {footer}
+        </View>
+      </View>
+    );
+
+    return backImg ? (
+      <Image source={backImg} style={styles.backImg}>
+        { body }
+      </Image>
+    ) : body;
+  }
 };
+
+const styles = StyleSheet.create({
+  backImg: {
+    flex: 0.55,
+    width: undefined,
+    height: undefined,
+    backgroundColor:'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    resizeMode: 'cover'
+  }
+});

@@ -12,7 +12,7 @@ import {
 
 import IconsGrid from '../icons/IconsGrid';
 
-import { caller } from '../../utils/lang';
+import {caller} from '../../utils/lang';
 
 export default class IconsDlg extends Component {
   _cb: Function = null;

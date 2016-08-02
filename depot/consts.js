@@ -5,7 +5,7 @@
 import Enum from './Enum';
 
 export const TrackerType = new Enum({
-  GOAL_TRACKER: {
+  GOAL: {
     title: 'Daily Goal',
     value: 'goal',
     desc: `Make a daily goal and set it as reached with the help of this tracker,
@@ -26,9 +26,15 @@ export const TrackerType = new Enum({
            e.g, an amount you spend on lunch.`
   },
 
-  STOP_WATCH: {
-    title: 'StopWatch',
+  STOPWATCH: {
+    title: 'Stopwatch',
     value: 'stopwatch',
     desc: `Track time you spend on a particular activity during the day.`
-  }
+  },
+
+  DISTANCE: {
+    title: 'Distance',
+    value: 'distance',
+    desc: `Track time you spend on a particular activity during the day.`
+  },
 });

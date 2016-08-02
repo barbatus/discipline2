@@ -19,13 +19,20 @@ const time = {
   },
 
   formatTimeMs: (timeMs) => {
-    let format = moment
-      .duration(timeMs, 'ms')
-      .format('hh:mm:ss');
-    if (timeMs < 60000) {
-      return `00:${format}`;
+    let duration = moment.duration(timeMs, 'ms');
+
+    if (timeMs < 60 * 1000) {
+      let ss = duration.format('ss');
+      return {hh: null, mm: '00', ss: ss};
     }
-    return format;
+
+    if (timeMs < 3600 * 1000) {
+      let format = duration.format('mm:ss').split(':');
+      return {hh: null, mm: format[0], ss: format[1]};
+    }
+
+    let format = duration.format('hh:mm:ss').split(':');
+    return {hh: format[0], mm: format[1], ss: format[2]};
   }
 };
 

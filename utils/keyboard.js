@@ -6,9 +6,7 @@ import {TextInput} from 'react-native';
 
 const {State: TextInputState} = TextInput;
 
-import {
-  DeviceEventEmitter
-} from 'react-native';
+import {DeviceEventEmitter} from 'react-native';
 
 import EventEmitter from 'eventemitter3';
 
