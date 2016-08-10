@@ -38,50 +38,40 @@ export default class NewTrackerView extends ScreenView {
     }
   }
 
-  moveLeft(instantly, callback) {
+  onLeftMove() {
     this.setState({
       trackerTypeId: null
     });
 
     this._setNewTrackerBtns();
-
-    super.moveLeft(instantly, callback);
   }
 
-  moveRight(instantly, callback) {
-    this.refs.newTrackerSlide.reset();
+  onRightMove() {
+    this.refs.newTrackSlide.reset();
     this.refs.typeSlide.reset();
-
-    super.moveRight(instantly, callback);
   }
 
-  setOpacity(value, animated, callback) {
-    super.setOpacity(value, animated, () => {
-      this.refs.newTrackerSlide.reset();
-      caller(callback);
-    });
-  }
-
-  _getCancelBtn(onPress) {
+  _getCancelBtn(onPress: Function) {
     return (
-      <NavCancelButton onPress={onPress.bind(this)} />
+      <NavCancelButton onPress={this::onPress} />
     );
   }
 
-  _getAcceptBtn(onPress) {
+  _getAcceptBtn(onPress: Function) {
     return (
-      <NavAcceptButton onPress={onPress.bind(this)} />
+      <NavAcceptButton onPress={this::onPress} />
     );
   }
 
-  _setNewTrackerBtns() {
+  _setNewTrackerBtns(callback: Function) {
     let { navBar } = this.context;
 
     if (navBar) {
       navBar.setTitle('New Tracker');
       navBar.setButtons(
         this._getCancelBtn(this.props.onCancel),
-        this._getAcceptBtn(this._onAccept));
+        this._getAcceptBtn(this._onAccept),
+        callback);
     }
   }
 
@@ -96,29 +86,35 @@ export default class NewTrackerView extends ScreenView {
     }
   }
 
-  _moveLeft() {
-    this.refs.newTracker.moveLeft();
-    this.refs.trackerType.moveLeft();
+  _moveViewsLeft() {
+    let views = [
+      this.refs.newTracker,
+      this.refs.trackerType
+    ];
+    ScreenView.moveLeft(views);
   }
 
-  _moveRight() {
-    this.refs.newTracker.moveRight();
-    this.refs.trackerType.moveRight();
+  _moveViewsRight() {
+    let views = [
+      this.refs.newTracker,
+      this.refs.trackerType
+    ];
+    ScreenView.moveRight(views);
   }
 
   _onAccept() {
-    let tracker = this.refs.newTrackerSlide.tracker;
+    let tracker = this.refs.newTrackSlide.tracker;
     caller(this.props.onAccept, tracker);
   }
 
   _onTypeCancel() {
     this._setNewTrackerBtns();
-    this._moveRight();
+    this._moveViewsRight();
   }
 
   _onTypeChange() {
     this._setTrackerTypeBtns();
-    this._moveLeft();
+    this._moveViewsLeft();
   }
 
   _onTypeAccept() {
@@ -126,7 +122,7 @@ export default class NewTrackerView extends ScreenView {
       trackerTypeId: this.refs.typeSlide.typeId
     }, () => {
       this._setNewTrackerBtns();
-      this._moveRight();
+      this._moveViewsRight();
     });
   }
 
@@ -139,7 +135,7 @@ export default class NewTrackerView extends ScreenView {
           content={
             <View style={styles.slideContainer}>
               <NewTrackerSlide
-                ref='newTrackerSlide'
+                ref='newTrackSlide'
                 typeId={this.state.trackerTypeId}
                 onTypeChange={::this._onTypeChange}
               />

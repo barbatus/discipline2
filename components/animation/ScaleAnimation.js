@@ -28,10 +28,12 @@ export default class ScaleAnimation {
   }
 
   animateIn(callback) {
-    Animation.timing(this._scale, 500, 1, null, callback);
+    let inn = Animation.timing(this._scale, 500, 1, null);
+    Animation.animate([inn], callback);
   }
 
   animateOut(callback: Function) {
-    Animation.timing(this._scale, 500, 0, null, callback);
+    let out = Animation.timing(this._scale, 500, 0, null);
+    Animation.animate([out], callback);
   }
 }

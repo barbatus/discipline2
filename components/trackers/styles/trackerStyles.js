@@ -51,9 +51,6 @@ const trackerDef = {
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  controlsContainer: {
-    flex: 1
-  },
   controls: {
     flex: 1,
     flexDirection: 'row',
@@ -126,7 +123,8 @@ const editDef = {
     ...trackerDef.bodyContainer,
     flex: 0.55,
     backgroundColor: '#F5F5F5',
-    ...trackerDef.borderBottomRadius
+    ...slideDef.borderRadius,
+    ...slideDef.borderBottomRadius
   },
   barContainer: {
     ...trackerDef.barContainer,
@@ -153,7 +151,6 @@ const editDef = {
     marginTop: 20
   },
   row: {
-    flex: 0,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',

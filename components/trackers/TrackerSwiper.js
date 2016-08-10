@@ -19,7 +19,7 @@ import {minScale, ScaleResponderAnimation} from '../animation/ScaleResponderAnim
 
 import Animation from '../animation/Animation';
 
-import ScreenInOutAnimation from '../animation/ScreenInOutAnimation';
+import ScreenUpDownAnimation from '../animation/ScreenUpDownAnimation';
 
 import {commonStyles, screenWidth} from '../styles/common';
 
@@ -32,7 +32,7 @@ import {caller} from '../../utils/lang';
 export default class TrackerSwiper extends TrackerRenderer {
   _index = 0;
 
-  _inOut = new ScreenInOutAnimation(minScale);
+  _inOut = new ScreenUpDownAnimation(minScale);
 
   constructor(props) {
     super(props);
@@ -97,11 +97,12 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   hide(callback) {
-    this._inOut.animateOut(callback);
+    this._inOut.setOut();
+    caller(callback);
   }
 
   show(index, callback) {
-    this._inOut.animateIn();
+    this._inOut.setIn();
     this._scale.animateIn(callback);
   }
 

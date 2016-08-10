@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
-import {trackerStyles} from '../../styles/trackerStyles';
+import {trackerDef, trackerStyles} from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';
 
@@ -22,13 +22,13 @@ import {slideWidth, slideHeight} from '../../styles/slideStyles';
 
 export default class TrackerView extends BaseTrackerView {
   render() {
-    const { backImg, onTap, onEdit, iconId, controls, footer } = this.props;
+    const {
+      style, title, backImg, iconId,
+      controls, footer, onTap, onEdit
+    } = this.props;
 
     return (
-      <Animated.View style={[
-          trackerStyles.innerView,
-          this.props.style
-        ]}>
+      <Animated.View style={[trackerStyles.innerView, style]}>
         <TouchableWithoutFeedback style={{flex: 1}} onPress={onTap}>
           <View style={{flex: 1}}>
             <View style={trackerStyles.headerContainer}>
@@ -53,7 +53,7 @@ export default class TrackerView extends BaseTrackerView {
               </View>
             </View>
             {
-              this._renderBody(backImg)
+              this._renderContent(backImg)
             }
           </View>
         </TouchableWithoutFeedback>
@@ -61,11 +61,11 @@ export default class TrackerView extends BaseTrackerView {
     );
   }
 
-  _renderBody(backImg) {
+  _renderContent(backImg) {
     let { controls, footer } = this.props;
 
     let body = (
-      <View style={{flex: 0.55}}>
+      <View style={styles.wrapper}>
         <View style={trackerStyles.bodyContainer}>
           {controls}
         </View>
@@ -83,14 +83,19 @@ export default class TrackerView extends BaseTrackerView {
   }
 };
 
+const flex = trackerDef.bodyContainer.flex +
+             trackerDef.footerContainer.flex;
 const styles = StyleSheet.create({
   backImg: {
-    flex: 0.55,
+    flex: flex,
     width: undefined,
     height: undefined,
     backgroundColor:'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     resizeMode: 'cover'
+  },
+  wrapper: {
+    flex
   }
 });

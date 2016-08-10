@@ -1,5 +1,9 @@
 'use strict';
 
+import reactMixin from 'react-mixin';
+
+import TimerMixin from 'react-timer-mixin';
+
 import Tracker from './Tracker';
 
 const timeInterval = 100; // ms
@@ -16,7 +20,7 @@ export default class StopWatchTracker extends Tracker {
 
     let value = this.value;
     super.tick();
-    this._hInterval = setInterval(() => {
+    this._hInterval = this.setInterval(() => {
       this._time += timeInterval;
       this.fireValue(value + this._time);
 
@@ -30,7 +34,7 @@ export default class StopWatchTracker extends Tracker {
     this.updLastTick(this._time);
     this._time = 0;
 
-    clearInterval(this._hInterval);
+    this.clearInterval(this._hInterval);
     this._hInterval = null;
     this.fireStop();
   }
@@ -39,3 +43,5 @@ export default class StopWatchTracker extends Tracker {
     return !!this._hInterval;
   }
 }
+
+reactMixin(StopWatchTracker.prototype, TimerMixin);

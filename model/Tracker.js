@@ -1,5 +1,9 @@
 'use strict';
 
+import moment from 'moment';
+
+import {AppState} from 'react-native';
+
 import {TrackerType} from '../depot/consts';
 
 import {Tracker as ITracker} from '../depot/interfaces';
@@ -8,6 +12,8 @@ import UserIconsStore from '../icons/UserIconsStore';
 
 import EventEmitter from 'eventemitter3';
 
+import {caller} from '../utils/lang';
+
 export default class Tracker {
   id: number;
   title: string;
@@ -15,6 +21,10 @@ export default class Tracker {
   typeId: string;
 
   events: EventEmitter = new EventEmitter();
+
+  _downDate = null;
+
+  _upDate = null;
 
   constructor(tracker: ITracker) {
     this.id = tracker.id;
@@ -59,6 +69,10 @@ export default class Tracker {
     return values.reduceRight((p, n) => {
       return p + n;
     }, 0);
+  }
+
+  get isActive() {
+    return false;
   }
 
   tick(value?: number) {
@@ -116,9 +130,9 @@ export default class Tracker {
     this.events.emit('stop');
   }
 
-  get isActive() {
-    return false;
-  }
+  onAppActive() {}
+
+  onAppBackground() {}
 
   _unsubscribe() {
     depot.trackers.events.removeListener('updated',
@@ -127,6 +141,9 @@ export default class Tracker {
       ::this._onTicks);
     depot.ticks.events.removeListener('removed',
       ::this._onUndos);
+
+    AppState.removeEventListener('change',
+      ::this._handleAppStateChange);
   }
 
   _subscribe() {
@@ -136,6 +153,9 @@ export default class Tracker {
       ::this._onTicks);
     depot.ticks.events.on('removed',
       ::this._onUndos);
+
+    AppState.addEventListener('change',
+      ::this._handleAppStateChange);
   }
 
   _onTicks(event) {
@@ -155,4 +175,34 @@ export default class Tracker {
       this.events.emit('change');
     }
   }
+
+  _handleAppStateChange(state) {
+    if (state === 'background') {
+      this._onAppBackground();
+    }
+
+    if (state === 'active') {
+      this._onAppActive();
+    }
+  }
+
+  _onAppBackground() {
+    this._downDate = moment();
+    this.onAppBackground(
+      this._downDate.valueOf());
+  }
+
+  _onAppActive() {
+    this._upDate = moment();
+
+    let dateChanged = !time.isSameDate(
+      this._upDate, this._downDate);
+    if (dateChanged) {
+      this.events.emit('change');
+    }
+
+    let diff = this._upDate.diff(this._downDate, 'milliseconds');
+    this.onAppActive(diff, dateChanged);
+  }
+
 }

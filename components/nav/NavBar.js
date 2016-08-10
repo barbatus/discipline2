@@ -6,30 +6,46 @@ import {
   StyleSheet,
   View,
   Text,
-  Animated
+  Animated,
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from 'react-native';
 
 import NavTitle from './Title';
 
 import NavigationBar from 'react-native-navbar';
 
+import {screenWidth, navHeight} from '../styles/common';
+
+import {caller} from '../../utils/lang';
+
 class NavBar extends Component {
+  _active = false;
+
   _opacity = new Animated.Value(1);
 
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      disabled: false
+    };
   }
 
-  setButtons(leftBtn, rightBtn) {
+  setButtons(leftBtn, rightBtn, callback) {
+    if (this._active) return;
+
+    this._active = true;
     this._hideButtons(() => {
       this.setState({
         leftBtn,
         rightBtn
       });
 
-      this._showButtons();
+      this._showButtons(() => {
+        this._active = false;
+        caller(callback);
+      });
     });
   }
 
@@ -45,23 +61,33 @@ class NavBar extends Component {
     });
   }
 
+  setDisabled(value, callback) {
+    this.setState({
+      disabled: value
+    }, callback);
+  }
+
   _hideButtons(callback: Function) {
+    this._animateOpacity(0, callback);
+  }
+
+  _animateOpacity(value, callback) {
     Animated.timing(this._opacity, {
       duration: 500,
-      toValue: 0
+      toValue: value
     }).start(callback);
   }
 
   _showButtons(callback: Function) {
-    Animated.timing(this._opacity, {
-      duration: 500,
-      toValue: 1
-    }).start(callback);
+    this._animateOpacity(1, callback);
   }
 
   _getAnimatedBtn(button) {
+    let mode = this.state.disabled ? 'none' : 'auto';
     return (
-      <Animated.View style={{opacity: this._opacity}}>
+      <Animated.View
+        pointerEvents={mode}
+        style={{opacity: this._opacity}}>
         {button}
       </Animated.View>
     );
@@ -84,13 +110,10 @@ class NavBar extends Component {
   }
 };
 
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   navbar: {
-    height: 64,
-    width: window.width,
+    height: navHeight,
+    width: screenWidth,
     backgroundColor: 'transparent'
   }
 });

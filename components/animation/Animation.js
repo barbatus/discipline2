@@ -13,17 +13,29 @@ class AnimationManager {
     return this._on;
   }
 
-  timing(field, duration, toValue, easing, callback) {
-    this._on = true;
-    let config = { duration, toValue }
+  timing(field, duration, toValue, easing) {
+    let config = { duration, toValue };
     if (easing) {
       config.easing = easing;
     }
 
-    Animated.timing(field, config).start(() => {
+    return Animated.timing(field, config);
+  }
+
+  animate(animations, callback) {
+    this._on = true;
+    Animated.parallel(animations).start(() => {
       this._on = false;
       caller(callback);
     });
+  }
+
+  animateIn(animations, callback) {
+    this.animate(animations.map(an => an.aIn), callback);
+  }
+
+  animateOut(animations, callback) {
+    this.animate(animations.map(an => an.aOut), callback);
   }
 
   combineStyles(anim1, anim2) {

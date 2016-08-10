@@ -62,9 +62,7 @@ export default class TrackerEditView extends BaseTrackerView {
   _onIconEdit() {
     let dlg = registry.get(DlgType.ICONS);
     dlg.show(iconId => {
-      this.setState({
-        iconId: iconId
-      }, ::dlg.hide);
+      this.setState({ iconId }, ::dlg.hide);
     });
   }
 

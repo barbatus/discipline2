@@ -33,6 +33,13 @@ const time = {
 
     let format = duration.format('hh:mm:ss').split(':');
     return {hh: format[0], mm: format[1], ss: format[2]};
+  },
+
+  isSameDate(dateLike1, dateLike2) {
+    let date1 = moment(dateLike1);
+    let date2 = moment(dateLike2);
+
+    return date1.isSame(date2, 'day');
   }
 };
 

@@ -12,7 +12,7 @@ import {
   Animated
 } from 'react-native';
 
-import {commonStyles} from '../styles/common';
+import {commonStyles, screenWidth} from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
@@ -36,12 +36,17 @@ const Scroll = React.createClass({
     return this.props.slides.length;
   },
 
+  getIndex() {
+    return this.refs.scroll.getIndex();
+  },
+
   scrollTo(index, callback, animated) {
     this.refs.scroll.scrollTo(index, callback, animated);
   },
 
   render() {
-    let { style, slides, slideWidth, scrollEnabled, index } = this.props;
+    let { style, centered, slides, slideWidth, scrollEnabled } = this.props;
+    let marginLeft = centered ? (screenWidth - slideWidth) / 2 : 0;
 
     return (
       <BaseScroll
@@ -51,7 +56,7 @@ const Scroll = React.createClass({
         style={style}
         slideWidth={slideWidth}
         scrollEnabled={scrollEnabled}
-        contentStyle={commonStyles.centered}>
+        contentStyle={[commonStyles.centered, {marginLeft}]}>
       </BaseScroll>
     );
   }

@@ -88,7 +88,8 @@ export default class FlipAnimation {
       }
     });
 
-    Animation.timing(this._rotY, 1000, stopVal,
-      Easing.inOut(Easing.sin), callback);
+    let flip = Animation.timing(this._rotY, 1000,
+      stopVal, Easing.inOut(Easing.sin));
+    Animation.animate([flip], callback);
   }
 }

@@ -40,6 +40,8 @@ import {commonStyles} from '../styles/common';
 import {caller} from '../../utils/lang';
 
 class MainScreen extends Component {
+  _active = false;
+
   componentDidMount() {
     registry.register(DlgType.ICONS, this.refs.iconDlg);
     this._setMainViewBtns();
@@ -49,29 +51,30 @@ class MainScreen extends Component {
     return this.refs.trackersView;
   }
 
-  get newTrackerView() {
-    return this.refs.newTrackerView;
+  get newTrackView() {
+    return this.refs.newTrackView;
   }
 
   _getNewBtn(onPress) {
     return (
-      <NavAddButton onPress={onPress.bind(this)} />
+      <NavAddButton onPress={this::onPress} />
     );
   }
 
   _getMenuBtn(onPress) {
     return (
-      <NavMenuButton onPress={onPress.bind(this)} />
+      <NavMenuButton onPress={this::onPress} />
     );
   }
 
-  _setMainViewBtns() {
+  _setMainViewBtns(callback: Function) {
     let navBar = this.refs.screen.navBar;
     if (navBar) {
       navBar.setTitle('Trackers');
       navBar.setButtons(
         this._getMenuBtn(this._onMenuToggle),
-        this._getNewBtn(this._onNewTracker));
+        this._getNewBtn(this._onNewTracker),
+        callback);
     }
   }
 
@@ -92,40 +95,34 @@ class MainScreen extends Component {
   // New tracker events.
 
   _onAccept(tracker) {
+    if (this._active) return;
+
+    this._active = true;
     this.trackersView.addTracker(tracker, () => {
       this._setMainViewBtns();
 
-      this.trackersView.setOpacity(0, false);
-      this.trackersView.moveRight(true);
-      this.newTrackerView.setOpacity(0, true, () => {
-        this.newTrackerView.moveRight(false, () => {
-          this.newTrackerView.setOpacity(1);
-        });
+      this.trackersView.setHidden();
+      this.trackersView.setRight();
+      this.newTrackView.hide(() => {
+        this.newTrackView.setRight();
+        this.newTrackView.setShown();
       });
-      this.trackersView.setOpacity(1, true);
+      this.trackersView.show(() => {
+        this._active = false;
+      });
     });
   }
 
   _cancelNewTracker() {
     this._setMainViewBtns();
-    this._moveToRight(this.trackersView, this.newTrackerView);
+    ScreenView.moveRight([this.trackersView, this.newTrackView]);
   }
 
   _onNewTracker() {
-    this._moveToLeft(this.trackersView, this.newTrackerView);
+    ScreenView.moveLeft([this.trackersView, this.newTrackView]);
   }
 
   // Common
-
-  _moveToLeft(view1, view2, callback) {
-    view1.moveLeft();
-    view2.moveLeft(callback);
-  }
-
-  _moveToRight(view1, view2, callback) {
-    view2.moveRight();
-    view1.moveRight(callback);
-  }
 
   _onMenuToggle() {
     caller(this.props.onMenu);
@@ -158,7 +155,7 @@ class MainScreen extends Component {
           onCancel={::this._cancelTrackerEdit} />
 
         <NewTrackerView
-          ref='newTrackerView'
+          ref='newTrackView'
           posX={1}
           onAccept={::this._onAccept}
           onCancel={::this._cancelNewTracker} />

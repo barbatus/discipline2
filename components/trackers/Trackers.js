@@ -150,7 +150,7 @@ export default class Trackers extends Component {
     this.swiper.hide();
   }
 
-  _onBigSlideTap(index) {
+  _onCenterSlideTap(index) {
     this.bscroll.hide();
     this.sscroll.hide();
 
@@ -175,7 +175,7 @@ export default class Trackers extends Component {
           ref='bscroll'
           style={styles.bigScroll}
           scale={1 / 1.6}
-          onSlideTap={::this._onBigSlideTap}
+          onCenterSlideTap={::this._onCenterSlideTap}
         />
         <TrackerScroll
           ref='sscroll'

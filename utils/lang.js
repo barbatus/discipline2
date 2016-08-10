@@ -5,3 +5,10 @@ export function caller(cb, ...args: any[]) {
     cb(...args);
   }
 };
+
+export function round(number, precision) {
+  let factor = Math.pow(10, precision);
+  let factored = number * factor;
+  let rounded = Math.round(factored);
+  return rounded / factor;
+};

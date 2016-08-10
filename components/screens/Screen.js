@@ -20,8 +20,11 @@ class Screen extends Component {
 
   get navBar() {
     return {
-      setButtons: (leftBtn, rightBtn) => {
-        this.refs.navBar.setButtons(leftBtn, rightBtn);
+      setButtons: (leftBtn, rightBtn, callback) => {
+        this.refs.navBar.setButtons(leftBtn, rightBtn, callback);
+      },
+      setDisabled: (disabled, callback) => {
+        this.refs.navBar.setDisabled(disabled, callback);
       },
       setTitle: (navTitle: string) => {
         this.refs.navBar.setTitle(navTitle);

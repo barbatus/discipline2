@@ -10,10 +10,10 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Animated
+  ScrollView
 } from 'react-native';
 
-import {slideStyles} from '../styles/slideStyles';
+import {slideStyles, slideDef} from '../styles/slideStyles';
 
 import {commonStyles} from '../../styles/common';
 
@@ -53,33 +53,42 @@ export default class TrackerTypesSlide extends Component {
   }
 
   _renderTypes() {
+    let selected = this.state.type;
+    let last = _.last(this.types);
+    let first = _.first(this.types);
+
+    let types = this.types.map(type => {
+      return (
+        <TouchableWithoutFeedback
+          key={type.valueOf()}
+          onPress={this._onTypeChosen.bind(this, type)}>
+          <View
+            style={selected === type ?
+              [styles.type, styles.selected] : styles.type}>
+              <View style={styles.typeIconContainer}>
+                <Image source={getIcon(type.valueOf())}
+                  style={styles.typeIcon} />
+              </View>
+              <View style={styles.typeTitleContainer}>
+                <Text style={styles.typeTitle}>
+                  {type.title}
+                </Text>
+              </View>
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    });
+
+    let borderColor = (selected == last || selected == first) ?
+      styles.selectedBorder : null;
     return (
-      <View style={styles.types}>
-        {
-          this.types.map(type => {
-            return (
-              <TouchableWithoutFeedback
-                key={type.valueOf()}
-                style={commonStyles.flexFilled}
-                onPress={this._onTypeChosen.bind(this, type)}>
-                <View
-                  style={this.state.type === type ?
-                    [styles.type, styles.selected] : styles.type}>
-                    <View style={styles.typeIconContainer}>
-                      <Image source={getIcon(type.valueOf())}
-                        style={[styles.typeIcon]} />
-                    </View>
-                    <View style={styles.typeTitleContainer}>
-                      <Text style={styles.typeTitle}>
-                        {type.title}
-                      </Text>
-                    </View>
-                </View>
-              </TouchableWithoutFeedback>
-            )
-          })
-        }
-      </View>
+      <ScrollView
+        style={[styles.types, borderColor]}
+        horizontal={true}
+        pagingEnabled={false}
+        bounces={false}>
+        {types}
+      </ScrollView>
     );
   }
 
@@ -107,7 +116,9 @@ export default class TrackerTypesSlide extends Component {
               slideStyles.footerContainer,
               styles.footerContainer
             ]}>
-            {this._renderTypes()}
+            {
+              this._renderTypes()
+            }
           </View>
         </View>
       </View>
@@ -138,7 +149,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     color: '#4A4A4A',
-    paddingTop: 20
+    paddingTop: 20,
+    fontWeight: '200'
   },
   desc: {
     fontSize: 17,
@@ -150,13 +162,15 @@ const styles = StyleSheet.create({
   types: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#F5F5F5'
+    backgroundColor: '#F5F5F5',
+    ...slideDef.borderRadius,
+    ...slideDef.borderBottomRadius,
+    borderWidth: 1,
+    borderColor: '#F5F5F5'
   },
   type: {
-    flex: 0.33,
+    width: 80,
     flexDirection: 'column',
-    borderTopWidth: 4,
-    borderColor: 'transparent',
     shadowColor: 'rgba(185, 185, 185, 0.4)',
     shadowOpacity: 1,
     shadowRadius: 0,
@@ -185,5 +199,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 4,
     borderTopColor: '#1A7CF9',
     backgroundColor: '#E6E6E6'
+  },
+  selectedBorder: {
+    borderColor: '#E6E6E6'
   }
 });

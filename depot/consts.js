@@ -15,7 +15,7 @@ export const TrackerType = new Enum({
   COUNTER: {
     title: 'Counter',
     value: 'counter',
-    desc: `Count the number of one particular activity you do during the day,
+    desc: `Count the number of a particular task or activity you do during the day,
            e.g., number of coffee cups you drink.`
   },
 
@@ -29,12 +29,12 @@ export const TrackerType = new Enum({
   STOPWATCH: {
     title: 'Stopwatch',
     value: 'stopwatch',
-    desc: `Track time you spend on a particular activity during the day.`
+    desc: `Track time you spend on a task or activity during the day.`
   },
 
   DISTANCE: {
     title: 'Distance',
     value: 'distance',
-    desc: `Track time you spend on a particular activity during the day.`
+    desc: `Measure the distance you cover for a particular task or activity per day.`
   },
 });

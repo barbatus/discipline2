@@ -10,7 +10,7 @@ import Animation from './Animation';
 
 import {screenHeight} from '../styles/common';
 
-export default class ScreenInOutAnimation {
+export default class ScreenUpDownAnimation {
   _moveY = new Animated.Value(0);
 
   constructor(scaleFactor = 1) {
@@ -32,13 +32,11 @@ export default class ScreenInOutAnimation {
     return this._moveY._value;
   }
 
-  animateIn(callback: Function) {
+  setIn() {
     this._moveY.setValue(0);
-    caller(callback);
   }
 
-  animateOut(callback: Function) {
+  setOut() {
     this._moveY.setValue(1);
-    caller(callback);
   }
 }

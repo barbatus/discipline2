@@ -53,9 +53,9 @@ const BaseScroll = React.createClass({
   },
 
   componentWillMount() {
-    let { slideWidth } = this.props;
+    let { slideWidth, index } = this.props;
 
-    this._index = this.props.index;
+    this._index = index;
     this._prevInd = this._index;
     this._offsetX = slideWidth * this._index;
     this._pageX = slideWidth;
@@ -70,17 +70,17 @@ const BaseScroll = React.createClass({
     }
 
     if (this.getSize() <= 1) {
-      caller(callback);
+      caller(callback, false);
       return;
     }
 
     if (this._isScrolling) return;
 
     index = Math.min(index, this.getSize() - 1);
-    let centerOffset = (screenWidth - this.getWidth()) / 2;
-    let offsetX = Math.max(index * this.getWidth() - centerOffset, 0);
+    let offsetX = Math.max(index * this.getWidth(), 0);
+
     if (this._offsetX === offsetX) {
-      caller(callback);
+      caller(callback, false);
       return;
     }
 
@@ -161,7 +161,7 @@ const BaseScroll = React.createClass({
       this._prevInd = this._index;
     }
 
-    caller(this._onScrollToCb);
+    caller(this._onScrollToCb, true);
     this._onScrollToCb = null;
   },
 
@@ -177,18 +177,16 @@ const BaseScroll = React.createClass({
     if (!diff) return;
 
     let slideWidth = this.getWidth();
-    this._index = this._index + (diff / slideWidth);
+    this._index = Math.round(this._index + (diff / slideWidth)) >> 0;
     this._offsetX = slideWidth * this._index;
   },
 
   render() {
-    let state = this.state;
-    let props = this.props;
-    let { index, slideWidth, slides, pagingEnabled, contentStyle } = props;
+    let { slides, pagingEnabled, contentStyle } = this.props;
 
     return (
       <ScrollView ref='scrollView'
-        {...props}
+        {...this.props}
         onScroll={this._onScroll}
         keyboardShouldPersistTaps={true}
         scrollEnabled={this.state.scrollEnabled}
@@ -206,5 +204,4 @@ const BaseScroll = React.createClass({
   }
 });
 
-module.exports = BaseScroll;
-
+export default BaseScroll;

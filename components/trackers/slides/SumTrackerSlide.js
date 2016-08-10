@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
     height: 50,
     width: width - 40,
     paddingRight: 20,
-    //paddingBottom: 20,
     fontSize: inFontSize,
     color: '#4A4A4A',
     textAlign: 'center',

@@ -10,96 +10,95 @@ import {commonStyles} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
-class ScreenView extends Component {
+import ScreenLeftRightAnimation from '../animation/ScreenLeftRightAnimation';
+
+import OpacityAnimation from '../animation/OpacityAnimation';
+
+import Animation from '../animation/Animation';
+
+export default class ScreenView extends Component {
   constructor(props) {
     super(props);
 
-    let posX = props.posX || 0;
-    this._moveX = new Animated.Value(posX);
-    this._opacity = new Animated.Value(1);
+    let { posX } = props;
+    this._leftRight = new ScreenLeftRightAnimation(posX);
+    this._opacity = new OpacityAnimation();
   }
 
-  get posX() {
-    return this._moveX;
+  static moveLeft(views, callback) {
+    if (!Animation.on) {
+      views.forEach(view => view.onLeftMove());
+      Animation.animateOut(views.map(view => view._leftRight), callback);
+    }
   }
 
-  get opacity() {
-    return this._opacity;
+  moveLeft(callback) {
+    if (!Animation.on) {
+      this.onLeftMove();
+      this._leftRight.animateOut(callback);
+    }
   }
 
-  moveLeft(instantly, callback) {
-    if (_.isFunction(instantly)) {
-      callback = instantly;
-      instantly = false;
-    }
+  onLeftMove() {}
 
-    let value = this.posX._value;
-    if (instantly) {
-      this.posX.setValue(value - 1);
-      caller(callback);
-      return;
-    }
-
-    Animated.timing(this.posX, {
-      duration: 500,
-      toValue: value - 1,
-      easing: Easing.inOut(Easing.linear)
-    }).start(callback);
+  setLeft() {
+    this.onLeftMove();
+    this._leftRight.setOut();
   }
 
-  moveRight(instantly, callback) {
-    if (_.isFunction(instantly)) {
-      callback = instantly;
-      instantly = false;
+  static moveRight(views, callback) {
+    if (!Animation.on) {
+      views.forEach(view => view.onRightMove());
+      Animation.animateIn(views.map(view => view._leftRight), callback);
     }
-
-    let value = this.posX._value;
-    if (instantly) {
-      this.posX.setValue(value + 1);
-      caller(callback);
-      return;
-    }
-
-    Animated.timing(this.posX, {
-      duration: 500,
-      toValue: value + 1,
-      easing: Easing.inOut(Easing.linear)
-    }).start(callback);
   }
 
-  setOpacity(value, animated, callback) {
-    if (!animated) {
-      this.opacity.setValue(value);
-      caller(callback);
-      return;
+  moveRight(callback) {
+    if (!Animation.on) {
+      this.onRightMove();
+      this._leftRight.animateIn(callback);
     }
+  }
 
-    Animated.timing(this.opacity, {
-      duration: 1000,
-      toValue: value
-    }).start(callback);
+  onRightMove() {}
+
+  setRight() {
+    this.onRightMove();
+    this._leftRight.setIn();
+  }
+
+  show(callback) {
+    this._opacity.animateIn(callback);
+  }
+
+  setShown() {
+    this._opacity.setIn();
+  }
+
+  hide(callback) {
+    this._opacity.animateOut(callback);
+  }
+
+  setHidden() {
+    this._opacity.setOut();
   }
 
   render() {
+    let style1 = this._leftRight.style;
+    let style2 = this._opacity.style;
+
     return (
       <Animated.View
-        shouldRasterizeIOS={true}
-        style={[
-          commonStyles.absoluteFilled, {
-            opacity: this._opacity,
-            transform: [{
-              translateX: this._moveX.interpolate({
-                inputRange: [-1, 0, 1],
-                outputRange: [-400, 0, 400]
-              })
-            }]
-          }
-        ]}>
+        style={[commonStyles.absoluteFilled, style1, style2]}>
         {this.props.content || this.content}
       </Animated.View>
     );
   }
 }
+
+ScreenView.defaultProps = {
+  posX: 0
+};
 
 ScreenView.contextTypes = {
   navBar: React.PropTypes.object.isRequired

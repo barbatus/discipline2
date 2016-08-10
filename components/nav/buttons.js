@@ -8,9 +8,11 @@ import styles from './styles';
 
 class NavButton extends Component {
   render() {
+    let onPress = _.debounce(this.props.onPress, 30);
+
     return (
       <TouchableOpacity
-        onPress={this.props.onPress}
+        onPress={onPress}
         style={this.props.style}>
         <Image
           source={getIcon(this.props.icon)}

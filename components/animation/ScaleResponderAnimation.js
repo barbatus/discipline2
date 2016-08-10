@@ -23,7 +23,8 @@ export class ScaleResponderAnimation {
         return;
       }
       if (this._scale._value < 1) {
-        Animation.timing(this._scale, 200, minScale, null, onDone);
+        let toMin = Animation.timing(this._scale, 200, minScale, null);
+        Animation.animate([toMin], onDone);
       }
     });
   }
@@ -41,10 +42,12 @@ export class ScaleResponderAnimation {
   }
 
   animateIn(callback) {
-    Animation.timing(this._scale, 500, 1, null, callback);
+    let inn = Animation.timing(this._scale, 500, 1, null);
+    Animation.animate([inn], callback);
   }
 
   animateOut(callback) {
-    Animation.timing(this._scale, 500, 0, null, callback);
+    let out = Animation.timing(this._scale, 500, 0, null);
+    Animation.animate([out], callback);
   }
 }

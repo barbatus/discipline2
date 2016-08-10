@@ -24,12 +24,7 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
-function round(number, precision) {
-  let factor = Math.pow(10, precision);
-  let factored = number * factor;
-  let rounded = Math.round(factored);
-  return rounded / factor;
-};
+import {round} from '../../../utils/lang';
 
 class DistanceData extends Component {
   constructor(props) {
@@ -60,21 +55,20 @@ class DistanceData extends Component {
 
     return (
       <View style={styles.distData}>
-        <View style={styles.circle}>
-          <Text style={styles.circleText}>
-            {this._formatDist(dist)}
+        <View style={[styles.label, styles.dist]}>
+          <Text style={styles.labelText}>
+            {
+              this._formatDist(dist)
+            }
           </Text>
           <Text style={styles.titleText}>
-            meters
+            mm
           </Text>
         </View>
-        <View style={styles.circle}>
+        <View style={styles.label}>
           <TimeLabel
-            style={styles.circleText}
-            width={100} time={time} />
-          <Text style={styles.titleText}>
-            time
-          </Text>
+            style={styles.labelText}
+            width={200} time={time} />
         </View>
       </View>
     );
@@ -85,8 +79,11 @@ class DistanceData extends Component {
       return value >> 0;
     }
 
-    let fVal = value / 1000;
-    return round(fVal, 2);
+    let rounded = round(value / 1000, 2);
+    let int = rounded >> 0;
+    let mod = (rounded * 100) % 100;
+
+    return `${int}.${mod}`;
   }
 
   _formatSpeed(value) {
@@ -192,7 +189,7 @@ const styles = StyleSheet.create({
   },
   distData: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center'
   },
@@ -216,26 +213,27 @@ const styles = StyleSheet.create({
     color: '#9B9B9B',
     fontWeight: '100'
   },
-  circle: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    borderWidth: 1,
-    borderColor: '#D9DADB',
+  label: {
+    flex: 1,
+    width: slideWidth,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  circleText: {
-    fontSize: 30,
-    fontWeight: '100'
+  dist: {
+    alignItems: 'flex-end'
+  },
+  labelText: {
+    fontSize: 50,
+    fontWeight: '100',
+    textAlign: 'center'
   },
   titleText: {
-    fontSize: 10,
-    position: 'absolute',
-    width: 60,
-    bottom: 15,
-    left: 25,
+    fontSize: 15,
+    paddingBottom: 10,
+    paddingLeft: 5,
+    color: '#9B9B9B',
     textAlign: 'center',
-    fontWeight: '100'
+    fontWeight: '200'
   }
 });

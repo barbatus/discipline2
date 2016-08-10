@@ -2,9 +2,15 @@
 
 import {DeviceEventEmitter} from 'react-native';
 
+import reactMixin from 'react-mixin';
+
+import TimerMixin from 'react-timer-mixin';
+
 import {RNLocation as Location} from 'NativeModules';
 
 import Tracker from './Tracker';
+
+import {getDistanceFromLatLonInMeters} from '../utils/geo';
 
 // Update distance interval in m.
 const distInterval = 5.0;
@@ -18,81 +24,20 @@ const saveTimeInterval = 1000;
 
 const tickDataSchema = 'DistData';
 
-// Radius of the earth in km.
-const R = 6371;
-
-function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
-  let dLat = deg2rad(lat2 - lat1);
-  let dLon = deg2rad(lon2 - lon1);
-  let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-  let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  let d = R * c;
-
-  return d * 1000;
-}
-
-function deg2rad(deg) {
-  return deg * (Math.PI / 180);
-}
-
 export default class DistanceTracker extends Tracker {
   _hInterval = null;
 
+  _initTime: number = 0;
+
   _time: number = 0;
+
+  _initDist: number = 0;
 
   _dist: number = 0;
 
   _lat: number = 0;
 
   _lon: number = 0;
-
-  tick() {
-    Location.requestAlwaysAuthorization();
-    Location.startUpdatingLocation();
-    Location.setDistanceFilter(distInterval);
-
-    this._addTick(0, { time: 0 });
-    DeviceEventEmitter.addListener('locationUpdated',
-      ::this._onLocationUpdate);
-
-    let time = this.time;
-    let dist = this.value;
-    this._hInterval = setInterval(() => {
-      this._time += timeInterval;
-      this.fireValue({
-        dist: dist + this._dist,
-        time: time + this._time
-      });
-
-      if (this._time % saveTimeInterval === 0) {
-        this._updateTick(this._dist, this._time);
-      }
-    }, timeInterval);
-  }
-
-  stop() {
-    this._updateTick(this._dist, this._time);
-    this.fireValue({
-      dist: this.value,
-      time: this.time
-    });
-
-    Location.stopUpdatingLocation();
-    DeviceEventEmitter.removeListener('locationUpdated',
-      ::this._onLocationUpdate);
-
-    this._time = 0;
-    this._dist = 0;
-    this._lat = 0;
-    this._lon = 0;
-    clearInterval(this._hInterval);
-    this._hInterval = null;
-
-    this.fireStop();
-  }
 
   get time() {
     let ticks = this.getTodayTicks();
@@ -108,27 +53,90 @@ export default class DistanceTracker extends Tracker {
     return !!this._hInterval;
   }
 
+  tick() {
+    Location.requestAlwaysAuthorization();
+    Location.startUpdatingLocation();
+    Location.setDistanceFilter(distInterval);
+
+    this._addTick(0, { time: 0 });
+    DeviceEventEmitter.addListener('locationUpdated',
+      ::this._onLocationUpdate);
+
+    this._initTime = this.time;
+    this._initDist = this.value;
+    this._hInterval = this.setInterval(() => {
+      this._time += timeInterval;
+
+      this._updateTick(
+        this._initDist, this._dist,
+        this._initTime, this._time,
+        this._time % saveTimeInterval === 0);
+
+    }, timeInterval);
+  }
+
+  stop() {
+    this._updateTick(
+      this._initDist, this._dist,
+      this._initTime, this._time, true);
+
+    Location.stopUpdatingLocation();
+    DeviceEventEmitter.removeListener('locationUpdated',
+      ::this._onLocationUpdate);
+
+    this._time = 0;
+    this._dist = 0;
+    this._lat = 0;
+    this._lon = 0;
+    this._init = false;
+    this.clearInterval(this._hInterval);
+    this._hInterval = null;
+
+    this.fireStop();
+  }
+
+  onAppActive(diffMs, dateChanged) {
+    if (!this.isActive || dateChanged) return;
+
+    this._time += diffMs;
+    this._updateTick(
+      this._initDist, this._dist,
+      this._initTime, this._time, true);
+  }
+
   _addTick(value, data: Object) {
     depot.ticks.addData(tickDataSchema, data);
     return this.addTick(value);
   }
 
-  _updateTick(dist, time) {
-    let tick = this.lastTick;
-    depot.ticks.updateData(tickDataSchema, tick.id, { time });
-    return this.updLastTick(dist);
+  _updateTick(initDist, dist, initTime, time) {
+    this.requestAnimationFrame(() => {
+      let tick = this.lastTick;
+      depot.ticks.updateData(tickDataSchema, tick.id, { time });
+      this.updLastTick(dist);
+    });
+
+    this.fireValue({
+      dist: initDist + dist,
+      time: initTime + time
+    });
   }
 
   _onLocationUpdate(location) {
     let { latitude, longitude, speed } = location.coords;
 
-    let dist = getDistanceFromLatLonInMeters(
-      this._lat, this._lon, latitude, longitude);
-    if (dist <= distInterval) {
-      this._dist += dist;
+    if (this._init) {
+      let dist = getDistanceFromLatLonInMeters(
+        this._lat, this._lon, latitude, longitude);
+      if (dist < 2 * distInterval) {
+        this._dist += dist;
+      }
     }
 
     this._lat = latitude;
     this._lon = longitude;
+    this._init = true;
   }
 }
+
+reactMixin(DistanceTracker.prototype, TimerMixin);
