@@ -170,6 +170,8 @@ const styles = StyleSheet.create({
   },
   type: {
     width: 80,
+    borderTopWidth: 4,
+    borderTopColor: 'transparent',
     flexDirection: 'column',
     shadowColor: 'rgba(185, 185, 185, 0.4)',
     shadowOpacity: 1,

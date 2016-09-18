@@ -145,9 +145,11 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 };
 
-const width = slideWidth - 40;
+const WIDGET_WIDTH = slideWidth - 40;
 
-const inFontSize = isPhone5() ? 32 : 42;
+const FONT_SIZE = isPhone5() ? 32 : 42;
+
+const INPUT_WIDTH = WIDGET_WIDTH - 40;
 
 const styles = StyleSheet.create({
   controlsContainer: {
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    width: width,
+    width: WIDGET_WIDTH,
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderBottomWidth: 0.5,
@@ -172,16 +174,16 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   textContainer: {
-    width: width,
+    width: WIDGET_WIDTH,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   sumInput: {
     height: 50,
-    width: width - 40,
+    width: INPUT_WIDTH,
     paddingRight: 20,
-    fontSize: inFontSize,
+    fontSize: FONT_SIZE,
     color: '#4A4A4A',
     textAlign: 'center',
     fontWeight: '100'

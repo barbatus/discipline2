@@ -45,12 +45,13 @@ const Swiper = React.createClass({
     return this.refs.scroll.isEnabled();
   },
 
-  setEnabled(enabled, callback) {
-    this.refs.scroll.setEnabled(enabled, callback);
-  },
-
   getIndex() {
     return this.refs.scroll.getIndex();
+  },
+
+  shouldComponentUpdate(props, state) {
+    return this.props.slides !== props.slides ||
+           this.props.scrollEnabled !== props.scrollEnabled;
   },
 
   scrollTo(index, callback, animated) {
@@ -123,7 +124,7 @@ const Swiper = React.createClass({
       <View style={styles.slide} key={key}>
         {slide}
       </View>
-    )
+    );
   },
 
   _onSlideChange(index, previ) {

@@ -18,6 +18,8 @@ import {
 
 import Easing from 'Easing';
 
+import Animation from '../animation/Animation';
+
 import ScreenView from './ScreenView';
 
 import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
@@ -30,6 +32,8 @@ import {commonDef, commonStyles} from '../styles/common';
 import {caller} from '../../utils/lang';
 
 export default class NewTrackerView extends ScreenView {
+  _active = false;
+
   constructor(props) {
     super(props);
 
@@ -51,6 +55,10 @@ export default class NewTrackerView extends ScreenView {
     this.refs.typeSlide.reset();
   }
 
+  get _isActive() {
+    return Animation.on;
+  }
+
   _getCancelBtn(onPress: Function) {
     return (
       <NavCancelButton onPress={this::onPress} />
@@ -63,7 +71,7 @@ export default class NewTrackerView extends ScreenView {
     );
   }
 
-  _setNewTrackerBtns(callback: Function) {
+  _setNewTrackerBtns(callback?: Function) {
     let { navBar } = this.context;
 
     if (navBar) {
@@ -75,31 +83,32 @@ export default class NewTrackerView extends ScreenView {
     }
   }
 
-  _setTrackerTypeBtns() {
+  _setTrackerTypeBtns(callback?: Function) {
     let { navBar } = this.context;
 
     if (navBar) {
       navBar.setTitle('Choose Type');
       navBar.setButtons(
         this._getCancelBtn(this._onTypeCancel),
-        this._getAcceptBtn(this._onTypeAccept));
+        this._getAcceptBtn(this._onTypeAccept),
+        callback);
     }
   }
 
-  _moveViewsLeft() {
+  _moveViewsLeft(callback?: Function) {
     let views = [
       this.refs.newTracker,
       this.refs.trackerType
     ];
-    ScreenView.moveLeft(views);
+    ScreenView.moveLeft(views, callback);
   }
 
-  _moveViewsRight() {
+  _moveViewsRight(callback?: Function) {
     let views = [
       this.refs.newTracker,
       this.refs.trackerType
     ];
-    ScreenView.moveRight(views);
+    ScreenView.moveRight(views, callback);
   }
 
   _onAccept() {
@@ -108,16 +117,22 @@ export default class NewTrackerView extends ScreenView {
   }
 
   _onTypeCancel() {
+    if (this._isActive) return;
+
     this._setNewTrackerBtns();
     this._moveViewsRight();
   }
 
   _onTypeChange() {
+    if (this._isActive) return;
+
     this._setTrackerTypeBtns();
     this._moveViewsLeft();
   }
 
   _onTypeAccept() {
+    if (this._isActive) return;
+
     this.setState({
       trackerTypeId: this.refs.typeSlide.typeId
     }, () => {

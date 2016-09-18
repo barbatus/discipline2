@@ -10,7 +10,7 @@ import {commonStyles} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
-import ScreenLeftRightAnimation from '../animation/ScreenLeftRightAnimation';
+import ScreenSlideLeftRightAnim from '../animation/ScreenSlideLeftRightAnim';
 
 import OpacityAnimation from '../animation/OpacityAnimation';
 
@@ -21,18 +21,18 @@ export default class ScreenView extends Component {
     super(props);
 
     let { posX } = props;
-    this._leftRight = new ScreenLeftRightAnimation(posX);
+    this._leftRight = new ScreenSlideLeftRightAnim(posX);
     this._opacity = new OpacityAnimation();
   }
 
-  static moveLeft(views, callback) {
+  static moveLeft(views, callback?: Function) {
     if (!Animation.on) {
       views.forEach(view => view.onLeftMove());
       Animation.animateOut(views.map(view => view._leftRight), callback);
     }
   }
 
-  moveLeft(callback) {
+  moveLeft(callback?: Function) {
     if (!Animation.on) {
       this.onLeftMove();
       this._leftRight.animateOut(callback);
@@ -46,7 +46,7 @@ export default class ScreenView extends Component {
     this._leftRight.setOut();
   }
 
-  static moveRight(views, callback) {
+  static moveRight(views, callback?: Function) {
     if (!Animation.on) {
       views.forEach(view => view.onRightMove());
       Animation.animateIn(views.map(view => view._leftRight), callback);
@@ -89,6 +89,7 @@ export default class ScreenView extends Component {
 
     return (
       <Animated.View
+        shouldRasterizeIOS={true}
         style={[commonStyles.absoluteFilled, style1, style2]}>
         {this.props.content || this.content}
       </Animated.View>

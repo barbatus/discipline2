@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
     height: 23,
     width: 23
   },
-  backIcon: {
-    height: 30,
-    width: 15
+  cancelIcon: {
+    height: 20,
+    width: 20
   },
   navBarTitleText: {
     color: 'black',

@@ -24,7 +24,7 @@ class TrackersDepot {
   }
 
   getAll(): Array<Tracker> {
-    return this._trackers.map(tracker => tracker);
+    return this._trackers.slice();
   }
 
   getOne(trackId: number): Tracker {

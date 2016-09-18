@@ -10,10 +10,10 @@ import Animation from './Animation';
 
 import {screenHeight} from '../styles/common';
 
-export default class ScreenUpDownAnimation {
+export default class ScreenSlideUpDownAnim {
   _moveY = new Animated.Value(0);
 
-  constructor(scaleFactor = 1) {
+  constructor(scaleFactor: number = 1) {
     this._scaleFactor = scaleFactor;
   }
 

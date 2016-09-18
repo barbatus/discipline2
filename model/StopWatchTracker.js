@@ -2,11 +2,9 @@
 
 import reactMixin from 'react-mixin';
 
-import TimerMixin from 'react-timer-mixin';
-
 import Tracker from './Tracker';
 
-const timeInterval = 100; // ms
+const minInterval = 100; // ms
 
 const saveInterval = 1000; // ms
 
@@ -15,33 +13,35 @@ export default class StopWatchTracker extends Tracker {
 
   _time: number = 0;
 
+  get isActive() {
+    return !!this._hInterval;
+  }
+
   tick() {
-    if (this._hInterval) return;
+    super.tick();
 
     let value = this.value;
-    super.tick();
-    this._hInterval = this.setInterval(() => {
-      this._time += timeInterval;
+    this._hInterval = setInterval(() => {
+      this._time += minInterval;
       this.fireValue(value + this._time);
 
       if (this._inval % saveInterval === 0) {
         this.updLastTick(this._time);
       }
-    }, timeInterval);
+    }, minInterval);
   }
 
   stop() {
+    if (!this.isActive) return;
+
+    super.stop();
+
     this.updLastTick(this._time);
     this._time = 0;
 
-    this.clearInterval(this._hInterval);
+    clearInterval(this._hInterval);
     this._hInterval = null;
+
     this.fireStop();
   }
-
-  get isActive() {
-    return !!this._hInterval;
-  }
 }
-
-reactMixin(StopWatchTracker.prototype, TimerMixin);

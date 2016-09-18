@@ -31,10 +31,11 @@ class TrackersView extends ScreenView {
         onScroll={this.props.onScroll}
         onSlideChange={this.props.onSlideChange}
         onSlideNoChange={this.props.onSlideNoChange}
-        onEdit={::this._onEdit}
         onRemove={this.props.onRemove}
-        onSwiperShow={::this._onSwiperShow}
-        onSwiperHide={::this._onSwiperHide}
+        onSwiperDown={this.props.onCalendarShown}
+        onEdit={::this._onEdit}
+        onSwiperScaleMove={::this._onSwiperScaleMove}
+        onSwiperMoveDown={::this._onSwiperMoveDown}
       />
     )
   }
@@ -64,14 +65,14 @@ class TrackersView extends ScreenView {
       this._getAcceptBtn(this._saveEdit));
   }
 
-  _onSwiperShow(dx: number) {
+  _onSwiperScaleMove(dv: number) {
     let { navBar } = this.context;
-    navBar.setOpacity(dx);
+    navBar.setOpacity(dv);
   }
 
-  _onSwiperHide(dx: number) {
+  _onSwiperMoveDown(dv: number) {
     let { navBar } = this.context;
-    navBar.setOpacity(dx);
+    navBar.setOpacity(1 - dv);
   }
 
   // Edit tracker events.

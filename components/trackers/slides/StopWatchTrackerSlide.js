@@ -28,7 +28,8 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     super(props);
 
     this.state = {
-      active: false
+      active: false,
+      lapTimeMs: 0
     };
   }
 
@@ -37,11 +38,12 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
 
     return (
       <View style={trackerStyles.controls}>
-        <View style={styles.controls}>       
+        <View style={styles.controls}>
           <TimeLabel
             ref='time'
-            width={slideWidth - 100}
-            time={this.state.time} />
+            width={200}
+            timeLapMs={this.state.lapTimeMs}
+            timeMs={this.state.timeMs} />
         </View>
       </View>
     );
@@ -78,7 +80,7 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     this.setState({
       iconId: tracker.iconId,
       title: tracker.title,
-      time: tracker.value
+      timeMs: tracker.value
     });
   }
 
@@ -92,6 +94,7 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
 
   onValue(value) {
     this.refs.time.setTime(value);
+    this.state.timeMs = value;
   }
 
   onStop() {
@@ -111,7 +114,9 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
   }
 
   _onLap() {
-
+    let lapTimeMs = this.state.timeMs;
+    this.refs.time.setTimeLap(lapTimeMs);
+    this.state.lapTimeMs = lapTimeMs;
   }
 };
 

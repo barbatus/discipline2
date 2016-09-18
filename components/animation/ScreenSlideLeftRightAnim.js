@@ -8,9 +8,9 @@ import {caller} from '../../utils/lang';
 
 import Animation from './Animation';
 
-import {screenHeight} from '../styles/common';
+import {screenWidth} from '../styles/common';
 
-export default class ScreenLeftRightAnimation {
+export default class ScreenSlideLeftRightAnim {
   _moveX: Animated.Value;
 
   constructor(posX: number = 1) {
@@ -22,7 +22,7 @@ export default class ScreenLeftRightAnimation {
       transform: [{
         translateX: this._moveX.interpolate({
           inputRange: [-1, 0, 1],
-          outputRange: [-400, 0, 400]
+          outputRange: [-(screenWidth + 1), 0, screenWidth + 1]
         })
       }]
     }

@@ -33,13 +33,13 @@ export default class OpacityAnimation {
     this._op.setValue(0);
   }
 
-  animateIn(callback) {
-    let inn = Animation.timing(this._op, 1000, 1, null);
+  animateIn(callback?: Function) {
+    let inn = Animation.timing(this._op, 1000, 1);
     Animation.animate([inn], callback);
   }
 
-  animateOut(callback: Function) {
-    let out = Animation.timing(this._op, 1000, 0, null);
+  animateOut(callback?: Function) {
+    let out = Animation.timing(this._op, 1000, 0);
     Animation.animate([out], callback);
   }
 }

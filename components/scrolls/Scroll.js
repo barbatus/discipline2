@@ -40,6 +40,11 @@ const Scroll = React.createClass({
     return this.refs.scroll.getIndex();
   },
 
+  shouldComponentUpdate(props, state) {
+    return this.props.slides !== props.slides ||
+           this.props.scrollEnabled !== props.scrollEnabled;
+  },
+
   scrollTo(index, callback, animated) {
     this.refs.scroll.scrollTo(index, callback, animated);
   },

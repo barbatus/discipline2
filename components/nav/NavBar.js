@@ -11,6 +11,8 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+import Animation from '../animation/Animation';
+
 import NavTitle from './Title';
 
 import NavigationBar from 'react-native-navbar';
@@ -24,6 +26,8 @@ class NavBar extends Component {
 
   _opacity = new Animated.Value(1);
 
+  _btnOpacity = new Animated.Value(0);
+
   constructor(props) {
     super(props);
 
@@ -33,19 +37,25 @@ class NavBar extends Component {
   }
 
   setButtons(leftBtn, rightBtn, callback) {
-    if (this._active) return;
-
-    this._active = true;
-    this._hideButtons(() => {
+    let showButtons = () => {
       this.setState({
         leftBtn,
         rightBtn
       });
 
       this._showButtons(() => {
-        this._active = false;
         caller(callback);
       });
+    };
+
+    if (!this.state.leftBtn &&
+        !this.state.rightBtn) {
+      showButtons();
+      return;
+    }
+
+    this._hideButtons(() => {
+      showButtons();
     });
   }
 
@@ -72,10 +82,8 @@ class NavBar extends Component {
   }
 
   _animateOpacity(value, callback) {
-    Animated.timing(this._opacity, {
-      duration: 500,
-      toValue: value
-    }).start(callback);
+    let anim = Animation.timing(this._btnOpacity, 500, value);
+    Animation.animate([anim], callback);
   }
 
   _showButtons(callback: Function) {
@@ -84,18 +92,20 @@ class NavBar extends Component {
 
   _getAnimatedBtn(button) {
     let mode = this.state.disabled ? 'none' : 'auto';
+    let style = [{opacity: this._btnOpacity}];
     return (
       <Animated.View
         pointerEvents={mode}
-        style={{opacity: this._opacity}}>
+        style={style}>
         {button}
       </Animated.View>
     );
   }
 
   render() {
+    let style = [styles.navbar, {opacity: this._opacity}];
     return (
-      <View style={styles.navbar}>
+      <Animated.View style={style}>
         <NavigationBar
           ref='navBar'
           tintColor='transparent'
@@ -105,7 +115,7 @@ class NavBar extends Component {
           }
           leftButton={this._getAnimatedBtn(this.state.leftBtn)}
           rightButton={this._getAnimatedBtn(this.state.rightBtn)} />
-      </View>
+      </Animated.View>
     );
   }
 };

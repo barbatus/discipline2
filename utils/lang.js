@@ -12,3 +12,7 @@ export function round(number, precision) {
   let rounded = Math.round(factored);
   return rounded / factor;
 };
+
+export function int(number) {
+  return number >> 0;
+};

@@ -19,6 +19,8 @@ import {
   NavBackButton
 } from '../nav/buttons';
 
+import Animation from '../animation/Animation';
+
 import Screen from './Screen';
 
 import ScreenView from './ScreenView';
@@ -55,6 +57,10 @@ class MainScreen extends Component {
     return this.refs.newTrackView;
   }
 
+  get _isActive() {
+    return Animation.on;
+  }
+
   _getNewBtn(onPress) {
     return (
       <NavAddButton onPress={this::onPress} />
@@ -67,7 +73,7 @@ class MainScreen extends Component {
     );
   }
 
-  _setMainViewBtns(callback: Function) {
+  _setMainViewBtns(callback?: Function) {
     let navBar = this.refs.screen.navBar;
     if (navBar) {
       navBar.setTitle('Trackers');
@@ -114,6 +120,8 @@ class MainScreen extends Component {
   }
 
   _cancelNewTracker() {
+    if (this._isActive) return;
+
     this._setMainViewBtns();
     ScreenView.moveRight([this.trackersView, this.newTrackView]);
   }

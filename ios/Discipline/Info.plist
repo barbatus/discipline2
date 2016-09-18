@@ -21,11 +21,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.5.5</string>
+	<string>0.6.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -38,10 +38,10 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This is the plist item for NSLocationWhenInUseUsageDescription</string>
 	<key>UIBackgroundModes</key>
-	<dict>
-		<key>location</key>
-		<true/>
-	</dict>
+	<array>
+		<string>audio</string>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -93,9 +93,9 @@ export default class TrackerEditView extends BaseTrackerView {
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
-              style={styles.textBox}
+              style={styles.changeIconBox}
               onPress={::this._onIconEdit}>
-              <Text style={styles.text}>
+              <Text style={styles.changeIconText}>
                 Change Icon
               </Text>
             </TouchableOpacity>
@@ -111,8 +111,8 @@ export default class TrackerEditView extends BaseTrackerView {
               ref='title'
               placeholder='Add a title'
               placeholderTextColor={trackerDef.hintText.color}
-              style={[propsStyles.inputTitle, styles.inputTitle]}
-              onChangeText={title => this.setState({title})}
+              style={propsStyles.titleInput}
+              onChangeText={title => this.setState({ title })}
               value={this.state.title}
             />
           </View>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
-  textBox: {
+  changeIconBox: {
     borderWidth: 1,
     borderColor: '#D4D4D4',
     padding: 3,
@@ -185,13 +185,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderRadius: 15
   },
-  text: {
+  changeIconText: {
     fontSize: 16,
     color: '#C4C4C4',
     fontWeight: '300'
-  },
-  inputTitle: {
-    fontSize: 27
   },
   deleteText: {
     color: '#FF001F'

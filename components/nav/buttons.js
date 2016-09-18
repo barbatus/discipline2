@@ -61,6 +61,7 @@ class NavCancelButton extends Component {
       <NavButton
         {...this.props}
         icon={'cancel'}
+        iconStyle={styles.cancelIcon}
         style={styles.navBarLeftButton} />
     );
   }

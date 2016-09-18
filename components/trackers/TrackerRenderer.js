@@ -24,14 +24,9 @@ export default class TrackerRenderer extends Component {
     super(props);
 
     this.state = {
-      trackers: []
+      trackers: props.trackers,
+      enabled: true
     };
-  }
-
-  setTrackers(trackers, callback) {
-    this.setState({
-      trackers
-    }, callback);
   }
 
   get opacity() {
@@ -40,6 +35,15 @@ export default class TrackerRenderer extends Component {
 
   set opacity(value) {
     this._opacity.setValue(value);
+  }
+
+  shouldComponentUpdate(props, state) {
+    if (this.props.trackers !== props.trackers) {
+      this.state.trackers = props.trackers;
+      return true;
+    }
+
+    return this.state.trackers !== state.trackers;
   }
 
   hide(callback) {

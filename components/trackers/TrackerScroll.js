@@ -56,13 +56,13 @@ export default class TrackerScroll extends TrackerRenderer {
 
     let slideStyle = { width: screenWidth * scale, height: slideHeight * scale};
     let slides = this.state.trackers.map(
-      (tracker, index) => {
+      tracker => {
         return (
           <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
             { this.renderTracker(tracker, editable, scale) }
           </View>
         );
-      });
+      }).toArray();
 
     return (
       <Animated.View style={[style, {

@@ -24,7 +24,7 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
-import {round} from '../../../utils/lang';
+import {formatDistance} from '../../../utils/format';
 
 class DistanceData extends Component {
   constructor(props) {
@@ -53,42 +53,25 @@ class DistanceData extends Component {
   render() {
     let { time, dist } = this.state;
 
+    let format = formatDistance(dist);
     return (
       <View style={styles.distData}>
         <View style={[styles.label, styles.dist]}>
           <Text style={styles.labelText}>
-            {
-              this._formatDist(dist)
-            }
+            { format.format }
           </Text>
           <Text style={styles.titleText}>
-            mm
+            { format.unit }
           </Text>
         </View>
         <View style={styles.label}>
           <TimeLabel
             style={styles.labelText}
-            width={200} time={time} />
+            width={200}
+            timeMs={time} />
         </View>
       </View>
     );
-  }
-
-  _formatDist(value) {
-    if (value < 1000) {
-      return value >> 0;
-    }
-
-    let rounded = round(value / 1000, 2);
-    let int = rounded >> 0;
-    let mod = (rounded * 100) % 100;
-
-    return `${int}.${mod}`;
-  }
-
-  _formatSpeed(value) {
-    let fVal = (value / 1000) * 3600;
-    return round(fVal, 1);
   }
 }
 

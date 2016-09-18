@@ -134,18 +134,22 @@ const editDef = {
   iconContainer: {
     ...trackerDef.iconContainer,
     alignItems: 'flex-end',
-    flex: 0.4
+    flex: 0.4,
+    paddingTop: 15
   },
   titleContainer: {
     ...trackerDef.titleContainer,
     alignItems: 'center',
     flex: 0.35
   },
-  inputTitle: {
-    width: 200,
-    fontSize: 28,
+  titleInput: {
+    flex: 0.35,
+    paddingRight: 0,
+    width: slideWidth - 40,
+    fontSize: 30,
     textAlign: 'center',
-    fontWeight: '100'
+    color: '#4A4A4A',
+    fontWeight: '200'
   },
   group: {
     marginTop: 20

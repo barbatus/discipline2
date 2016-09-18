@@ -21,6 +21,10 @@ const UserIcons = new Enum({
     value: 'bar',
     [IconSize.NORMAL]: require('./files/user/icon8/bar.png')
   },
+  BARBELL: {
+    value: 'barbell',
+    [IconSize.NORMAL]: require('./files/user/icon8/barbell.png')
+  },
   BELL: {
     value: 'bell',
     [IconSize.NORMAL]: require('./files/user/icon8/bell.png')
@@ -93,6 +97,10 @@ const UserIcons = new Enum({
     value: 'idea',
     [IconSize.NORMAL]: require('./files/user/icon8/idea.png')
   },
+  IMAC: {
+    value: 'imac',
+    [IconSize.NORMAL]: require('./files/user/icon8/imac.png')
+  },
   INFO: {
     value: 'info',
     [IconSize.NORMAL]: require('./files/user/icon8/info.png')
@@ -121,6 +129,10 @@ const UserIcons = new Enum({
     value: 'news',
     [IconSize.NORMAL]: require('./files/user/icon8/news.png')
   },
+  PARTY_BALOONS: {
+    value: 'party_baloons',
+    [IconSize.NORMAL]: require('./files/user/icon8/party_baloons.png')
+  },
   PILL: {
     value: 'pill',
     [IconSize.NORMAL]: require('./files/user/icon8/pill.png')
@@ -144,6 +156,10 @@ const UserIcons = new Enum({
   SHOPPING_CART: {
     value: 'shopping_cart',
     [IconSize.NORMAL]: require('./files/user/icon8/shopping_cart.png')
+  },
+  SKIING: {
+    value: 'skiing',
+    [IconSize.NORMAL]: require('./files/user/icon8/skiing.png')
   },
   SMOKING: {
     value: 'smoking',

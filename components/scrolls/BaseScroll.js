@@ -47,9 +47,9 @@ const BaseScroll = React.createClass({
     }
   },
 
-  getInitialState() {
-    let { scrollEnabled } = this.props;
-    return { scrollEnabled };
+  shouldComponentUpdate(props, state) {
+    return this.props.slides !== props.slides ||
+           this.props.scrollEnabled !== props.scrollEnabled;
   },
 
   componentWillMount() {
@@ -111,13 +111,7 @@ const BaseScroll = React.createClass({
   },
 
   isEnabled() {
-    return this.state.scrollEnabled;
-  },
-
-  setEnabled(enabled, callback) {
-    this.setState({
-      scrollEnabled: enabled
-    }, callback);
+    return this.props.scrollEnabled;
   },
 
   _onTouchStart(event) {
@@ -189,7 +183,7 @@ const BaseScroll = React.createClass({
         {...this.props}
         onScroll={this._onScroll}
         keyboardShouldPersistTaps={true}
-        scrollEnabled={this.state.scrollEnabled}
+        scrollEnabled={this.props.scrollEnabled}
         pagingEnabled={pagingEnabled}
         contentContainerStyle={contentStyle}
         contentOffset={{x: this._offsetX}}

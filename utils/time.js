@@ -3,6 +3,12 @@
 import moment from 'moment';
 import 'moment-duration-format';
 
+import {__} from './format';
+
+const SS_MS = 1000;
+const MM_MS = 60 * 1000;
+const HH_MS = 60 * 60 * 1000;
+
 const time = {
   getDateMs: () => {
     let now = moment();
@@ -19,20 +25,41 @@ const time = {
   },
 
   formatTimeMs: (timeMs) => {
-    let duration = moment.duration(timeMs, 'ms');
+    let duration = moment.duration(timeMs);
 
-    if (timeMs < 60 * 1000) {
-      let ss = duration.format('ss');
-      return {hh: null, mm: '00', ss: ss};
+    if (timeMs < MM_MS) {
+      let ss = duration.seconds();
+      let f = {
+        hh: null,
+        mm: '00',
+        ss: __(ss),
+        format: () => `00:${f.ss}`
+      };
+      return f;
     }
 
-    if (timeMs < 3600 * 1000) {
-      let format = duration.format('mm:ss').split(':');
-      return {hh: null, mm: format[0], ss: format[1]};
+    if (timeMs < HH_MS) {
+      let ss = duration.seconds();
+      let mm = duration.minutes();
+      let f = {
+        hh: null,
+        mm: __(mm),
+        ss: __(ss),
+        format: () => `${f.mm}:${f.ss}`
+      };
+      return f;
     }
 
-    let format = duration.format('hh:mm:ss').split(':');
-    return {hh: format[0], mm: format[1], ss: format[2]};
+    let ss = duration.seconds();
+    let mm = duration.minutes();
+    let hh = duration.hours();
+    let f = {
+      hh: ss,
+      mm: mm,
+      ss: ss,
+      format: () => `${f.hh}:${f.mm}:${f.ss}`
+    };
+    return f;
   },
 
   isSameDate(dateLike1, dateLike2) {
@@ -40,6 +67,20 @@ const time = {
     let date2 = moment(dateLike2);
 
     return date1.isSame(date2, 'day');
+  },
+
+  getToDayEndMs() {
+    let now = moment();
+    let end = now.endOf('day');
+
+    return end.diff(now, 'milliseconds');
+  },
+
+  getFromDayStartMs() {
+    let now = moment();
+    let start = now.startOf('day');
+
+    return now.diff(start, 'milliseconds');
   }
 };
 

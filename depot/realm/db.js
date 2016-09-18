@@ -4,6 +4,18 @@
 
 import Realm from 'realm';
 
+const AppInfoSchema = {
+  name: 'AppInfo',
+  properties: {
+    ver: 'string',
+    testTrackers: {
+      type: 'list',
+      objectType: 'Tracker',
+      default: []
+    }
+  }
+};
+
 const TrackerSchema = {
   name: 'Tracker',
   primaryKey: 'id',
@@ -74,6 +86,7 @@ const DistanceDataSchema = {
 };
 
 let DB = new Realm({ schema: [
-  TrackersSchema, TrackerSchema, TickSchema, TicksSchema, DistanceDataSchema
+  AppInfoSchema, TrackersSchema, TrackerSchema,
+  TickSchema, TicksSchema, DistanceDataSchema
 ] });
 export default DB;

@@ -3,10 +3,8 @@
 import React, {Component} from 'react';
 
 import {
-  TouchableOpacity,
   StyleSheet,
   View,
-  Text,
   Animated
 } from 'react-native';
 
@@ -14,9 +12,13 @@ import reactMixin from 'react-mixin';
 
 import TimerMixin from 'react-timer-mixin';
 
+import {List} from 'immutable';
+
 import TrackerSwiper from './TrackerSwiper';
 
 import TrackerScroll from './TrackerScroll';
+
+import TrackerCal from './TrackerCal';
 
 import TrackerStore from '../../model/Trackers';
 
@@ -24,33 +26,49 @@ import {commonStyles} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
+const absFilled = commonStyles.absoluteFilled;
+
+const newList = (trackers) => {
+  return new List(trackers || []);
+};
+
 export default class Trackers extends Component {
-  _trackers = [];
+  _trackers = null;
 
   _opacity = new Animated.Value(0);
 
-  componentWillMount() {
-    this._trackers = this._loadTrackers();
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      swiper: newList(),
+      scroll: newList()
+    };
   }
 
   componentDidMount() {
-    if (this.trackers.length) {
-      this._renderInit(this.trackers);
+    let trackers = newList(
+      this._loadTrackers());
+    this._setTrackers(trackers);
+
+    if (trackers.size) {
+      this._renderOne(trackers.first(), () => {
+        this._renderAll(trackers);
+      });
     }
   }
 
   addTracker(tracker, callback) {
-    if (!tracker.typeId) return null;
+    check.assert.not.null(tracker.typeId);
 
     let nextInd = this.swiper.nextIndex;
     tracker = TrackerStore.addAt(tracker, nextInd);
 
-    caller(callback);
-
-    let trackers = this.trackers;
-    trackers.splice(nextInd, 0, tracker);
-    this._renderAll(trackers, () => {
-      this.swiper.scrollTo(nextInd);
+    this.swiper.addTracker(tracker, () => { 
+      let trackers = this.trackers.insert(nextInd, tracker);
+      this._setTrackers(trackers);
+      this._renderScrolls(trackers);
+      caller(callback, tracker);
     });
 
     return tracker;
@@ -83,32 +101,42 @@ export default class Trackers extends Component {
   }
 
   _loadTrackers() {
-    let hasTestData = depot.hasTestData();
-    if (!hasTestData) {
-      depot.initTestData();
-    }
+    depot.initData();
 
     return TrackerStore.getAll();
   }
 
-  _renderInit(trackers, callback) {
-    this.swiper.setTrackers(trackers.slice(0, 1), () => {
+  _setTrackers(trackers) {
+    this._trackers = trackers;
+  }
+
+  _renderOne(tracker, callback) {
+    this.setState({
+      swiper: newList([tracker])
+    }, () => {
       Animated.timing(this._opacity, {
         duration: 500,
         toValue: 1
-      }).start(() => {
-        this._renderAll(trackers);
-      });
+      }).start(callback);
     });
   }
 
   _renderAll(trackers, callback) {
-    this.swiper.setTrackers(trackers, callback);
+    this.setState({
+      swiper: trackers
+    });
 
     this.setTimeout(() => {
-      this.bscroll.setTrackers(trackers);
-      this.sscroll.setTrackers(trackers);
+      this.setState({
+        scroll: trackers
+      }, callback);
     });
+  }
+
+  _renderScrolls(trackers, callback) {
+    this.setState({
+      scroll: trackers
+    }, callback);
   }
 
   _onEdit() {
@@ -121,33 +149,37 @@ export default class Trackers extends Component {
     let removed = tracker.remove();
 
     if (removed) {
-      caller(this.props.onRemove, removed);
-
       this.swiper.removeTracker(index => {
-        let trackers = this.trackers;
-        trackers.splice(index, 1);
-        this._renderAll(trackers);
+        let trackers = this.trackers.delete(index);
+        this._setTrackers(trackers);
+        this._renderScrolls(trackers);
+        caller(this.props.onRemove);
       });
     }
   }
 
-  _onMoveUpStart() {
-    let index = this.swiper.index;
+  _onScaleStart() {
+    let { index } = this.swiper;
     this.bscroll.hide();
     this.bscroll.scrollTo(index, false);
     this.sscroll.scrollTo(index, false);
   }
 
-  _onMoveUp(dv) {
+  _onScaleMove(dv) {
     this.bscroll.opacity = 1 - dv;
     this.sscroll.opacity = 1 - dv;
-    caller(this.props.onSwiperHide, dv);
+    caller(this.props.onSwiperScaleMove, dv);
   }
 
-  _onMoveUpDone() {
+  _onScaleDone() {
     this.bscroll.show();
     this.sscroll.show();
     this.swiper.hide();
+  }
+
+  _onMoveDown(dv: number) {
+    this.refs.calendar.setShown(dv);
+    caller(this.props.onSwiperMoveDown, dv);
   }
 
   _onCenterSlideTap(index) {
@@ -157,7 +189,6 @@ export default class Trackers extends Component {
     this.swiper.scrollTo(index, () => {
       this.swiper.show();
     }, false);
-    caller(this.props.onSwiperShow, 1);
   }
 
   _onSmallSlideTap(index) {
@@ -170,29 +201,37 @@ export default class Trackers extends Component {
       <Animated.View style={[
         commonStyles.flexFilled,
         {opacity: this._opacity}
-      ]}> 
+      ]}>
         <TrackerScroll
           ref='bscroll'
+          trackers={this.state.scroll}
           style={styles.bigScroll}
           scale={1 / 1.6}
           onCenterSlideTap={::this._onCenterSlideTap}
         />
         <TrackerScroll
           ref='sscroll'
+          trackers={this.state.scroll}
           style={styles.smallScroll}
           scale={1 / 4}
           editable={false}
           onSlideTap={::this._onSmallSlideTap}
         />
+        <TrackerCal
+          ref='calendar'
+          style={absFilled}
+        />
         <TrackerSwiper
           ref='swiper'
-          style={commonStyles.absoluteFilled}
+          trackers={this.state.swiper}
+          style={absFilled}
           onScroll={this.props.onScroll}
           onSlideChange={this.props.onSlideChange}
           onSlideNoChange={this.props.onSlideNoChange}
-          onMoveUpStart={::this._onMoveUpStart}
-          onMoveUp={::this._onMoveUp}
-          onMoveUpDone={::this._onMoveUpDone}
+          onScaleStart={::this._onScaleStart}
+          onScaleMove={::this._onScaleMove}
+          onScaleDone={::this._onScaleDone}
+          onMoveDown={::this._onMoveDown}
           onRemove={::this._onRemove}
           onEdit={::this._onEdit} />
       </Animated.View>

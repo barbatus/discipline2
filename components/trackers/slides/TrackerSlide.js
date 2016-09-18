@@ -28,6 +28,8 @@ import ScaleAnimation from '../../animation/ScaleAnimation';
 
 import {caller} from '../../../utils/lang';
 
+const absFilled = commonStyles.absoluteFilled;
+
 export default class TrackerSlide extends Component {
   constructor(props) {
     super(props);
@@ -164,7 +166,7 @@ export default class TrackerSlide extends Component {
       return (
         <TrackerEditView
           ref='editView'
-          style={[commonStyles.absoluteFilled, this._flip.style2]}
+          style={[absFilled, this._flip.style2]}
           showType={false}
           delete={true}
           iconId={tracker.iconId}
