@@ -6,15 +6,15 @@ import {
   StyleSheet,
   View,
   Text,
-  Animated
+  Animated,
 } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
-class Screen extends Component {
+export default class Screen extends Component {
   getChildContext() {
     return {
-      navBar: this.navBar
+      navBar: this.navBar,
     }
   }
 
@@ -36,10 +36,10 @@ class Screen extends Component {
   }
 
   render() {
-    let {
+    const {
       content,
       background,
-      navigator
+      navigator,
     } = this.props;
 
     return (
@@ -57,7 +57,7 @@ class Screen extends Component {
 }
 
 Screen.childContextTypes = {
-  navBar: React.PropTypes.object.isRequired
+  navBar: React.PropTypes.object.isRequired,
 };
 
 const Dimensions = require('Dimensions');
@@ -65,17 +65,15 @@ const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   background: {
     position: 'absolute',
     height: window.height,
-    width: window.width
+    width: window.width,
   },
   content: {
     height: window.height - 64,
-    width: window.width
-  }
+    width: window.width,
+  },
 });
-
-module.exports = Screen;

@@ -8,7 +8,7 @@ import styles from './styles';
 
 class NavTitle extends Component {
   render() {
-    let navTitle = (
+    const navTitle = (
       <View style={styles.navTitle}>
         <Text style={styles.navTitleText}>
           {this.props.title}

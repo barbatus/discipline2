@@ -58,13 +58,13 @@ const Swiper = React.createClass({
     this.refs.scroll.scrollTo(index, callback, animated);
   },
 
-  _renderDots(size) {
+  _renderDots(index, size) {
     if (size <= 1) return null;
 
     let dots = [];
     let basicDot = [styles.basicDot, this._scaleDot(size)];
     for(let i = 0; i < size; i++) {
-      let dotStyle = i === this.getIndex() ? 
+      let dotStyle = i === index ? 
         [basicDot, styles.activeDot] : basicDot;
       dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
     }
@@ -139,7 +139,7 @@ const Swiper = React.createClass({
     } = this.props;
 
     let dots = slides.length >= 2 ?
-      this._renderDots(slides.length) : null;
+      this._renderDots(index, slides.length) : null;
 
     return (
       <View style={style}>

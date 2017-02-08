@@ -34,12 +34,12 @@ export default class OpacityAnimation {
   }
 
   animateIn(callback?: Function) {
-    let inn = Animation.timing(this._op, 1000, 1);
+    const inn = Animation.timing(this._op, 1000, 1);
     Animation.animate([inn], callback);
   }
 
   animateOut(callback?: Function) {
-    let out = Animation.timing(this._op, 1000, 0);
+    const out = Animation.timing(this._op, 1000, 0);
     Animation.animate([out], callback);
   }
 }

@@ -21,17 +21,17 @@ class Timer {
 
   _timer = null;
 
-  constructor(fn, ms = 0) {
+  constructor(fn: Function, ms: number = 0) {
     this._fn = fn;
     this._ms = ms;
     this.start();
   }
 
-  get isActive() {
+  get active() {
     return !!this._timer;
   }
 
-  restart(ms) {
+  restart(ms: number) {
     this.stop();
 
     this._ms = ms;
@@ -45,7 +45,7 @@ class Timer {
   }
 
   stop() {
-    if (!this.isActive) return;
+    if (!this.active) return;
 
     clearTimeout(this._timer);
     this._timer = null;
@@ -72,8 +72,8 @@ export default class Tracker {
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
 
-    this._subscribe();
-    this._setDayTimer();
+    // this._subscribe();
+    // this._setDayTimer();
   }
 
   get type() {
@@ -112,46 +112,6 @@ export default class Tracker {
     }, 0);
   }
 
-  get isActive() {
-    return false;
-  }
-
-  tick(value?: number) {
-    check.assert(!this.isActive);
-
-    return this.addTick(value);
-  }
-
-  stop() {}
-
-  undo() {
-    let tick = this.lastTick;
-    if (tick) {
-      return depot.ticks.remove(tick.id);
-    }
-    return false;
-  }
-
-  save() {
-    return depot.trackers.update({
-      id: this.id,
-      title: this.title,
-      typeId: this.typeId,
-      iconId: this.iconId
-    });
-  }
-
-  remove() {
-    let removed = depot.trackers.remove(this.id);
-    if (removed) this.destroy();
-    return removed;
-  }
-
-  addTick(value?: number) {
-    return depot.trackers.addTick(this.id,
-      time.getDateTimeMs(), value);
-  }
-
   updLastTick(value: number) {
     return depot.trackers.updLastTick(this.id, value);
   }
@@ -170,14 +130,6 @@ export default class Tracker {
     this._unsubscribe();
   }
 
-  fireValue(value) {
-    this.events.emit('value', value);
-  }
-
-  fireStop() {
-    this.events.emit('stop');
-  }
-
   onAppActive(diff, dateChanged) {
     if (dateChanged) {
       this.events.emit('change');
@@ -190,24 +142,24 @@ export default class Tracker {
   onAppBackground() {}
 
   _unsubscribe() {
-    depot.trackers.events.removeListener('updated',
-      this._onUpdated, this);
-    depot.ticks.events.removeListener('added',
-      this._onTicks, this);
-    depot.ticks.events.removeListener('removed',
-      this._onUndos, this);
+    // depot.trackers.events.removeListener('updated',
+    //   this._onUpdated, this);
+    // depot.ticks.events.removeListener('added',
+    //   this._onTicks, this);
+    // depot.ticks.events.removeListener('removed',
+    //   this._onUndos, this);
 
     AppState.removeEventListener('change',
       ::this._handleAppStateChange);
   }
 
   _subscribe() {
-    depot.trackers.events.on('updated',
-      this._onUpdated, this);
-    depot.ticks.events.on('added',
-      this._onTicks, this);
-    depot.ticks.events.on('removed',
-      this._onUndos, this);
+    // depot.trackers.events.on('updated',
+    //   this._onUpdated, this);
+    // depot.ticks.events.on('added',
+    //   this._onTicks, this);
+    // depot.ticks.events.on('removed',
+    //   this._onUndos, this);
 
     AppState.addEventListener('change',
       ::this._handleAppStateChange);
@@ -229,24 +181,6 @@ export default class Tracker {
   _unsetDayTimer() {
     if (this._dayTimer) {
       this._dayTimer.stop();
-    }
-  }
-
-  _onTicks(event) {
-    if (event.trackId === this.id) {
-      this.events.emit('tick');
-    }
-  }
-
-  _onUndos(event) {
-    if (event.trackId === this.id) {
-      this.events.emit('undo');
-    }
-  }
-
-  _onUpdated(event) {
-    if (event.trackId === this.id) {
-      this.events.emit('change');
     }
   }
 

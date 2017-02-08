@@ -16,52 +16,29 @@ import {trackerStyles} from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';
 
+import {caller} from '../../../utils/lang';
+
 export default class CounterSlide extends TrackerSlide {
-  onChange() {
-    let { tracker } = this.props;
-    this.setState({
-      iconId: tracker.iconId,
-      title: tracker.title,
-      count: tracker.count
-    });
-  }
-
-  onTick() {
-    Vibration.vibrate();
-
-    let { tracker } = this.props;
-    this.setState({
-      count: tracker.count
-    });
-  }
-
-  onUndo() {
-    let { tracker } = this.props;
-    this.setState({
-      count: tracker.count
-    });
-  }
-
   get controls() {
-    let { editable } = this.props;
+    let { tracker, editable } = this.props;
 
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
           <TouchableOpacity
             disabled={!editable}
-            onPress={::this._onMinus}>
+            onPress={::this._onUndo}>
             <Image
               source={getIcon('minus')}
               style={trackerStyles.circleBtn}
             />
           </TouchableOpacity>
           <Text style={styles.countText} numberOfLines={1}>
-            {this.state.count}
+            {tracker.count}
           </Text>
           <TouchableOpacity
             disabled={!editable}
-            onPress={::this._onPlus}>
+            onPress={::this._onTick}>
             <Image
               source={getIcon('plus')}
               style={trackerStyles.circleBtn}
@@ -80,14 +57,13 @@ export default class CounterSlide extends TrackerSlide {
     );
   }
 
-  _onPlus() {
-    let { tracker } = this.props;
-    tracker.tick();
+  _onTick() {
+    Vibration.vibrate();
+    caller(this.props.onTick);
   }
 
-  _onMinus() {
-    let { tracker } = this.props;
-    tracker.undo();
+  _onUndo() {
+    caller(this.props.onUndo);
   }
 };
 

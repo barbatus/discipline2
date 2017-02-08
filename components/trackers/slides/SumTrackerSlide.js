@@ -10,12 +10,12 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Vibration
+  Vibration,
 } from 'react-native';
 
 import {
   trackerDef,
-  trackerStyles
+  trackerStyles,
 } from '../styles/trackerStyles';
 
 import {slideWidth} from '../styles/slideStyles';
@@ -27,6 +27,11 @@ import TrackerSlide from './TrackerSlide';
 import Keyboard from '../../../utils/keyboard';
 
 export default class SumTrackerSlide extends TrackerSlide {
+  shouldComponentUpdate(props, state) {
+    const should = super.shouldComponentUpdate(props, state);
+    return should || this.state.added !== state.added;
+  }
+
   cancelEdit(callback) {
     super.cancelEdit(callback);
     Keyboard.dismiss();
@@ -48,34 +53,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   shake() {
-    let { tracker } = this.props;
-    tracker.undo();
-  }
-
-  onChange() {
-    let { tracker } = this.props;
-    this.setState({
-      iconId: tracker.iconId,
-      title: tracker.title,
-      added: null,
-      sum: tracker.value
-    });
-  }
-
-  onTick() {
-    Vibration.vibrate();
-
-    let { tracker } = this.props;
-    this.setState({
-      sum: tracker.value
-    });
-  }
-
-  onUndo() {
-    let { tracker } = this.props;
-    this.setState({
-      sum: tracker.value
-    });
+    caller(this.props.onUndo);
   }
 
   onTap() {
@@ -84,7 +62,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   get controls() {
-    let { editable } = this.props;
+    const { tracker, editable } = this.props;
 
     return (
       <View style={[
@@ -108,13 +86,14 @@ export default class SumTrackerSlide extends TrackerSlide {
               onPress={::this._onPlus}>
               <Image
                 source={getIcon('plus_sm')}
-                style={[trackerStyles.circleBtnSm, styles.circleBtnSm]} />
+                style={[trackerStyles.circleBtnSm, styles.circleBtnSm]}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.sumText}>=</Text>
             <Text style={styles.sumText}>
-              $ {this.state.sum}
+              $ {tracker.value}
             </Text>
           </View>
         </View>
@@ -132,16 +111,16 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   _onPlus() {
     Keyboard.dismiss();
-    let { tracker } = this.props;
-    let added = parseFloat(this.state.added);
+    const { tracker } = this.props;
+    const added = parseFloat(this.state.added);
     if (added) {
-      tracker.tick(added);
-      this.setState({ added: '' });
+      this.props.onTick(added);
+      this.setState({added: ''});
     }
   }
 
   _onChangeText(sumAdded) {
-    this.setState({ added: sumAdded });
+    this.setState({added: sumAdded});
   }
 };
 
@@ -155,13 +134,13 @@ const styles = StyleSheet.create({
   controlsContainer: {
     flex: 1,
     alignItems: 'flex-start',
-    paddingTop: 25
+    paddingTop: 25,
   },
   controls: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -171,7 +150,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#DADADA',
     paddingBottom: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   textContainer: {
     width: WIDGET_WIDTH,
@@ -186,14 +165,14 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE,
     color: '#4A4A4A',
     textAlign: 'center',
-    fontWeight: '100'
+    fontWeight: '100',
   },
   circleBtnSm: {
-    width: 40
+    width: 40,
   },
   sumText: {
     fontSize: 35,
     color: '#9B9B9B',
-    fontWeight: '200'
-  }
+    fontWeight: '200',
+  },
 });

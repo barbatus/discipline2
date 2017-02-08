@@ -17,15 +17,65 @@ class Depot {
   ticks: ITicksDepot = ticks;
   appInfo = appInfo;
 
-  initData() {
-    this._initTestData();
+  addTracker(tracker: Tracker): Tracker {
+    return this.trackers.add(tracker);
   }
 
-  _initTestData() {
+  addTrackerAt(tracker: Tracker, index: number): Tracker {
+    return this.trackers.addAt(tracker, index);
+  }
+
+  addTick(trackId: number,
+          dateTimeMs: number,
+          value?: number): Tick {
+    check.assert.number(trackId);
+    check.assert.number(dateTimeMs);
+
+    return this.ticks.add({
+      trackId: trackId,
+      dateTimeMs: dateTimeMs,
+      value: value
+    });
+  }
+
+  updateTracker(tracker: Tracker): boolean {
+    return this.trackers.update(tracker);
+  }
+
+  removeTracker(trackId: number): boolean {
+    this.trackers.remove(trackId);
+    this.ticks.removeForTracker(trackId);
+    return true;
+  }
+
+  undoLastTick(trackId: number) {
+    let tick = depot.ticks.getLast(trackId);
+    if (tick) {
+      return depot.ticks.remove(tick.id);
+    }
+    return false;
+  }
+
+  updLastTick(trackId: number, value?: number) {
+    let tick = depot.ticks.getLast(trackId);
+    this.ticks.update(tick.id, value);
+    return tick;
+  }
+
+  loadTestData() {
     this._resetTestData();
 
-    if (this._hasTestData()) return;
+    if (this._hasTestData()) {
+      return this.trackers.getAll();
+    };
 
+    let trackers = this._genTestTrackers();
+    this._setTestTrackers(trackers);
+
+    return trackers;
+  }
+
+  _genTestTrackers() {
     let trackers = [];
     let tracker = this.trackers.add({
       title: 'Morning Run',
@@ -76,7 +126,7 @@ class Depot {
     });
     trackers.push(tracker);
 
-    this._setTestTrackers(trackers);
+    return trackers;
   }
 
   _resetTestData() {
@@ -84,7 +134,7 @@ class Depot {
     let appVer = DeviceInfo.getVersion();
     if (savedVer != appVer) {
       let trackers = this._getTestTrackers();
-      if (savedVer && !trackers.length) {
+      if (!trackers.length) {
         trackers = this.trackers.getAll();
       }
       for (let tracker of trackers) {
@@ -96,7 +146,7 @@ class Depot {
 
   _hasTestData() {
     let trackers = this._getTestTrackers();
-    return trackers.length;
+    return !!trackers.length;
   }
 
   _setTestTrackers(trackers) {

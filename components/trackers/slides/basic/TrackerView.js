@@ -11,7 +11,7 @@ import {
   TextInput,
   StyleSheet,
   Animated,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import {trackerDef, trackerStyles} from '../../styles/trackerStyles';
@@ -22,10 +22,8 @@ import {slideWidth, slideHeight} from '../../styles/slideStyles';
 
 export default class TrackerView extends BaseTrackerView {
   render() {
-    const {
-      style, title, backImg, iconId,
-      controls, footer, onTap, onEdit
-    } = this.props;
+    const { tracker, style, backImg, onTap, onEdit } = this.props;
+    const { title, iconId } = tracker;
 
     return (
       <Animated.View style={[trackerStyles.innerView, style]}>
@@ -48,7 +46,7 @@ export default class TrackerView extends BaseTrackerView {
               </View>
               <View style={trackerStyles.titleContainer}>
                 <Text style={trackerStyles.titleText}>
-                  {this.props.title}
+                  {title}
                 </Text>
               </View>
             </View>
@@ -62,9 +60,9 @@ export default class TrackerView extends BaseTrackerView {
   }
 
   _renderContent(backImg) {
-    let { controls, footer } = this.props;
+    const { controls, footer } = this.props;
 
-    let body = (
+    const body = (
       <View style={styles.wrapper}>
         <View style={trackerStyles.bodyContainer}>
           {controls}
@@ -93,9 +91,9 @@ const styles = StyleSheet.create({
     backgroundColor:'transparent',
     justifyContent: 'center',
     alignItems: 'center',
-    resizeMode: 'cover'
+    resizeMode: 'cover',
   },
   wrapper: {
-    flex
-  }
+    flex,
+  },
 });

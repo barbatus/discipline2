@@ -4,16 +4,16 @@ import AppIconsStore from './AppIconsStore';
 
 import UserIconsStore from './UserIconsStore';
 
-import {IconSize} from './consts';
+export {IconSize} from './consts';
 
-function getIcon(iconId) {
-  let icon = AppIconsStore.get(iconId);
+export function getIcon(iconId) {
+  const icon = AppIconsStore.get(iconId);
   if (icon) return icon;
 
   return UserIconsStore.get(iconId);
 }
 
-module.exports = {
-  getIcon,
-  IconSize
-};
+// module.exports = {
+//   getIcon,
+//   IconSize
+// };

@@ -130,10 +130,8 @@ export default class Calendar extends Component {
   _renderMonthView(argMoment, eventDatesMap) {
     const { eventDates, customStyle, weekStart, today } = this.props;
 
-    let
-      renderIndex = 0,
+    const
       weekRows = [],
-      days = [],
       startOfArgMonthMoment = argMoment.startOf('month');
 
     const
@@ -149,6 +147,8 @@ export default class Calendar extends Component {
     const events = (eventDatesMap !== null) ?
       eventDatesMap[argMoment.startOf('month').format()] : null;
 
+    let renderIndex = 0;
+    let days = [];
     do {
       const dayIndex = renderIndex - offset;
       const isoWeekday = (renderIndex + weekStart) % 7;
@@ -196,7 +196,7 @@ export default class Calendar extends Component {
   _renderHeading() {
     const { customStyle } = this.props;
 
-    let headings = [];
+    const headings = [];
     for (let i = 0; i < 7; i++) {
       const j = (i + this.props.weekStart) % 7;
       headings.push(
@@ -218,9 +218,9 @@ export default class Calendar extends Component {
   }
 
   _renderTopBar() {
-    let { customStyle, monthNames } = this.props;
+    const { customStyle, monthNames } = this.props;
 
-    let localizedMonth = monthNames[this.state.currentMonthMoment.month()];
+    const localizedMonth = monthNames[this.state.currentMonthMoment.month()];
     return (
       <View style={styles.calendarControls}>
         <TouchableOpacity

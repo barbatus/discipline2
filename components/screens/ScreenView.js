@@ -20,7 +20,7 @@ export default class ScreenView extends Component {
   constructor(props) {
     super(props);
 
-    let { posX } = props;
+    const { posX } = props;
     this._leftRight = new ScreenSlideLeftRightAnim(posX);
     this._opacity = new OpacityAnimation();
   }
@@ -84,13 +84,13 @@ export default class ScreenView extends Component {
   }
 
   render() {
-    let style1 = this._leftRight.style;
-    let style2 = this._opacity.style;
+    const style1 = this._leftRight.style;
+    const style2 = this._opacity.style;
 
     return (
       <Animated.View
         shouldRasterizeIOS={true}
-        style={[commonStyles.absoluteFilled, style1, style2]}>
+        style={[commonStyles.absFilled, style1, style2]}>
         {this.props.content || this.content}
       </Animated.View>
     );
@@ -98,11 +98,9 @@ export default class ScreenView extends Component {
 }
 
 ScreenView.defaultProps = {
-  posX: 0
+  posX: 0,
 };
 
 ScreenView.contextTypes = {
-  navBar: React.PropTypes.object.isRequired
+  navBar: React.PropTypes.object.isRequired,
 };
-
-module.exports = ScreenView;

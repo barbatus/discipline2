@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 
 import {
   Animated,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
@@ -25,7 +25,7 @@ export default class TrackerRenderer extends Component {
 
     this.state = {
       trackers: props.trackers,
-      enabled: true
+      enabled: true,
     };
   }
 
@@ -37,12 +37,15 @@ export default class TrackerRenderer extends Component {
     this._opacity.setValue(value);
   }
 
+  get shown() {
+    return this.opacity._value === 1;
+  }
+
   shouldComponentUpdate(props, state) {
     if (this.props.trackers !== props.trackers) {
       this.state.trackers = props.trackers;
       return true;
     }
-
     return this.state.trackers !== state.trackers;
   }
 
@@ -54,43 +57,54 @@ export default class TrackerRenderer extends Component {
     this.opacity = 1;
   }
 
-  get shown() {
-    return this.opacity._value === 1;
+  onEdit(tracker: Tracker) {
+    caller(this.props.onEdit, tracker);
   }
 
-  onEdit(trackId) {
-    caller(this.props.onEdit, trackId);
+  onRemove(tracker: Tracker) {
+    caller(this.props.onRemove, tracker);
   }
 
-  onRemove(trackId) {
-    caller(this.props.onRemove, trackId);
+  onTap(tracker: Tracker) {
+    caller(this.props.onTap, tracker);
   }
 
-  onTap(trackId) {
-    caller(this.props.onTap, trackId);
+  onTick(tracker: Tracker, value?: number) {
+    caller(this.props.onTick, tracker, value);
   }
 
-  renderTracker(tracker: Object,
-                editable: boolean = true,
-                scale: number = 1) {
-    let newSlide = (Component) => {
-      let { id } = tracker;
+  onStop(tracker: Tracker, value?: number) {
+    caller(this.props.onStop, tracker, value);
+  }
+
+  onProgress(tracker: Tracker, value?: number) {
+    caller(this.props.onProgress, tracker, value);
+  }
+
+  onUndo(tracker: Tracker) {
+    caller(this.props.onUndo, tracker);
+  }
+
+  renderTracker(tracker: Tracker, editable: boolean = true, scale: number = 1) {
+    const newSlide = (Component) => {
       return (
         <Component
-          ref={id}
-          key={id}
+          ref={tracker.id}
+          key={tracker.id}
           editable={editable}
           scale={scale}
-          onEdit={this.onEdit.bind(this, id)}
-          onRemove={this.onRemove.bind(this, id)}
-          onTap={this.onTap.bind(this, id)}
+          onEdit={this.onEdit.bind(this, tracker)}
+          onRemove={this.onRemove.bind(this, tracker)}
+          onTap={this.onTap.bind(this, tracker)}
+          onTick={this.onTick.bind(this, tracker)}
+          onUndo={this.onUndo.bind(this, tracker)}
+          onStop={this.onStop.bind(this, tracker)}
           tracker={tracker}
         />
       )
     };
 
-    let type = tracker.type;
-    switch (type) {
+    switch (tracker.type) {
       case TrackerType.GOAL:
         return newSlide(GoalTrackerSlide);
       case TrackerType.COUNTER:

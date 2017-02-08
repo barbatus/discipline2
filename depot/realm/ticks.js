@@ -21,18 +21,14 @@ class TicksDepot {
     this._table = table[0];
   }
 
-  getAll(trackId: number): Array<Tick> {
+  getForTracker(trackId: number): Array<Tick> {
     check.assert.number(trackId);
 
     let ticks = DB.objects('Tick');
     return ticks
       .filtered(`trackId = ${trackId}`)
-      .sorted('dateTimeMs');
-  }
-
-  getData(schema: string, tickId: number) {
-    let data = DB.objects(schema);
-    return data.filtered(`tickId = ${tickId}`)[0];
+      .sorted('dateTimeMs')
+      .map(tick => tick);
   }
 
   getForPeriod(trackId: number,
@@ -50,20 +46,21 @@ class TicksDepot {
 
     return ticks
       .filtered(query)
-      .sorted('dateTimeMs');
+      .sorted('dateTimeMs')
+      .map(tick => tick);
   }
 
   getLast(trackId: number): Tick {
     check.assert.number(trackId);
 
-    let ticks = depot.getAll(trackId);
+    let ticks = depot.getForTracker(trackId);
     return ticks[ticks.length - 1];
   }
 
   count(trackId: number): number {
     check.assert.number(trackId);
 
-    let ticks = depot.getAll(trackId);
+    let ticks = depot.getForTracker(trackId);
     return ticks.length;
   }
 
@@ -74,12 +71,17 @@ class TicksDepot {
       this._table.nextId = tick.id + 1;
     });
 
+    let { id, trackId } = tick;
     this.events.emit('added', {
-      id: tick.id,
-      trackId: tick.trackId
+      id, trackId
     });
 
     return tick;
+  }
+
+  getData(schema: string, tickId: number) {
+    let data = DB.objects(schema);
+    return data.filtered(`tickId = ${tickId}`)[0];
   }
 
   addData(schema: string, data: Object) {
@@ -121,9 +123,24 @@ class TicksDepot {
       DB.delete(tick);
     });
 
-    this.events.emit('removed', { id, trackId });
+    this.events.emit('removed', { ids: [id], trackId });
 
     return tick !== null;
+  }
+
+  removeForTracker(trackId) {
+    check.assert.number(trackId);
+
+    let ticks = DB.objects('Tick');
+    ticks = ticks.filtered(`trackId = ${trackId}`);
+    let ids = ticks.map(tick => tick.id);
+    DB.write(() => {
+      DB.delete(ticks);
+    });
+
+    this.events.emit('removed', { ids, trackId });
+
+    return ids.length;
   }
 };
 

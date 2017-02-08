@@ -10,7 +10,7 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 
 import {slideStyles, slideDef} from '../styles/slideStyles';
@@ -30,7 +30,7 @@ export default class TrackerTypesSlide extends Component {
     super(props);
 
     this.state = {
-      type: this.types[0]
+      type: this.types[0],
     };
   }
 
@@ -40,7 +40,7 @@ export default class TrackerTypesSlide extends Component {
 
   reset() {
     this.setState({
-      type: this.types[0]
+      type: this.types[0],
     });
   }
 
@@ -53,11 +53,11 @@ export default class TrackerTypesSlide extends Component {
   }
 
   _renderTypes() {
-    let selected = this.state.type;
-    let last = _.last(this.types);
-    let first = _.first(this.types);
+    const selected = this.state.type;
+    const last = _.last(this.types);
+    const first = _.first(this.types);
 
-    let types = this.types.map(type => {
+    const types = this.types.map(type => {
       return (
         <TouchableWithoutFeedback
           key={type.valueOf()}
@@ -79,7 +79,7 @@ export default class TrackerTypesSlide extends Component {
       );
     });
 
-    let borderColor = (selected == last || selected == first) ?
+    const borderColor = (selected == last || selected == first) ?
       styles.selectedBorder : null;
     return (
       <ScrollView
@@ -129,7 +129,7 @@ export default class TrackerTypesSlide extends Component {
 const styleDef = {
   centered: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 };
 
@@ -137,27 +137,27 @@ const styles = StyleSheet.create({
   headerContainer: {
     ...styleDef.centered,
     flex: 0.3,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   bodyContainer: {
     ...styleDef.centered,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   footerContainer: {
-    flex: 0.20
+    flex: 0.20,
   },
   title: {
     fontSize: 28,
     color: '#4A4A4A',
     paddingTop: 20,
-    fontWeight: '200'
+    fontWeight: '200',
   },
   desc: {
     fontSize: 17,
     color: '#9B9B9B',
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
   },
   types: {
     flex: 1,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
     borderWidth: 1,
-    borderColor: '#F5F5F5'
+    borderColor: '#F5F5F5',
   },
   type: {
     width: 80,
@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     shadowOffset: {
       height: -1,
-      width: 0
-    }
+      width: 0,
+    },
   },
   typeIconContainer: {
     ...styleDef.centered,
@@ -191,18 +191,18 @@ const styles = StyleSheet.create({
     flex: 0.25,
   },
   typeTitle: {
-    fontSize: 12
+    fontSize: 12,
   },
   typeIcon: {
     resizeMode: 'contain',
-    height: 40
+    height: 40,
   },
   selected: {
     borderTopWidth: 4,
     borderTopColor: '#1A7CF9',
-    backgroundColor: '#E6E6E6'
+    backgroundColor: '#E6E6E6',
   },
   selectedBorder: {
-    borderColor: '#E6E6E6'
-  }
+    borderColor: '#E6E6E6',
+  },
 });

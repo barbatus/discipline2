@@ -22,7 +22,7 @@ const Scroll = React.createClass({
   propTypes: {
     slides: React.PropTypes.array.isRequired,
     slideWidth: React.PropTypes.number.isRequired,
-    scrollEnabled: React.PropTypes.bool
+    scrollEnabled: React.PropTypes.bool,
   },
 
   getDefaultProps() {

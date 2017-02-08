@@ -9,15 +9,13 @@ import {
   Text,
   Animated,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
 import Scroll from '../scrolls/Scroll';
-
 import BaseScroll from '../scrolls/BaseScroll';
 
 import {commonStyles, screenWidth} from '../styles/common';
-
 import {slideHeight} from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
@@ -28,7 +26,7 @@ export default class TrackerScroll extends TrackerRenderer {
   hide(callback) {
     Animated.timing(this._opacity, {
       duration: 500,
-      toValue: 0
+      toValue: 0,
     }).start(callback);
   }
 
@@ -36,11 +34,11 @@ export default class TrackerScroll extends TrackerRenderer {
     this.refs.scroll.scrollTo(index, callback, animated);
   }
 
-  onTap(trackId: string) {
-    let index = this.state.trackers.findIndex(
-      tracker => tracker.id === trackId);
+  onTap(tracker: Tracker) {
+    const index = this.state.trackers.findIndex(
+      _ => _ === tracker);
 
-    let scroll = this.refs.scroll.getIndex();
+    const scroll = this.refs.scroll.getIndex();
      if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
       return;
@@ -52,10 +50,13 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   render() {
-    let { style, editable, scale } = this.props;
+    const { style, editable, scale } = this.props;
 
-    let slideStyle = { width: screenWidth * scale, height: slideHeight * scale};
-    let slides = this.state.trackers.map(
+    const slideStyle = {
+      width: screenWidth * scale,
+      height: slideHeight * scale,
+    };
+    const slides = this.state.trackers.map(
       tracker => {
         return (
           <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
@@ -82,5 +83,5 @@ export default class TrackerScroll extends TrackerRenderer {
 };
 
 TrackerScroll.defaultProps = {
-  editable: true
+  editable: true,
 };

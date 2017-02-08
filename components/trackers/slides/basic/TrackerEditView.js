@@ -11,14 +11,14 @@ import {
   TextInput,
   StyleSheet,
   Animated,
-  SwitchIOS,
-  TouchableWithoutFeedback
+  Switch,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import {
   trackerStyles,
   propsStyles,
-  trackerDef
+  trackerDef,
 } from '../../styles/trackerStyles';
 
 import {TrackerType} from '../../../../depot/consts';
@@ -27,43 +27,54 @@ import registry, {DlgType} from '../../../dlg/registry';
 
 import BaseTrackerView from './BaseTrackerView';
 
+import Trackers from '../../../../model/Trackers';
+
 export default class TrackerEditView extends BaseTrackerView {
   constructor(props) {
     super(props);
 
+    const tracker = props.tracker;
     this.state = {
-      title: props.title,
-      iconId: props.iconId,
+      tracker,
       sendNotif: false,
-      saveGoog: false
+      saveGoog: false,
     };
   }
 
+  shouldComponentUpdate(props, state) {
+    if (this.props.tracker !== props.tracker) {
+      this.state.tracker = props.tracker;
+      return true;
+    }
+    return this.state.tracker !== state.tracker;
+  }
+
   reset() {
-    this.refs.title.blur();
-    let { iconId, title } = this.props;
     this.setState({
-      iconId, title
+      tracker: Trackers.create({}),
     });
+    this.refs.title.blur();
   }
 
-  get iconId() {
-    return this.state.iconId;
-  }
-
-  get typeId() {
-    return this.props.typeId;
-  }
-
-  get title() {
-    return this.state.title;
+  get tracker() {
+    return this.state.tracker;
   }
 
   _onIconEdit() {
-    let dlg = registry.get(DlgType.ICONS);
+    const dlg = registry.get(DlgType.ICONS);
     dlg.show(iconId => {
-      this.setState({ iconId }, ::dlg.hide);
+      let tracker = this.state.tracker;
+      tracker = Trackers.create(tracker);
+      tracker.iconId = iconId;
+      this.setState({ tracker }, ::dlg.hide);
     });
+  }
+
+  _onTitleEdit(title: string) {
+    let tracker = this.state.tracker;
+    tracker = Trackers.create(tracker);
+    tracker.title = title;
+    this.setState({ tracker });
   }
 
   _renderDeleteRow() {
@@ -83,12 +94,14 @@ export default class TrackerEditView extends BaseTrackerView {
   }
 
   render() {
-    let typeEnum = TrackerType.fromValue(this.props.typeId);
+    const { tracker } = this.state;
+    const { typeId, iconId, title } = tracker;
+    const typeEnum = TrackerType.fromValue(typeId);
 
     return (
       <Animated.View style={[
           propsStyles.innerView,
-          this.props.style
+          this.props.style,
         ]}>
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
@@ -102,7 +115,7 @@ export default class TrackerEditView extends BaseTrackerView {
           </View>
           <View style={propsStyles.iconContainer}>
             <Image
-              source={this.getMainIcon(this.state.iconId)}
+              source={this.getMainIcon(iconId)}
               style={trackerStyles.mainIcon}
             />
           </View>
@@ -112,8 +125,8 @@ export default class TrackerEditView extends BaseTrackerView {
               placeholder='Add a title'
               placeholderTextColor={trackerDef.hintText.color}
               style={propsStyles.titleInput}
-              onChangeText={title => this.setState({ title })}
-              value={this.state.title}
+              onChangeText={title => this._onTitleEdit(title)}
+              value={title}
             />
           </View>
         </View>
@@ -147,7 +160,7 @@ export default class TrackerEditView extends BaseTrackerView {
                 </Text>
               </View>
               <View style={propsStyles.colRight}>
-                <SwitchIOS
+                <Switch
                   onValueChange={value => this.setState({sendNotif: value})}
                   value={this.state.sendNotif} />
               </View>
@@ -159,7 +172,7 @@ export default class TrackerEditView extends BaseTrackerView {
                 </Text>
               </View>
               <View style={propsStyles.colRight}>
-                <SwitchIOS 
+                <Switch
                   onValueChange={value => this.setState({saveGoog: value})}
                   value={this.state.saveGoog} />
               </View>
@@ -175,7 +188,7 @@ export default class TrackerEditView extends BaseTrackerView {
 const styles = StyleSheet.create({
   barContainer: {
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   changeIconBox: {
     borderWidth: 1,
@@ -183,22 +196,22 @@ const styles = StyleSheet.create({
     padding: 3,
     paddingRight: 10,
     paddingLeft: 10,
-    borderRadius: 15
+    borderRadius: 15,
   },
   changeIconText: {
     fontSize: 16,
     color: '#C4C4C4',
-    fontWeight: '300'
+    fontWeight: '300',
   },
   deleteText: {
-    color: '#FF001F'
+    color: '#FF001F',
   },
   trackTypeText: {
-    color: '#C4C4C4'
-  }
+    color: '#C4C4C4',
+  },
 });
 
 TrackerEditView.defaultProps = {
   showType: true,
-  title: ''
+  title: '',
 };

@@ -47,10 +47,10 @@ export class MoveUpDownResponder {
 
     return PanResponder.create({
       onMoveShouldSetPanResponderCapture: (e: Object, state: Object) => {
-        let dy = Math.abs(state.dy);
-        let dx = Math.abs(state.dx);
-        let cos = dx / dy;
-        let captured = cos <= 0.20 && dy >= 20;
+        const dy = Math.abs(state.dy);
+        const dx = Math.abs(state.dx);
+        const cos = dx / dy;
+        const captured = cos <= 0.20 && dy >= 20;
         isUp = state.vy < 0;
         return captured && !this.stopped;
       },

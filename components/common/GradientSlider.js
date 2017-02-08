@@ -189,7 +189,7 @@ class GradientSlider extends Component {
             }
           ]}>
           <LinearGradient
-            start={[0, 0.5]} end={[1, 0.5]}
+            start={{x: 0, y: 0.5}} end={{x: 1, y: 0.5}}
             colors={this.state.left.grad}
             style={styles.gradient} />
         </Animated.View>
@@ -202,7 +202,7 @@ class GradientSlider extends Component {
             }
           ]}>
           <LinearGradient
-            start={[0, 0.5]} end={[1, 0.5]}
+            start={{ x: 0, y: 0.5}} end={{x: 1, y: 0.5}}
             colors={this.state.center.grad}
             style={styles.gradient} />
         </Animated.View>
@@ -215,7 +215,7 @@ class GradientSlider extends Component {
             }
           ]}>
           <LinearGradient
-            start={[0, 0.5]} end={[1, 0.5]}
+            start={{x: 0, y: 0.5}} end={{x: 1, y: 0.5}}
             colors={this.state.right.grad}
             style={styles.gradient} />
         </Animated.View>

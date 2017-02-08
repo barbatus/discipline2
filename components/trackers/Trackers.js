@@ -9,15 +9,12 @@ import {
 } from 'react-native';
 
 import reactMixin from 'react-mixin';
-
 import TimerMixin from 'react-timer-mixin';
 
 import {List} from 'immutable';
 
 import TrackerSwiper from './TrackerSwiper';
-
 import TrackerScroll from './TrackerScroll';
-
 import TrackerCal from './TrackerCal';
 
 import TrackerStore from '../../model/Trackers';
@@ -26,93 +23,66 @@ import {commonStyles} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
-const absFilled = commonStyles.absoluteFilled;
-
-const newList = (trackers) => {
-  return new List(trackers || []);
-};
-
 export default class Trackers extends Component {
-  _trackers = null;
-
   _opacity = new Animated.Value(0);
 
   constructor(props) {
     super(props);
 
     this.state = {
-      swiper: newList(),
-      scroll: newList()
+      swTrackers: new List(),
+      scTrackers: new List(),
     };
   }
 
-  componentDidMount() {
-    let trackers = newList(
-      this._loadTrackers());
-    this._setTrackers(trackers);
+  get index() {
+    return this._swiper.index;
+  }
 
-    if (trackers.size) {
-      this._renderOne(trackers.first(), () => {
-        this._renderAll(trackers);
+  get tracker() {
+    return this._swiper.current;
+  }
+
+  get editedTracker() {
+    return this._swiper.editedTracker;
+  }
+
+  componentDidMount() {
+    const { trackers } = this.props;
+
+    if (trackers) {
+      this._renderTracker(trackers.first(), () => {
+        this._renderTrackers(trackers);
       });
     }
   }
 
-  addTracker(tracker, callback) {
-    check.assert.not.null(tracker.typeId);
-
-    let nextInd = this.swiper.nextIndex;
-    tracker = TrackerStore.addAt(tracker, nextInd);
-
-    this.swiper.addTracker(tracker, () => { 
-      let trackers = this.trackers.insert(nextInd, tracker);
-      this._setTrackers(trackers);
-      this._renderScrolls(trackers);
-      caller(callback, tracker);
-    });
-
-    return tracker;
-  }
-
-  get swiper() {
-    return this.refs.swiper;
-  }
-
-  get bscroll() {
-    return this.refs.bscroll;
-  }
-
-  get sscroll() {
-    return this.refs.sscroll;
-  }
-
-  get trackers() {
-    return this._trackers;
+  componentWillReceiveProps({ trackers }) {
+    if (this.props.trackers !== trackers) {
+      this._renderTrackers(trackers);
+    }
   }
 
   cancelEdit() {
-    this.swiper.cancelEdit();
+    this._swiper.cancelEdit();
     caller(this.props.onCancel);
   }
 
-  saveEdit() {
-    this.swiper.saveEdit();
-    caller(this.props.onSave);
+  get _swiper() {
+    return this.refs.swiper;
   }
 
-  _loadTrackers() {
-    depot.initData();
-
-    return TrackerStore.getAll();
+  get _bscroll() {
+    return this.refs.bscroll;
   }
 
-  _setTrackers(trackers) {
-    this._trackers = trackers;
+  get _sscroll() {
+    return this.refs.sscroll;
   }
 
-  _renderOne(tracker, callback) {
+  _renderTracker(tracker, callback) {
     this.setState({
-      swiper: newList([tracker])
+      swTrackers: new List([tracker])
     }, () => {
       Animated.timing(this._opacity, {
         duration: 500,
@@ -121,60 +91,43 @@ export default class Trackers extends Component {
     });
   }
 
-  _renderAll(trackers, callback) {
+  _renderTrackers(trackers, callback) {
     this.setState({
-      swiper: trackers
+      swTrackers: trackers
     });
 
     this.setTimeout(() => {
       this.setState({
-        scroll: trackers
+        scTrackers: trackers
       }, callback);
     });
   }
 
-  _renderScrolls(trackers, callback) {
-    this.setState({
-      scroll: trackers
-    }, callback);
+  _onEdit(tracker: Tracker) {
+    this._swiper.showEdit();
+    caller(this.props.onEdit, tracker);
   }
 
-  _onEdit() {
-    this.swiper.showEdit();
-    caller(this.props.onEdit);
-  }
-
-  _onRemove() {
-    let tracker = this.swiper.current;
-    let removed = tracker.remove();
-
-    if (removed) {
-      this.swiper.removeTracker(index => {
-        let trackers = this.trackers.delete(index);
-        this._setTrackers(trackers);
-        this._renderScrolls(trackers);
-        caller(this.props.onRemove);
-      });
-    }
+  _onRemove(tracker: Tracker) {
+    caller(this.props.onRemove, tracker);
   }
 
   _onScaleStart() {
-    let { index } = this.swiper;
-    this.bscroll.hide();
-    this.bscroll.scrollTo(index, false);
-    this.sscroll.scrollTo(index, false);
+    this._bscroll.hide();
+    this._bscroll.scrollTo(this.index, false);
+    this._sscroll.scrollTo(this.index, false);
   }
 
   _onScaleMove(dv) {
-    this.bscroll.opacity = 1 - dv;
-    this.sscroll.opacity = 1 - dv;
+    this._bscroll.opacity = 1 - dv;
+    this._sscroll.opacity = 1 - dv;
     caller(this.props.onSwiperScaleMove, dv);
   }
 
   _onScaleDone() {
-    this.bscroll.show();
-    this.sscroll.show();
-    this.swiper.hide();
+    this._bscroll.show();
+    this._sscroll.show();
+    this._swiper.hide();
   }
 
   _onMoveDown(dv: number) {
@@ -183,35 +136,44 @@ export default class Trackers extends Component {
   }
 
   _onCenterSlideTap(index) {
-    this.bscroll.hide();
-    this.sscroll.hide();
+    this._bscroll.hide();
+    this._sscroll.hide();
 
-    this.swiper.scrollTo(index, () => {
-      this.swiper.show();
+    this._swiper.scrollTo(index, () => {
+      this._swiper.show();
     }, false);
   }
 
   _onSmallSlideTap(index) {
-    this.bscroll.scrollTo(index, true);
-    this.sscroll.scrollTo(index, true);
+    this._bscroll.scrollTo(index, true);
+    this._sscroll.scrollTo(index, true);
   }
 
   render() {
+    const { swTrackers, scTrackers } = this.state;
+    const { removeIndex, addIndex, updateIndex } = this.props;
+    const { onRemoveCompleted, onAddCompleted, onSaveCompleted } = this.props;
+    const { onScroll, onSlideChange, onSlideNoChange } = this.props;
+    const { onUndo, onTick, onStop } = this.props;
+
     return (
       <Animated.View style={[
-        commonStyles.flexFilled,
-        {opacity: this._opacity}
-      ]}>
+          commonStyles.flexFilled,
+          { opacity: this._opacity }]
+        }>
         <TrackerScroll
           ref='bscroll'
-          trackers={this.state.scroll}
+          trackers={scTrackers}
           style={styles.bigScroll}
           scale={1 / 1.6}
+          onUndo={onUndo}
+          onTick={onTick}
+          onStop={onStop}
           onCenterSlideTap={::this._onCenterSlideTap}
         />
         <TrackerScroll
           ref='sscroll'
-          trackers={this.state.scroll}
+          trackers={scTrackers}
           style={styles.smallScroll}
           scale={1 / 4}
           editable={false}
@@ -219,21 +181,31 @@ export default class Trackers extends Component {
         />
         <TrackerCal
           ref='calendar'
-          style={absFilled}
+          style={commonStyles.absFilled}
         />
         <TrackerSwiper
           ref='swiper'
-          trackers={this.state.swiper}
-          style={absFilled}
-          onScroll={this.props.onScroll}
-          onSlideChange={this.props.onSlideChange}
-          onSlideNoChange={this.props.onSlideNoChange}
+          trackers={swTrackers}
+          style={commonStyles.absFilled}
+          removeIndex={removeIndex}
+          addIndex={addIndex}
+          updateIndex={updateIndex}
+          onScroll={onScroll}
+          onSlideChange={onSlideChange}
+          onSlideNoChange={onSlideNoChange}
           onScaleStart={::this._onScaleStart}
           onScaleMove={::this._onScaleMove}
           onScaleDone={::this._onScaleDone}
           onMoveDown={::this._onMoveDown}
           onRemove={::this._onRemove}
-          onEdit={::this._onEdit} />
+          onEdit={::this._onEdit}
+          onTick={onTick}
+          onUndo={onUndo}
+          onStop={onStop}
+          onRemoveCompleted={onRemoveCompleted}
+          onAddCompleted={onAddCompleted}
+          onSaveCompleted={onSaveCompleted}
+        />
       </Animated.View>
     )
   }

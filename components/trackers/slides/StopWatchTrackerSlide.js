@@ -2,6 +2,8 @@
 
 import React, {Component} from 'react';
 
+import {caller} from '../../../utils/lang';
+
 import {
   View,
   TouchableHighlight,
@@ -9,12 +11,12 @@ import {
   Image,
   Text,
   StyleSheet,
-  Vibration
+  Vibration,
 } from 'react-native';
 
 import {
   trackerDef,
-  trackerStyles
+  trackerStyles,
 } from '../styles/trackerStyles';
 
 import {slideWidth} from '../styles/slideStyles';
@@ -23,18 +25,35 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
+import Timers from './Timers';
+
 export default class StopWatchTrackerSlide extends TrackerSlide {
   constructor(props) {
     super(props);
 
-    this.state = {
-      active: false,
-      lapTimeMs: 0
-    };
+    const { tracker } = props;
+    this._timer = Timers.get(tracker.id, 1000);
+    this._timer.events.on('onTimer', ::this._onTimer);
+  }
+
+  shouldComponentUpdate(props, state) {
+    const should = super.shouldComponentUpdate(props, state);
+    return should || this.state.active !== state.active;
+  }
+
+  componentWillUnmount() {
+    const { tracker } = this.props;
+    Timers.dispose(tracker.id);
+    this._timer = null;
+  }
+
+  onEdit() {
+    if (this._timer.active) return;
+    super.onEdit();
   }
 
   get controls() {
-    let { editable } = this.props;
+    const { tracker } = this.props;
 
     return (
       <View style={trackerStyles.controls}>
@@ -42,17 +61,17 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
           <TimeLabel
             ref='time'
             width={200}
-            timeLapMs={this.state.lapTimeMs}
-            timeMs={this.state.timeMs} />
+            timeMs={tracker.value}
+          />
         </View>
       </View>
     );
   }
 
   get footer() {
-    let { editable } = this.props;
+    const { editable } = this.props;
 
-    let renderBtn = (label, onPress) => {
+    const renderBtn = (label, onPress) => {
       return (
         <TouchableOpacity
           style={styles.button}
@@ -65,58 +84,41 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
       );
     };
 
-    let active = this.state.active;
+    const active = this._timer.active;
     return (
       <View style={styles.footerContainer}>
-        { active ? renderBtn('STOP', this._onStopBtn) :
-                   renderBtn('START', this._onStartBtn) }
+        {
+          active ?
+            renderBtn('STOP', this._onStop) :
+            renderBtn('START', this._onTick)
+        }
         { renderBtn('LAP', this._onLap) }
       </View>
     );
   }
 
-  onChange() {
-    let { tracker } = this.props;
-    this.setState({
-      iconId: tracker.iconId,
-      title: tracker.title,
-      timeMs: tracker.value
-    });
-  }
-
-  onTick() {
+  _onTick() {
     Vibration.vibrate();
 
-    this.setState({
-      active: true
-    });
+    const { tracker } = this.props;
+    this._timer.start(tracker.value);
+    caller(this.props.onTick);
   }
 
-  onValue(value) {
-    this.refs.time.setTime(value);
-    this.state.timeMs = value;
+  _onTimer(timeMs: number) {
+    this.refs.time.setTime(timeMs);
   }
 
-  onStop() {
-    this.setState({
-      active: false
-    });
-  }
-
-  _onStartBtn() {
-    let { tracker } = this.props;
-    tracker.tick();
-  }
-
-  _onStopBtn() {
-    let { tracker } = this.props;
-    tracker.stop();
+  _onStop() {
+    this._timer.stop();
+    caller(this.props.onStop, this._timer.timeMs);
   }
 
   _onLap() {
-    let lapTimeMs = this.state.timeMs;
+    const { tracker } = this.props;
+    const timeMs = this._timer.active ? this._timer.timeMs : 0;
+    const lapTimeMs = tracker.value + timeMs;
     this.refs.time.setTimeLap(lapTimeMs);
-    this.state.lapTimeMs = lapTimeMs;
   }
 };
 
@@ -125,14 +127,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   footerContainer: {
     flex: 1,
     width: slideWidth,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   button: {
     width: 70,
@@ -140,11 +142,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#D9DADB',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   btnText: {
     fontSize: 15,
     color: '#9B9B9B',
-    fontWeight: '100'
-  }
+    fontWeight: '200',
+  },
 });

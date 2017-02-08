@@ -16,25 +16,9 @@ import {trackerStyles} from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';
 
+import {caller} from '../../../utils/lang';
+
 export default class GoalTrackerSlide extends TrackerSlide {
-  onChange() {
-    let { tracker } = this.props;
-    this.setState({
-      iconId: tracker.iconId,
-      title: tracker.title,
-      checked: tracker.checked
-    });
-  }
-
-  onTick() {
-    Vibration.vibrate();
-
-    let { tracker } = this.props;
-    this.setState({
-      checked: tracker.checked
-    });
-  }
-
   get controls() {
     let { editable } = this.props;
 
@@ -42,7 +26,7 @@ export default class GoalTrackerSlide extends TrackerSlide {
       <View style={trackerStyles.controls}>
         <TouchableOpacity
           disabled={!editable}
-          onPress={::this._onCheck}>
+          onPress={::this.onTick}>
           <Image
             source={getIcon('check')}
             style={this._checkStyle}
@@ -60,14 +44,15 @@ export default class GoalTrackerSlide extends TrackerSlide {
     );
   }
 
-  get _checkStyle() {
-    return this.state.checked ?
-      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
-        trackerStyles.checkBtn;
+  onTick() {
+    Vibration.vibrate();
+    caller(this.props.onTick);
   }
 
-  _onCheck() {
+  get _checkStyle() {
     let { tracker } = this.props;
-    tracker.tick();
+    return tracker.checked ?
+      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
+        trackerStyles.checkBtn;
   }
 };

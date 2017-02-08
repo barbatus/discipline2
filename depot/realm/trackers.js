@@ -118,9 +118,9 @@ class TrackersDepot {
       trackId, minDateMs, maxDateMs);
   }
 
-  getLastTick(trackId: number): Tick {
-    return ticksDB.getLast(trackId);
-  }
+  // getLastTick(trackId: number): Tick {
+  //   return ticksDB.getLast(trackId);
+  // }
 
   updLastTick(trackId: number, value: number) {
     let tick = this.getLastTick(trackId);

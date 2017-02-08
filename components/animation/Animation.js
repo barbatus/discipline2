@@ -39,8 +39,8 @@ class AnimationManager {
     });
     this._callback.push(callback);
     this._timeout = setTimeout(() => {
-      let callbacks = this._callback.slice();
-      let animations = this._animations.slice();
+      const callbacks = this._callback.slice();
+      const animations = this._animations.slice();
       this._callback.length = 0;
       this._animations.length = 0;
       this._animate(animations, () => {
@@ -59,7 +59,7 @@ class AnimationManager {
 
   combineStyles(...anims) {
     let transform = [];
-    for (let anim of anims) {
+    for (const anim of anims) {
       transform = transform.concat(
         anim.style.transform);
     }

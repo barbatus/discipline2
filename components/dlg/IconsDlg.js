@@ -58,7 +58,8 @@ export default class IconsDlg extends Component {
             <View style={styles.bodyContainer}>
               <IconsGrid
                 ref='iconsGrid'
-                onIconChosen={this._onIconChosen.bind(this)} />
+                onIconChosen={this._onIconChosen.bind(this)}
+              />
             </View>
           </View>
         </Modal>

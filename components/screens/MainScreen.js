@@ -8,32 +8,31 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Animated
+  Animated,
 } from 'react-native';
+
+import {connect} from 'react-redux';
 
 import {
   NavAddButton,
   NavMenuButton,
   NavCancelButton,
   NavAcceptButton,
-  NavBackButton
+  NavBackButton,
 } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
 
 import Screen from './Screen';
-
 import ScreenView from './ScreenView';
 
 import TrackersView from './TrackersView';
-
 import NewTrackerView from './NewTrackerView';
 
 import IconsDlg from '../dlg/IconsDlg';
-
 import registry, {DlgType} from '../dlg/registry';
 
-import Trackers from '../../model/Trackers';
+import {addTracker} from '../../model/actions';
 
 import GradientSlider from '../common/GradientSlider';
 
@@ -50,7 +49,7 @@ class MainScreen extends Component {
   }
 
   get trackersView() {
-    return this.refs.trackersView;
+    return this.refs.trackersView.getWrappedInstance();
   }
 
   get newTrackView() {
@@ -74,7 +73,7 @@ class MainScreen extends Component {
   }
 
   _setMainViewBtns(callback?: Function) {
-    let navBar = this.refs.screen.navBar;
+    const navBar = this.refs.screen.navBar;
     if (navBar) {
       navBar.setTitle('Trackers');
       navBar.setButtons(
@@ -84,38 +83,27 @@ class MainScreen extends Component {
     }
   }
 
-  // Edit tracker events.
-
-  _cancelTrackerEdit() {
-    this._setMainViewBtns();
-  }
-
-  _saveTrackerEdit() {
-    this._setMainViewBtns();
-  }
-
-  _removeTrackerEdit() {
-    this._setMainViewBtns();
-  }
-
   // New tracker events.
 
   _onAccept(tracker) {
     if (this._active) return;
 
     this._active = true;
-    this.trackersView.addTracker(tracker, () => {
-      this._setMainViewBtns();
+    this.props.onAdd(tracker,
+      this.trackersView.index);
+  }
 
-      this.trackersView.setHidden();
-      this.trackersView.setRight();
-      this.newTrackView.hide(() => {
-        this.newTrackView.setRight();
-        this.newTrackView.setShown();
-      });
-      this.trackersView.show(() => {
-        this._active = false;
-      });
+  _onAddCompleted() {
+    this._setMainViewBtns();
+
+    this.trackersView.setHidden();
+    this.trackersView.setRight();
+    this.newTrackView.hide(() => {
+      this.newTrackView.setRight();
+      this.newTrackView.setShown();
+    });
+    this.trackersView.show(() => {
+      this._active = false;
     });
   }
 
@@ -137,7 +125,8 @@ class MainScreen extends Component {
   }
 
   _onSlideChange(index, previ) {
-    let dir = Math.sign(index - previ);
+    //const dir = Math.sign(index - previ);
+    const dir = index - previ >= 0 ? 1 : -1;
     this.refs.gradient.finishSlide(dir);
   }
 
@@ -158,15 +147,18 @@ class MainScreen extends Component {
           onScroll={::this._onScroll}
           onSlideNoChange={::this._onSlideNoChange}
           onSlideChange={::this._onSlideChange}
-          onRemove={::this._removeTrackerEdit}
-          onSave={::this._saveTrackerEdit}
-          onCancel={::this._cancelTrackerEdit} />
+          onAddCompleted={::this._onAddCompleted}
+          onRemoveCompleted={::this._setMainViewBtns}
+          onSaveCompleted={::this._setMainViewBtns}
+          onCancel={::this._setMainViewBtns}
+        />
 
         <NewTrackerView
           ref='newTrackView'
           posX={1}
           onAccept={::this._onAccept}
-          onCancel={::this._cancelNewTracker} />
+          onCancel={::this._cancelNewTracker}
+        />
 
         <IconsDlg ref='iconDlg' />
       </View>
@@ -174,21 +166,30 @@ class MainScreen extends Component {
   }
 
   render() {
-    let { navigator } = this.props;
+    const { navigator } = this.props;
 
-    let gradient = (
+    const gradient = (
       <GradientSlider
         ref='gradient'
-        style={commonStyles.absoluteFilled} />
+        style={commonStyles.absFilled}
+      />
     );
     return (
       <Screen
         ref='screen'
         navigator={navigator}
         background={gradient}
-        content={this._renderContent()} />
+        content={this._renderContent()}
+      />
     );
   }
 };
 
-module.exports = MainScreen;
+export default connect(null,
+  dispatch => {
+    return {
+      onAdd: (tracker, index) => dispatch(
+        addTracker(tracker, index))
+    };
+  }
+)(MainScreen);

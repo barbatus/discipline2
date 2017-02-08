@@ -7,13 +7,13 @@ import {
   StyleSheet,
   View,
   Text,
-  Animated
+  Animated,
 } from 'react-native';
 
 import {
   NavCancelButton,
   NavAcceptButton,
-  NavBackButton
+  NavBackButton,
 } from '../nav/buttons';
 
 import Easing from 'Easing';
@@ -72,7 +72,7 @@ export default class NewTrackerView extends ScreenView {
   }
 
   _setNewTrackerBtns(callback?: Function) {
-    let { navBar } = this.context;
+    const { navBar } = this.context;
 
     if (navBar) {
       navBar.setTitle('New Tracker');
@@ -84,7 +84,7 @@ export default class NewTrackerView extends ScreenView {
   }
 
   _setTrackerTypeBtns(callback?: Function) {
-    let { navBar } = this.context;
+    const { navBar } = this.context;
 
     if (navBar) {
       navBar.setTitle('Choose Type');
@@ -96,23 +96,23 @@ export default class NewTrackerView extends ScreenView {
   }
 
   _moveViewsLeft(callback?: Function) {
-    let views = [
+    const views = [
       this.refs.newTracker,
-      this.refs.trackerType
+      this.refs.trackerType,
     ];
     ScreenView.moveLeft(views, callback);
   }
 
   _moveViewsRight(callback?: Function) {
-    let views = [
+    const views = [
       this.refs.newTracker,
-      this.refs.trackerType
+      this.refs.trackerType,
     ];
     ScreenView.moveRight(views, callback);
   }
 
   _onAccept() {
-    let tracker = this.refs.newTrackSlide.tracker;
+    const tracker = this.refs.newTrackSlide.tracker;
     caller(this.props.onAccept, tracker);
   }
 
@@ -172,12 +172,12 @@ export default class NewTrackerView extends ScreenView {
 };
 
 NewTrackerView.contextTypes = {
-  navBar: React.PropTypes.object.isRequired
+  navBar: React.PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   slideContainer: {
     ...commonDef.flexFilled,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });

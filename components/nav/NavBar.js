@@ -37,7 +37,7 @@ class NavBar extends Component {
   }
 
   setButtons(leftBtn, rightBtn, callback) {
-    let showButtons = () => {
+    const showButtons = () => {
       this.setState({
         leftBtn,
         rightBtn
@@ -82,7 +82,7 @@ class NavBar extends Component {
   }
 
   _animateOpacity(value, callback) {
-    let anim = Animation.timing(this._btnOpacity, 500, value);
+    const anim = Animation.timing(this._btnOpacity, 500, value);
     Animation.animate([anim], callback);
   }
 
@@ -91,8 +91,8 @@ class NavBar extends Component {
   }
 
   _getAnimatedBtn(button) {
-    let mode = this.state.disabled ? 'none' : 'auto';
-    let style = [{opacity: this._btnOpacity}];
+    const mode = this.state.disabled ? 'none' : 'auto';
+    const style = [{opacity: this._btnOpacity}];
     return (
       <Animated.View
         pointerEvents={mode}
@@ -103,7 +103,7 @@ class NavBar extends Component {
   }
 
   render() {
-    let style = [styles.navbar, {opacity: this._opacity}];
+    const style = [styles.navbar, {opacity: this._opacity}];
     return (
       <Animated.View style={style}>
         <NavigationBar

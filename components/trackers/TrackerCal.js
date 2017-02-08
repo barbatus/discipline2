@@ -11,13 +11,12 @@ import {
 
 import Calendar from '../calendar/Calendar';
 
-import {commonStyles} from '../styles/common';
+import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
+import {commonStyles} from '../styles/common';
 import {slideWidth} from './styles/slideStyles';
 
 import {caller} from '../../utils/lang';
-
-import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
 export default class TrackerCal extends Component {
   _opacity = new Animated.Value(0);
@@ -38,9 +37,9 @@ export default class TrackerCal extends Component {
   }
 
   render() {
-    let { style } = this.props;
+    const { style } = this.props;
 
-    let calStyle = [style, this._upDown.style, {opacity: this._opacity}];
+    const calStyle = [style, this._upDown.style, {opacity: this._opacity}];
 
     return (
       <Animated.View style={calStyle}>

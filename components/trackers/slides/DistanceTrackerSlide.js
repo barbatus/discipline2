@@ -10,12 +10,12 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Vibration
+  Vibration,
 } from 'react-native';
 
 import {
   trackerDef,
-  trackerStyles
+  trackerStyles,
 } from '../styles/trackerStyles';
 
 import {slideWidth} from '../styles/slideStyles';
@@ -85,24 +85,24 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   get controls() {
-    let { time, dist } = this.state;
+    const { tracker } = this.props;
 
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
           <DistanceData
             ref='dist'
-            dist={dist}
-            time={time} />
+            dist={tracker.value}
+            time={tracker.time} />
         </View>
       </View>
     );
   }
 
   get footer() {
-    let { editable } = this.props;
+    const { editable } = this.props;
 
-    let renderBtn = (label, onPress) => {
+    const renderBtn = (label, onPress) => {
       return (
         <TouchableOpacity
           style={styles.button}
@@ -115,23 +115,13 @@ export default class DistanceTrackerSlide extends TrackerSlide {
       );
     };
 
-    let active = this.state.active;
+    const active = this.state.active;
     return (
       <View style={styles.footerContainer}>
         { active ? renderBtn('STOP', this._onStopBtn) :
                    renderBtn('START', this._onStartBtn) }
       </View>
     );
-  }
-
-  onChange() {
-    let { tracker } = this.props;
-    this.setState({
-      iconId: tracker.iconId,
-      title: tracker.title,
-      dist: tracker.value,
-      time: tracker.time
-    });
   }
 
   onTick() {
@@ -153,12 +143,12 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   _onStartBtn() {
-    let { tracker } = this.props;
+    const { tracker } = this.props;
     tracker.tick();
   }
 
   _onStopBtn() {
-    let { tracker } = this.props;
+    const { tracker } = this.props;
     tracker.stop();
   }
 };
@@ -168,19 +158,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   distData: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   footerContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   button: {
     width: 70,
@@ -189,27 +179,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D9DADB',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   btnText: {
     fontSize: 15,
     color: '#9B9B9B',
-    fontWeight: '100'
+    fontWeight: '100',
   },
   label: {
     flex: 1,
     width: slideWidth,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   dist: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   labelText: {
     fontSize: 50,
     fontWeight: '100',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   titleText: {
     fontSize: 15,
@@ -217,6 +207,6 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     color: '#9B9B9B',
     textAlign: 'center',
-    fontWeight: '200'
-  }
+    fontWeight: '200',
+  },
 });

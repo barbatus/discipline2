@@ -5,12 +5,12 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 class TimeDigit extends Component {
   shouldComponentUpdate(props) {
-    return props.value != this.props.value;
+    return props.value !== this.props.value;
   }
 
   render() {
@@ -39,44 +39,54 @@ class TimeLabel extends Component {
 
     this.state = {
       timeMs: props.timeMs,
-      timeLapMs: props.timeLapMs
+      timeLapMs: 0
     };
   }
 
-  setTime(timeMs) {
+  setTime(timeMs: number) {
     this.setState({
       timeMs
     });
   }
 
-  setTimeLap(timeLapMs) {
+  setTimeLap(timeLapMs: number) {
     this.setState({
       timeLapMs
     });
   }
 
   shouldComponentUpdate(props, state) {
-    if (props.timeMs !== this.props.timeMs ||
-        props.timeLapMs !== this.props.timeLapMs) {
+    if (props.timeMs != this.props.timeMs) {
       this.state.timeMs = props.timeMs;
       this.state.timeLapMs = props.timeLapMs;
       return true;
     }
+    return this.state.timeMs != state.timeMs ||
+           this.state.timeLapMs != state.timeLapMs;
+  }
 
-    return this.state.timeMs !== state.timeMs ||
-           this.state.timeLapMs !== state.timeLapMs;
+  componentWillReceiveProps({ timeMs }) {
+    this.setState({
+      timeMs
+    });
+
+    if (!timeMs) {
+      this.setState({
+        lapTimeMs: 0
+      });
+    }
   }
 
   render() {
-    let { style, width } = this.props;
+    const { style, width } = this.props;
 
-    let { hh, mm, ss } = time.formatTimeMs(this.state.timeMs);
-    let timeLap = time.formatTimeMs(this.state.timeLapMs);
-    let digWidth = width / 6;
-    let delimStyle = [styles.timeText, styles.delimStyle, style];
-    let digitStyle = [styles.timeText, style];
-    let trueWidth = hh ? width : 4 * digWidth;
-    let lapStyle = [{ width: trueWidth }, styles.lapText];
+    const { hh, mm, ss } = time.formatTimeMs(this.state.timeMs);
+    const timeLap = time.formatTimeMs(this.state.timeLapMs);
+    const digWidth = width / 6;
+    const delimStyle = [styles.timeText, styles.delimStyle, style];
+    const digitStyle = [styles.timeText, style];
+    const trueWidth = hh ? width : 4 * digWidth;
+    const lapStyle = [{ width: trueWidth }, styles.lapText];
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
@@ -110,32 +120,32 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   timeText: {
     fontSize: 52,
     fontWeight: '100',
     color: '#4A4A4A',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   slotStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   delimStyle: {
     paddingLeft: 3,
-    paddingRight: 3
+    paddingRight: 3,
   },
   lapText: {
     fontSize: 20,
     color: '#9B9B9B',
     fontWeight: '100',
-    textAlign: 'right'
-  }
+    textAlign: 'right',
+  },
 });

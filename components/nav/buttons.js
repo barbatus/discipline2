@@ -28,7 +28,8 @@ class NavAddButton extends Component {
       <NavButton {...this.props}
         icon={'new'}
         iconStyle={styles.newIcon}
-        style={styles.navBarRightButton} />
+        style={styles.navBarRightButton}
+      />
     );
   }
 }
@@ -39,7 +40,8 @@ class NavBackButton extends Component {
       <NavButton {...this.props}
         icon={'back'}
         iconStyle={styles.backIcon}
-        style={styles.navBarLeftButton} />
+        style={styles.navBarLeftButton}
+      />
     );
   }
 }
@@ -50,7 +52,8 @@ class NavMenuButton extends Component {
       <NavButton {...this.props}
         icon={'menu'}
         iconStyle={styles.menuIcon}
-        style={styles.navBarLeftButton} />
+        style={styles.navBarLeftButton}
+      />
     );
   }
 }
@@ -62,7 +65,8 @@ class NavCancelButton extends Component {
         {...this.props}
         icon={'cancel'}
         iconStyle={styles.cancelIcon}
-        style={styles.navBarLeftButton} />
+        style={styles.navBarLeftButton}
+      />
     );
   }
 }
@@ -73,7 +77,8 @@ class NavAcceptButton extends Component {
       <NavButton
         {...this.props}
         icon={'accept'}
-        style={styles.navBarRightButton} />
+        style={styles.navBarRightButton}
+      />
     );
   }
 }
