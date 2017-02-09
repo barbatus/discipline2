@@ -3,7 +3,7 @@
 import {
   createStore,
   applyMiddleware,
-  combineReducers
+  combineReducers,
 } from 'redux';
 
 import thunk from 'redux-thunk';
@@ -14,7 +14,7 @@ const middleware = applyMiddleware(thunk);
 
 export default (data = {}) => {
   const rootReducer = combineReducers({
-    trackers
+    trackers,
   });
 
   return createStore(rootReducer, data, middleware);

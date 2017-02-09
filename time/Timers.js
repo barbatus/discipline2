@@ -2,7 +2,7 @@
 
 import EventEmitter from 'eventemitter3';
 
-class _Timers {
+class Timers {
   _timers = {};
 
   get(id: number, int: number) {
@@ -19,8 +19,8 @@ class _Timers {
   }
 }
 
-const Timers = new _Timers();
-export default Timers;
+const timers = new Timers();
+export default timers;
 
 class Timer {
   _pastMs = 0;

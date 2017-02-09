@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -16,17 +16,17 @@ const styles = StyleSheet.create({
   },
   controlButton: {
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
   },
   navIcon: {
     resizeMode: 'contain',
     height: 23,
-    width: 23
+    width: 23,
   },
   title: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 15
+    fontSize: 15,
   },
   calendarHeading: {
     flexDirection: 'row',
@@ -51,52 +51,37 @@ const styles = StyleSheet.create({
   },
   dayButton: {
     alignItems: 'center',
-    padding: 5,
+    padding: 0,
     width: DEVICE_WIDTH / 7,
     borderTopWidth: 1,
     borderTopColor: '#e9e9e9',
   },
-  dayButtonFiller: {
-    padding: 5,
+  outDayButton: {
+    padding: 0,
     width: DEVICE_WIDTH / 7,
   },
   day: {
     fontSize: 16,
-    alignSelf: 'center',
+    textAlign: 'center',
   },
-  eventIndicatorFiller: {
-    marginTop: 3,
-    borderColor: 'transparent',
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-  },
-  eventIndicator: {
-    backgroundColor: '#cccccc',
-  },
-  dayCircleFiller: {
+  dayCircle: {
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 33,
+    height: 33,
+    borderRadius: 16,
   },
   currentDayCircle: {
     backgroundColor: 'red',
   },
   currentDayText: {
-    color: 'white'
+    color: 'white',
   },
   selectedDayCircle: {
     backgroundColor: 'black',
   },
-  hasEventCircle: {
-  },
-  hasEventText: {
-  },
   selectedDayText: {
     color: 'white',
-    fontWeight: 'bold',
   },
   weekendDayText: {
     color: 'white',

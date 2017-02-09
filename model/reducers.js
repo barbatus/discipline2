@@ -12,6 +12,7 @@ import {
   TICK_TRACKER,
   UNDO_LAST_TICK,
   UPDATE_LAST_TICK,
+  CHANGE_DAY,
 } from './actions';
 
 import Trackers from './Trackers';
@@ -29,8 +30,8 @@ export const trackers = handleActions({
     }
   },
   [REMOVE_TRACKER]: (state, { tracker }) => {
-    let equal = trackEqual(tracker);
-    let index = state.trackers.findIndex(
+    const equal = trackEqual(tracker);
+    const index = state.trackers.findIndex(
       tracker => equal(tracker));
     return {
       removeIndex: index,
@@ -80,5 +81,12 @@ export const trackers = handleActions({
     const trackers = state.trackers.update(index,
       tracker => Trackers.create(tracker));
     return { trackers };
-  }
+  },
+  [CHANGE_DAY]: (state, { trackers }) => {
+    return {
+      trackers: new List(trackers.map(
+        tracker => Trackers.create(tracker))
+      ),
+    };
+  },
 }, {});

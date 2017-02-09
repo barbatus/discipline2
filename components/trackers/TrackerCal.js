@@ -6,7 +6,7 @@ import {
   View,
   StyleSheet,
   Animated,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
 import Calendar from '../calendar/Calendar';
@@ -54,10 +54,11 @@ export default class TrackerCal extends Component {
             dayHeading: styles.dayHeading,
             weekendHeading: styles.weekendHeading,
             title: styles.title,
+            dayCircle: styles.dayCircle,
             currentDayCircle: styles.currentDayCircle,
-            dayCircleFiller: styles.dayCircleFiller,
             selectedDayCircle: styles.selectedDayCircle
           }}
+          scrollEnabled={true}
           eventDates={['2016-07-03', '2016-07-05', '2016-07-28', '2016-07-30']}
           showControls={true}
           titleFormat={'MMMM YYYY'}
@@ -74,54 +75,49 @@ const styles = StyleSheet.create({
     top: -40,
     backgroundColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   dayButton: {
     borderTopColor: 'transparent',
-    padding: 0
+    padding: 0,
   },
   day: {
     fontSize: 18,
     color: 'white',
-    fontWeight: '200'
+    fontWeight: '300',
   },
   weekendDayText: {
-    color: 'white'
+    color: 'white',
   },
   selectedDayText: {
-    color: 'white'
+    color: 'white',
   },
   currentDayText: {
-    color: 'white'
+    color: 'white',
   },
   calendarHeading: {
     borderTopWidth: 0,
-    borderBottomWidth: 0
+    borderBottomWidth: 0,
   },
   dayHeading: {
     color: 'white',
     fontSize: 13,
-    fontWeight: '100'
+    fontWeight: '200',
   },
   weekendHeading: {
     color: 'white',
     fontSize: 13,
-    fontWeight: '100'
+    fontWeight: '200',
   },
   title: {
     fontSize: 19,
     color: 'white',
-    fontWeight: '200'
+    fontWeight: '200',
   },
   currentDayCircle: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)'
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
   },
   selectedDayCircle: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)'
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
-  dayCircleFiller: {
-    width: 35,
-    height: 35,
-    borderRadius: 17
-  }
 });

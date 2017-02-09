@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -22,12 +22,12 @@ export default class Day extends Component {
     isToday: PropTypes.bool,
     isWeekend: PropTypes.bool,
     onPress: PropTypes.func,
-    usingEvents: PropTypes.bool
+    usingEvents: PropTypes.bool,
   }
 
   dayCircleStyle = (isWeekend, isSelected, isToday, hasEvent) => {
     const { customStyle } = this.props;
-    const dayCircleStyle = [styles.dayCircleFiller, customStyle.dayCircleFiller];
+    const dayCircleStyle = [styles.dayCircle, customStyle.dayCircle];
 
     if (isToday) {
       dayCircleStyle.push(styles.currentDayCircle, customStyle.currentDayCircle);
@@ -68,17 +68,18 @@ export default class Day extends Component {
   }
 
   render() {
-    let { caption, customStyle } = this.props;
-    const {filler,  hasEvent,
+    const { caption, customStyle } = this.props;
+    const {
+      outDay, 
+      hasEvent,
       isWeekend,
       isSelected,
       isToday,
-      usingEvents,
     } = this.props;
 
-    return filler ? (
+    return outDay ? (
         <TouchableWithoutFeedback>
-          <View style={[styles.dayButtonFiller, customStyle.dayButtonFiller]}>
+          <View style={[styles.outDayButton, customStyle.outDayButton]}>
             <Text style={[styles.day, customStyle.day]} />
           </View>
         </TouchableWithoutFeedback>
@@ -90,14 +91,6 @@ export default class Day extends Component {
               {caption}
             </Text>
           </View>
-          {usingEvents &&
-            <View style={[
-              styles.eventIndicatorFiller,
-              customStyle.eventIndicatorFiller,
-              hasEvent && styles.eventIndicator,
-              hasEvent && customStyle.eventIndicator]}
-            />
-          }
         </View>
       </TouchableOpacity>
     );

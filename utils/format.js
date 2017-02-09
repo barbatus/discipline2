@@ -16,9 +16,9 @@ export function formatDistance(dist) {
     }
   }
 
-  let rounded = round(dist, 2);
-  let km = int(rounded);
-  let mm = int((rounded * 100) % 100);
+  const rounded = round(dist, 2);
+  const km = int(rounded);
+  const mm = int((rounded * 100) % 100);
 
   return {
     format: `${km}.${__(mm)}`,

@@ -39,6 +39,5 @@ class Keyboard {
   }
 }
 
-let keyboard = new Keyboard();
-
+const keyboard = new Keyboard();
 export default keyboard;

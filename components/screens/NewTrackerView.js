@@ -38,13 +38,13 @@ export default class NewTrackerView extends ScreenView {
     super(props);
 
     this.state = {
-      trackerTypeId: null
+      trackerTypeId: null,
     }
   }
 
   onLeftMove() {
     this.setState({
-      trackerTypeId: null
+      trackerTypeId: null,
     });
 
     this._setNewTrackerBtns();

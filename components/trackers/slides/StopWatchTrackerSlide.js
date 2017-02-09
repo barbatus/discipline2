@@ -25,7 +25,7 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
-import Timers from './Timers';
+import Timers from '../../../time/Timers';
 
 export default class StopWatchTrackerSlide extends TrackerSlide {
   constructor(props) {

@@ -9,7 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Animated
+  Animated,
 } from 'react-native';
 
 import {commonStyles, screenWidth} from '../styles/common';
@@ -28,7 +28,7 @@ const Scroll = React.createClass({
   getDefaultProps() {
     return {
       slides: [],
-      scrollEnabled: true
+      scrollEnabled: true,
     }
   },
 
@@ -50,8 +50,8 @@ const Scroll = React.createClass({
   },
 
   render() {
-    let { style, centered, slides, slideWidth, scrollEnabled } = this.props;
-    let marginLeft = centered ? (screenWidth - slideWidth) / 2 : 0;
+    const { style, centered, slides, slideWidth, scrollEnabled } = this.props;
+    const marginLeft = centered ? (screenWidth - slideWidth) / 2 : 0;
 
     return (
       <BaseScroll
@@ -67,4 +67,4 @@ const Scroll = React.createClass({
   }
 });
 
-module.exports = Scroll;
+export default Scroll;

@@ -3,10 +3,10 @@
 export const LOAD_TEST_DATA = 'LOAD_INIT';
 
 export const loadTestData = () => {
-  let trackers = depot.loadTestData();
+  const trackers = depot.loadTestData();
   return {
     type: LOAD_TEST_DATA,
-    trackers
+    trackers,
   }
 };
 
@@ -16,7 +16,7 @@ export const removeTracker = tracker => {
   depot.removeTracker(tracker.id);
   return {
     type: REMOVE_TRACKER,
-    tracker
+    tracker,
   }
 };
 
@@ -27,7 +27,7 @@ export const addTracker = (tracker, index) => {
   return {
     type: ADD_TRACKER,
     tracker,
-    index
+    index,
   }
 };
 
@@ -37,7 +37,7 @@ export const updateTracker = (tracker) => {
   depot.updateTracker(tracker);
   return {
     type: UPDATE_TRACKER,
-    tracker
+    tracker,
   }
 };
 
@@ -49,7 +49,7 @@ export const tickTracker = (tracker, value) => {
   return {
     type: TICK_TRACKER,
     tracker,
-    tick
+    tick,
   }
 };
 
@@ -59,7 +59,7 @@ export const undoLastTick = tracker => {
   depot.undoLastTick(tracker.id);
   return {
     type: UNDO_LAST_TICK,
-    tracker
+    tracker,
   }
 };
 
@@ -69,6 +69,16 @@ export const updateLastTick = (tracker, value) => {
   depot.updLastTick(tracker.id, value);
   return {
     type: UPDATE_LAST_TICK,
-    tracker
+    tracker,
+  }
+};
+
+export const CHANGE_DAY = 'CHANGE_DAY';
+
+export const changeDay = () => {
+  const trackers = depot.loadTrackers();
+  return {
+    type: CHANGE_DAY,
+    trackers,
   }
 };

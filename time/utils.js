@@ -3,7 +3,7 @@
 import moment from 'moment';
 import 'moment-duration-format';
 
-import {__} from './format';
+import {__} from '../utils/format';
 
 const SS_MS = 1000;
 const MM_MS = 60 * 1000;
@@ -11,11 +11,11 @@ const HH_MS = 60 * 60 * 1000;
 
 const time = {
   getDateMs: () => {
-    let now = moment();
-    let dateMs = moment([
+    const now = moment();
+    const dateMs = moment([
       now.year(),
       now.month(),
-      now.date()
+      now.date(),
     ]).valueOf();
     return dateMs;
   },
@@ -25,11 +25,11 @@ const time = {
   },
 
   formatTimeMs: (timeMs) => {
-    let duration = moment.duration(timeMs);
+    const duration = moment.duration(timeMs);
 
     if (timeMs < MM_MS) {
-      let ss = duration.seconds();
-      let f = {
+      const ss = duration.seconds();
+      const f = {
         hh: null,
         mm: '00',
         ss: __(ss),
@@ -39,9 +39,9 @@ const time = {
     }
 
     if (timeMs < HH_MS) {
-      let ss = duration.seconds();
-      let mm = duration.minutes();
-      let f = {
+      const ss = duration.seconds();
+      const mm = duration.minutes();
+      const f = {
         hh: null,
         mm: __(mm),
         ss: __(ss),
@@ -50,10 +50,10 @@ const time = {
       return f;
     }
 
-    let ss = duration.seconds();
-    let mm = duration.minutes();
-    let hh = duration.hours();
-    let f = {
+    const ss = duration.seconds();
+    const mm = duration.minutes();
+    const hh = duration.hours();
+    const f = {
       hh: ss,
       mm: mm,
       ss: ss,
@@ -63,22 +63,22 @@ const time = {
   },
 
   isSameDate(dateLike1, dateLike2) {
-    let date1 = moment(dateLike1);
-    let date2 = moment(dateLike2);
+    const date1 = moment(dateLike1);
+    const date2 = moment(dateLike2);
 
     return date1.isSame(date2, 'day');
   },
 
   getToDayEndMs() {
-    let now = moment();
-    let end = now.endOf('day');
+    const now = moment();
+    const end = now.endOf('day');
 
     return end.diff(now, 'milliseconds');
   },
 
   getFromDayStartMs() {
-    let now = moment();
-    let start = now.startOf('day');
+    const now = moment();
+    const start = now.startOf('day');
 
     return now.diff(start, 'milliseconds');
   }

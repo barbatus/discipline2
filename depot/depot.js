@@ -62,6 +62,10 @@ class Depot {
     return tick;
   }
 
+  loadTrackers() {
+    return depot.trackers.getAll();
+  }
+
   loadTestData() {
     this._resetTestData();
 

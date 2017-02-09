@@ -13,7 +13,7 @@ export class MoveDownResponderAnim {
 
   constructor(responder: MoveUpDownResponder, slideHeight: number,
               onMove?: Function, onStart?: Function, onDone?: Function) {
-    this._maxDy = 0.75 * slideHeight;
+    this._maxDy = 0.5 * slideHeight;
 
     this._moveY.addListener(({ value }) => {
       caller(onMove, value / this._maxDy);
@@ -44,12 +44,12 @@ export class MoveDownResponderAnim {
   }
 
   animateIn(callback?: Function) {
-    let inn = Animation.timing(this._moveY, 500, this._maxDy);
+    const inn = Animation.timing(this._moveY, 500, this._maxDy);
     Animation.animate([inn], callback);
   }
 
   animateOut(callback?: Function) {
-    let out = Animation.timing(this._moveY, 500, 0);
+    const out = Animation.timing(this._moveY, 500, 0);
     Animation.animate([out], callback);
   }
 }

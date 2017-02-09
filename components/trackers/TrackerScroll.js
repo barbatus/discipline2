@@ -41,7 +41,7 @@ export default class TrackerScroll extends TrackerRenderer {
     const scroll = this.refs.scroll.getIndex();
      if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
-      return;
+      //return;
     }
 
     this.scrollTo(index, () => {

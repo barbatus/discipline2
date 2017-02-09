@@ -125,8 +125,7 @@ class MainScreen extends Component {
   }
 
   _onSlideChange(index, previ) {
-    //const dir = Math.sign(index - previ);
-    const dir = index - previ >= 0 ? 1 : -1;
+    const dir = (index - previ) >= 0 ? 1 : -1;
     this.refs.gradient.finishSlide(dir);
   }
 

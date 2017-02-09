@@ -9,7 +9,7 @@ import {caller} from './lang';
 BackgroundGeolocation.configure({
   distanceFilter: 3,
   stopOnTerminate: false,
-  autoSync: false
+  autoSync: false,
 });
 
 class GeoFence_ {
@@ -42,7 +42,7 @@ class GeoFence_ {
   off(event, cb, context) {
     if (!this._cbMap.has(event)) return;
 
-    let emitter = this._cbMap.get(event);
+    const emitter = this._cbMap.get(event);
     emitter.removeListener(event, cb, context);
   }
 
@@ -65,12 +65,12 @@ class GeoFence_ {
   }
 
   _start(onSuccess, onError, count = 0) {
-    let successCb = () => {
+    const successCb = () => {
       this._starts++;
       caller(onSuccess);
     };
 
-    let errorCb = () => {
+    const errorCb = () => {
       if (count === 3) {
         caller(onError);
         return;
@@ -100,7 +100,7 @@ class GeoFence_ {
     BackgroundGeolocation.on(event, (...args) => {
       if (!this._cbMap.has(event)) return;
 
-      let emitter = this._cbMap.get(event);
+      const emitter = this._cbMap.get(event);
       emitter.emit.apply(emitter, [event].concat(args));
     });
   }
@@ -112,7 +112,7 @@ const POS_OPT = {
   enableHighAccuracy: true,
   timeout: 20000,
   maximumAge: 1000,
-  distanceFilter: 5
+  distanceFilter: 5,
 };
 
 const WATCH_EVENT = 'watch';

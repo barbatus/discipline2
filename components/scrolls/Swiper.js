@@ -8,7 +8,7 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Animated
+  Animated,
 } from 'react-native';
 
 import TimerMixin from 'react-timer-mixin';
@@ -24,7 +24,7 @@ const Swiper = React.createClass({
     slides: React.PropTypes.array.isRequired,
     style: View.propTypes.style,
     scrollEnabled: React.PropTypes.bool,
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
   },
 
   mixins: [TimerMixin],
@@ -61,10 +61,10 @@ const Swiper = React.createClass({
   _renderDots(index, size) {
     if (size <= 1) return null;
 
-    let dots = [];
-    let basicDot = [styles.basicDot, this._scaleDot(size)];
+    const dots = [];
+    const basicDot = [styles.basicDot, this._scaleDot(size)];
     for(let i = 0; i < size; i++) {
-      let dotStyle = i === index ? 
+      const dotStyle = i === index ? 
         [basicDot, styles.activeDot] : basicDot;
       dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
     }

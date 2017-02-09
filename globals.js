@@ -12,4 +12,4 @@ global.getIcon = require('./icons/icons').getIcon;
 
 global.depot = require('./depot/depot');
 
-global.time = require('./utils/time');
+global.time = require('./time/utils');

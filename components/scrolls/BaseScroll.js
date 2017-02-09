@@ -7,7 +7,7 @@ import {
   Text,
   View,
   ScrollView,
-  Animated
+  Animated,
 } from 'react-native';
 
 import {commonStyles, screenWidth} from '../styles/common';
@@ -28,7 +28,7 @@ const BaseScroll = React.createClass({
     scrollsToTop: React.PropTypes.bool,
     removeClippedSubviews: React.PropTypes.bool,
     automaticallyAdjustContentInsets: React.PropTypes.bool,
-    keyboardDismissMode: React.PropTypes.string
+    keyboardDismissMode: React.PropTypes.string,
   },
 
   getDefaultProps() {
@@ -53,7 +53,7 @@ const BaseScroll = React.createClass({
   },
 
   componentWillMount() {
-    let { slideWidth, index } = this.props;
+    const { slideWidth, index } = this.props;
 
     this._index = index;
     this._prevInd = this._index;
@@ -126,18 +126,25 @@ const BaseScroll = React.createClass({
 
     if (this.getSize() <= 1) return;
 
-    let dx = this._pageX - event.nativeEvent.pageX;
+    const dx = this._pageX - event.nativeEvent.pageX;
     this._pageX = event.nativeEvent.pageX;
 
-    let size = this.getSize();
+    const size = this.getSize();
     if (this._index === 0 && dx <= 0) return;
     if (this._index === size - 1 && dx >= 0) return;
+
+    // Adjust offset and index after moving.
+    // Offset and index become float.
+    this._offsetX += dx;
+    const slideWidth = this.getWidth();
+    const index = this._index + (dx / slideWidth);
+    this._index = Math.min(Math.max(index, 0), size - 1);
 
     caller(this.props.onTouchMove, dx);
   },
 
   _onScrollEnd(event) {
-    let { x } = event.nativeEvent.contentOffset;
+    const { x } = event.nativeEvent.contentOffset;
     this._endScrolling(x);
   },
 
@@ -165,12 +172,17 @@ const BaseScroll = React.createClass({
     caller(this.props.onScrollBegin, event);
   },
 
+  // Used to update offset and current slide index
+  // after scrolling. Offset and index are supposed to
+  // be integer since slide width is an integer
+  // and scrolling happens for an exact number of slides. 
   _updateSlideIndex(offsetX) {
-    let diff = offsetX - this._offsetX;
+    const diff = offsetX - this._offsetX;
 
     if (!diff) return;
 
-    let slideWidth = this.getWidth();
+    const slideWidth = this.getWidth();
+    // Sometimes it's not round integer. 
     this._index = Math.round(this._index + (diff / slideWidth)) >> 0;
     this._offsetX = slideWidth * this._index;
   },

@@ -30,7 +30,7 @@ class DistanceData extends Component {
   constructor(props) {
     super(props);
 
-    let { time, dist } = props;
+    const { time, dist } = props;
     this.state = { time, dist };
   }
 
@@ -51,9 +51,9 @@ class DistanceData extends Component {
   }
 
   render() {
-    let { time, dist } = this.state;
+    const { time, dist } = this.state;
 
-    let format = formatDistance(dist);
+    const format = formatDistance(dist);
     return (
       <View style={styles.distData}>
         <View style={[styles.label, styles.dist]}>
@@ -101,7 +101,6 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
   get footer() {
     const { editable } = this.props;
-
     const renderBtn = (label, onPress) => {
       return (
         <TouchableOpacity

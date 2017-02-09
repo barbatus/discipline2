@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   countText: {
     fontSize: 56,
     fontWeight: '200',
-    color: '#4A4A4A'
-  }
+    color: '#4A4A4A',
+  },
 });

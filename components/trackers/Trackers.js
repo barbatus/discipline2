@@ -158,8 +158,8 @@ export default class Trackers extends Component {
 
     return (
       <Animated.View style={[
-          commonStyles.flexFilled,
-          { opacity: this._opacity }]
+          commonStyles.absFilled,
+          {opacity: this._opacity}]
         }>
         <TrackerScroll
           ref='bscroll'
@@ -215,9 +215,9 @@ reactMixin(Trackers.prototype, TimerMixin);
 
 const styles = StyleSheet.create({
   bigScroll: {
-    flex: 0.65
+    flex: 0.65,
   },
   smallScroll: {
-    flex: 0.35
-  }
+    flex: 0.35,
+  },
 });
