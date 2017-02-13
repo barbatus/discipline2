@@ -13,6 +13,8 @@ import {
   Vibration,
 } from 'react-native';
 
+import {connect} from 'react-redux';
+
 import {
   trackerDef,
   trackerStyles,
@@ -25,6 +27,12 @@ import TrackerSlide from './TrackerSlide';
 import TimeLabel from './TimeLabel';
 
 import {formatDistance} from '../../../utils/format';
+
+import {caller} from '../../../utils/lang';
+
+import {tickGeoTracker} from '../../../model/actions';
+
+import DistanceTracker from '../../../geo/DistanceTracker';
 
 class DistanceData extends Component {
   constructor(props) {
@@ -39,15 +47,15 @@ class DistanceData extends Component {
   }
 
   shouldComponentUpdate(props, state) {
-    if (props.dist != this.props.dist ||
-        props.time != this.props.time) {
+    if (props.dist !== this.props.dist ||
+        props.time !== this.props.time) {
       this.state.time = props.time;
       this.state.dist = props.dist;
       return true;
     }
 
-    return this.state.dist != state.dist ||
-           this.state.time != state.time;
+    return this.state.dist !== state.dist ||
+           this.state.time !== state.time;
   }
 
   render() {
@@ -68,20 +76,46 @@ class DistanceData extends Component {
           <TimeLabel
             style={styles.labelText}
             width={200}
-            timeMs={time} />
+            timeMs={time}
+          />
         </View>
       </View>
     );
   }
 }
 
-export default class DistanceTrackerSlide extends TrackerSlide {
+const DIST_INTRVL = 5.0;
+
+const TIME_INTRVL = 100; // ms
+
+const tickDataSchema = 'DistData';
+
+function getTime(tracker) {
+  let ticks = tracker.getTodayTicks();
+  let data = ticks.map(tick => depot.ticks.getData(
+    tickDataSchema, tick.id));
+  let times = data.map(item => item.time);
+  return times.reduceRight((p, n) => {
+    return p + n;
+  }, 0);
+}
+
+class DistanceTrackerSlide extends TrackerSlide {
+  _distTracker = null;
+
   constructor(props) {
     super(props);
 
     this.state = {
-      active: false
+      active: false,
     };
+
+    this._distTracker = new DistanceTracker(DIST_INTRVL, TIME_INTRVL);
+  }
+
+  shouldComponentUpdate(props, state) {
+    const should = super.shouldComponentUpdate(props, state);
+    return should || this.state.active !== state.active;
   }
 
   get controls() {
@@ -93,7 +127,8 @@ export default class DistanceTrackerSlide extends TrackerSlide {
           <DistanceData
             ref='dist'
             dist={tracker.value}
-            time={tracker.time} />
+            time={tracker.time}
+          />
         </View>
       </View>
     );
@@ -123,34 +158,54 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     );
   }
 
-  onTick() {
-    Vibration.vibrate();
-
-    this.setState({
-      active: true
-    });
-  }
-
-  onValue({ time, speed, dist }) {
-    this.refs.dist.setDistAndTime(dist, time);
-  }
-
-  onStop() {
-    this.setState({
-      active: false
-    });
-  }
-
   _onStartBtn() {
-    const { tracker } = this.props;
-    tracker.tick();
+    this._distTracker.start(::this._onDistStart, ::this._onDistUpdate);
   }
 
   _onStopBtn() {
+    this._distTracker.stop(::this._onDistStop);
+  }
+
+  _onDistStart(error) {
+    if (error) return;
+
     const { tracker } = this.props;
-    tracker.stop();
+    this._initDist = tracker.value;
+    this._initTime = tracker.time;
+
+    Vibration.vibrate();
+
+    this.setState({
+      active: true,
+    });
+  }
+
+  _onDistStop({ dist, time }) {
+    this._onDistUpdate({ dist, time });
+
+    this.setState({
+      active: false,
+    });
+
+    const { onStop, tracker } = this.props;
+    caller(onStop, tracker, dist, time);
+  }
+
+  _onDistUpdate({ dist, time }) {
+    dist = this._initDist + dist;
+    time = this._initTime + time; 
+    this.refs.dist.setDistAndTime(dist, time);
   }
 };
+
+export default connect(null,
+  dispatch => {
+    return {
+      onStop: (tracker, dist, time) => dispatch(
+        tickGeoTracker(tracker, dist, { time }))
+    };
+  }
+)(DistanceTrackerSlide);
 
 const styles = StyleSheet.create({
   controls: {

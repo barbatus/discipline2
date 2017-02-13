@@ -1,13 +1,17 @@
+'use strict';
+
 import {Dimensions, StyleSheet} from 'react-native';
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
+import {screenWidth} from '../styles/common';
 
 const styles = StyleSheet.create({
   calendarContainer: {
-    backgroundColor: '#f7f7f7',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   monthContainer: {
-    width: DEVICE_WIDTH,
+    width: screenWidth,
   },
   calendarControls: {
     marginTop: 10,
@@ -26,25 +30,30 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: 19,
+    color: 'white',
+    fontWeight: '200',
   },
   calendarHeading: {
     flexDirection: 'row',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
   },
   dayHeading: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     textAlign: 'center',
     marginVertical: 5,
+    color: 'white',
+    fontWeight: '200',
   },
   weekendHeading: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     textAlign: 'center',
     marginVertical: 5,
-    color: '#cccccc',
+    color: 'white',
+    fontWeight: '200',
   },
   weekRow: {
     flexDirection: 'row',
@@ -52,39 +61,49 @@ const styles = StyleSheet.create({
   dayButton: {
     alignItems: 'center',
     padding: 0,
-    width: DEVICE_WIDTH / 7,
+    width: screenWidth / 7,
     borderTopWidth: 1,
-    borderTopColor: '#e9e9e9',
+    borderTopColor: 'transparent',
   },
-  outDayButton: {
-    padding: 0,
-    width: DEVICE_WIDTH / 7,
+  dayText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: '300',
   },
-  day: {
-    fontSize: 16,
-    textAlign: 'center',
+  outDayText: {
+    color: 'rgba(255, 255, 255, 0.2)',
   },
   dayCircle: {
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'transparent',
     width: 33,
     height: 33,
     borderRadius: 16,
   },
   currentDayCircle: {
-    backgroundColor: 'red',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
   },
   currentDayText: {
     color: 'white',
   },
   selectedDayCircle: {
-    backgroundColor: 'black',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   selectedDayText: {
     color: 'white',
   },
   weekendDayText: {
     color: 'white',
+  },
+  tickPoint: {
+    position: 'absolute',
+    width: 5,
+    height: 5,
+    backgroundColor: 'white',
+    borderRadius: 3,
+    left: 27,
+    top: 3,
   },
 });
 

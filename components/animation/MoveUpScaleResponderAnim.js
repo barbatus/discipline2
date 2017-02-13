@@ -24,7 +24,7 @@ export class MoveUpScaleResponderAnim {
 
     responder.subscribeUp({
       onMove: dy => {
-        let speed = Math.abs(dy) * 2;
+        const speed = Math.abs(dy) * 2;
         let scale = (slideHeight - speed) / slideHeight;
         scale = Math.max(minMoveScale, scale);
 
@@ -33,7 +33,7 @@ export class MoveUpScaleResponderAnim {
       onMoveStart: onStart,
       onMoveDone: () => {
         if (this._scale._value < 1) {
-          let toMin = Animation.timing(this._scale, 200, minScale);
+          const toMin = Animation.timing(this._scale, 200, minScale);
           Animation.animate([toMin], onDone);
         }
       }
@@ -53,12 +53,12 @@ export class MoveUpScaleResponderAnim {
   }
 
   animateIn(callback?: Function) {
-    let inn = Animation.timing(this._scale, 500, 1);
+    const inn = Animation.timing(this._scale, 500, 1);
     Animation.animate([inn], callback);
   }
 
   animateOut(callback?: Function) {
-    let out = Animation.timing(this._scale, 500, 0);
+    const out = Animation.timing(this._scale, 500, 0);
     Animation.animate([out], callback);
   }
 }

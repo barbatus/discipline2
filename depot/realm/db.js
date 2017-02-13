@@ -11,8 +11,8 @@ const AppInfoSchema = {
     testTrackers: {
       type: 'list',
       objectType: 'Tracker',
-      default: []
-    }
+      default: [],
+    },
   }
 };
 
@@ -23,8 +23,8 @@ const TrackerSchema = {
     id: 'int',
     title: 'string',
     typeId: 'string',
-    iconId: 'string'
-  }
+    iconId: 'string',
+  },
 };
 
 const TrackersSchema = {
@@ -32,14 +32,14 @@ const TrackersSchema = {
   properties: {
     nextId: {
       type: 'int',
-      default: 1
+      default: 1,
     },
     trackers: {
       type: 'list',
       objectType: 'Tracker',
-      default: []
-    }
-  }
+      default: [],
+    },
+  },
 };
 
 const TicksSchema = {
@@ -47,9 +47,9 @@ const TicksSchema = {
   properties: {
     nextId: {
       type: 'int',
-      default: 1
-    }
-  }
+      default: 1,
+    },
+  },
 };
 
 const TickSchema = {
@@ -59,17 +59,17 @@ const TickSchema = {
     id: 'int',
     trackId: {
       type: 'int',
-      indexed: true
+      indexed: true,
     },
     dateTimeMs: {
       type: 'int',
-      indexed: true
+      indexed: true,
     },
     value: {
       type: 'float',
-      optional: true
-    }
-  }
+      optional: true,
+    },
+  },
 };
 
 const DistanceDataSchema = {
@@ -77,16 +77,18 @@ const DistanceDataSchema = {
   properties: {
     tickId: {
       type: 'int',
-      indexed: true
+      indexed: true,
     },
     time: {
-      type: 'int'
-    }
-  }
+      type: 'int',
+    },
+  },
 };
 
-let DB = new Realm({ schema: [
-  AppInfoSchema, TrackersSchema, TrackerSchema,
-  TickSchema, TicksSchema, DistanceDataSchema
-] });
+const DB = new Realm({
+  schema: [
+    AppInfoSchema, TrackersSchema, TrackerSchema,
+    TickSchema, TicksSchema, DistanceDataSchema,
+  ],
+});
 export default DB;

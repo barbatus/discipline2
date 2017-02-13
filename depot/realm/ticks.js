@@ -12,7 +12,7 @@ class TicksDepot {
   _table: TickSchemaType;
 
   constructor() {
-    let table = DB.objects('Ticks');
+    const table = DB.objects('Ticks');
     if (!table.length) {
       DB.write(() => {
         DB.create('Ticks', {});
@@ -24,7 +24,7 @@ class TicksDepot {
   getForTracker(trackId: number): Array<Tick> {
     check.assert.number(trackId);
 
-    let ticks = DB.objects('Tick');
+    const ticks = DB.objects('Tick');
     return ticks
       .filtered(`trackId = ${trackId}`)
       .sorted('dateTimeMs')
@@ -37,9 +37,8 @@ class TicksDepot {
     check.assert.number(trackId);
     check.assert.number(minDateMs);
 
-    let ticks = DB.objects('Tick');
+    const ticks = DB.objects('Tick');
     let query = `trackId = ${trackId} AND dateTimeMs >= ${minDateMs}`;
-
     if (maxDateMs) {
       query = `${query} AND dateTimeMs < ${maxDateMs}`;
     }
@@ -53,14 +52,14 @@ class TicksDepot {
   getLast(trackId: number): Tick {
     check.assert.number(trackId);
 
-    let ticks = depot.getForTracker(trackId);
+    const ticks = depot.getForTracker(trackId);
     return ticks[ticks.length - 1];
   }
 
   count(trackId: number): number {
     check.assert.number(trackId);
 
-    let ticks = depot.getForTracker(trackId);
+    const ticks = depot.getForTracker(trackId);
     return ticks.length;
   }
 
@@ -71,16 +70,16 @@ class TicksDepot {
       this._table.nextId = tick.id + 1;
     });
 
-    let { id, trackId } = tick;
+    const { id, trackId } = tick;
     this.events.emit('added', {
-      id, trackId
+      id, trackId,
     });
 
     return tick;
   }
 
   getData(schema: string, tickId: number) {
-    let data = DB.objects(schema);
+    const data = DB.objects(schema);
     return data.filtered(`tickId = ${tickId}`)[0];
   }
 
@@ -94,18 +93,19 @@ class TicksDepot {
   update(tickId: number, value: number) {
     check.assert.number(tickId);
 
-    let ticks = DB.objects('Tick');
-    let tick = ticks.filtered(`id = ${tickId}`)[0];
+    const ticks = DB.objects('Tick');
+    const tick = ticks.filtered(`id = ${tickId}`)[0];
     DB.write(() => {
       tick.value = value;
     });
   }
 
   updateData(schema: string, tickId: number, data: Object) {
+    check.assert.string(schema);
     check.assert.number(tickId);
 
-    let dataObj = DB.objects(schema);
-    let tickData = dataObj.filtered(`tickId = ${tickId}`)[0];
+    const dataObj = DB.objects(schema);
+    const tickData = dataObj.filtered(`tickId = ${tickId}`)[0];
     DB.write(() => {
       for (let prop in data) {
         tickData[prop] = data[prop];
@@ -116,9 +116,9 @@ class TicksDepot {
   remove(tickId: number): boolean {
     check.assert.number(tickId);
 
-    let ticks = DB.objects('Tick');
-    let tick = ticks.filtered(`id = ${tickId}`)[0];
-    let { id, trackId } = tick;
+    const ticks = DB.objects('Tick');
+    const tick = ticks.filtered(`id = ${tickId}`)[0];
+    const { id, trackId } = tick;
     DB.write(() => {
       DB.delete(tick);
     });
@@ -133,7 +133,7 @@ class TicksDepot {
 
     let ticks = DB.objects('Tick');
     ticks = ticks.filtered(`trackId = ${trackId}`);
-    let ids = ticks.map(tick => tick.id);
+    const ids = ticks.map(tick => tick.id);
     DB.write(() => {
       DB.delete(ticks);
     });
@@ -144,5 +144,5 @@ class TicksDepot {
   }
 };
 
-let depot = new TicksDepot();
+const depot = new TicksDepot();
 export default depot;

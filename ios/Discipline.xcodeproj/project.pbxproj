@@ -35,6 +35,7 @@
 		BBE57555711C429394BFFB51 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B84511084ACF4BAE949ACABF /* libc++.tbd */; };
 		CC504415CA7E42D188648528 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE24232B722241FF9BEA9BEB /* libz.tbd */; };
 		D54F7BD7EBB74AB597E62FAA /* libCocoaLumberjack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A084E954137943C29ADDD292 /* libCocoaLumberjack.a */; };
+		DBB7FA4CC95C4BDBB65943F5 /* libToolTipMenu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED5156CF2194312AAD444EB /* libToolTipMenu.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +143,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = BVLinearGradient;
+		};
+		0996D6771E504B4B0082EAA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C77A9E3353D2404A9ABF64F0 /* ToolTipMenu.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4681C0211B05271A004D67D4;
+			remoteInfo = ToolTipMenu;
+		};
+		0996D6791E504B4B0082EAA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C77A9E3353D2404A9ABF64F0 /* ToolTipMenu.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4681C02C1B05271A004D67D4;
+			remoteInfo = ToolTipMenuTests;
 		};
 		09B3D97A1E4AF55A00D210BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -359,6 +374,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Discipline/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Discipline/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1ED5156CF2194312AAD444EB /* libToolTipMenu.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libToolTipMenu.a; sourceTree = "<group>"; };
 		3A7290F307D24D6A86548CA1 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		54DD608BE20E43938526A18F /* libsqlite3.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		5DBE1D58ECF548C980F55A16 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
@@ -373,6 +389,7 @@
 		B5EF576A40214F499FF1C237 /* RNBackgroundGeolocation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundGeolocation.xcodeproj; path = "../node_modules/react-native-background-geolocation/ios/RNBackgroundGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		B84511084ACF4BAE949ACABF /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		BD9227FE4E554C9BAC11B5E5 /* libRNBackgroundGeolocation.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundGeolocation.a; sourceTree = "<group>"; };
+		C77A9E3353D2404A9ABF64F0 /* ToolTipMenu.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ToolTipMenu.xcodeproj; path = "../node_modules/react-native-tooltip/ToolTipMenu.xcodeproj"; sourceTree = "<group>"; };
 		E3EB655A38AB4B0E9BB01B08 /* Lumberjack.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Lumberjack.xcodeproj; path = "../node_modules/cocoa-lumberjack/CocoaLumberjack/Lumberjack.xcodeproj"; sourceTree = "<group>"; };
 		EA983B871FE545B6A576921D /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		EE24232B722241FF9BEA9BEB /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -414,6 +431,7 @@
 				107ECA36506448BA85DFD5AA /* libRNBackgroundGeolocation.a in Frameworks */,
 				89C1574FF3924749B67BE713 /* libsqlite3.tbd in Frameworks */,
 				09B3D9F91E4AFC1B00D210BC /* libRCTAnimation.a in Frameworks */,
+				DBB7FA4CC95C4BDBB65943F5 /* libToolTipMenu.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,6 +517,15 @@
 			isa = PBXGroup;
 			children = (
 				097524531D2D86CD00A75694 /* libBVLinearGradient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0996D6481E504B4B0082EAA1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0996D6781E504B4B0082EAA1 /* libToolTipMenu.a */,
+				0996D67A1E504B4B0082EAA1 /* ToolTipMenuTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -643,6 +670,7 @@
 				5DBE1D58ECF548C980F55A16 /* RNBackgroundFetch.xcodeproj */,
 				E3EB655A38AB4B0E9BB01B08 /* Lumberjack.xcodeproj */,
 				6F8C9AB2C3504B578CB375D3 /* RNShakeEvent.xcodeproj */,
+				C77A9E3353D2404A9ABF64F0 /* ToolTipMenu.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -824,6 +852,10 @@
 					ProductGroup = 09B3D9421E4AF55A00D210BC /* Products */;
 					ProjectRef = 6F8C9AB2C3504B578CB375D3 /* RNShakeEvent.xcodeproj */;
 				},
+				{
+					ProductGroup = 0996D6481E504B4B0082EAA1 /* Products */;
+					ProjectRef = C77A9E3353D2404A9ABF64F0 /* ToolTipMenu.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -930,6 +962,20 @@
 			fileType = archive.ar;
 			path = libBVLinearGradient.a;
 			remoteRef = 097524521D2D86CD00A75694 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0996D6781E504B4B0082EAA1 /* libToolTipMenu.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libToolTipMenu.a;
+			remoteRef = 0996D6771E504B4B0082EAA1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0996D67A1E504B4B0082EAA1 /* ToolTipMenuTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ToolTipMenuTests.xctest;
+			remoteRef = 0996D6791E504B4B0082EAA1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		09B3D97B1E4AF55A00D210BC /* libRNShakeEvent.a */ = {
@@ -1211,7 +1257,10 @@
 				INFOPLIST_FILE = DisciplineTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.app/Discipline";
@@ -1226,7 +1275,10 @@
 				INFOPLIST_FILE = DisciplineTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.app/Discipline";
@@ -1258,6 +1310,7 @@
 					"$(SRCROOT)/../node_modules/cocoa-lumberjack/CocoaLumberjack/**",
 					"$(SRCROOT)/../node_modules/react-native-shake-event",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-tooltip/ToolTipMenu",
 				);
 				INFOPLIST_FILE = Discipline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1295,6 +1348,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
 					"$(SRCROOT)/../node_modules/cocoa-lumberjack/CocoaLumberjack/**",
 					"$(SRCROOT)/../node_modules/react-native-shake-event",
+					"$(SRCROOT)/../node_modules/react-native-tooltip/ToolTipMenu",
 				);
 				INFOPLIST_FILE = Discipline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1360,6 +1414,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
 					"$(SRCROOT)/../node_modules/cocoa-lumberjack/CocoaLumberjack/**",
 					"$(SRCROOT)/../node_modules/react-native-shake-event",
+					"$(SRCROOT)/../node_modules/react-native-tooltip/ToolTipMenu",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1414,6 +1469,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
 					"$(SRCROOT)/../node_modules/cocoa-lumberjack/CocoaLumberjack/**",
 					"$(SRCROOT)/../node_modules/react-native-shake-event",
+					"$(SRCROOT)/../node_modules/react-native-tooltip/ToolTipMenu",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

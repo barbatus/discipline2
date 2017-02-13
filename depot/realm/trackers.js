@@ -14,7 +14,7 @@ class TrackersDepot {
   _table: TrackersSchemaType;
 
   constructor() {
-    let table = DB.objects('Trackers');
+    const table = DB.objects('Trackers');
     if (!table.length) {
       DB.write(() => {
         DB.create('Trackers', {});
@@ -30,12 +30,13 @@ class TrackersDepot {
   getOne(trackId: number): Tracker {
     check.assert.number(trackId);
 
-    let trackers = this._trackers.filtered('id = $0', trackId);
+    const trackers = this._trackers
+      .filtered('id = $0', trackId);
     return trackers[0];
   }
 
   count(): number {
-    let trackers = this.getAll();
+    const trackers = this.getAll();
     return trackers.length;
   }
 
@@ -57,7 +58,7 @@ class TrackersDepot {
     });
 
     this.events.emit('added', {
-      trackId: tracker.id
+      trackId: tracker.id,
     });
 
     return tracker;
@@ -66,7 +67,7 @@ class TrackersDepot {
   remove(trackId: number): boolean {
     check.assert.number(trackId);
 
-    let tracker = this._trackers
+    const tracker = this._trackers
       .filtered('id = $0', trackId)[0];
     if (tracker) {
       DB.write(() => {
@@ -80,7 +81,7 @@ class TrackersDepot {
   }
 
   update(data: Tracker): boolean {
-    let tracker = this._trackers
+    const tracker = this._trackers
       .filtered('id = $0', data.id)[0];    
     if (tracker) {
       DB.write(() => {
@@ -89,59 +90,10 @@ class TrackersDepot {
     }
 
     this.events.emit('updated', {
-      trackId: tracker.id
+      trackId: tracker.id,
     });
 
     return !!tracker;
-  }
-
-  addTick(trackId: number,
-          dateTimeMs: number,
-          value?: number): Tick {
-    check.assert.number(trackId);
-    check.assert.number(dateTimeMs);
-
-    return ticksDB.add({
-      trackId: trackId,
-      dateTimeMs: dateTimeMs,
-      value: value
-    });
-  }
-
-  getTicks(trackId: number,
-           minDateMs: number,
-           maxDateMs?: number): Array<Tick> {
-    check.assert.number(trackId);
-    check.assert.number(minDateMs);
-
-    return ticksDB.getForPeriod(
-      trackId, minDateMs, maxDateMs);
-  }
-
-  // getLastTick(trackId: number): Tick {
-  //   return ticksDB.getLast(trackId);
-  // }
-
-  updLastTick(trackId: number, value: number) {
-    let tick = this.getLastTick(trackId);
-    ticksDB.update(tick.id, value);
-    return tick;
-  }
-
-  getTodayTicks(trackId: number): Array<Tick> {
-    check.assert.number(trackId);
-
-    return this.getTicks(trackId, time.getDateMs());
-  }
-
-  getTodayCount(trackId: number): number {
-    let ticks = this.getTodayTicks(trackId);
-    return ticks.length;
-  }
-
-  getTodayValues(trackId: number): Array<number> {
-    let ticks = this.getTodayTicks(trackId);
-    return ticks.map(tick => tick.value ? tick.value : 0);
   }
 
   get _trackers() {
@@ -149,5 +101,5 @@ class TrackersDepot {
   }
 };
 
-let depot = new TrackersDepot();
+const depot = new TrackersDepot();
 export default depot;

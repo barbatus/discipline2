@@ -29,9 +29,11 @@ export default class Trackers extends Component {
   constructor(props) {
     super(props);
 
+    const { trackers } = this.props;
     this.state = {
       swTrackers: new List(),
       scTrackers: new List(),
+      currentTracker: trackers.first(),
     };
   }
 
@@ -86,19 +88,19 @@ export default class Trackers extends Component {
     }, () => {
       Animated.timing(this._opacity, {
         duration: 500,
-        toValue: 1
+        toValue: 1,
       }).start(callback);
     });
   }
 
   _renderTrackers(trackers, callback) {
     this.setState({
-      swTrackers: trackers
+      swTrackers: trackers,
     });
 
     this.setTimeout(() => {
       this.setState({
-        scTrackers: trackers
+        scTrackers: trackers,
       }, callback);
     });
   }
@@ -149,8 +151,16 @@ export default class Trackers extends Component {
     this._sscroll.scrollTo(index, true);
   }
 
+  _onSlideChange(index, previ) {
+    this.setState({
+      currentTracker: this.tracker,
+    });
+    const { onSlideChange } = this.props;
+    caller(onSlideChange, index, previ);
+  }
+
   render() {
-    const { swTrackers, scTrackers } = this.state;
+    const { swTrackers, scTrackers, currentTracker } = this.state;
     const { removeIndex, addIndex, updateIndex } = this.props;
     const { onRemoveCompleted, onAddCompleted, onSaveCompleted } = this.props;
     const { onScroll, onSlideChange, onSlideNoChange } = this.props;
@@ -182,6 +192,7 @@ export default class Trackers extends Component {
         <TrackerCal
           ref='calendar'
           style={commonStyles.absFilled}
+          tracker={currentTracker}
         />
         <TrackerSwiper
           ref='swiper'
@@ -191,7 +202,7 @@ export default class Trackers extends Component {
           addIndex={addIndex}
           updateIndex={updateIndex}
           onScroll={onScroll}
-          onSlideChange={onSlideChange}
+          onSlideChange={::this._onSlideChange}
           onSlideNoChange={onSlideNoChange}
           onScaleStart={::this._onScaleStart}
           onScaleMove={::this._onScaleMove}

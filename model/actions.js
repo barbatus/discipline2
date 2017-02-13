@@ -1,5 +1,15 @@
 'use strict';
 
+export const tickGeoTracker = (tracker, value, data) => {
+  const dateTimeMs = time.getDateTimeMs();
+  const tick = depot.addTick(tracker.id, dateTimeMs, value, data);
+  return {
+    type: TICK_TRACKER,
+    tracker,
+    tick,
+  };
+};
+
 export const LOAD_TEST_DATA = 'LOAD_INIT';
 
 export const loadTestData = () => {
@@ -7,7 +17,7 @@ export const loadTestData = () => {
   return {
     type: LOAD_TEST_DATA,
     trackers,
-  }
+  };
 };
 
 export const REMOVE_TRACKER = 'REMOVE_TRACK';
@@ -17,7 +27,7 @@ export const removeTracker = tracker => {
   return {
     type: REMOVE_TRACKER,
     tracker,
-  }
+  };
 };
 
 export const ADD_TRACKER = 'ADD_TRACKER';
@@ -28,7 +38,7 @@ export const addTracker = (tracker, index) => {
     type: ADD_TRACKER,
     tracker,
     index,
-  }
+  };
 };
 
 export const UPDATE_TRACKER = 'UPDATE_TRACKER';
@@ -38,19 +48,19 @@ export const updateTracker = (tracker) => {
   return {
     type: UPDATE_TRACKER,
     tracker,
-  }
+  };
 };
 
 export const TICK_TRACKER = 'TICK_TRACKER';
 
 export const tickTracker = (tracker, value) => {
-  let dateTimeMs = time.getDateTimeMs();
-  let tick = depot.addTick(tracker.id, dateTimeMs, value);
+  const dateTimeMs = time.getDateTimeMs();
+  const tick = depot.addTick(tracker.id, dateTimeMs, value);
   return {
     type: TICK_TRACKER,
     tracker,
     tick,
-  }
+  };
 };
 
 export const UNDO_LAST_TICK = 'UNDO_LAST_TICK';
@@ -60,17 +70,17 @@ export const undoLastTick = tracker => {
   return {
     type: UNDO_LAST_TICK,
     tracker,
-  }
+  };
 };
 
 export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
 export const updateLastTick = (tracker, value) => {
-  depot.updLastTick(tracker.id, value);
+  depot.updateLastTick(tracker.id, value);
   return {
     type: UPDATE_LAST_TICK,
     tracker,
-  }
+  };
 };
 
 export const CHANGE_DAY = 'CHANGE_DAY';
@@ -80,5 +90,5 @@ export const changeDay = () => {
   return {
     type: CHANGE_DAY,
     trackers,
-  }
+  };
 };

@@ -24,6 +24,7 @@ const trackEqual = tracker1 => {
 export const trackers = handleActions({
   [LOAD_TEST_DATA]: (state, { trackers }) => {      
     return {
+      ...state,
       trackers: new List(trackers.map(
         tracker => Trackers.create(tracker))
       ),
@@ -34,14 +35,16 @@ export const trackers = handleActions({
     const index = state.trackers.findIndex(
       tracker => equal(tracker));
     return {
+      ...state,
       removeIndex: index,
       trackers: state.trackers.delete(index),
     }
   },
   [ADD_TRACKER]: (state, { tracker, index } ) => {
-    let trackers = state.trackers.insert(index,
+    const trackers = state.trackers.insert(index,
       Trackers.create(tracker));
     return {
+      ...state,
       addIndex: index,
       trackers,
     }
@@ -50,10 +53,10 @@ export const trackers = handleActions({
     const equal = trackEqual(tracker);
     const index = state.trackers.findIndex(
       tracker => equal(tracker));
-    const newTracker = Trackers.create(tracker);
     const trackers = state.trackers.update(index,
-      tracker => newTracker);
+      tracker => Trackers.getOne(tracker.id));
     return {
+      ...state,
       updateIndex: index,
       trackers,
     }
@@ -63,29 +66,39 @@ export const trackers = handleActions({
     const index = state.trackers.findIndex(
       tracker => equal(tracker));
     const trackers = state.trackers.update(index,
-      tracker => Trackers.create(tracker));
-    return { trackers };
+      tracker => Trackers.getOne(tracker.id));
+    return {
+      ...state,
+      trackers,
+    };
   },
   [UNDO_LAST_TICK]: (state, { tracker } ) => {
     const equal = trackEqual(tracker);
     const index = state.trackers.findIndex(
       tracker => equal(tracker));
     const trackers = state.trackers.update(index,
-      tracker => Trackers.create(tracker));
-    return { trackers };
+      tracker => Trackers.getOne(tracker.id));
+    return {
+      ...state,
+      trackers,
+    };
   },
   [UPDATE_LAST_TICK]: (state, { tracker }) => {
     const equal = trackEqual(tracker);
     const index = state.trackers.findIndex(
       tracker => equal(tracker));
     const trackers = state.trackers.update(index,
-      tracker => Trackers.create(tracker));
-    return { trackers };
+      tracker => Trackers.getOne(tracker.id));
+    return {
+      ...state,
+      trackers,
+    };
   },
   [CHANGE_DAY]: (state, { trackers }) => {
     return {
+      ...state,
       trackers: new List(trackers.map(
-        tracker => Trackers.create(tracker))
+        tracker => Trackers.getOne(tracker.id))
       ),
     };
   },

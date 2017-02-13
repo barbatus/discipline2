@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import moment from 'moment';
+
 import Calendar from '../calendar/Calendar';
 
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
@@ -26,6 +28,16 @@ export default class TrackerCal extends Component {
   constructor(props) {
     super(props);
     this._upDown.setOut();
+
+    const { tracker } = this.props;
+    this.state = {
+      ticks: this._getTicks(tracker, moment()),
+    };
+  }
+
+  shouldComponentUpdate(props, state) {
+    return (this.props.tracker !== props.tracker ||
+            this.state.ticks !== state.ticks);
   }
 
   setShown(value: number) {
@@ -36,34 +48,46 @@ export default class TrackerCal extends Component {
       this._upDown.setIn();
   }
 
+  _getTicks(tracker, date) {
+    const startDate = moment(date)
+      .subtract(1, 'month')
+      .startOf('month');
+    const endDate = moment(date)
+      .add(1, 'month')
+      .endOf('month')
+      .add(1, 'day');
+    const ticks = depot.getTicks(
+      tracker.id, startDate.valueOf(), endDate.valueOf());
+    return ticks;
+  }
+
+  _onMonthChanged(date) {
+    const { tracker } = this.props;
+    this.setState({
+      ticks: this._getTicks(tracker, date),
+    });
+  }
+
   render() {
-    const { style } = this.props;
+    const { style, tracker } = this.props;
+    const { ticks } = this.state;
+    const tickDates = ticks.map(tick => moment(tick.dateTimeMs));
 
     const calStyle = [style, this._upDown.style, {opacity: this._opacity}];
-
     return (
       <Animated.View style={calStyle}>
         <Calendar
           ref='calendar'
           customStyle={{
             calendarContainer: styles.container,
-            monthContainer: styles.monthContainer,
-            dayButton: styles.dayButton,
-            day: styles.day,
-            calendarHeading: styles.calendarHeading,
-            dayHeading: styles.dayHeading,
-            weekendHeading: styles.weekendHeading,
-            title: styles.title,
-            dayCircle: styles.dayCircle,
-            currentDayCircle: styles.currentDayCircle,
-            selectedDayCircle: styles.selectedDayCircle
           }}
           scrollEnabled={true}
-          eventDates={['2016-07-03', '2016-07-05', '2016-07-28', '2016-07-30']}
+          tickDates={tickDates}
           showControls={true}
           titleFormat={'MMMM YYYY'}
           prevButtonText={'Prev'}
           nextButtonText={'Next'}
+          onMonthChanged={::this._onMonthChanged}
         />
       </Animated.View>
     );
@@ -73,51 +97,5 @@ export default class TrackerCal extends Component {
 const styles = StyleSheet.create({
   container: {
     top: -40,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayButton: {
-    borderTopColor: 'transparent',
-    padding: 0,
-  },
-  day: {
-    fontSize: 18,
-    color: 'white',
-    fontWeight: '300',
-  },
-  weekendDayText: {
-    color: 'white',
-  },
-  selectedDayText: {
-    color: 'white',
-  },
-  currentDayText: {
-    color: 'white',
-  },
-  calendarHeading: {
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-  },
-  dayHeading: {
-    color: 'white',
-    fontSize: 13,
-    fontWeight: '200',
-  },
-  weekendHeading: {
-    color: 'white',
-    fontSize: 13,
-    fontWeight: '200',
-  },
-  title: {
-    fontSize: 19,
-    color: 'white',
-    fontWeight: '200',
-  },
-  currentDayCircle: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-  },
-  selectedDayCircle: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
 });

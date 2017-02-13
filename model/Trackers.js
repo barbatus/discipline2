@@ -1,40 +1,38 @@
 'use strict';
 
-import Tracker from './Tracker';
+import Tracker, {DistanceTracker} from './Tracker';
 
 import {TrackerType} from '../depot/consts';
 
-import DistanceTracker from './DistanceTracker';
-
 export default class Trackers {
   static getAll() {
-    let trackers = depot.trackers.getAll();
+    const trackers = depot.loadTrackers();
     return trackers.map(trackDoc => {
       return this.create(trackDoc);
     });
   }
 
-  static getOne(trackId) {
-    let trackDoc = depot.trackers.getOne(trackId);
+  static getOne(trackId: number) {
+    const trackDoc = depot.getTracker(trackId);
     return this.create(trackDoc);
   }
 
   static add(tracker) {
-    let trackDoc = depot.trackers.add(tracker);
+    const trackDoc = depot.addTracker(tracker);
     return this.create(trackDoc);
   }
 
   static addAt(tracker, index) {
-    let trackDoc = depot.trackers.addAt(tracker, index);
+    const trackDoc = depot.addTrackerAt(tracker, index);
     return this.create(trackDoc);
   }
 
   static remove(tracker) {
-    return depot.trackers.remove(tracker.id);
+    return depot.removeTracker(tracker.id);
   }
 
   static create(tracker) {
-    let type = tracker.typeId;
+    const type = tracker.typeId;
     switch (type) {
       case TrackerType.DISTANCE.valueOf():
         return new DistanceTracker(tracker);

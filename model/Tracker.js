@@ -19,6 +19,7 @@ export default class Tracker {
     this.title = tracker.title;
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
+    this.ticks = tracker.ticks || [];
   }
 
   get type() {
@@ -38,11 +39,11 @@ export default class Tracker {
   }
 
   get lastTick() {
-    return depot.trackers.getLastTick(this.id);
+    return this.ticks[this.count - 1];
   }
 
   get count() {
-    return depot.trackers.getTodayCount(this.id);
+    return this.ticks.length;
   }
 
   get checked() {
@@ -51,17 +52,39 @@ export default class Tracker {
   }
 
   get value() {
-    let values = depot.trackers.getTodayValues(this.id);
+    const values = this.ticks.map(tick => tick.value || 0);
     return values.reduceRight((p, n) => {
       return p + n;
     }, 0);
   }
+}
 
-  getTicks(startDateMs: number) {
-    return depot.trackers.getTicks(this.id, startDateMs);
+export class DistanceTracker extends Tracker {
+  get time() {
+    const data = this.ticks.map(tick => tick.data || {});
+    const times = data.map(item => item.time || 0);
+    return times.reduceRight((p, n) => {
+      return p + n;
+    }, 0);
   }
+  // onAppActive(diffMs, dateChanged) {
+  //   super.onAppActive(diffMs, dateChanged);
 
-  getTodayTicks() {
-    return depot.trackers.getTodayTicks(this.id);
-  }
+  //   if (!this.isActive) return;
+
+  //   // Each tracker can't run more than a day,
+  //   // so day's changed, we check how much time past
+  //   // since the day start to estimate exact time
+  //   // to add to the prev tracker click.
+  //   if (dateChanged) {
+  //     clearInterval(this._hInterval);
+  //     let past = time.getFromDayStartMs();
+  //     diffMs -= past;
+  //   }
+
+  //   this._time += diffMs;
+  //   this._updateTick(
+  //     this._initDist, this._dist,
+  //     this._initTime, this._time, true);
+  // }
 }

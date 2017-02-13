@@ -80,7 +80,7 @@ export default class FlipAnimation {
   _animateFlip(stopVal, op1, op2, opCondition, callback) {
     this._rotY.removeAllListeners();
 
-    let id = this._rotY.addListener(({ value }) => {
+    const id = this._rotY.addListener(({ value }) => {
       if (opCondition(value)) {
         this._rotY.removeListener(id);
         this._opacity1.setValue(op1);
@@ -88,7 +88,7 @@ export default class FlipAnimation {
       }
     });
 
-    let flip = Animation.timing(this._rotY, 1000,
+    const flip = Animation.timing(this._rotY, 1000,
       stopVal, Easing.inOut(Easing.sin));
     Animation.animate([flip], callback);
   }
