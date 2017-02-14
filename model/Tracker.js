@@ -48,14 +48,12 @@ export default class Tracker {
 
   get checked() {
     let count = this.count;
-    return count != 0;
+    return count !== 0;
   }
 
   get value() {
     const values = this.ticks.map(tick => tick.value || 0);
-    return values.reduceRight((p, n) => {
-      return p + n;
-    }, 0);
+    return values.reduceRight((p, n) => p + n, 0);
   }
 }
 
@@ -63,9 +61,7 @@ export class DistanceTracker extends Tracker {
   get time() {
     const data = this.ticks.map(tick => tick.data || {});
     const times = data.map(item => item.time || 0);
-    return times.reduceRight((p, n) => {
-      return p + n;
-    }, 0);
+    return times.reduceRight((p, n) => p + n, 0);
   }
   // onAppActive(diffMs, dateChanged) {
   //   super.onAppActive(diffMs, dateChanged);

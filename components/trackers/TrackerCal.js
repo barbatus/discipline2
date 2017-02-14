@@ -18,8 +18,6 @@ import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 import {commonStyles} from '../styles/common';
 import {slideWidth} from './styles/slideStyles';
 
-import {caller} from '../../utils/lang';
-
 export default class TrackerCal extends Component {
   _opacity = new Animated.Value(0);
 
@@ -28,16 +26,10 @@ export default class TrackerCal extends Component {
   constructor(props) {
     super(props);
     this._upDown.setOut();
-
-    const { tracker } = this.props;
-    this.state = {
-      ticks: this._getTicks(tracker, moment()),
-    };
   }
 
   shouldComponentUpdate(props, state) {
-    return (this.props.tracker !== props.tracker ||
-            this.state.ticks !== state.ticks);
+    return this.props.ticks !== props.ticks;
   }
 
   setShown(value: number) {
@@ -48,29 +40,8 @@ export default class TrackerCal extends Component {
       this._upDown.setIn();
   }
 
-  _getTicks(tracker, date) {
-    const startDate = moment(date)
-      .subtract(1, 'month')
-      .startOf('month');
-    const endDate = moment(date)
-      .add(1, 'month')
-      .endOf('month')
-      .add(1, 'day');
-    const ticks = depot.getTicks(
-      tracker.id, startDate.valueOf(), endDate.valueOf());
-    return ticks;
-  }
-
-  _onMonthChanged(date) {
-    const { tracker } = this.props;
-    this.setState({
-      ticks: this._getTicks(tracker, date),
-    });
-  }
-
   render() {
-    const { style, tracker } = this.props;
-    const { ticks } = this.state;
+    const { style, ticks, todayMs, onMonthChanged } = this.props;
     const tickDates = ticks.map(tick => moment(tick.dateTimeMs));
 
     const calStyle = [style, this._upDown.style, {opacity: this._opacity}];
@@ -81,13 +52,14 @@ export default class TrackerCal extends Component {
           customStyle={{
             calendarContainer: styles.container,
           }}
+          todayMs={todayMs}
           scrollEnabled={true}
           tickDates={tickDates}
           showControls={true}
           titleFormat={'MMMM YYYY'}
           prevButtonText={'Prev'}
           nextButtonText={'Next'}
-          onMonthChanged={::this._onMonthChanged}
+          onMonthChanged={onMonthChanged}
         />
       </Animated.View>
     );

@@ -13,6 +13,7 @@ import {
   UNDO_LAST_TICK,
   UPDATE_LAST_TICK,
   CHANGE_DAY,
+  UPDATE_CALENDAR,
 } from './actions';
 
 import Trackers from './Trackers';
@@ -100,6 +101,13 @@ export const trackers = handleActions({
       trackers: new List(trackers.map(
         tracker => Trackers.getOne(tracker.id))
       ),
+    };
+  },
+  [UPDATE_CALENDAR]: (state, { tracker, todayMs, ticks }) => {
+    return {
+      ...state,
+      todayMs,
+      ticks,
     };
   },
 }, {});

@@ -1,5 +1,17 @@
 'use strict';
 
+export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
+
+export const updateCalendar = (tracker, todayMs, startDateMs, endDateMs) => {
+  const ticks = depot.getTicks(tracker.id, startDateMs, endDateMs);
+  return {
+    type: UPDATE_CALENDAR,
+    todayMs,
+    tracker,
+    ticks,
+  }
+};
+
 export const tickGeoTracker = (tracker, value, data) => {
   const dateTimeMs = time.getDateTimeMs();
   const tick = depot.addTick(tracker.id, dateTimeMs, value, data);

@@ -151,14 +151,12 @@ class MainScreen extends Component {
           onSaveCompleted={::this._setMainViewBtns}
           onCancel={::this._setMainViewBtns}
         />
-
         <NewTrackerView
           ref='newTrackView'
           posX={1}
           onAccept={::this._onAccept}
           onCancel={::this._cancelNewTracker}
         />
-
         <IconsDlg ref='iconDlg' />
       </View>
     );

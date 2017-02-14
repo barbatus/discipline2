@@ -15,17 +15,31 @@ export const minMoveScale = 0.5;
 export class MoveUpScaleResponderAnim {
   _scale = new Animated.Value(1);
 
-  constructor(responder: MoveUpDownResponder, slideHeight: number,
-              onScale?: Function, onStart?: Function, onDone?: Function) {
+  _slideHeight = 0;
+
+  constructor(slideHeight: number) {
+    this._slideHeight = slideHeight;
+  }
+
+  get style(): Object {
+    return {
+      transform: [{
+        scale: this._scale
+      }]
+    }
+  }
+
+  subscribe(responder: MoveUpDownResponder, 
+            onScale?: Function, onStart?: Function, onDone?: Function) {
+    assert.ok(responder);
 
     this._scale.addListener(({value}) => {
       caller(onScale, value <= minScale ? 0 : value);
     });
-
     responder.subscribeUp({
       onMove: dy => {
         const speed = Math.abs(dy) * 2;
-        let scale = (slideHeight - speed) / slideHeight;
+        let scale = (this._slideHeight - speed) / this._slideHeight;
         scale = Math.max(minMoveScale, scale);
 
         this._scale.setValue(scale);
@@ -38,14 +52,6 @@ export class MoveUpScaleResponderAnim {
         }
       }
     });
-  }
-
-  get style(): Object {
-    return {
-      transform: [{
-        scale: this._scale
-      }]
-    }
   }
 
   dispose() {

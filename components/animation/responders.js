@@ -7,8 +7,6 @@ import {PanResponder} from 'react-native';
 import {caller} from '../../utils/lang';
 
 export class MoveUpDownResponder {
-  _stopped = false;
-
   constructor() {
     this._panHandlers =
       this._createResponder().panHandlers;
@@ -16,10 +14,6 @@ export class MoveUpDownResponder {
 
   get panHandlers() {
     return this._panHandlers;
-  }
-
-  get stopped() {
-    return this._stopped;
   }
 
   subscribeUp({ onMove, onMoveStart, onMoveDone }) {
@@ -34,12 +28,13 @@ export class MoveUpDownResponder {
     this._onMoveDownDone = onMoveDone;
   }
 
-  stop() {
-    this._stopped = true;
-  }
-
-  resume() {
-    this._stopped = false;
+  dispose() {
+    this._onMoveUp = null;
+    this._onMoveUpStart = null;
+    this._onMoveUpDone = null;
+    this._onMoveDown = null;
+    this._onMoveDownStart = null;
+    this._onMoveDownDone = null;
   }
 
   _createResponder() {

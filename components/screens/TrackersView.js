@@ -10,12 +10,16 @@ import {
 
 import {connect} from 'react-redux';
 
+import moment from 'moment';
+
 import {
   NavCancelButton,
   NavAcceptButton,
 } from '../nav/buttons';
 
 import ScreenView from './ScreenView';
+
+import TrackerCal from '../trackers/TrackerCal';
 
 import Trackers from '../trackers/Trackers';
 
@@ -25,6 +29,7 @@ import {
   updateTracker,
   undoLastTick,
   updateLastTick,
+  updateCalendar,
 } from '../../model/actions';
 
 import {commonStyles} from '../styles/common';
@@ -33,37 +38,43 @@ import {caller} from '../../utils/lang';
 
 class TrackersView extends ScreenView {
   get content() {
+    const { ticks, todayMs } = this.props;
     const { trackers, removeIndex, addIndex, updateIndex } = this.props;
-    const {
-      onRemoveCompleted,
-      onAddCompleted,
-      onSaveCompleted,
-      onCalendarShown,
-    } = this.props;
+    const { onRemoveCompleted, onAddCompleted, onSaveCompleted } = this.props;
     const { onScroll, onSlideChange, onSlideNoChange } = this.props;
 
     return (
-      <Trackers
-        ref='trackers'
-        trackers={trackers}
-        removeIndex={removeIndex}
-        addIndex={addIndex}
-        updateIndex={updateIndex}
-        onScroll={onScroll}
-        onSlideChange={onSlideChange}
-        onSlideNoChange={onSlideNoChange}
-        onSwiperDown={onCalendarShown}
-        onRemove={::this._onRemove}
-        onEdit={::this._onEdit}
-        onTick={::this._onTick}
-        onStop={::this._onStopLastTick}
-        onUndo={::this._onUndoLastTick}
-        onRemoveCompleted={onRemoveCompleted}
-        onAddCompleted={onAddCompleted}
-        onSaveCompleted={onSaveCompleted}
-        onSwiperScaleMove={::this._onSwiperScaleMove}
-        onSwiperMoveDown={::this._onSwiperMoveDown}
-      />
+      <Animated.View style={commonStyles.flexFilled}>
+        <TrackerCal
+          ref='calendar'
+          style={commonStyles.absFilled}
+          todayMs={todayMs}
+          ticks={ticks}
+          onMonthChanged={::this._onMonthChanged}
+        />
+        <Trackers
+          ref='trackers'
+          style={commonStyles.absFilled}
+          trackers={trackers}
+          removeIndex={removeIndex}
+          addIndex={addIndex}
+          updateIndex={updateIndex}
+          onScroll={onScroll}
+          onSlideChange={onSlideChange}
+          onSlideNoChange={onSlideNoChange}
+          onRemove={::this._onRemove}
+          onEdit={::this._onEdit}
+          onTick={::this._onTick}
+          onStop={::this._onStopLastTick}
+          onUndo={::this._onUndoLastTick}
+          onRemoveCompleted={onRemoveCompleted}
+          onAddCompleted={onAddCompleted}
+          onSaveCompleted={onSaveCompleted}
+          onSwiperScaleMove={::this._onSwiperScaleMove}
+          onSwiperMoveDown={::this._onSwiperMoveDown}
+          onSwiperMoveDownStart={::this._onSwiperMoveDownStart}
+        />
+      </Animated.View>
     );
   }
 
@@ -108,6 +119,37 @@ class TrackersView extends ScreenView {
   _onSwiperMoveDown(dv: number) {
     const { navBar } = this.context;
     navBar.setOpacity(1 - dv);
+    this.refs.calendar.setShown(dv);
+  }
+
+  _onSwiperMoveDownStart() {
+    const date = moment();
+    const startDateMs = moment(date)
+      .subtract(1, 'month')
+      .startOf('month')
+      .valueOf();
+    const endDateMs = moment(date)
+      .add(1, 'month')
+      .endOf('month')
+      .add(1, 'day')
+      .valueOf();
+    this.props.onCalendarUpdate(this.current,
+      date.valueOf(), startDateMs, endDateMs);
+  }
+
+  _onMonthChanged(date) {
+    const dateMs = date.valueOf();
+    const startDateMs = moment(date)
+      .subtract(1, 'month')
+      .startOf('month')
+      .valueOf();
+    const endDateMs = moment(date)
+      .add(1, 'month')
+      .endOf('month')
+      .add(1, 'day')
+      .valueOf();
+    this.props.onCalendarUpdate(this.current,
+      dateMs, startDateMs, endDateMs);
   }
 
   // Edit tracker events.
@@ -152,10 +194,14 @@ export default connect(
       addIndex: state.trackers.addIndex,
       removeIndex: state.trackers.removeIndex,
       updateIndex: state.trackers.updateIndex,
+      ticks: state.trackers.ticks || [],
+      todayMs: state.trackers.todayMs,
     };
   },
   dispatch => {
     return {
+      onCalendarUpdate: (tracker, todayMs, startDateMs, endDateMs) => dispatch(
+        updateCalendar(tracker, todayMs, startDateMs, endDateMs)),
       onRemove: tracker => dispatch(
         removeTracker(tracker)),
       onUpdate: tracker => dispatch(

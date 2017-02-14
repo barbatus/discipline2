@@ -19,7 +19,6 @@ import {
   minScale,
   MoveUpScaleResponderAnim,
 } from '../animation/MoveUpScaleResponderAnim';
-import {MoveDownResponderAnim} from '../animation/MoveDownResponderAnim';
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 import {MoveUpDownResponder} from '../animation/responders';
 
@@ -35,26 +34,16 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   _upDown = new ScreenSlideUpDownAnim(minScale);
 
-  constructor(props) {
-    super(props);
+  _moveScale = new MoveUpScaleResponderAnim(slideHeight);
 
-    const { onScaleMove, onScaleDone, onScaleStart,
-            onMoveDown, onMoveDownDone, onMoveDownStart } = props;
-    this._responder = new MoveUpDownResponder();
-
-    this._moveScale = new MoveUpScaleResponderAnim(this._responder,
-      slideHeight, onScaleMove, onScaleStart, onScaleDone);
-
-    this._moveDown = new MoveDownResponderAnim(this._responder,
-      slideHeight, onMoveDown, onMoveDownStart, () => {
-        this._setEnabled(false);
-        this._responder.stop();
-        caller(onMoveDownDone);
-      });
-  }
+  _responder = new MoveUpDownResponder();
 
   get current() {
     return this.state.trackers.get(this.index);
+  }
+
+  get responder() {
+    return this._responder;
   }
 
   get editedTracker() {
@@ -81,7 +70,13 @@ export default class TrackerSwiper extends TrackerRenderer {
   componentWillUnmount() {
     RNShakeEvent.removeEventListener('shake');
     this._moveScale.dispose();
-    this._moveDown.dispose();
+    this._responder.dispose();
+  }
+
+  componentDidMount() {
+    const { onScaleMove, onScaleDone, onScaleStart } = this.props;
+    this._moveScale.subscribe(this._responder,
+      onScaleMove, onScaleStart, onScaleDone);
   }
 
   shouldComponentUpdate(props, state) {
@@ -89,7 +84,12 @@ export default class TrackerSwiper extends TrackerRenderer {
     return should || this.state.enabled !== state.enabled;
   }
 
-  componentWillReceiveProps({ trackers, removeIndex, addIndex, updateIndex }) {
+  componentWillReceiveProps({ enabled, trackers, removeIndex, addIndex, updateIndex }) {
+    const prevEnabled = this.props.enabled;
+    if (prevEnabled !== enabled) {
+      this.setState({ enabled });
+    }
+
     const prevTrackers = this.props.trackers;
     if (prevTrackers === trackers) return;
 
@@ -114,24 +114,13 @@ export default class TrackerSwiper extends TrackerRenderer {
     }
   }
 
-  onTap() {
-    super.onTap();
-
-    if (this._responder.stopped) {
-      this._moveDown.animateOut(() => {
-        this._responder.resume();
-        this._setEnabled(true);
-      });
-    }
-  }
-
   shakeCurrent() {
     const trackerId = this.current.id;
     this.refs[trackerId].shake();
   }
 
   showEdit(callback) {
-    this.setState({ enabled: false }, () => {
+    this.setState({enabled: false}, () => {
       const trackerId = this.current.id;
       this.refs[trackerId].showEdit(callback);
     });
@@ -191,9 +180,10 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   render() {
     const { style, onScroll, onSlideNoChange } = this.props;
+    const { trackers, enabled } = this.state;
 
     const slideStyle = {width: screenWidth, height: slideHeight};
-    const slides = this.state.trackers.map(
+    const slides = trackers.map(
       tracker => {
         return (
           <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
@@ -207,15 +197,14 @@ export default class TrackerSwiper extends TrackerRenderer {
         ref='swiper'
         style={commonStyles.flexFilled}
         slides={slides}
-        scrollEnabled={this.state.enabled}
+        scrollEnabled={enabled}
         onTouchMove={onScroll}
         onSlideChange={::this._onSlideChange}
         onSlideNoChange={onSlideNoChange}>
       </Swiper>
     );
 
-    const transform = Animation.combineStyles(
-      this._moveScale, this._moveDown, this._upDown);
+    const transform = Animation.combineStyles(this._moveScale, this._upDown);
     const swiperStyle = [style, transform];
 
     return (

@@ -67,7 +67,7 @@ export default class TrackerScroll extends TrackerRenderer {
 
     return (
       <Animated.View style={[style, {
-          opacity: this._opacity
+          opacity: this._opacity,
         }
       ]}>
         <Scroll

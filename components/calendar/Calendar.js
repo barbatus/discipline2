@@ -28,9 +28,8 @@ export default class Calendar extends Component {
     monthNames: PropTypes.array,
     onDateSelect: PropTypes.func,
     onMonthChanged: PropTypes.func,
-    selectedDate: PropTypes.any,
     titleFormat: PropTypes.string,
-    today: PropTypes.any,
+    todayMs: PropTypes.number,
     weekStart: PropTypes.number,
     monthToRender: PropTypes.number,
   };
@@ -44,7 +43,7 @@ export default class Calendar extends Component {
       'July', 'August', 'September', 'October', 'November', 'December',
     ],
     titleFormat: 'MMMM YYYY',
-    today: moment(),
+    todayMs: moment().valueOf(),
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
   };
@@ -52,11 +51,20 @@ export default class Calendar extends Component {
   constructor(props) {
     super(props);
 
-    const { today, selectedDate } = this.props;
+    const { todayMs } = this.props;
     this.state = {
-      currentMonth: today ? moment(today) : null,
-      selectedDate: selectedDate ? moment(selectedDate) : null,
+      currentMonth: moment(todayMs),
+      selectedDate: null,
     };
+  }
+
+  shouldComponentUpdate(props, state) {
+    if (this.props.todayMs !== props.todayMs) {
+      this.state.currentMonth = moment(props.todayMs);
+      this.state.selectedDate = null;
+      return true;
+    }
+    return this.props.ticks !== props.ticks;
   }
 
   componentDidMount() {
@@ -107,8 +115,8 @@ export default class Calendar extends Component {
     this._calendar.scrollTo({ y: 0, x: scrollToX, animated });
   }
 
-  _scrollEnded(event) {
-    const position = event.nativeEvent.contentOffset.x;
+  _scrollEnded({ nativeEvent }) {
+    const position = nativeEvent.contentOffset.x;
     const currentPage = position / screenWidth;
     const index = int(this.props.monthToRender / 2);
     const { currentMonth } = this.state;

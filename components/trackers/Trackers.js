@@ -5,7 +5,8 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   View,
-  Animated
+  Animated,
+  InteractionManager,
 } from 'react-native';
 
 import reactMixin from 'react-mixin';
@@ -15,16 +16,20 @@ import {List} from 'immutable';
 
 import TrackerSwiper from './TrackerSwiper';
 import TrackerScroll from './TrackerScroll';
-import TrackerCal from './TrackerCal';
 
+import {MoveDownResponderAnim} from '../animation/MoveDownResponderAnim';
 import TrackerStore from '../../model/Trackers';
 
 import {commonStyles} from '../styles/common';
+
+import {slideHeight} from './styles/slideStyles';
 
 import {caller} from '../../utils/lang';
 
 export default class Trackers extends Component {
   _opacity = new Animated.Value(0);
+
+  _moveDown = new MoveDownResponderAnim(slideHeight);
 
   constructor(props) {
     super(props);
@@ -34,6 +39,7 @@ export default class Trackers extends Component {
       swTrackers: new List(),
       scTrackers: new List(),
       currentTracker: trackers.first(),
+      swiperEnabled: true,
     };
   }
 
@@ -49,14 +55,31 @@ export default class Trackers extends Component {
     return this._swiper.editedTracker;
   }
 
+  componentWillUnmount() {
+    this._moveDown.dispose();
+  }
+
   componentDidMount() {
-    const { trackers } = this.props;
+    const {
+      trackers, onSwiperMoveDown, onSwiperMoveDownStart,
+    } = this.props;
 
     if (trackers) {
       this._renderTracker(trackers.first(), () => {
         this._renderTrackers(trackers);
       });
     }
+
+    this._moveDown.subscribe(this._swiper.responder,
+      onSwiperMoveDown,
+      () => {
+        this.setState({
+          swiperEnabled: false,
+        });
+        InteractionManager.runAfterInteractions(() => {
+          caller(onSwiperMoveDownStart);
+        });
+      });
   }
 
   componentWillReceiveProps({ trackers }) {
@@ -132,12 +155,16 @@ export default class Trackers extends Component {
     this._swiper.hide();
   }
 
-  _onMoveDown(dv: number) {
-    this.refs.calendar.setShown(dv);
-    caller(this.props.onSwiperMoveDown, dv);
+  _onTap() {
+    if (this._moveDown.in) {
+      this._moveDown.animateOut(() => this.setState({
+          swiperEnabled: true,
+        })
+      );
+    }
   }
 
-  _onCenterSlideTap(index) {
+  _onCenterSlideTap(index: number) {
     this._bscroll.hide();
     this._sscroll.hide();
 
@@ -146,12 +173,12 @@ export default class Trackers extends Component {
     }, false);
   }
 
-  _onSmallSlideTap(index) {
+  _onSmallSlideTap(index: number) {
     this._bscroll.scrollTo(index, true);
     this._sscroll.scrollTo(index, true);
   }
 
-  _onSlideChange(index, previ) {
+  _onSlideChange(index: number, previ: number) {
     this.setState({
       currentTracker: this.tracker,
     });
@@ -160,17 +187,18 @@ export default class Trackers extends Component {
   }
 
   render() {
-    const { swTrackers, scTrackers, currentTracker } = this.state;
+    const { swTrackers, scTrackers, swiperEnabled } = this.state;
     const { removeIndex, addIndex, updateIndex } = this.props;
     const { onRemoveCompleted, onAddCompleted, onSaveCompleted } = this.props;
     const { onScroll, onSlideChange, onSlideNoChange } = this.props;
     const { onUndo, onTick, onStop } = this.props;
+    const { style } = this.props;
 
+    const combinedStyle = [
+      style, this._moveDown.style, {opacity: this._opacity},
+    ];
     return (
-      <Animated.View style={[
-          commonStyles.absFilled,
-          {opacity: this._opacity}]
-        }>
+      <Animated.View style={combinedStyle}>
         <TrackerScroll
           ref='bscroll'
           trackers={scTrackers}
@@ -189,13 +217,9 @@ export default class Trackers extends Component {
           editable={false}
           onSlideTap={::this._onSmallSlideTap}
         />
-        <TrackerCal
-          ref='calendar'
-          style={commonStyles.absFilled}
-          tracker={currentTracker}
-        />
         <TrackerSwiper
           ref='swiper'
+          enabled={swiperEnabled}
           trackers={swTrackers}
           style={commonStyles.absFilled}
           removeIndex={removeIndex}
@@ -207,7 +231,7 @@ export default class Trackers extends Component {
           onScaleStart={::this._onScaleStart}
           onScaleMove={::this._onScaleMove}
           onScaleDone={::this._onScaleDone}
-          onMoveDown={::this._onMoveDown}
+          onTap={::this._onTap}
           onRemove={::this._onRemove}
           onEdit={::this._onEdit}
           onTick={onTick}
