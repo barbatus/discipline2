@@ -259,4 +259,6 @@ class Depot {
   }
 };
 
-module.exports = new Depot();
+const depot = new Depot();
+export default depot;
+

@@ -11,17 +11,17 @@ const tickDataSchema = 'DistData';
 export default class DistanceTracker {
   _hInterval = null;
 
-  _time: number = 0;
+  _time = 0;
 
-  _dist: number = 0;
+  _dist = 0;
 
   _latLon = {};
 
-  _distInterva: number = 5.0;
+  _distInterval = 5.0;
 
-  _timeInterval: number = 100; // ms
+  _timeInterval = 100; // ms
 
-  _starting: boolean = false;
+  _starting = false;
 
   constructor(distInterval, timeInterval) {
     this._distInterval = distInterval;
@@ -60,7 +60,7 @@ export default class DistanceTracker {
   stop(onStop: Function) {
     if (!this.active) return;
 
-    let reset = () => {
+    const reset = () => {
       this._time = 0;
       this._dist = 0;
       this._latLon = {};
@@ -80,42 +80,6 @@ export default class DistanceTracker {
       reset();
     });
   }
-
-  onAppActive(diffMs, dateChanged) {
-    super.onAppActive(diffMs, dateChanged);
-
-    if (!this.isActive) return;
-
-    // Each tracker can't run more than a day,
-    // so day's changed, we check how much time past
-    // since the day start to estimate exact time
-    // to add to the prev tracker click.
-    if (dateChanged) {
-      clearInterval(this._hInterval);
-      let past = time.getFromDayStartMs();
-      diffMs -= past;
-    }
-
-    this._time += diffMs;
-    this._updateTick(
-      this._initDist, this._dist,
-      this._initTime, this._time, true);
-  }
-
-  // _updateTick(initDist, dist, initTime, time, save) {
-  //   if (save) {
-  //     requestAnimationFrame(() => {
-  //       let tick = this.lastTick;
-  //       depot.ticks.updateData(tickDataSchema, tick.id, { time });
-  //       this.updLastTick(dist);
-  //     });
-  //   }
-
-  //   this.fireValue({
-  //     dist: initDist + dist,
-  //     time: initTime + time
-  //   });
-  // }
 
   _onPosition(pos) {
     const { latitude, longitude } = pos.coords;

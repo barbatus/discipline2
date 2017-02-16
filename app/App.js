@@ -24,7 +24,6 @@ export default class App extends Component {
       touchToClose: false,
       isOpen: false,
     };
-    const store = this.props.store;
     this._dayUpdate = new DayUpdateEvent();
   }
 

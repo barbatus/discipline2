@@ -64,7 +64,8 @@ export default class Calendar extends Component {
       this.state.selectedDate = null;
       return true;
     }
-    return this.props.ticks !== props.ticks;
+    return this.props.ticks !== props.ticks ||
+           this.state.selectedDate !== state.selectedDate;
   }
 
   componentDidMount() {

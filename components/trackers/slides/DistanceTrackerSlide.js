@@ -20,11 +20,7 @@ import {
   trackerStyles,
 } from '../styles/trackerStyles';
 
-import {slideWidth} from '../styles/slideStyles';
-
-import TrackerSlide from './TrackerSlide';
-
-import TimeLabel from './TimeLabel';
+import registry, {DlgType} from '../../dlg/registry';
 
 import {formatDistance} from '../../../utils/format';
 
@@ -33,6 +29,12 @@ import {caller} from '../../../utils/lang';
 import {tickGeoTracker} from '../../../model/actions';
 
 import DistanceTracker from '../../../geo/DistanceTracker';
+
+import {slideWidth} from '../styles/slideStyles';
+
+import TrackerSlide from './TrackerSlide';
+
+import TimeLabel from './TimeLabel';
 
 class DistanceData extends Component {
   constructor(props) {
@@ -88,18 +90,6 @@ const DIST_INTRVL = 5.0;
 
 const TIME_INTRVL = 100; // ms
 
-const tickDataSchema = 'DistData';
-
-function getTime(tracker) {
-  let ticks = tracker.getTodayTicks();
-  let data = ticks.map(tick => depot.ticks.getData(
-    tickDataSchema, tick.id));
-  let times = data.map(item => item.time);
-  return times.reduceRight((p, n) => {
-    return p + n;
-  }, 0);
-}
-
 class DistanceTrackerSlide extends TrackerSlide {
   _distTracker = null;
 
@@ -152,8 +142,21 @@ class DistanceTrackerSlide extends TrackerSlide {
     const active = this.state.active;
     return (
       <View style={styles.footerContainer}>
-        { active ? renderBtn('STOP', this._onStopBtn) :
-                   renderBtn('START', this._onStartBtn) }
+        <View style={styles.startStopBtn}>
+          { active ? renderBtn('STOP', this._onStopBtn) :
+                     renderBtn('START', this._onStartBtn) }
+        </View>
+        <View style={styles.seeMap}>
+          <Text style={trackerStyles.footerText}>
+            See {
+              <Text
+                style={styles.seeMapLink}
+                onPress={::this._showMap}>
+                map
+              </Text>
+            }
+          </Text>
+        </View>
       </View>
     );
   }
@@ -196,13 +199,25 @@ class DistanceTrackerSlide extends TrackerSlide {
     time = this._initTime + time; 
     this.refs.dist.setDistAndTime(dist, time);
   }
+
+  _showMap() {
+    const initRegion = {
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0121,
+    };
+    const dlg = registry.get(DlgType.MAPS);
+    dlg.show(initRegion);
+  }
 };
 
 export default connect(null,
   dispatch => {
     return {
       onStop: (tracker, dist, time) => dispatch(
-        tickGeoTracker(tracker, dist, { time }))
+        tickGeoTracker(tracker, dist, { time })
+      )
     };
   }
 )(DistanceTrackerSlide);
@@ -222,9 +237,9 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   button: {
     width: 70,
@@ -262,5 +277,14 @@ const styles = StyleSheet.create({
     color: '#9B9B9B',
     textAlign: 'center',
     fontWeight: '200',
+  },
+  startStopBtn: {
+    flex: 0.6,
+  },
+  seeMap: {
+    flex: 0.4,
+  },
+  seeMapLink: {
+    textDecorationLine: 'underline',
   },
 });

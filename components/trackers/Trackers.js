@@ -107,7 +107,7 @@ export default class Trackers extends Component {
 
   _renderTracker(tracker, callback) {
     this.setState({
-      swTrackers: new List([tracker])
+      swTrackers: new List([tracker]),
     }, () => {
       Animated.timing(this._opacity, {
         duration: 500,

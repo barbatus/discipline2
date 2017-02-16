@@ -1,7 +1,8 @@
 'use strict';
 
 export const DlgType = {
-  ICONS: 'icons'
+  ICONS: 'icons',
+  MAPS: 'maps',
 };
 
 class DlgRegistry {

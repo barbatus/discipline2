@@ -30,6 +30,7 @@ import TrackersView from './TrackersView';
 import NewTrackerView from './NewTrackerView';
 
 import IconsDlg from '../dlg/IconsDlg';
+import MapsDlg from '../dlg/MapsDlg';
 import registry, {DlgType} from '../dlg/registry';
 
 import {addTracker} from '../../model/actions';
@@ -44,7 +45,8 @@ class MainScreen extends Component {
   _active = false;
 
   componentDidMount() {
-    registry.register(DlgType.ICONS, this.refs.iconDlg);
+    registry.register(DlgType.ICONS, this.refs.iconsDlg);
+    registry.register(DlgType.MAPS, this.refs.mapsDlg);
     this._setMainViewBtns();
   }
 
@@ -157,7 +159,8 @@ class MainScreen extends Component {
           onAccept={::this._onAccept}
           onCancel={::this._cancelNewTracker}
         />
-        <IconsDlg ref='iconDlg' />
+        <IconsDlg ref='iconsDlg' />
+        <MapsDlg ref='mapsDlg' />
       </View>
     );
   }

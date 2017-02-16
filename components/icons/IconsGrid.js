@@ -13,25 +13,25 @@ import {
   View,
   StyleSheet,
   ListView,
-  Image
+  Image,
 } from 'react-native';
 
 import {caller} from '../../utils/lang';
 
-let IconsGrid = React.createClass({
+const IconsGrid = React.createClass({
     getInitialState: function() {
-      let ds = new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
+      const ds = new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2,
       });
-
       return { ds };
     },
 
     _getIcons(): Array<Array<UserIcon>> {
-      let icons = UserIconsStore.getAll();
+      const icons = UserIconsStore.getAll();
 
-      let iconRows = [], iconRow = [];
-      let { count } = this._getColSize();
+      let iconRow = [];
+      const iconRows = [];
+      const { count } = this._getColSize();
       icons.forEach((icon, index) => {
         iconRow.push(icon);
         if ((index + 1) % count === 0) {
@@ -59,14 +59,14 @@ let IconsGrid = React.createClass({
         count = 4;
       }
 
-      let pad = (count * 0);
-      let width = ((window.width - pad) / count) >> 0;
+      const pad = (count * 0);
+      const width = ((window.width - pad) / count) >> 0;
 
       return { width, count };
     },
 
     _renderIcon(icon: UserIcon) {
-      let { width } = this._getColSize();
+      const { width } = this._getColSize();
 
       return (
         <TouchableOpacity
@@ -84,7 +84,7 @@ let IconsGrid = React.createClass({
     },
 
     _renderRow: function(icons) {
-      let items = icons.map(icon => {
+      const items = icons.map(icon => {
         return this._renderIcon(icon);
       });
 
@@ -96,8 +96,7 @@ let IconsGrid = React.createClass({
     },
 
     render() {
-      let icons = this._getIcons();
-
+      const icons = this._getIcons();
       return (
         <ListView
           dataSource={this.state.ds.cloneWithRows(icons)}
@@ -110,24 +109,24 @@ let IconsGrid = React.createClass({
 
 const styles = StyleSheet.create({
   grid: {
-    paddingTop: 20
+    paddingTop: 20,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginBottom: 8
+    marginBottom: 8,
   },
   col: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 0
+    padding: 0,
   },
   icon: {
     resizeMode: 'contain',
     width: 50,
-    height: 50
-  }
+    height: 50,
+  },
 });
 
-module.exports = IconsGrid;
+export default IconsGrid;

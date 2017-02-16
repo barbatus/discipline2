@@ -21,6 +21,7 @@
     "react-native-calendar": "^0.7.0",
     "react-native-device-info": "^0.9.9",
     "react-native-linear-gradient": "^2.0.0",
+    "react-native-maps": "^0.13.0",
     "react-native-navbar": "^1.6.0",
     "react-native-shake-event": "^3.0.0",
     "react-native-side-menu": "^0.20.1",

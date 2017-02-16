@@ -1,5 +1,3 @@
-'use strict';
-
 declare interface IModal {
   hide();
 

@@ -4,6 +4,8 @@ import Tracker, {DistanceTracker} from './Tracker';
 
 import {TrackerType} from '../depot/consts';
 
+import depot from '../depot/depot';
+
 export default class Trackers {
   static getAll() {
     const trackers = depot.loadTrackers();

@@ -1,5 +1,7 @@
 'use strict';
 
+import depot from '../depot/depot';
+
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
 
 export const updateCalendar = (tracker, todayMs, startDateMs, endDateMs) => {
