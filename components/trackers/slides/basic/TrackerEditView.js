@@ -29,6 +29,16 @@ import BaseTrackerView from './BaseTrackerView';
 
 import Trackers from '../../../../model/Trackers';
 
+import {caller} from '../../../../utils/lang';
+
+function compareTrackers(track1, track2) {
+  return (
+    track1.typeId !== track2.typeId ||
+    track1.iconId !== track2.iconId ||
+    track1.title !== track2.title
+  );
+}
+
 export default class TrackerEditView extends BaseTrackerView {
   constructor(props) {
     super(props);
@@ -49,17 +59,6 @@ export default class TrackerEditView extends BaseTrackerView {
     return this.state.tracker !== state.tracker;
   }
 
-  reset() {
-    this.setState({
-      tracker: Trackers.create({}),
-    });
-    this.refs.title.blur();
-  }
-
-  get tracker() {
-    return this.state.tracker;
-  }
-
   _onIconEdit() {
     const dlg = registry.get(DlgType.ICONS);
     dlg.show(iconId => {
@@ -67,6 +66,7 @@ export default class TrackerEditView extends BaseTrackerView {
       tracker = Trackers.create(tracker);
       tracker.iconId = iconId;
       this.setState({ tracker }, ::dlg.hide);
+      caller(this.props.onTrackerChange, tracker);
     });
   }
 
@@ -75,10 +75,11 @@ export default class TrackerEditView extends BaseTrackerView {
     tracker = Trackers.create(tracker);
     tracker.title = title;
     this.setState({ tracker });
+    caller(this.props.onTrackerChange, tracker);
   }
 
   _renderDeleteRow() {
-    return this.props.delete ? (
+    return this.props.allowDelete ? (
       <View style={propsStyles.group}>
         <View style={[propsStyles.row]}>
           <TouchableOpacity
@@ -141,7 +142,7 @@ export default class TrackerEditView extends BaseTrackerView {
                 </View>
                 <TouchableOpacity
                     style={propsStyles.colRight}
-                    onPress={this.props.onTypeChange}>
+                    onPress={this.props.onTypeSelect}>
                   <Text style={[propsStyles.colText, styles.trackTypeText]}>
                     {typeEnum ? typeEnum.title : 'Select'}
                   </Text>

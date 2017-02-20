@@ -19,45 +19,44 @@ import {commonStyles} from '../../styles/common';
 
 import {TrackerType} from '../../../depot/consts';
 
+import {caller} from '../../../utils/lang';
+
 const clean = str => {
   check.assert.string(str);
 
   return str.replace(/\n/g, '').replace(/\s+/g, ' ');
 }
 
+const TYPES = TrackerType.symbols();
+
 export default class TrackerTypesSlide extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      type: this.types[0],
+      type: TrackerType.fromValue(props.typeId),
     };
   }
 
-  get types() {
-    return TrackerType.symbols();
-  }
-
-  reset() {
-    this.setState({
-      type: this.types[0],
-    });
-  }
-
-  get typeId() {
-    return this.state.type.valueOf();
+  shouldComponentUpdate(props, state) {
+    if (this.props.typeId !== props.typeId) {
+      this.state.type = TrackerType.fromValue(props.typeId);
+      return true;
+    }
+    return this.state.type !== state.type;
   }
 
   _onTypeChosen(type) {
     this.setState({ type });
+    caller(this.props.onTypeChosen, type.valueOf());
   }
 
   _renderTypes() {
     const selected = this.state.type;
-    const last = _.last(this.types);
-    const first = _.first(this.types);
+    const last = _.last(TYPES);
+    const first = _.first(TYPES);
 
-    const types = this.types.map(type => {
+    const types = TYPES.map(type => {
       return (
         <TouchableWithoutFeedback
           key={type.valueOf()}
@@ -71,7 +70,7 @@ export default class TrackerTypesSlide extends Component {
               </View>
               <View style={styles.typeTitleContainer}>
                 <Text style={styles.typeTitle}>
-                  {type.title}
+                  { type.title }
                 </Text>
               </View>
           </View>
@@ -87,21 +86,26 @@ export default class TrackerTypesSlide extends Component {
         horizontal={true}
         pagingEnabled={false}
         bounces={false}>
-        {types}
+        { types }
       </ScrollView>
     );
   }
 
   render() {
+    const { style } = this.props;
+    const { type } = this.state;
+
+    const title = type ? type.title : '';
+    const desc = type ? type.desc : '';
     return (
-      <View style={slideStyles.slide}>
+      <View style={[slideStyles.slide, style]}>
         <View style={slideStyles.innerView}>
           <View style={[
               slideStyles.headerContainer,
               styles.headerContainer
             ]}>
             <Text style={styles.title}>
-              {this.state.type.title}
+              { title }
             </Text>
           </View>
           <View style={[
@@ -109,16 +113,14 @@ export default class TrackerTypesSlide extends Component {
               styles.bodyContainer
             ]}>
             <Text style={styles.desc}>
-              {clean(this.state.type.desc)}
+              { clean(desc) }
             </Text>
           </View>
           <View style={[
               slideStyles.footerContainer,
               styles.footerContainer
             ]}>
-            {
-              this._renderTypes()
-            }
+            { this._renderTypes() }
           </View>
         </View>
       </View>

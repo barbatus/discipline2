@@ -42,18 +42,12 @@ export default class DistanceTracker {
 
       if (error) return;
 
-      this._dist = 0;
-      this._time = 0;
-      this._hInterval = setInterval(() => {
-        this._time += this._timeInterval;
-        const data = {
-          dist: this._dist,
-          time: this._time,
-        };
-        caller(onUpdate, data);
-      }, this._timeInterval);
-
-      GeoWatcher.watch(this._onPosition, this);
+      this._unwatch = GeoWatcher.watch(pos => {
+        this._onPosition(pos);
+        if (!this.active) {
+          this._startTracking(onUpdate);
+        }
+      });
     });
   }
 
@@ -67,7 +61,7 @@ export default class DistanceTracker {
       clearInterval(this._hInterval);
       this._hInterval = null;
 
-      GeoWatcher.offWatch(this._onPosition, this);
+      this._unwatch();
       GeoWatcher.stop();
     };
 
@@ -75,18 +69,34 @@ export default class DistanceTracker {
       const data = {
         dist: this._dist,
         time: this._time,
+        latitude: this._latLon.latitude,
+        longitude: this._latLon.longitude,
       };
       caller(onStop, data, error);
       reset();
     });
   }
 
-  _onPosition(pos) {
-    const { latitude, longitude } = pos.coords;
+  _startTracking(onUpdate) {
+    this._dist = 0;
+    this._time = 0;
+    this._hInterval = setInterval(() => {
+      this._time += this._timeInterval;
+      const data = {
+        dist: this._dist,
+        time: this._time,
+        latitude: this._latLon.latitude,
+        longitude: this._latLon.longitude,
+      };
+      caller(onUpdate, data);
+    }, this._timeInterval);
+  }
+
+  _onPosition({ coords }) {
+    const { latitude, longitude } = coords;
 
     const dist = haversine(this._latLon, { latitude, longitude });
     this._dist += dist || 0;
-
     this._latLon = { latitude, longitude };
   }
 

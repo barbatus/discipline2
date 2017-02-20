@@ -22,6 +22,10 @@ export default class CommonModal extends Component {
     return null;
   }
 
+  shouldComponentUpdate(props, state) {
+    return this.state.modalVisible !== state.modalVisible;
+  }
+
   show(...args) {
     check.assert.like(
       this.state.modalVisible, true,
@@ -30,14 +34,14 @@ export default class CommonModal extends Component {
     this.onBeforeShown(...args);
     this.setState({
       modalVisible: true,
-    }, ::this.onAfterShown);
+    }, this.onAfterShown.bind(this, ...args));
   }
 
   hide() {
     this.onBeforeHidden();
     this.setState({
       modalVisible: false,
-    }, this.onAfterHidden);
+    }, ::this.onAfterHidden);
   }
 
   onBeforeShown() {}
@@ -54,7 +58,7 @@ export default class CommonModal extends Component {
         <Modal
           animationType={'slide'}
           transparent={false}
-          visible={this.state.modalVisible}>
+          visible={!!this.state.modalVisible}>
           <View style={commonStyles.flexFilled}>
             <View style={styles.headerContainer}>
               <TouchableOpacity onPress={::this.hide}>

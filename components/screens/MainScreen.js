@@ -42,7 +42,18 @@ import {commonStyles} from '../styles/common';
 import {caller} from '../../utils/lang';
 
 class MainScreen extends Component {
-  _active = false;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      index: 0,
+      active: false,
+    };
+  }
+
+  shouldComponentUpdate(props, state) {
+    return false;
+  }
 
   componentDidMount() {
     registry.register(DlgType.ICONS, this.refs.iconsDlg);
@@ -56,10 +67,6 @@ class MainScreen extends Component {
 
   get newTrackView() {
     return this.refs.newTrackView;
-  }
-
-  get _isActive() {
-    return Animation.on;
   }
 
   _getNewBtn(onPress) {
@@ -88,11 +95,10 @@ class MainScreen extends Component {
   // New tracker events.
 
   _onAccept(tracker) {
-    if (this._active) return;
+    if (this.state.active) return;
 
-    this._active = true;
-    this.props.onAdd(tracker,
-      this.trackersView.index);
+    this.setState({active: true});
+    this.props.onAdd(tracker, this.state.index + 1);
   }
 
   _onAddCompleted() {
@@ -105,12 +111,12 @@ class MainScreen extends Component {
       this.newTrackView.setShown();
     });
     this.trackersView.show(() => {
-      this._active = false;
+      this.setState({active: false});
     });
   }
 
   _cancelNewTracker() {
-    if (this._isActive) return;
+    if (Animation.on) return;
 
     this._setMainViewBtns();
     ScreenView.moveRight([this.trackersView, this.newTrackView]);
@@ -129,6 +135,9 @@ class MainScreen extends Component {
   _onSlideChange(index, previ) {
     const dir = (index - previ) >= 0 ? 1 : -1;
     this.refs.gradient.finishSlide(dir);
+    this.setState({
+      index,
+    })
   }
 
   _onSlideNoChange() {
@@ -140,6 +149,8 @@ class MainScreen extends Component {
   }
 
   _renderContent() {
+    console.log('render');
+
     return (
       <View style={commonStyles.flexFilled}>
         <TrackersView

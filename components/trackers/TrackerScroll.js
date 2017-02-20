@@ -41,7 +41,6 @@ export default class TrackerScroll extends TrackerRenderer {
     const scroll = this.refs.scroll.getIndex();
      if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
-      //return;
     }
 
     this.scrollTo(index, () => {
@@ -59,7 +58,9 @@ export default class TrackerScroll extends TrackerRenderer {
     const slides = this.state.trackers.map(
       tracker => {
         return (
-          <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
+          <View
+            key={tracker.id}
+            style={[commonStyles.centered, slideStyle]}>
             { this.renderTracker(tracker, editable, scale) }
           </View>
         );
@@ -68,7 +69,7 @@ export default class TrackerScroll extends TrackerRenderer {
     return (
       <Animated.View style={[style, {
           opacity: this._opacity,
-        }
+        },
       ]}>
         <Scroll
           ref='scroll'

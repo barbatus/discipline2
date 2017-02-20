@@ -19,9 +19,8 @@ import TrackerSlide from './TrackerSlide';
 import {caller} from '../../../utils/lang';
 
 export default class GoalTrackerSlide extends TrackerSlide {
-  get controls() {
-    let { editable } = this.props;
-
+  get bodyControls() {
+    const { editable } = this.props;
     return (
       <View style={trackerStyles.controls}>
         <TouchableOpacity
@@ -36,7 +35,7 @@ export default class GoalTrackerSlide extends TrackerSlide {
     );
   }
 
-  get footer() {
+  get footerControls() {
     return (
       <Text style={trackerStyles.footerText}>
         Tap when you've reached the goal

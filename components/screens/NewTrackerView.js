@@ -8,6 +8,7 @@ import {
   View,
   Text,
   Animated,
+  ScrollView,
 } from 'react-native';
 
 import {
@@ -23,40 +24,37 @@ import Animation from '../animation/Animation';
 import ScreenView from './ScreenView';
 
 import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
+
 import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 import Trackers from '../../model/Trackers';
 
-import {commonDef, commonStyles} from '../styles/common';
+import {commonDef, commonStyles, screenWidth} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
 export default class NewTrackerView extends ScreenView {
-  _active = false;
-
   constructor(props) {
     super(props);
 
     this.state = {
-      trackerTypeId: null,
-    }
+      tracker: Trackers.create({}),
+      typeId: null,
+    };
   }
 
   onLeftMove() {
     this.setState({
-      trackerTypeId: null,
+      tracker: Trackers.create({}),
+      typeId: null,
     });
 
     this._setNewTrackerBtns();
   }
 
-  onRightMove() {
-    this.refs.newTrackSlide.reset();
-    this.refs.typeSlide.reset();
-  }
-
-  get _isActive() {
-    return Animation.on;
+  shouldComponentUpdate(props, state) {
+    return this.state.tracker !== state.tracker ||
+           this.state.typeId !== state.typeId;
   }
 
   _getCancelBtn(onPress: Function) {
@@ -95,78 +93,82 @@ export default class NewTrackerView extends ScreenView {
     }
   }
 
-  _moveViewsLeft(callback?: Function) {
-    const views = [
-      this.refs.newTracker,
-      this.refs.trackerType,
-    ];
-    ScreenView.moveLeft(views, callback);
-  }
-
-  _moveViewsRight(callback?: Function) {
-    const views = [
-      this.refs.newTracker,
-      this.refs.trackerType,
-    ];
-    ScreenView.moveRight(views, callback);
-  }
-
-  _onAccept() {
-    const tracker = this.refs.newTrackSlide.tracker;
-    caller(this.props.onAccept, tracker);
-  }
-
-  _onTypeCancel() {
-    if (this._isActive) return;
-
-    this._setNewTrackerBtns();
-    this._moveViewsRight();
-  }
-
-  _onTypeChange() {
-    if (this._isActive) return;
-
-    this._setTrackerTypeBtns();
-    this._moveViewsLeft();
-  }
-
-  _onTypeAccept() {
-    if (this._isActive) return;
-
+  _onTrackerChange(tracker: Tracker) {
     this.setState({
-      trackerTypeId: this.refs.typeSlide.typeId
-    }, () => {
-      this._setNewTrackerBtns();
-      this._moveViewsRight();
+      tracker,
     });
   }
 
+  _onAccept() {
+    caller(this.props.onAccept, this.state.tracker);
+  }
+
+  _onTypeCancel() {
+    if (Animation.on) return;
+
+    this._setNewTrackerBtns();
+    this._moveTo(0);
+  }
+
+  _onTypeSelect() {
+    if (Animation.on) return;
+
+    this._setTrackerTypeBtns();
+    this._moveTo(1);
+  }
+
+  _onTypeChosen(typeId) {
+    this.setState({
+      typeId,
+    });
+  }
+
+  _onTypeAccept() {
+    if (Animation.on) return;
+
+    this._setNewTrackerBtns();
+    this._moveTo(0);
+
+    let { tracker, typeId } = this.state;
+    tracker = Trackers.create(tracker);
+    tracker.typeId = typeId;
+    this.setState({
+      tracker,
+    });
+  }
+
+  _moveTo(index: number) {
+    const scrollToX = index * screenWidth;
+    this.refs.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
+  }
+
   get content() {
+    const { tracker } = this.state;
+
     return (
-      <View style={commonStyles.flexFilled}>
-        <ScreenView
-          ref='newTracker'
-          posX={0}
-          content={
-            <View style={styles.slideContainer}>
-              <NewTrackerSlide
-                ref='newTrackSlide'
-                typeId={this.state.trackerTypeId}
-                onTypeChange={::this._onTypeChange}
-              />
-            </View>
-          }
-        />
-        <ScreenView
-          ref='trackerType'
-          posX={1}
-          content={
-            <View style={styles.slideContainer}>
-              <TrackerTypesSlide ref='typeSlide' />
-            </View>
-          }
-        />
-      </View>
+      <ScrollView
+        ref='scroll'
+        horizontal
+        pagingEnabled
+        scrollEnabled={false}
+        //removeClippedSubviews
+        scrollEventThrottle={1000}
+        showsHorizontalScrollIndicator={false}
+        automaticallyAdjustContentInsets>
+        <View key={0} style={styles.slideContainer}>
+          <NewTrackerSlide
+            tracker={tracker}
+            onTypeSelect={::this._onTypeSelect}
+            onTrackerChange={::this._onTrackerChange}
+          />
+        </View>
+        <View key={1} style={styles.slideContainer}>
+          <TrackerTypesSlide
+            typeId={tracker.typeId}
+            onTypeChosen={::this._onTypeChosen}
+          />
+        </View>
+      </ScrollView>
     );
   }
 };
@@ -178,6 +180,7 @@ NewTrackerView.contextTypes = {
 const styles = StyleSheet.create({
   slideContainer: {
     ...commonDef.flexFilled,
+    width: screenWidth,
     alignItems: 'center',
   },
 });

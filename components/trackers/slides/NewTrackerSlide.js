@@ -15,50 +15,18 @@ import {trackerStyles} from '../styles/trackerStyles';
 
 import TrackerEditView from './basic/TrackerEditView';
 
-import consts from '../../../depot/consts';
-
-import {commonStyles} from '../../styles/common';
-
-import Trackers from '../../../model/Trackers';
-
 export default class NewTrackerSlide extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      tracker: {},
-    };
-  }
-
   shouldComponentUpdate(props, state) {
-    if (this.props.typeId !== props.typeId) {
-      const tracker = Trackers.create(this.tracker);
-      tracker.typeId = props.typeId;
-      this.state.tracker = tracker;
-      return true;
-    }
-    return this.state.tracker !== state.tracker;
-  }
-
-  reset() {
-    this.refs.editView.reset();
-  }
-
-  get tracker() {
-    return this.refs.editView.tracker;
+    return this.props.tracker !== props.tracker;
   }
 
   render() {
-    const { onIconEdit, onTypeChange } = this.props;
-    const { tracker } = this.state;
-
+    const { style } = this.props;
     return (
-      <View style={trackerStyles.slide}>
+      <View style={[trackerStyles.slide, style]}>
         <TrackerEditView
           ref='editView'
-          tracker={tracker}
-          onIconEdit={onIconEdit}
-          onTypeChange={onTypeChange}
+          {...this.props}
           style={styles.editView}
         />
       </View>

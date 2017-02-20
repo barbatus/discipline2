@@ -136,7 +136,7 @@ class GeoWatcher_ {
       error => {
         caller(cb, null, error);
       },
-      POS_OPT
+      POS_OPT,
     );
   }
 
@@ -149,6 +149,8 @@ class GeoWatcher_ {
   }
 
   offWatch(cb: Function, context: any) {
+    check.assert.function(cb);
+
     this._emitter.removeListener(WATCH_EVENT, cb, context);
   }
 
@@ -164,7 +166,7 @@ class GeoWatcher_ {
     navigator.geolocation.getCurrentPosition(
       pos => caller(cb, pos, null),
       error => caller(cb, null, error),
-      POS_OPT
+      POS_OPT,
     );
   }
 

@@ -195,7 +195,7 @@ export default class Calendar extends Component {
     }
 
     return (
-      <View style={styles.calendarHeading}>
+      <View style={styles.calHeading}>
         {headings}
       </View>
     );
@@ -207,7 +207,7 @@ export default class Calendar extends Component {
 
     const monthName = monthNames[currentMonth.month()];
     return (
-      <View style={styles.calendarControls}>
+      <View style={styles.calControls}>
         <TouchableOpacity
           style={styles.controlButton}
           onPress={this._onPrev}>
@@ -241,9 +241,9 @@ export default class Calendar extends Component {
     });
 
     return (
-      <View style={[styles.calendarContainer, customStyle.calendarContainer]}>
-        {this._renderTopBar()}
-        {this._renderHeading(titleFormat)}
+      <View style={[styles.calContainer, customStyle.calContainer]}>
+        { this._renderTopBar() }
+        { this._renderHeading(titleFormat) }
         <ScrollView
           ref={calendar => this._calendar = calendar}
           horizontal
@@ -252,8 +252,8 @@ export default class Calendar extends Component {
           scrollEventThrottle={1000}
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
-          onMomentumScrollEnd={event => this._scrollEnded(event)}>
-          {monthViews}
+          onMomentumScrollEnd={::this._scrollEnded}>
+          { monthViews }
         </ScrollView>
       </View>
     );

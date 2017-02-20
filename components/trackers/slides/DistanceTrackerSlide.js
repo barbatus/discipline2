@@ -13,8 +13,6 @@ import {
   Vibration,
 } from 'react-native';
 
-import {connect} from 'react-redux';
-
 import {
   trackerDef,
   trackerStyles,
@@ -26,8 +24,6 @@ import {formatDistance} from '../../../utils/format';
 
 import {caller} from '../../../utils/lang';
 
-import {tickGeoTracker} from '../../../model/actions';
-
 import DistanceTracker from '../../../geo/DistanceTracker';
 
 import {slideWidth} from '../styles/slideStyles';
@@ -37,15 +33,12 @@ import TrackerSlide from './TrackerSlide';
 import TimeLabel from './TimeLabel';
 
 class DistanceData extends Component {
+
   constructor(props) {
     super(props);
 
     const { time, dist } = props;
     this.state = { time, dist };
-  }
-
-  setDistAndTime(dist, time) {
-    this.setState({ dist, time });
   }
 
   shouldComponentUpdate(props, state) {
@@ -90,25 +83,25 @@ const DIST_INTRVL = 5.0;
 
 const TIME_INTRVL = 100; // ms
 
-class DistanceTrackerSlide extends TrackerSlide {
+export default class DistanceTrackerSlide extends TrackerSlide {
   _distTracker = null;
+
+  _path = [];
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      active: false,
-    };
-
     this._distTracker = new DistanceTracker(DIST_INTRVL, TIME_INTRVL);
   }
 
-  shouldComponentUpdate(props, state) {
-    const should = super.shouldComponentUpdate(props, state);
-    return should || this.state.active !== state.active;
+  get bodyStyle() {
+    return styles.bodyContainer;
   }
 
-  get controls() {
+  get footerStyle() {
+    return styles.footerContainer;
+  }
+
+  get bodyControls() {
     const { tracker } = this.props;
 
     return (
@@ -124,7 +117,7 @@ class DistanceTrackerSlide extends TrackerSlide {
     );
   }
 
-  get footer() {
+  get footerControls() {
     const { editable } = this.props;
     const renderBtn = (label, onPress) => {
       return (
@@ -139,12 +132,13 @@ class DistanceTrackerSlide extends TrackerSlide {
       );
     };
 
-    const active = this.state.active;
+    const { tracker } = this.props;
     return (
-      <View style={styles.footerContainer}>
+      <View style={styles.footerControlsContainer}>
         <View style={styles.startStopBtn}>
-          { active ? renderBtn('STOP', this._onStopBtn) :
-                     renderBtn('START', this._onStartBtn) }
+          { tracker.active ?
+              renderBtn('STOP', this._onStopBtn) :
+              renderBtn('START', this._onStartBtn) }
         </View>
         <View style={styles.seeMap}>
           <Text style={trackerStyles.footerText}>
@@ -178,51 +172,37 @@ class DistanceTrackerSlide extends TrackerSlide {
 
     Vibration.vibrate();
 
-    this.setState({
-      active: true,
-    });
+    caller(this.props.onStart);
+    caller(this.props.onTick, 0, {time: 0});
   }
 
-  _onDistStop({ dist, time }) {
-    this._onDistUpdate({ dist, time });
+  _onDistStop({ dist, time, latitude, longitude }) {
+    this._onDistUpdate({ dist, time, latitude, longitude });
 
-    this.setState({
-      active: false,
-    });
-
-    const { onStop, tracker } = this.props;
-    caller(onStop, tracker, dist, time);
+    caller(this.props.onStop);
   }
 
-  _onDistUpdate({ dist, time }) {
+  _onDistUpdate({ dist, time, latitude, longitude }) {
+    caller(this.props.onProgress, dist, { time });
+
     dist = this._initDist + dist;
-    time = this._initTime + time; 
-    this.refs.dist.setDistAndTime(dist, time);
+    time = this._initTime + time;
+    this._path.push({ latitude, longitude });
   }
 
   _showMap() {
-    const initRegion = {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0121,
-    };
     const dlg = registry.get(DlgType.MAPS);
-    dlg.show(initRegion);
+    dlg.show(this._path);
   }
 };
 
-export default connect(null,
-  dispatch => {
-    return {
-      onStop: (tracker, dist, time) => dispatch(
-        tickGeoTracker(tracker, dist, { time })
-      )
-    };
-  }
-)(DistanceTrackerSlide);
-
 const styles = StyleSheet.create({
+  bodyContainer: {
+    flex: 0.35,
+  },
+  footerContainer: {
+    flex: 0.2,
+  },
   controls: {
     flex: 1,
     flexDirection: 'row',
@@ -235,10 +215,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  footerContainer: {
+  footerControlsContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   button: {
@@ -279,10 +259,12 @@ const styles = StyleSheet.create({
     fontWeight: '200',
   },
   startStopBtn: {
-    flex: 0.6,
+    flex: 0.5,
+    justifyContent: 'center',
   },
   seeMap: {
-    flex: 0.4,
+    flex: 0.5,
+    justifyContent: 'center',
   },
   seeMapLink: {
     textDecorationLine: 'underline',

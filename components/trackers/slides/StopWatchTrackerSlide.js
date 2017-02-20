@@ -36,11 +36,6 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     this._timer.events.on('onTimer', ::this._onTimer);
   }
 
-  shouldComponentUpdate(props, state) {
-    const should = super.shouldComponentUpdate(props, state);
-    return should || this.state.active !== state.active;
-  }
-
   componentWillUnmount() {
     const { tracker } = this.props;
     Timers.dispose(tracker.id);
@@ -48,13 +43,13 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
   }
 
   onEdit() {
-    if (this._timer.active) return;
+    const { tracker } = this.props;
+    if (tracker.active) return;
     super.onEdit();
   }
 
-  get controls() {
+  get bodyControls() {
     const { tracker } = this.props;
-
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
@@ -68,8 +63,8 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     );
   }
 
-  get footer() {
-    const { editable } = this.props;
+  get footerControls() {
+    const { tracker, editable } = this.props;
 
     const renderBtn = (label, onPress) => {
       return (
@@ -84,11 +79,10 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
       );
     };
 
-    const active = this._timer.active;
     return (
       <View style={styles.footerContainer}>
         {
-          active ?
+          tracker. active ?
             renderBtn('STOP', this._onStop) :
             renderBtn('START', this._onTick)
         }
@@ -102,16 +96,18 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
 
     const { tracker } = this.props;
     this._timer.start(tracker.value);
+    caller(this.props.onStart);
     caller(this.props.onTick);
   }
 
   _onTimer(timeMs: number) {
     this.refs.time.setTime(timeMs);
+    caller(this.props.onProgress, timeMs);
   }
 
   _onStop() {
     this._timer.stop();
-    caller(this.props.onStop, this._timer.timeMs);
+    caller(this.props.onStop);
   }
 
   _onLap() {

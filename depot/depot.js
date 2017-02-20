@@ -115,7 +115,7 @@ class Depot {
     if (data) {
       const tracker = this.trackers.getOne(trackId);
       const schema = tickSchemas[tracker.typeId];
-      this.ticks.updateData(tickDataSchema, tick.id, data);
+      this.ticks.updateData(schema, tick.id, data);
     }
 
     this.ticks.update(tick.id, value);

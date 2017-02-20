@@ -13,7 +13,7 @@ const AppInfoSchema = {
       objectType: 'Tracker',
       default: [],
     },
-  }
+  },
 };
 
 const TrackerSchema = {

@@ -50,7 +50,7 @@ export default class TrackerCal extends Component {
         <Calendar
           ref='calendar'
           customStyle={{
-            calendarContainer: styles.container,
+            calContainer: styles.container,
           }}
           todayMs={todayMs}
           scrollEnabled={true}

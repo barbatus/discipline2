@@ -4,6 +4,8 @@ import Tracker, {DistanceTracker} from './Tracker';
 
 import {TrackerType} from '../depot/consts';
 
+import {Tracker as ITracker} from '../depot/interfaces';
+
 import depot from '../depot/depot';
 
 export default class Trackers {
@@ -33,7 +35,7 @@ export default class Trackers {
     return depot.removeTracker(tracker.id);
   }
 
-  static create(tracker) {
+  static create(tracker: ITracker) {
     const type = tracker.typeId;
     switch (type) {
       case TrackerType.DISTANCE.valueOf():
@@ -41,5 +43,9 @@ export default class Trackers {
       default:
         return new Tracker(tracker);
     }
+  }
+
+  static clone(tracker: Tracker) {
+    return tracker.clone();
   }
 }

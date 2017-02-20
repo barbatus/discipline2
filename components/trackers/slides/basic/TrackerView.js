@@ -50,9 +50,7 @@ export default class TrackerView extends BaseTrackerView {
                 </Text>
               </View>
             </View>
-            {
-              this._renderContent(backImg)
-            }
+            { this._renderContent(backImg) }
           </View>
         </TouchableWithoutFeedback>
       </Animated.View>
@@ -60,15 +58,18 @@ export default class TrackerView extends BaseTrackerView {
   }
 
   _renderContent(backImg) {
-    const { controls, footer } = this.props;
+    const {
+      bodyControls, footerControls,
+      bodyStyle, footerStyle,
+    } = this.props;
 
     const body = (
       <View style={styles.wrapper}>
-        <View style={trackerStyles.bodyContainer}>
-          {controls}
+        <View style={[trackerStyles.bodyContainer, bodyStyle]}>
+          {bodyControls}
         </View>
-        <View style={trackerStyles.footerContainer}>
-          {footer}
+        <View style={[trackerStyles.footerContainer, footerStyle]}>
+          {footerControls}
         </View>
       </View>
     );

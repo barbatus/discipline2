@@ -19,9 +19,8 @@ import TrackerSlide from './TrackerSlide';
 import {caller} from '../../../utils/lang';
 
 export default class CounterSlide extends TrackerSlide {
-  get controls() {
-    let { tracker, editable } = this.props;
-
+  get bodyControls() {
+    const { tracker, editable } = this.props;
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
@@ -49,7 +48,7 @@ export default class CounterSlide extends TrackerSlide {
     );
   }
 
-  get footer() {
+  get footerControls() {
     return (
       <Text style={trackerStyles.footerText}>
         Tap to count the thing you've done

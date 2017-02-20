@@ -26,6 +26,8 @@ import TrackerSlide from './TrackerSlide';
 
 import Keyboard from '../../../utils/keyboard';
 
+import {caller} from '../../../utils/lang';
+
 export default class SumTrackerSlide extends TrackerSlide {
   shouldComponentUpdate(props, state) {
     const should = super.shouldComponentUpdate(props, state);
@@ -61,9 +63,8 @@ export default class SumTrackerSlide extends TrackerSlide {
     Keyboard.dismiss();
   }
 
-  get controls() {
+  get bodyControls() {
     const { tracker, editable } = this.props;
-
     return (
       <View style={[
         trackerStyles.controls,
@@ -101,7 +102,7 @@ export default class SumTrackerSlide extends TrackerSlide {
     );
   }
 
-  get footer() {
+  get footerControls() {
     return (
       <Text style={trackerStyles.footerText}>
         Shake to undo
@@ -111,10 +112,10 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   _onPlus() {
     Keyboard.dismiss();
-    const { tracker } = this.props;
+    const { tracker, onTick } = this.props;
     const added = parseFloat(this.state.added);
     if (added) {
-      this.props.onTick(added);
+      caller(onTick, added);
       this.setState({added: ''});
     }
   }

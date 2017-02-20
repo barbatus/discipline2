@@ -100,7 +100,7 @@ const trackerDef = {
     fontSize: 15,
     textAlign: 'center',
     width: 150,
-    fontWeight: '300',
+    fontWeight: '200',
   },
   hintText: {
     color: '#DFDFDF',

@@ -38,21 +38,15 @@ export default class Trackers extends Component {
     this.state = {
       swTrackers: new List(),
       scTrackers: new List(),
-      currentTracker: trackers.first(),
       swiperEnabled: true,
+      index: 0,
     };
   }
 
-  get index() {
-    return this._swiper.index;
-  }
-
-  get tracker() {
-    return this._swiper.current;
-  }
-
-  get editedTracker() {
-    return this._swiper.editedTracker;
+  shouldComponentUpdate(props, state) {
+    return this.state.swTrackers !== state.swTrackers ||
+           this.state.scTrackers !== state.scTrackers ||
+           this.state.swiperEnabled !== state.swiperEnabled;
   }
 
   componentWillUnmount() {
@@ -61,7 +55,9 @@ export default class Trackers extends Component {
 
   componentDidMount() {
     const {
-      trackers, onSwiperMoveDown, onSwiperMoveDownStart,
+      trackers,
+      onSwiperMoveDown,
+      onSwiperMoveDownStart,
     } = this.props;
 
     if (trackers) {
@@ -139,8 +135,8 @@ export default class Trackers extends Component {
 
   _onScaleStart() {
     this._bscroll.hide();
-    this._bscroll.scrollTo(this.index, false);
-    this._sscroll.scrollTo(this.index, false);
+    this._bscroll.scrollTo(this.state.index, false);
+    this._sscroll.scrollTo(this.state.index, false);
   }
 
   _onScaleMove(dv) {
@@ -157,7 +153,8 @@ export default class Trackers extends Component {
 
   _onTap() {
     if (this._moveDown.in) {
-      this._moveDown.animateOut(() => this.setState({
+      this._moveDown.animateOut(
+        this.setState.bind(this, {
           swiperEnabled: true,
         })
       );
@@ -179,19 +176,12 @@ export default class Trackers extends Component {
   }
 
   _onSlideChange(index: number, previ: number) {
-    this.setState({
-      currentTracker: this.tracker,
-    });
-    const { onSlideChange } = this.props;
-    caller(onSlideChange, index, previ);
+    this.setState({ index });
+    caller(this.props.onSlideChange, index, previ);
   }
 
   render() {
     const { swTrackers, scTrackers, swiperEnabled } = this.state;
-    const { removeIndex, addIndex, updateIndex } = this.props;
-    const { onRemoveCompleted, onAddCompleted, onSaveCompleted } = this.props;
-    const { onScroll, onSlideChange, onSlideNoChange } = this.props;
-    const { onUndo, onTick, onStop } = this.props;
     const { style } = this.props;
 
     const combinedStyle = [
@@ -201,12 +191,10 @@ export default class Trackers extends Component {
       <Animated.View style={combinedStyle}>
         <TrackerScroll
           ref='bscroll'
+          {...this.props}
           trackers={scTrackers}
           style={styles.bigScroll}
           scale={1 / 1.6}
-          onUndo={onUndo}
-          onTick={onTick}
-          onStop={onStop}
           onCenterSlideTap={::this._onCenterSlideTap}
         />
         <TrackerScroll
@@ -219,27 +207,17 @@ export default class Trackers extends Component {
         />
         <TrackerSwiper
           ref='swiper'
+          {...this.props}
           enabled={swiperEnabled}
           trackers={swTrackers}
           style={commonStyles.absFilled}
-          removeIndex={removeIndex}
-          addIndex={addIndex}
-          updateIndex={updateIndex}
-          onScroll={onScroll}
-          onSlideChange={::this._onSlideChange}
-          onSlideNoChange={onSlideNoChange}
           onScaleStart={::this._onScaleStart}
           onScaleMove={::this._onScaleMove}
           onScaleDone={::this._onScaleDone}
           onTap={::this._onTap}
           onRemove={::this._onRemove}
           onEdit={::this._onEdit}
-          onTick={onTick}
-          onUndo={onUndo}
-          onStop={onStop}
-          onRemoveCompleted={onRemoveCompleted}
-          onAddCompleted={onAddCompleted}
-          onSaveCompleted={onSaveCompleted}
+          onSlideChange={::this._onSlideChange}
         />
       </Animated.View>
     )

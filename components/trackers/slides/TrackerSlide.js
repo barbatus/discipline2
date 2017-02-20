@@ -13,6 +13,8 @@ import {
   propsStyles,
 } from '../styles/trackerStyles';
 
+import Keyboard from '../../../utils/keyboard';
+
 import {commonStyles} from '../../styles/common';
 
 import TrackerView from './basic/TrackerView';
@@ -36,48 +38,57 @@ export default class TrackerSlide extends Component {
     const { scale } = props;
     this._flip = new FlipAnimation();
     this._scale = new ScaleAnimation(scale);
-    this.state = {};
+    this.state = {
+      tracker: props.tracker,
+    };
   }
 
   shouldComponentUpdate(props, state) {
-    return this.props.tracker !== props.tracker;
+    if (this.props.tracker !== props.tracker) {
+      this.state.tracker = props.tracker;
+      return true;
+    }
+    return this.state.tracker !== state.tracker;
   }
 
-  get controls() {
-    throw new Error('controls is not implemented');
+  get bodyControls() {
+    throw new Error('Controls is not implemented');
   }
 
-  get footer() {
-    throw new Error('footer is not implemented');
+  get footerControls() {
+    throw new Error('Footer controls is not implemented');
   }
 
-  get editedTracker() {
-    return this.refs.editView.tracker;
+  get bodyStyle() {
+    return null;
+  }
+
+  get footerStyle() {
+    return null;
   }
 
   showEdit(callback) {
+    const { tracker } = this.props;
+    this.setState({
+      tracker: tracker.clone(),
+    });
+    Keyboard.dismiss();
     this._flip.animateIn(callback);
   }
 
   cancelEdit(callback) {
-    this._flip.animateOut(() => {
-      this.refs.editView.reset();
-      caller(callback);
-    });
+    Keyboard.dismiss();
+    this._flip.animateOut(callback);
   }
 
   collapse(callback) {
-    this._scale.animateOut(() => {
-      //this.refs.editView.reset();
-      caller(callback);
-    });
+    this._scale.animateOut(callback);
   }
 
   shake(callback) {}
 
   render() {
     const { style } = this.props;
-
     const slideStyle = [trackerStyles.slide, style];
     return (
       <Animated.View style={[slideStyle, this._scale.style]}>
@@ -104,35 +115,37 @@ export default class TrackerSlide extends Component {
   }
 
   _renderBackView() {
-    const { tracker, editable } = this.props;
-
+    const { editable, onTrackerChange } = this.props;
+    const { tracker } = this.state;
     if (editable) {
       return (
         <TrackerEditView
           ref='editView'
           style={[absFilled, this._flip.style2]}
           showType={false}
-          delete={true}
+          allowDelete
           tracker={tracker}
           onRemove={::this.onRemove}
+          onTrackerChange={onTrackerChange}
         />
       );
     }
   }
 
   _renderFrontView() {
-    const { tracker, editable } = this.props;
-
+    const { tracker } = this.props;
     return (
       <TrackerView
         ref='trackerView'
         style={this._flip.style1}
         tracker={tracker}
         backImg={this.backImg}
-        controls={this.controls}
-        footer={this.footer}
+        bodyControls={this.bodyControls}
+        footerControls={this.footerControls}
         onTap={::this.onTap}
         onEdit={::this.onEdit}
+        bodyStyle={this.bodyStyle}
+        footerStyle={this.footerStyle}
       />
     );
   }

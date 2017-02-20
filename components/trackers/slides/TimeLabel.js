@@ -14,8 +14,8 @@ class TimeDigit extends Component {
   }
 
   render() {
-    let { style, value, width } = this.props;
-    let align = [{textAlign: 'center'}];
+    const { style, value, width } = this.props;
+    const align = [{textAlign: 'center'}];
     return (
       <View style={styles.slotStyle}>
         <Text style={[{ width }, align]}>

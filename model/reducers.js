@@ -14,12 +14,34 @@ import {
   UPDATE_LAST_TICK,
   CHANGE_DAY,
   UPDATE_CALENDAR,
+  COMPLETE_CHANGE,
+  START_TRACKER,
+  STOP_TRACKER,
 } from './actions';
 
 import Trackers from './Trackers';
 
 const trackEqual = tracker1 => {
   return tracker2 => tracker1.id === tracker2.id;
+};
+
+const findIndex = (trackers, tracker) => {
+  const equal = trackEqual(tracker);
+  return trackers.findIndex(tracker => equal(tracker));
+};
+
+const cloneTracker = (trackers, tracker, index?: number) => {
+  if (index == null) {
+    index = findIndex(trackers, tracker);
+  }
+  return trackers.update(index, _ => Trackers.clone(tracker));
+};
+
+const insertTracker = (trackers, tracker, index?: number) => {
+  if (index == null) {
+    index = findIndex(trackers, tracker);
+  }
+  return trackers.insert(index, Trackers.create(tracker));
 };
 
 export const trackers = handleActions({
@@ -32,64 +54,61 @@ export const trackers = handleActions({
     }
   },
   [REMOVE_TRACKER]: (state, { tracker }) => {
-    const equal = trackEqual(tracker);
-    const index = state.trackers.findIndex(
-      tracker => equal(tracker));
+    const index = findIndex(state.trackers, tracker);
+    const trackers = state.trackers.delete(index);
     return {
       ...state,
       removeIndex: index,
-      trackers: state.trackers.delete(index),
+      trackers,
     }
   },
   [ADD_TRACKER]: (state, { tracker, index } ) => {
-    const trackers = state.trackers.insert(index,
-      Trackers.create(tracker));
+    const trackers = insertTracker(state.trackers, tracker, index);
     return {
       ...state,
       addIndex: index,
       trackers,
     }
   },
+  [START_TRACKER]: (state, { tracker } ) => {
+    const trackers = cloneTracker(state.trackers, tracker);
+    return {
+      ...state,
+      trackers,
+    };
+  },
+  [STOP_TRACKER]: (state, { tracker } ) => {
+    const trackers = cloneTracker(state.trackers, tracker);
+    return {
+      ...state,
+      trackers,
+    };
+  },
   [UPDATE_TRACKER]: (state, { tracker }) => {
-    const equal = trackEqual(tracker);
-    const index = state.trackers.findIndex(
-      tracker => equal(tracker));
-    const trackers = state.trackers.update(index,
-      tracker => Trackers.getOne(tracker.id));
+    const index = findIndex(state.trackers, tracker);
+    const trackers = cloneTracker(state.trackers, tracker, index);
     return {
       ...state,
       updateIndex: index,
       trackers,
     }
   },
-  [TICK_TRACKER]: (state, { tracker, click } ) => {
-    const equal = trackEqual(tracker);
-    const index = state.trackers.findIndex(
-      tracker => equal(tracker));
-    const trackers = state.trackers.update(index,
-      tracker => Trackers.getOne(tracker.id));
+  [TICK_TRACKER]: (state, { tracker } ) => {
+    const trackers = cloneTracker(state.trackers, tracker);
     return {
       ...state,
       trackers,
     };
   },
   [UNDO_LAST_TICK]: (state, { tracker } ) => {
-    const equal = trackEqual(tracker);
-    const index = state.trackers.findIndex(
-      tracker => equal(tracker));
-    const trackers = state.trackers.update(index,
-      tracker => Trackers.getOne(tracker.id));
+    const trackers = cloneTracker(state.trackers, tracker);
     return {
       ...state,
       trackers,
     };
   },
   [UPDATE_LAST_TICK]: (state, { tracker }) => {
-    const equal = trackEqual(tracker);
-    const index = state.trackers.findIndex(
-      tracker => equal(tracker));
-    const trackers = state.trackers.update(index,
-      tracker => Trackers.getOne(tracker.id));
+    const trackers = cloneTracker(state.trackers, tracker);
     return {
       ...state,
       trackers,
@@ -108,6 +127,14 @@ export const trackers = handleActions({
       ...state,
       todayMs,
       ticks,
+    };
+  },
+  [COMPLETE_CHANGE]: (state, { index }) => {
+    return {
+      ...state,
+      addIndex: null,
+      removeIndex: null,
+      updateIndex: null,
     };
   },
 }, {});

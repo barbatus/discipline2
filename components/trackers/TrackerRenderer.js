@@ -25,7 +25,6 @@ export default class TrackerRenderer extends Component {
 
     this.state = {
       trackers: props.trackers,
-      enabled: true,
     };
   }
 
@@ -69,20 +68,32 @@ export default class TrackerRenderer extends Component {
     caller(this.props.onTap, tracker);
   }
 
-  onTick(tracker: Tracker, value?: number) {
-    caller(this.props.onTick, tracker, value);
+  onTick(tracker: Tracker, value?: number, data?: any) {
+    caller(this.props.onTick, tracker, value, data);
   }
 
-  onStop(tracker: Tracker, value?: number) {
-    caller(this.props.onStop, tracker, value);
+  onStart(tracker: Tracker) {
+    caller(this.props.onStart, tracker);
   }
 
-  onProgress(tracker: Tracker, value?: number) {
-    caller(this.props.onProgress, tracker, value);
+  onStop(tracker: Tracker) {
+    caller(this.props.onStop, tracker);
+  }
+
+  onProgress(tracker: Tracker, value?: number, data?: any) {
+    caller(this.props.onProgress, tracker, value, data);
   }
 
   onUndo(tracker: Tracker) {
     caller(this.props.onUndo, tracker);
+  }
+
+  onTrackerChange(tracker: Tracker) {
+    caller(this.props.onTrackerChange, tracker);
+  }
+
+  _wrapPropCall(prop: string, tracker: Tracker) {
+    return (...args) => caller(this.props[prop], tracker, ...args);
   }
 
   renderTracker(tracker: Tracker, editable: boolean = true, scale: number = 1) {
@@ -98,10 +109,13 @@ export default class TrackerRenderer extends Component {
           onTap={this.onTap.bind(this, tracker)}
           onTick={this.onTick.bind(this, tracker)}
           onUndo={this.onUndo.bind(this, tracker)}
+          onProgress={this.onProgress.bind(this, tracker)}
+          onStart={this.onStart.bind(this, tracker)}
           onStop={this.onStop.bind(this, tracker)}
+          onTrackerChange={::this.onTrackerChange}
           tracker={tracker}
         />
-      )
+      );
     };
 
     switch (tracker.type) {

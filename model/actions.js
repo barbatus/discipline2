@@ -14,16 +14,6 @@ export const updateCalendar = (tracker, todayMs, startDateMs, endDateMs) => {
   }
 };
 
-export const tickGeoTracker = (tracker, value, data) => {
-  const dateTimeMs = time.getDateTimeMs();
-  const tick = depot.addTick(tracker.id, dateTimeMs, value, data);
-  return {
-    type: TICK_TRACKER,
-    tracker,
-    tick,
-  };
-};
-
 export const LOAD_TEST_DATA = 'LOAD_INIT';
 
 export const loadTestData = () => {
@@ -67,9 +57,10 @@ export const updateTracker = (tracker) => {
 
 export const TICK_TRACKER = 'TICK_TRACKER';
 
-export const tickTracker = (tracker, value) => {
+export const tickTracker = (tracker, value, data) => {
   const dateTimeMs = time.getDateTimeMs();
-  const tick = depot.addTick(tracker.id, dateTimeMs, value);
+  const tick = depot.addTick(tracker.id, dateTimeMs, value, data);
+  tracker.ticks = depot.getTicks(tracker.id, time.getDateMs());
   return {
     type: TICK_TRACKER,
     tracker,
@@ -77,10 +68,31 @@ export const tickTracker = (tracker, value) => {
   };
 };
 
+export const START_TRACKER = 'START_TRACKER';
+
+export const startTracker = tracker => {
+  tracker.active = true;
+  return {
+    type: START_TRACKER,
+    tracker,
+  };
+};
+
+export const STOP_TRACKER = 'STOP_TRACKER';
+
+export const stopTracker = tracker => {
+  tracker.active = false;
+  return {
+    type: STOP_TRACKER,
+    tracker,
+  };
+};
+
 export const UNDO_LAST_TICK = 'UNDO_LAST_TICK';
 
 export const undoLastTick = tracker => {
   depot.undoLastTick(tracker.id);
+  tracker.ticks = depot.getTicks(tracker.id, time.getDateMs());
   return {
     type: UNDO_LAST_TICK,
     tracker,
@@ -89,11 +101,21 @@ export const undoLastTick = tracker => {
 
 export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
-export const updateLastTick = (tracker, value) => {
-  depot.updateLastTick(tracker.id, value);
+export const updateLastTick = (tracker, value, data) => {
+  depot.updateLastTick(tracker.id, value, data);
+  tracker.ticks = depot.getTicks(tracker.id, time.getDateMs());
   return {
     type: UPDATE_LAST_TICK,
     tracker,
+  };
+};
+
+export const COMPLETE_CHANGE = 'COMPLETE_CHANGE';
+
+export const completeChange = index => {
+  return {
+    type: COMPLETE_CHANGE,
+    index,
   };
 };
 

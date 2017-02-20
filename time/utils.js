@@ -81,6 +81,21 @@ const time = {
     const start = now.startOf('day');
 
     return now.diff(start, 'milliseconds');
+  },
+
+  addMonth(dateMs) {
+    return moment(dateMs)
+      .add(1, 'month')
+      .endOf('month')
+      .add(1, 'day')
+      .valueOf();
+  },
+
+  subtractMonth(dateMs) {
+    return moment(dateMs)
+      .subtract(1, 'month')
+      .startOf('month')
+      .valueOf();
   }
 };
 

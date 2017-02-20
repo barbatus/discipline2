@@ -13,6 +13,7 @@ export default class Tracker {
   title: string;
   iconId: string;
   typeId: string;
+  active: boolean;
 
   constructor(tracker: ITracker) {
     this.id = tracker.id;
@@ -20,6 +21,13 @@ export default class Tracker {
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
     this.ticks = tracker.ticks || [];
+    this.active = false;
+  }
+
+  clone() {
+    const tracker = Object.assign(Object.create(this), this);
+    tracker.active = this.active;
+    return tracker;
   }
 
   get type() {
@@ -63,6 +71,7 @@ export class DistanceTracker extends Tracker {
     const times = data.map(item => item.time || 0);
     return times.reduceRight((p, n) => p + n, 0);
   }
+
   // onAppActive(diffMs, dateChanged) {
   //   super.onAppActive(diffMs, dateChanged);
 

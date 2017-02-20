@@ -5,7 +5,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {screenWidth} from '../styles/common';
 
 const styles = StyleSheet.create({
-  calendarContainer: {
+  calContainer: {
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   monthContainer: {
     width: screenWidth,
   },
-  calendarControls: {
+  calControls: {
     marginTop: 10,
     marginBottom: 20,
     flexDirection: 'row'
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '200',
   },
-  calendarHeading: {
+  calHeading: {
     flexDirection: 'row',
     borderTopWidth: 0,
     borderBottomWidth: 0,
