@@ -149,8 +149,6 @@ class MainScreen extends Component {
   }
 
   _renderContent() {
-    console.log('render');
-
     return (
       <View style={commonStyles.flexFilled}>
         <TrackersView

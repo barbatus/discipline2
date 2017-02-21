@@ -118,8 +118,7 @@ const BaseScroll = React.createClass({
     this._pageX = event.nativeEvent.pageX;
   },
 
-  _onTouchEnd(e) {
-  },
+  _onTouchEnd(e) {},
 
   _onTouchMove(event) {
     if (!this.isEnabled()) return;
@@ -150,7 +149,7 @@ const BaseScroll = React.createClass({
 
   _endScrolling(offsetX) {
     this._isScrolling = false;
-    this._updateSlideIndex(offsetX);
+    this._updateSlideIndexByOffset(offsetX);
 
     if (this._prevInd === this._index) {
       caller(this.props.onSlideNoChange);
@@ -176,7 +175,7 @@ const BaseScroll = React.createClass({
   // after scrolling. Offset and index are supposed to
   // be integer since slide width is an integer
   // and scrolling happens for an exact number of slides. 
-  _updateSlideIndex(offsetX) {
+  _updateSlideIndexByOffset(offsetX) {
     const diff = offsetX - this._offsetX;
 
     if (!diff) return;
@@ -188,9 +187,8 @@ const BaseScroll = React.createClass({
   },
 
   render() {
-    let { slides, pagingEnabled,
-          contentStyle, scrollEnabled } = this.props;
-
+    const { slides, pagingEnabled,
+            contentStyle, scrollEnabled } = this.props;
     return (
       <ScrollView ref='scrollView'
         {...this.props}
@@ -205,7 +203,7 @@ const BaseScroll = React.createClass({
         onTouchMove={this._onTouchMove}
         onMomentumScrollBegin={this._onScrollBegin}
         onMomentumScrollEnd={this._onScrollEnd}>
-        {slides}
+        { slides }
       </ScrollView>
     );
   }

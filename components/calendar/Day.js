@@ -27,7 +27,12 @@ export default class Day extends Component {
     onPress: PropTypes.func,
   }
 
-  dayCircleStyle = (isWeekend, isSelected, isToday) => {
+  shouldComponentUpdate(props, state) {
+    return this.props.isSelected !== props.isSelected ||
+           this.props.isToday !== props.isToday;
+  }
+
+  dayCircleStyle = (isSelected, isToday) => {
     const { customStyle } = this.props;
     const dayCircleStyle = [styles.dayCircle];
 
@@ -42,7 +47,7 @@ export default class Day extends Component {
     return dayCircleStyle;
   }
 
-  dayTextStyle = (isWeekend, isSelected, isToday) => {
+  dayTextStyle = (isSelected, isToday) => {
     const { customStyle } = this.props;
     const dayTextStyle = [styles.dayText];
 
@@ -54,29 +59,18 @@ export default class Day extends Component {
       dayTextStyle.push(styles.selectedDayText);
     }
 
-    if (isWeekend) {
-      dayTextStyle.push(styles.weekendDayText);
-    }
-
     return dayTextStyle;
   }
 
   render() {
-    const { caption, customStyle } = this.props;
-    const {
-      outDay, 
-      hasTick,
-      isWeekend,
-      isSelected,
-      isToday,
-    } = this.props;
+    const { caption, outDay, hasTick, isSelected, isToday } = this.props;
 
     return outDay ? (
         <TouchableWithoutFeedback>
           <View style={styles.dayButton}>
             <View style={styles.dayCircle}>
               <Text style={[styles.dayText, styles.outDayText]}>
-                {caption}
+                { caption }
               </Text>
             </View>
           </View>
@@ -84,10 +78,10 @@ export default class Day extends Component {
       ) : (
       <TouchableOpacity onPress={this.props.onPress}>
         <View style={styles.dayButton}>
-          <View style={this.dayCircleStyle(isWeekend, isSelected, isToday)}>
+          <View style={this.dayCircleStyle(isSelected, isToday)}>
             { hasTick ? <View style={styles.tickPoint} /> : null }
-            <Text style={this.dayTextStyle(isWeekend, isSelected, isToday)}>
-              {caption}
+            <Text style={this.dayTextStyle(isSelected, isToday)}>
+              { caption }
             </Text>
           </View>
         </View>

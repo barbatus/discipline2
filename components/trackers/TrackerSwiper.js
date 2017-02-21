@@ -157,7 +157,7 @@ export default class TrackerSwiper extends TrackerRenderer {
           InteractionManager.runAfterInteractions(() => {
             // In case of removing the first tracker,
             // we move to the next, so adjust the index accordingly.
-            this._index = index ? prevInd : 0;
+            this.scrollTo(index ? prevInd : 0, null, false);
             caller(callback);
           });
       });
@@ -186,7 +186,7 @@ export default class TrackerSwiper extends TrackerRenderer {
           <View
             key={tracker.id}
             style={[commonStyles.centered, slideStyle]}>
-            { this.renderTracker(tracker, true) }
+            { this.renderTracker(tracker) }
           </View>
         )
       }).toArray();
@@ -197,6 +197,7 @@ export default class TrackerSwiper extends TrackerRenderer {
       <Swiper
         ref='swiper'
         style={commonStyles.flexFilled}
+        index={this._index}
         slides={slides}
         scrollEnabled={enabled}
         onTouchMove={onScroll}

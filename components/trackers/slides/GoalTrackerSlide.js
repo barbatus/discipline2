@@ -20,11 +20,11 @@ import {caller} from '../../../utils/lang';
 
 export default class GoalTrackerSlide extends TrackerSlide {
   get bodyControls() {
-    const { editable } = this.props;
+    const { responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
         <TouchableOpacity
-          disabled={!editable}
+          disabled={!responsive}
           onPress={::this.onTick}>
           <Image
             source={getIcon('check')}

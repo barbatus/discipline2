@@ -16,6 +16,5 @@ export default (data = {}) => {
   const rootReducer = combineReducers({
     trackers,
   });
-
   return createStore(rootReducer, data, middleware);
 };

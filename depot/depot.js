@@ -21,66 +21,65 @@ class Depot {
   ticks: ITicksDepot = ticks;
   appInfo = appInfo;
 
-  getTracker(trackId: number): Tracker {
+  getTracker(trackId: number): Promise<Tracker> {
     check.assert.number(trackId);
 
     const tracker = this.trackers.getOne(trackId);
-    if (!tracker) return null;
+    if (!tracker) return Promise.reject();
 
     const schema = tickSchemas[tracker.typeId];
     if (schema) {
       const ticks = this._getTicksWithData(
         schema, trackId, time.getDateMs());
-      return {
+      return Promise.resolve({
         ...tracker,
         ticks,
-      };
+      });
     }
 
     const ticks = this._getTicks(trackId, time.getDateMs());
-    return {
+    return Promise.resolve({
       ...tracker,
       ticks,
-    };
-  }
-
-  loadTrackers(): Array<Tracker> {
-    const trackers = this.trackers.getAll();
-    return trackers.map(tracker => {
-      const trackId = tracker.id;
-      const schema = tickSchemas[tracker.typeId];
-      const ticks = schema ?
-        this._getTicksWithData(schema, trackId, time.getDateMs()) :
-        this._getTicks(trackId, time.getDateMs());
-      return {
-        ...tracker,
-        ticks,
-      };
     });
   }
 
-  addTracker(tracker: Tracker): Tracker {
-    return this.trackers.add(tracker);
+  loadTrackers(): Promise<Array<Tracker>> {
+    const trackers = this.trackers.getAll();
+    return Promise.resolve(
+      trackers.map(tracker => {
+        const trackId = tracker.id;
+        const schema = tickSchemas[tracker.typeId];
+        const ticks = schema ?
+          this._getTicksWithData(schema, trackId, time.getDateMs()) :
+          this._getTicks(trackId, time.getDateMs());
+        return {
+          ...tracker,
+          ticks,
+        };
+      })
+    );
   }
 
-  addTrackerAt(tracker: Tracker, index: number): Tracker {
-    return this.trackers.addAt(tracker, index);
+  addTracker(tracker: Tracker): Promise<Tracker> {
+    return Promise.resolve(this.trackers.add(tracker));
   }
 
-  updateTracker(tracker: Tracker): boolean {
-    return this.trackers.update(tracker);
+  addTrackerAt(tracker: Tracker, index: number): Promise<Tracker> {
+    return Promise.resolve(this.trackers.addAt(tracker, index));
   }
 
-  removeTracker(trackId: number): boolean {
-    this.trackers.remove(trackId);
+  updateTracker(tracker: Tracker): Promise<boolean> {
+    return Promise.resolve(this.trackers.update(tracker));
+  }
+
+  removeTracker(trackId: number): Promise<boolean> {
     this.ticks.removeForTracker(trackId);
-    return true;
+    return Promise.resolve(this.trackers.remove(trackId));
   }
 
-  addTick(trackId: number,
-          dateTimeMs: number,
-          value?: number,
-          data?: Object): Tick {
+  addTick(trackId: number, dateTimeMs: number,
+          value?: number, data?: Object): Promise<Tick> {
     check.assert.number(trackId);
     check.assert.number(dateTimeMs);
 
@@ -90,24 +89,27 @@ class Depot {
       this.ticks.addData(schema, data);
     }
 
-    return this.ticks.add({
+    const tick = this.ticks.add({
       trackId: trackId,
       dateTimeMs: dateTimeMs,
       value: value,
     });
+    return Promise.resolve(tick);
   }
 
-  undoLastTick(trackId: number): boolean {
+  undoLastTick(trackId: number): Promise<boolean> {
     check.assert.number(trackId);
 
     const tick = this.ticks.getLast(trackId);
     if (tick) {
-      return this.ticks.remove(tick.id);
+      return Promise.resolve(this.ticks.remove(tick.id));
     }
-    return false;
+    return Promise.resolve(false);
   }
 
-  updateLastTick(trackId: number, value?: number, data?: Object): Tick {
+  updateLastTick(trackId: number,
+                 value?: number,
+                 data?: Object): Promise<Tick> {
     check.assert.number(trackId);
 
     const tick = this.ticks.getLast(trackId);
@@ -118,28 +120,28 @@ class Depot {
       this.ticks.updateData(schema, tick.id, data);
     }
 
-    this.ticks.update(tick.id, value);
-    return tick;
+    return Promise.resolve(this.ticks.update(tick.id, value));
   }
 
   getTicks(trackId: number,
            minDateMs: number,
-           maxDateMs?: number): Array<Tick> {
+           maxDateMs?: number): Promise<Array<Tick>> {
     check.assert.number(trackId);
     check.assert.number(minDateMs);
 
     const tracker = this.trackers.getOne(trackId);
-
     const schema = tickSchemas[tracker.typeId];
     if (schema) {
-      return this._getTicksWithData(
-        schema, trackId, minDateMs, maxDateMs);
+      const ticks = this._getTicksWithData(schema, trackId,
+        minDateMs, maxDateMs);
+      return Promise.resolve(ticks);
     }
 
-    return this._getTicks(trackId, minDateMs, maxDateMs);
+    const ticks = this._getTicks(trackId, minDateMs, maxDateMs);
+    return Promise.resolve(ticks);
   }
 
-  loadTestData(): Array<Tracker> {
+  loadTestData(): Promise<Array<Tracker>> {
     this._resetTestData();
 
     if (this._hasTestData()) {
@@ -149,7 +151,7 @@ class Depot {
     const trackers = this._genTestTrackers();
     this._setTestTrackers(trackers);
 
-    return trackers;
+    return Promise.resolve(trackers);
   }
 
   _getTicks(trackId: number,

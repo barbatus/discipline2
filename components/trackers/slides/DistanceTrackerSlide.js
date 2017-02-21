@@ -24,7 +24,7 @@ import {formatDistance} from '../../../utils/format';
 
 import {caller} from '../../../utils/lang';
 
-import DistanceTracker from '../../../geo/DistanceTracker';
+import DistanceTrackers, {DistanceTracker} from '../../../geo/DistanceTrackers';
 
 import {slideWidth} from '../styles/slideStyles';
 
@@ -84,13 +84,18 @@ const DIST_INTRVL = 5.0;
 const TIME_INTRVL = 100; // ms
 
 export default class DistanceTrackerSlide extends TrackerSlide {
-  _distTracker = null;
+  _distTracker: DistanceTracker = null;
 
   _path = [];
 
   constructor(props) {
     super(props);
-    this._distTracker = new DistanceTracker(DIST_INTRVL, TIME_INTRVL);
+    const { tracker } = props;
+    this._distTracker = DistanceTrackers.get(tracker.id,
+      DIST_INTRVL, TIME_INTRVL);
+    this._distTracker.events.on('onStart', ::this._onDistStart);
+    this._distTracker.events.on('onUpdate', ::this._onDistUpdate);
+    this._distTracker.events.on('onStop', ::this._onDistStop);
   }
 
   get bodyStyle() {
@@ -118,12 +123,12 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   get footerControls() {
-    const { editable } = this.props;
+    const { responsive } = this.props;
     const renderBtn = (label, onPress) => {
       return (
         <TouchableOpacity
           style={styles.button}
-          disabled={!editable}
+          disabled={!responsive}
           onPress={this::onPress}>
           <Text style={styles.btnText}>
             {label}
@@ -155,12 +160,18 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     );
   }
 
+  componentWillUnmount() {
+    const { tracker } = this.props;
+    DistanceTrackers.dispose(tracker.id);
+    this._distTracker = null;
+  }
+
   _onStartBtn() {
-    this._distTracker.start(::this._onDistStart, ::this._onDistUpdate);
+    this._distTracker.start();
   }
 
   _onStopBtn() {
-    this._distTracker.stop(::this._onDistStop);
+    this._distTracker.stop();
   }
 
   _onDistStart(error) {

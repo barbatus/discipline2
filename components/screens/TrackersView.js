@@ -58,14 +58,12 @@ class TrackersView extends ScreenView {
   }
 
   get content() {
-    const { ticks, todayMs } = this.props;
     return (
       <Animated.View style={commonStyles.flexFilled}>
         <TrackerCal
           ref='calendar'
+          {...this.props}
           style={commonStyles.absFilled}
-          todayMs={todayMs}
-          ticks={ticks}
           onMonthChanged={::this._onMonthChanged}
         />
         <Trackers
@@ -205,12 +203,13 @@ export default connect(
       updateIndex: state.trackers.updateIndex,
       ticks: state.trackers.ticks || [],
       todayMs: state.trackers.todayMs,
+      dateMs: state.trackers.dateMs,
     };
   },
   (dispatch, props) => {
     return {
-      onCalendarUpdate: (tracker, todayMs, startDateMs, endDateMs) => dispatch(
-        updateCalendar(tracker, todayMs, startDateMs, endDateMs)),
+      onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) => dispatch(
+        updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
       onRemove: tracker => dispatch(removeTracker(tracker)),
       onUpdate: tracker => dispatch(updateTracker(tracker)),
       onTick: (tracker, value, data) => dispatch(
@@ -232,6 +231,7 @@ export default connect(
         dispatch(completeChange(index));
         caller(props.onSaveCompleted, index);
       },
+      dispatch,
     }
   }, null, {withRef: true}
 )(TrackersView);

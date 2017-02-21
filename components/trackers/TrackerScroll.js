@@ -13,9 +13,11 @@ import {
 } from 'react-native';
 
 import Scroll from '../scrolls/Scroll';
+
 import BaseScroll from '../scrolls/BaseScroll';
 
 import {commonStyles, screenWidth} from '../styles/common';
+
 import {slideHeight} from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
@@ -49,7 +51,7 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   render() {
-    const { style, editable, scale } = this.props;
+    const { style, responsive, scale } = this.props;
 
     const slideStyle = {
       width: screenWidth * scale,
@@ -61,7 +63,7 @@ export default class TrackerScroll extends TrackerRenderer {
           <View
             key={tracker.id}
             style={[commonStyles.centered, slideStyle]}>
-            { this.renderTracker(tracker, editable, scale) }
+            { this.renderScaledTracker(tracker, scale, responsive) }
           </View>
         );
       }).toArray();
@@ -84,5 +86,5 @@ export default class TrackerScroll extends TrackerRenderer {
 };
 
 TrackerScroll.defaultProps = {
-  editable: true,
+  responsive: true,
 };

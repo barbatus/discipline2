@@ -25,27 +25,17 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
-import Timers from '../../../time/Timers';
+import Timers, {Timer} from '../../../time/Timers';
 
 export default class StopWatchTrackerSlide extends TrackerSlide {
+  _timer: Timer = null;
+
   constructor(props) {
     super(props);
 
     const { tracker } = props;
     this._timer = Timers.get(tracker.id, 1000);
     this._timer.events.on('onTimer', ::this._onTimer);
-  }
-
-  componentWillUnmount() {
-    const { tracker } = this.props;
-    Timers.dispose(tracker.id);
-    this._timer = null;
-  }
-
-  onEdit() {
-    const { tracker } = this.props;
-    if (tracker.active) return;
-    super.onEdit();
   }
 
   get bodyControls() {
@@ -64,13 +54,13 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
   }
 
   get footerControls() {
-    const { tracker, editable } = this.props;
+    const { tracker, responsive } = this.props;
 
     const renderBtn = (label, onPress) => {
       return (
         <TouchableOpacity
           style={styles.button}
-          disabled={!editable}
+          disabled={!responsive}
           onPress={this::onPress}>
           <Text style={styles.btnText}>
             {label}
@@ -91,17 +81,27 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     );
   }
 
+  componentWillUnmount() {
+    const { tracker } = this.props;
+    Timers.dispose(tracker.id);
+    this._timer = null;
+  }
+
+  onEdit() {
+    const { tracker } = this.props;
+    if (tracker.active) return;
+    super.onEdit();
+  }
+
   _onTick() {
     Vibration.vibrate();
 
-    const { tracker } = this.props;
-    this._timer.start(tracker.value);
+    this._timer.start(0);
     caller(this.props.onStart);
     caller(this.props.onTick);
   }
 
   _onTimer(timeMs: number) {
-    this.refs.time.setTime(timeMs);
     caller(this.props.onProgress, timeMs);
   }
 

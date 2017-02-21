@@ -10,14 +10,17 @@ import {
 } from 'react-native';
 
 import reactMixin from 'react-mixin';
+
 import TimerMixin from 'react-timer-mixin';
 
 import {List} from 'immutable';
 
 import TrackerSwiper from './TrackerSwiper';
+
 import TrackerScroll from './TrackerScroll';
 
 import {MoveDownResponderAnim} from '../animation/MoveDownResponderAnim';
+
 import TrackerStore from '../../model/Trackers';
 
 import {commonStyles} from '../styles/common';
@@ -202,7 +205,7 @@ export default class Trackers extends Component {
           trackers={scTrackers}
           style={styles.smallScroll}
           scale={1 / 4}
-          editable={false}
+          responsive={false}
           onSlideTap={::this._onSmallSlideTap}
         />
         <TrackerSwiper

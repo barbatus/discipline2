@@ -1,14 +1,36 @@
 'use strict';
 
-import haversine from 'haversine'
+import haversine from 'haversine';
+
+import EventEmitter from 'eventemitter3';
 
 import {GeoWatcher, getMetersFromLatLon} from './geo';
 
 import {caller} from '../utils/lang';
 
-const tickDataSchema = 'DistData';
+class DistanceTrackers {
+  _trackers = {};
 
-export default class DistanceTracker {
+  get(id: number, distInt: number, timeInt: number) {
+    if (!this._trackers[id]) {
+      this._trackers[id] =
+        new DistanceTracker(distInt, timeInt);
+    }
+    return this._trackers[id];
+  }
+
+  dispose(id: number) {
+    if (this._trackers[id]) {
+      this._trackers[id].dispose();
+      this._trackers[id] = null;
+    }
+  }
+}
+
+const trackers = new DistanceTrackers();
+export default trackers;
+
+export class DistanceTracker {
   _hInterval = null;
 
   _time = 0;
@@ -23,35 +45,37 @@ export default class DistanceTracker {
 
   _starting = false;
 
-  constructor(distInterval, timeInterval) {
-    this._distInterval = distInterval;
-    this._timeInterval = timeInterval;
+  events: EventEmitter = new EventEmitter();
+
+  constructor(distInt, timeInt) {
+    this._distInterval = distInt;
+    this._timeInterval = timeInt;
   }
 
   get active() {
     return !!this._hInterval;
   }
 
-  start(onStart: Function, onUpdate: Function) {
+  start() {
     if (this._starting || this.active) return;
 
     this._starting = true;
     GeoWatcher.start((pos, error) => {
       this._starting = false;
-      caller(onStart, error);
+      this._fireOnStart(error);
 
       if (error) return;
 
       this._unwatch = GeoWatcher.watch(pos => {
         this._onPosition(pos);
         if (!this.active) {
-          this._startTracking(onUpdate);
+          this._startTracking();
         }
       });
     });
   }
 
-  stop(onStop: Function) {
+  stop() {
     if (!this.active) return;
 
     const reset = () => {
@@ -72,12 +96,31 @@ export default class DistanceTracker {
         latitude: this._latLon.latitude,
         longitude: this._latLon.longitude,
       };
-      caller(onStop, data, error);
+      this._fireOnStop(data, error);
       reset();
     });
   }
 
-  _startTracking(onUpdate) {
+  dispose() {
+    this.stop();
+    this.events.removeAllListeners('onStart');
+    this.events.removeAllListeners('onUpdate');
+    this.events.removeAllListeners('onStop');
+  }
+
+  _fireOnStart(error: any) {
+    this.events.emit('onStart', error);
+  }
+
+  _fireOnUpdate(data: any) {
+    this.events.emit('onUpdate', data);
+  }
+
+  _fireOnStop(data: any, error: any) {
+    this.events.emit('onStop', data, error);
+  }
+
+  _startTracking() {
     this._dist = 0;
     this._time = 0;
     this._hInterval = setInterval(() => {
@@ -88,7 +131,7 @@ export default class DistanceTracker {
         latitude: this._latLon.latitude,
         longitude: this._latLon.longitude,
       };
-      caller(onUpdate, data);
+      this._fireOnUpdate(data);
     }, this._timeInterval);
   }
 

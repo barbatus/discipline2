@@ -20,12 +20,12 @@ import {caller} from '../../../utils/lang';
 
 export default class CounterSlide extends TrackerSlide {
   get bodyControls() {
-    const { tracker, editable } = this.props;
+    const { tracker, responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
           <TouchableOpacity
-            disabled={!editable}
+            disabled={!responsive}
             onPress={::this._onUndo}>
             <Image
               source={getIcon('minus')}
@@ -36,7 +36,7 @@ export default class CounterSlide extends TrackerSlide {
             {tracker.count}
           </Text>
           <TouchableOpacity
-            disabled={!editable}
+            disabled={!responsive}
             onPress={::this._onTick}>
             <Image
               source={getIcon('plus')}

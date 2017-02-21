@@ -173,6 +173,13 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		09C089C11E5C0C1F00B3F8B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 350DE72584F9434FB485952E /* RNBackgroundFetch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 835318541D52293F005738CD;
+			remoteInfo = RNBackgroundFetch;
+		};
 		09F96D9D1E49CD8500908B6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
@@ -535,6 +542,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		09C089971E5C0C1E00B3F8B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				09C089C21E5C0C1F00B3F8B4 /* libRNBackgroundFetch.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		09F96F161E49D04F00908B6F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -825,6 +840,10 @@
 					ProjectRef = 6F5B90C5ED5D4DBC8C6EE766 /* RealmReact.xcodeproj */;
 				},
 				{
+					ProductGroup = 09C089971E5C0C1E00B3F8B4 /* Products */;
+					ProjectRef = 350DE72584F9434FB485952E /* RNBackgroundFetch.xcodeproj */;
+				},
+				{
 					ProductGroup = 09F96F161E49D04F00908B6F /* Products */;
 					ProjectRef = B5EF576A40214F499FF1C237 /* RNBackgroundGeolocation.xcodeproj */;
 				},
@@ -970,6 +989,13 @@
 			fileType = archive.ar;
 			path = "libRCTAnimation-tvOS.a";
 			remoteRef = 09B3D9F71E4AFB9800D210BC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		09C089C21E5C0C1F00B3F8B4 /* libRNBackgroundFetch.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNBackgroundFetch.a;
+			remoteRef = 09C089C11E5C0C1F00B3F8B4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		09F96D9E1E49CD8500908B6F /* libRCTImage-tvOS.a */ = {

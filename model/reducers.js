@@ -122,10 +122,10 @@ export const trackers = handleActions({
       ),
     };
   },
-  [UPDATE_CALENDAR]: (state, { tracker, todayMs, ticks }) => {
+  [UPDATE_CALENDAR]: (state, { tracker, dateMs, ticks }) => {
     return {
       ...state,
-      todayMs,
+      dateMs,
       ticks,
     };
   },

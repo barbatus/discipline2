@@ -11,8 +11,6 @@ import {
   Animated,
 } from 'react-native';
 
-import TimerMixin from 'react-timer-mixin';
-
 import {commonStyles, screenWidth} from '../styles/common';
 
 import BaseScroll from './BaseScroll';
@@ -27,13 +25,11 @@ const Swiper = React.createClass({
     index: React.PropTypes.number,
   },
 
-  mixins: [TimerMixin],
-
   getDefaultProps() {
     return {
       index: 0,
       slides: [],
-      scrollEnabled: true
+      scrollEnabled: true,
     }
   },
 
@@ -74,7 +70,7 @@ const Swiper = React.createClass({
         pointerEvents='none'
         style={styles.dotsContainer}>
         <View style={styles.dots}>
-          {dots}
+          { dots }
         </View>
       </Animated.View>
     );
@@ -115,7 +111,7 @@ const Swiper = React.createClass({
       width: radius,
       height: radius,
       borderRadius: radius / 2,
-      marginRight: margin
+      marginRight: margin,
     };
   },
 
@@ -133,12 +129,12 @@ const Swiper = React.createClass({
   },
 
   render() {
-    let {
+    const {
       index, style, slides, onTouchMove,
-      scrollEnabled, onSlideNoChange
+      scrollEnabled, onSlideNoChange,
     } = this.props;
 
-    let dots = slides.length >= 2 ?
+    const dots = slides.length >= 2 ?
       this._renderDots(index, slides.length) : null;
 
     return (
@@ -154,7 +150,7 @@ const Swiper = React.createClass({
           onSlideChange={this._onSlideChange}
           onSlideNoChange={onSlideNoChange}>
         </BaseScroll>
-        {dots}
+        { dots }
       </View>
     );
   }

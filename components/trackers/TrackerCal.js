@@ -16,6 +16,7 @@ import Calendar from '../calendar/Calendar';
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
 import {commonStyles} from '../styles/common';
+
 import {slideWidth} from './styles/slideStyles';
 
 export default class TrackerCal extends Component {
@@ -41,7 +42,7 @@ export default class TrackerCal extends Component {
   }
 
   render() {
-    const { style, ticks, todayMs, onMonthChanged } = this.props;
+    const { style, ticks, todayMs, dateMs, onMonthChanged } = this.props;
     const tickDates = ticks.map(tick => moment(tick.dateTimeMs));
 
     const calStyle = [style, this._upDown.style, {opacity: this._opacity}];
@@ -53,6 +54,7 @@ export default class TrackerCal extends Component {
             calContainer: styles.container,
           }}
           todayMs={todayMs}
+          dateMs={dateMs}
           scrollEnabled={true}
           tickDates={tickDates}
           showControls={true}

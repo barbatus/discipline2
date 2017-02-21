@@ -8,9 +8,13 @@ import {
 } from 'react-native';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
+
 import CounterSlide from './slides/CounterSlide';
+
 import SumTrackerSlide from './slides/SumTrackerSlide';
+
 import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
+
 import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 
 import {TrackerType} from '../../depot/consts';
@@ -92,43 +96,55 @@ export default class TrackerRenderer extends Component {
     caller(this.props.onTrackerChange, tracker);
   }
 
-  _wrapPropCall(prop: string, tracker: Tracker) {
-    return (...args) => caller(this.props[prop], tracker, ...args);
+  renderTracker(tracker: Tracker) {
+    // Generate onProgress events only
+    // for the main tracker slides (swiper's ones)
+    return this._renderTracker(tracker, 1.0, true, true, {
+      onProgress: this.onProgress.bind(this, tracker),
+    });
   }
 
-  renderTracker(tracker: Tracker, editable: boolean = true, scale: number = 1) {
-    const newSlide = (Component) => {
-      return (
-        <Component
-          ref={tracker.id}
-          key={tracker.id}
-          editable={editable}
-          scale={scale}
-          onEdit={this.onEdit.bind(this, tracker)}
-          onRemove={this.onRemove.bind(this, tracker)}
-          onTap={this.onTap.bind(this, tracker)}
-          onTick={this.onTick.bind(this, tracker)}
-          onUndo={this.onUndo.bind(this, tracker)}
-          onProgress={this.onProgress.bind(this, tracker)}
-          onStart={this.onStart.bind(this, tracker)}
-          onStop={this.onStop.bind(this, tracker)}
-          onTrackerChange={::this.onTrackerChange}
-          tracker={tracker}
-        />
-      );
-    };
+  renderScaledTracker(tracker: Tracker, scale: number, responsive: boolean) {
+    check.assert.number(scale);
+    check.assert.boolean(responsive);
 
+    return this._renderTracker(tracker, scale, responsive, false);
+  }
+
+  _renderTracker(tracker: Tracker, scale: number,
+                 responsive: boolean, editable: boolean,
+                 props: Object) {
+    props = _.extend({ responsive, editable, scale }, props); 
     switch (tracker.type) {
       case TrackerType.GOAL:
-        return newSlide(GoalTrackerSlide);
+        return this._renderSlide(GoalTrackerSlide, tracker, props);
       case TrackerType.COUNTER:
-        return newSlide(CounterSlide);
+        return this._renderSlide(CounterSlide, tracker, props);
       case TrackerType.SUM:
-        return newSlide(SumTrackerSlide);
+        return this._renderSlide(SumTrackerSlide, tracker, props);
       case TrackerType.STOPWATCH:
-        return newSlide(StopWatchTrackerSlide);
+        return this._renderSlide(StopWatchTrackerSlide, tracker, props);
       case TrackerType.DISTANCE:
-        return newSlide(DistanceTrackerSlide);
+        return this._renderSlide(DistanceTrackerSlide, tracker, props);
     }
+  }
+
+  _renderSlide(Component, tracker: Tracker, props: Object) {
+    return (
+      <Component
+        {...props}
+        ref={tracker.id}
+        key={tracker.id}
+        onEdit={this.onEdit.bind(this, tracker)}
+        onRemove={this.onRemove.bind(this, tracker)}
+        onTap={this.onTap.bind(this, tracker)}
+        onTick={this.onTick.bind(this, tracker)}
+        onUndo={this.onUndo.bind(this, tracker)}
+        onStart={this.onStart.bind(this, tracker)}
+        onStop={this.onStop.bind(this, tracker)}
+        onTrackerChange={::this.onTrackerChange}
+        tracker={tracker}
+      />
+    );
   }
 };

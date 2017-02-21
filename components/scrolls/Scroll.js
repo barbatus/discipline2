@@ -50,17 +50,14 @@ const Scroll = React.createClass({
   },
 
   render() {
-    const { style, centered, slides, slideWidth, scrollEnabled } = this.props;
+    const { centered, slideWidth } = this.props;
     const marginLeft = centered ? (screenWidth - slideWidth) / 2 : 0;
 
     return (
       <BaseScroll
         ref='scroll'
-        slides={slides}
+        {...this.props}
         pagingEnabled={false}
-        style={style}
-        slideWidth={slideWidth}
-        scrollEnabled={scrollEnabled}
         contentStyle={[commonStyles.centered, {marginLeft}]}>
       </BaseScroll>
     );

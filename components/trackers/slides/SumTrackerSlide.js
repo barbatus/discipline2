@@ -64,7 +64,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   get bodyControls() {
-    const { tracker, editable } = this.props;
+    const { tracker, responsive } = this.props;
     return (
       <View style={[
         trackerStyles.controls,
@@ -74,7 +74,7 @@ export default class SumTrackerSlide extends TrackerSlide {
           <View style={styles.inputContainer}>
              <TextInput
               ref='added'
-              editable={editable}
+              editable={responsive}
               placeholder='Enter value'
               placeholderTextColor={trackerDef.hintText.color}
               style={styles.sumInput}
@@ -83,7 +83,7 @@ export default class SumTrackerSlide extends TrackerSlide {
               onSubmitEditing={::this._onPlus}
             />
             <TouchableOpacity
-              disabled={!editable}
+              disabled={!responsive}
               onPress={::this._onPlus}>
               <Image
                 source={getIcon('plus_sm')}
