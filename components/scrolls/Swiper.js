@@ -38,11 +38,11 @@ const Swiper = React.createClass({
   },
 
   isEnabled() {
-    return this.refs.scroll.isEnabled();
+    return this.refs.scroll.enabled;
   },
 
   getIndex() {
-    return this.refs.scroll.getIndex();
+    return this.refs.scroll.index;
   },
 
   shouldComponentUpdate(props, state) {
@@ -160,20 +160,20 @@ const stylesDef = {
   slide: {
     flex: 1,
     width: screenWidth,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   dots: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'transparent'
+    backgroundColor:'transparent',
   },
   dotsContainer: {
     position: 'absolute',
     bottom: 10,
     left: 0,
-    right: 0
+    right: 0,
   },
   basicDot: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -181,11 +181,11 @@ const stylesDef = {
     height: 7,
     borderRadius: 4,
     marginBottom: 5,
-    marginRight: 5
+    marginRight: 5,
   },
   activeDot: {
-    backgroundColor: 'rgb(255, 255, 255)'
-  }
+    backgroundColor: 'rgb(255, 255, 255)',
+  },
 };
 
 const styles = StyleSheet.create(stylesDef);

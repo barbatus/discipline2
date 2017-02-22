@@ -7,6 +7,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import {extend} from 'lodash';
+
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
 
 import CounterSlide from './slides/CounterSlide';
@@ -114,7 +116,7 @@ export default class TrackerRenderer extends Component {
   _renderTracker(tracker: Tracker, scale: number,
                  responsive: boolean, editable: boolean,
                  props: Object) {
-    props = _.extend({ responsive, editable, scale }, props); 
+    props = extend({ responsive, editable, scale }, props); 
     switch (tracker.type) {
       case TrackerType.GOAL:
         return this._renderSlide(GoalTrackerSlide, tracker, props);

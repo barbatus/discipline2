@@ -36,7 +36,7 @@ const grads = [{
 const rightOut = window.width - 1;
 const leftOut = -window.width + 1;
 
-class GradientSlider extends Component {
+export default class GradientSlider extends Component {
   constructor(props) {
     super(props);
 
@@ -46,41 +46,41 @@ class GradientSlider extends Component {
     this.state = {
       left: {
         grad: this._getGrad(-1),
-        move: new Animated.Value(leftOut)
+        move: new Animated.Value(leftOut),
       },
       center: {
         grad: this._getGrad(0),
-        move: new Animated.Value(0)
+        move: new Animated.Value(0),
       },
       right: {
         grad: this._getGrad(1),
-        move: new Animated.Value(rightOut)
-      }
+        move: new Animated.Value(rightOut),
+      },
     };
   }
 
   _getGrad(index) {
-    let residue = index % grads.length;
-    let grad = residue >= 0 ? grads[residue] : grads[grads.length + residue];
+    const residue = index % grads.length;
+    const grad = residue >= 0 ? grads[residue] : grads[grads.length + residue];
     return [grad.start, grad.end];
   }
 
   slide(dx) {
     if (this._isAnimated) return;
 
-    let left = this.state[this._slides[0]];
-    let leftVal = left.move._value;
-    let leftDx = Math.min(leftVal - dx, 0);
+    const left = this.state[this._slides[0]];
+    const leftVal = left.move._value;
+    const leftDx = Math.min(leftVal - dx, 0);
     left.move.setValue(leftDx);
 
-    let center = this.state[this._slides[1]];
-    let centerVal = center.move._value;
-    let centerDx = centerVal - dx;
+    const center = this.state[this._slides[1]];
+    const centerVal = center.move._value;
+    const centerDx = centerVal - dx;
     center.move.setValue(centerDx);
 
-    let right = this.state[this._slides[2]];
-    let rightVal = right.move._value;
-    let rightDx = Math.max(rightVal - dx, 0);
+    const right = this.state[this._slides[2]];
+    const rightVal = right.move._value;
+    const rightDx = Math.max(rightVal - dx, 0);
     right.move.setValue(rightDx);
   }
 
@@ -103,8 +103,8 @@ class GradientSlider extends Component {
       ]).start(() => {
 
         this._gradInd += 1;
-        let slide0 = this._slides[0];
-        let slide1 = this._slides[1];
+        const slide0 = this._slides[0];
+        const slide1 = this._slides[1];
         this.state[slide0].move.setValue(rightOut);
         this.setState({
           [slide0]: {
@@ -136,8 +136,8 @@ class GradientSlider extends Component {
       ]).start(() => {
 
         this._gradInd -= 1;
-        let slide2 = this._slides[2];
-        let slide1 = this._slides[1];
+        const slide2 = this._slides[2];
+        const slide1 = this._slides[1];
         this.state[slide2].move.setValue(leftOut);
         this.setState({
           [slide2]: {
@@ -191,7 +191,8 @@ class GradientSlider extends Component {
           <LinearGradient
             start={{x: 0, y: 0.5}} end={{x: 1, y: 0.5}}
             colors={this.state.left.grad}
-            style={styles.gradient} />
+            style={styles.gradient}
+          />
         </Animated.View>
         <Animated.View
           style={[
@@ -217,7 +218,8 @@ class GradientSlider extends Component {
           <LinearGradient
             start={{x: 0, y: 0.5}} end={{x: 1, y: 0.5}}
             colors={this.state.right.grad}
-            style={styles.gradient} />
+            style={styles.gradient}
+          />
         </Animated.View>
       </View>
     );
@@ -233,5 +235,3 @@ const styles = StyleSheet.create({
     right: 0
   }
 });
-
-module.exports = GradientSlider;

@@ -15,6 +15,8 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import {getIcon} from '../../../../icons/icons';
+
 import {
   trackerStyles,
   propsStyles,
@@ -179,7 +181,7 @@ export default class TrackerEditView extends BaseTrackerView {
               </View>
             </View>
           </View>
-          {this._renderDeleteRow()}
+          { this._renderDeleteRow() }
         </View>
       </Animated.View>
     );

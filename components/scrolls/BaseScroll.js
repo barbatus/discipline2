@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -10,12 +10,18 @@ import {
   Animated,
 } from 'react-native';
 
+import {isBoolean} from 'lodash';
+
 import {commonStyles, screenWidth} from '../styles/common';
 
 import {caller} from '../../utils/lang';
 
-const BaseScroll = React.createClass({
-  propTypes: {
+class BaseScroll extends Component {
+  _offsetX = 0;
+
+  _isScrolling = false;
+
+  static propTypes = {
     slideWidth: React.PropTypes.number.isRequired,
     index: React.PropTypes.number,
     slides: React.PropTypes.array.isRequired,
@@ -29,28 +35,36 @@ const BaseScroll = React.createClass({
     removeClippedSubviews: React.PropTypes.bool,
     automaticallyAdjustContentInsets: React.PropTypes.bool,
     keyboardDismissMode: React.PropTypes.string,
-  },
+  };
 
-  getDefaultProps() {
-    return {
-      index: 0,
-      slides: [],
-      horizontal: true,
-      pagingEnabled: true,
-      scrollEnabled: true,
-      showsHorizontalScrollIndicator: false,
-      bounces: false,
-      scrollsToTop: false,
-      removeClippedSubviews: true,
-      automaticallyAdjustContentInsets: false,
-      keyboardDismissMode: 'on-drag'
-    }
-  },
+  static defaultProps = {
+    index: 0,
+    slides: [],
+    horizontal: true,
+    pagingEnabled: true,
+    scrollEnabled: true,
+    showsHorizontalScrollIndicator: false,
+    bounces: false,
+    scrollsToTop: false,
+    removeClippedSubviews: true,
+    automaticallyAdjustContentInsets: false,
+    keyboardDismissMode: 'on-drag',
+  };
+
+  // This is not reliable since it might be
+  // incorrect if slides list has changed
+  get index() {
+    return this._index;
+  }
+
+  get enabled() {
+    return this.props.scrollEnabled;
+  }
 
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
            this.props.scrollEnabled !== props.scrollEnabled;
-  },
+  }
 
   componentWillMount() {
     const { slideWidth, index } = this.props;
@@ -61,23 +75,27 @@ const BaseScroll = React.createClass({
     this._pageX = slideWidth;
     this._isScrolling = false;
     this._onScrollToCb = null;
-  },
+  }
 
-  scrollTo(index, callback, animated) {
-    if (_.isBoolean(callback)) {
+  scrollTo(index: number,
+           callback?: Function|boolean,
+           animated?: boolean) {
+    const { slides, slideWidth } = this.props;
+
+    if (isBoolean(callback)) {
       animated = callback;
       callback = null;
     }
 
-    if (this.getSize() <= 1) {
+    if (slides.length <= 1) {
       caller(callback, false);
       return;
     }
 
     if (this._isScrolling) return;
 
-    index = Math.min(index, this.getSize() - 1);
-    const offsetX = Math.max(index * this.getWidth(), 0);
+    index = Math.min(index, slides.length - 1);
+    const offsetX = Math.max(index * slideWidth, 0);
 
     if (this._offsetX === offsetX) {
       caller(callback, false);
@@ -87,67 +105,48 @@ const BaseScroll = React.createClass({
     this._onScrollToCb = callback;
     this._isScrolling = true;
     this.refs.scrollView.scrollTo({
-      x: offsetX, y: 0,
-      animated: animated !== false
+      x: offsetX,
+      y: 0,
+      animated: animated !== false,
     });
 
     if (animated === false) {
       this._endScrolling(offsetX);
     }
-  },
-
-  getSize() {
-    return this.props.slides.length;
-  },
-
-  getWidth() {
-    return this.props.slideWidth;
-  },
-
-  // This is not reliable since it might be
-  // incorrect if slides list has changed
-  getIndex() {
-    return this._index;
-  },
-
-  isEnabled() {
-    return this.props.scrollEnabled;
-  },
+  }
 
   _onTouchStart(event) {
     this._pageX = event.nativeEvent.pageX;
-  },
+  }
 
-  _onTouchEnd(e) {},
+  _onTouchEnd(e) {}
 
   _onTouchMove(event) {
-    if (!this.isEnabled()) return;
+    const { slides, slideWidth } = this.props;
 
-    if (this.getSize() <= 1) return;
+    if (!this.enabled || slides.length <= 1) return;
 
     const dx = this._pageX - event.nativeEvent.pageX;
     this._pageX = event.nativeEvent.pageX;
 
-    const size = this.getSize();
     if (this._index === 0 && dx <= 0) return;
-    if (this._index === size - 1 && dx >= 0) return;
+    if (this._index === slides.length - 1 && dx >= 0) return;
 
     // Adjust offset and index after moving.
     // Offset and index become float.
     this._offsetX += dx;
-    const slideWidth = this.getWidth();
     const index = this._index + (dx / slideWidth);
-    this._index = Math.min(Math.max(index, 0), size - 1);
+    this._index = Math.min(Math.max(index, 0), slides.length - 1);
 
     caller(this.props.onTouchMove, dx);
-  },
+  }
 
   _onScrollEnd(event) {
     const { x } = event.nativeEvent.contentOffset;
     this._endScrolling(x);
-  },
+  }
 
-  _endScrolling(offsetX) {
+  _endScrolling(offsetX: number) {
     this._isScrolling = false;
     this._updateSlideIndexByOffset(offsetX);
 
@@ -163,50 +162,53 @@ const BaseScroll = React.createClass({
 
     caller(this._onScrollToCb, true);
     this._onScrollToCb = null;
-  },
+  }
 
   _onScrollBegin(event) {
     this._isScrolling = true;
 
     caller(this.props.onScrollBegin, event);
-  },
+  }
 
   // Used to update offset and current slide index
   // after scrolling. Offset and index are supposed to
   // be integer since slide width is an integer
   // and scrolling happens for an exact number of slides. 
-  _updateSlideIndexByOffset(offsetX) {
-    const diff = offsetX - this._offsetX;
+  _updateSlideIndexByOffset(offsetX: number) {
+    const { slideWidth } = this.props;
 
+    const diff = offsetX - this._offsetX;
     if (!diff) return;
 
-    const slideWidth = this.getWidth();
     // Sometimes it's not round integer. 
     this._index = Math.round(this._index + (diff / slideWidth)) >> 0;
     this._offsetX = slideWidth * this._index;
-  },
+  }
 
   render() {
-    const { slides, pagingEnabled,
-            contentStyle, scrollEnabled } = this.props;
+    const {
+      slides, pagingEnabled,
+      contentStyle, scrollEnabled,
+    } = this.props;
+
     return (
-      <ScrollView ref='scrollView'
+      <ScrollView
+        ref='scrollView'
         {...this.props}
-        onScroll={this._onScroll}
         keyboardShouldPersistTaps='always'
         scrollEnabled={scrollEnabled}
         pagingEnabled={pagingEnabled}
         contentContainerStyle={contentStyle}
         contentOffset={{x: this._offsetX}}
-        onTouchStart={this._onTouchStart}
-        onTouchEnd={this._onTouchEnd}
-        onTouchMove={this._onTouchMove}
-        onMomentumScrollBegin={this._onScrollBegin}
-        onMomentumScrollEnd={this._onScrollEnd}>
+        onTouchStart={::this._onTouchStart}
+        onTouchEnd={::this._onTouchEnd}
+        onTouchMove={::this._onTouchMove}
+        onMomentumScrollBegin={::this._onScrollBegin}
+        onMomentumScrollEnd={::this._onScrollEnd}>
         { slides }
       </ScrollView>
     );
   }
-});
+}
 
 export default BaseScroll;

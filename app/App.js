@@ -9,13 +9,20 @@ import {Provider} from 'react-redux';
 import {Navigator, StyleSheet} from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
+
 import MainScreen from '../components/screens/MainScreen';
+
 import Menu from '../components/nav/Menu';
 
 import DayUpdateEvent from './DayUpdateEvent';
+
 import {changeDay} from '../model/actions';
 
-export default class App extends Component {
+export default function CreateApp(store) {
+  return () => <App store={store} />;
+}
+
+class App extends Component {
   state: any;
 
   constructor(props: any) {

@@ -118,6 +118,8 @@ export default class DayUpdateEvent {
   }
 
   _onAppActive() {
+    if (!this._downDate) return;
+
     this._upDate = moment();
 
     const dateChanged = !time.isSameDate(

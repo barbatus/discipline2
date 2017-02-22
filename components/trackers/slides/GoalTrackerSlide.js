@@ -9,8 +9,10 @@ import {
   Image,
   Text,
   StyleSheet,
-  Vibration
+  Vibration,
 } from 'react-native';
+
+import {getIcon} from '../../../icons/icons';
 
 import {trackerStyles} from '../styles/trackerStyles';
 

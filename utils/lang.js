@@ -1,7 +1,9 @@
 'use strict';
 
+import {isFunction} from 'lodash';
+
 export function caller(cb, ...args: any[]) {
-  if (_.isFunction(cb)) {
+  if (isFunction(cb)) {
     cb(...args);
   }
 };

@@ -7,7 +7,7 @@ import {
   Animated,
 } from 'react-native';
 
-import UserIconsStore from '../../../../icons/UserIconsStore';
+import {getIcon, UserIconsStore} from '../../../../icons/icons';
 
 export default class BaseTrackerView extends Component {
   getMainIcon(iconId) {

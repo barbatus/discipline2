@@ -13,6 +13,10 @@ import {
   ScrollView,
 } from 'react-native';
 
+import {first, last} from 'lodash';
+
+import {getIcon} from '../../../icons/icons';
+
 import {slideStyles, slideDef} from '../styles/slideStyles';
 
 import {commonStyles} from '../../styles/common';
@@ -53,8 +57,8 @@ export default class TrackerTypesSlide extends Component {
 
   _renderTypes() {
     const selected = this.state.type;
-    const last = _.last(TYPES);
-    const first = _.first(TYPES);
+    const lastType = last(TYPES);
+    const firstType = first(TYPES);
 
     const types = TYPES.map(type => {
       return (
@@ -78,7 +82,8 @@ export default class TrackerTypesSlide extends Component {
       );
     });
 
-    const borderColor = (selected == last || selected == first) ?
+    const borderColor =
+      (selected == lastType || selected == firstType) ?
       styles.selectedBorder : null;
     return (
       <ScrollView

@@ -12,6 +12,8 @@ import {
   Vibration
 } from 'react-native';
 
+import {getIcon} from '../../../icons/icons';
+
 import {trackerStyles} from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';

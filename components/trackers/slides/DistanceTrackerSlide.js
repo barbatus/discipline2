@@ -189,21 +189,17 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
   _onDistStop({ dist, time, latitude, longitude }) {
     this._onDistUpdate({ dist, time, latitude, longitude });
-
     caller(this.props.onStop);
   }
 
   _onDistUpdate({ dist, time, latitude, longitude }) {
     caller(this.props.onProgress, dist, { time });
-
-    dist = this._initDist + dist;
-    time = this._initTime + time;
     this._path.push({ latitude, longitude });
   }
 
   _showMap() {
     const dlg = registry.get(DlgType.MAPS);
-    dlg.show(this._path);
+    dlg.show(this._path.slice(0));
   }
 };
 

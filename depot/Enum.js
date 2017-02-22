@@ -1,9 +1,11 @@
 'use strict';
 
+import {has} from 'lodash';
+
 class EnumSymbol {
   constructor(key: String, props: Object) {
     check.assert.string(key);
-    assert(_.has(props, 'value'));
+    assert(has(props, 'value'));
 
     this.key = key;
 

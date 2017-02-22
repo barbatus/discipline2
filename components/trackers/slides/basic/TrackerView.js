@@ -14,6 +14,8 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import {getIcon} from '../../../../icons/icons';
+
 import {trackerDef, trackerStyles} from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';

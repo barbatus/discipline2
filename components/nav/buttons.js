@@ -4,11 +4,15 @@ import React, {Component} from 'react';
 
 import {TouchableOpacity, Text, Image} from 'react-native';
 
+import {debounce} from 'lodash';
+
+import {getIcon} from '../../icons/icons';
+
 import styles from './styles';
 
 class NavButton extends Component {
   render() {
-    let onPress = _.debounce(this.props.onPress, 30);
+    let onPress = debounce(this.props.onPress, 30);
 
     return (
       <TouchableOpacity

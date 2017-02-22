@@ -12,6 +12,8 @@ import {
 
 import moment from 'moment';
 
+import {getIcon} from '../../icons/icons';
+
 import Month from './Month';
 
 import styles from './styles';

@@ -13,7 +13,4 @@ export function getIcon(iconId) {
   return UserIconsStore.get(iconId);
 }
 
-// module.exports = {
-//   getIcon,
-//   IconSize
-// };
+export {default as UserIconsStore} from './UserIconsStore';

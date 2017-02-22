@@ -13,6 +13,8 @@ import {
   Vibration,
 } from 'react-native';
 
+import {getIcon} from '../../../icons/icons';
+
 import {
   trackerDef,
   trackerStyles,

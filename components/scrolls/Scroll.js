@@ -37,7 +37,7 @@ const Scroll = React.createClass({
   },
 
   getIndex() {
-    return this.refs.scroll.getIndex();
+    return this.refs.scroll.index;
   },
 
   shouldComponentUpdate(props, state) {
