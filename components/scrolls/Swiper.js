@@ -1,6 +1,6 @@
 'use strict'
 
-import React from 'react';
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -17,42 +17,32 @@ import BaseScroll from './BaseScroll';
 
 import {caller} from '../../utils/lang';
 
-const Swiper = React.createClass({
-  propTypes: {
+export default class Swiper extends Component {
+  _index = 0;
+
+  static propTypes = {
     slides: React.PropTypes.array.isRequired,
     style: View.propTypes.style,
     scrollEnabled: React.PropTypes.bool,
-    index: React.PropTypes.number,
-  },
+  };
 
-  getDefaultProps() {
-    return {
-      index: 0,
-      slides: [],
-      scrollEnabled: true,
-    }
-  },
+  static defaultProps = {
+    slides: [],
+    scrollEnabled: true,
+  };
 
-  getSize() {
-    return this.props.slides.length;
-  },
-
-  isEnabled() {
-    return this.refs.scroll.enabled;
-  },
-
-  getIndex() {
-    return this.refs.scroll.index;
-  },
+  get index() {
+    return this._index;
+  }
 
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
            this.props.scrollEnabled !== props.scrollEnabled;
-  },
+  }
 
   scrollTo(index, callback, animated) {
     this.refs.scroll.scrollTo(index, callback, animated);
-  },
+  }
 
   _renderDots(index, size) {
     if (size <= 1) return null;
@@ -74,7 +64,7 @@ const Swiper = React.createClass({
         </View>
       </Animated.View>
     );
-  },
+  }
 
   _setActiveDot(curInd, prevInd) {
     if (this.refs['page' + prevInd]) {
@@ -92,7 +82,7 @@ const Swiper = React.createClass({
         }
       });
     }
-  },
+  }
 
   /**
    * Scales dot radius.
@@ -113,7 +103,7 @@ const Swiper = React.createClass({
       borderRadius: radius / 2,
       marginRight: margin,
     };
-  },
+  }
 
   _renderSlide(slide, key) {
     return (
@@ -121,40 +111,40 @@ const Swiper = React.createClass({
         {slide}
       </View>
     );
-  },
+  }
 
   _onSlideChange(index, previ) {
+    this._index = index;
     this._setActiveDot(index, previ);
     caller(this.props.onSlideChange, index, previ);
-  },
+  }
 
   render() {
     const {
-      index, style, slides, onTouchMove,
+      style, slides, onTouchMove,
       scrollEnabled, onSlideNoChange,
     } = this.props;
 
     const dots = slides.length >= 2 ?
-      this._renderDots(index, slides.length) : null;
+      this._renderDots(this._index, slides.length) : null;
 
     return (
       <View style={style}>
         <BaseScroll
           ref='scroll'
           style={commonStyles.flexFilled}
-          index={index}
           slides={slides}
           slideWidth={screenWidth}
           onTouchMove={onTouchMove}
           scrollEnabled={scrollEnabled}
-          onSlideChange={this._onSlideChange}
+          onSlideChange={::this._onSlideChange}
           onSlideNoChange={onSlideNoChange}>
         </BaseScroll>
         { dots }
       </View>
     );
   }
-});
+}
 
 const stylesDef = {
   slide: {
@@ -189,5 +179,3 @@ const stylesDef = {
 };
 
 const styles = StyleSheet.create(stylesDef);
-
-export default Swiper;

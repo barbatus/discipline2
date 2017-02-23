@@ -6,6 +6,10 @@ import {PanResponder} from 'react-native';
 
 import {caller} from '../../utils/lang';
 
+const ANGLE_TRESHOLD = Math.cos(89 * Math.PI / 180);
+
+const DY_TRESHOLD = 20;
+
 export class MoveUpDownResponder {
   constructor() {
     this._panHandlers =
@@ -45,9 +49,9 @@ export class MoveUpDownResponder {
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
         const cos = dx / dy;
-        const captured = cos <= 0.20 && dy >= 20;
+        const captured = cos <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
         isUp = state.vy < 0;
-        return captured && !this.stopped;
+        return captured;
       },
       onPanResponderMove: (e: Object, state: Object) => {
         if (isUp && state.vy > 0) return;

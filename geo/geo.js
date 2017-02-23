@@ -7,165 +7,158 @@ import EventEmitter from 'eventemitter3';
 import {caller} from '../utils/lang';
 
 BackgroundGeolocation.configure({
-  distanceFilter: 3,
+  distanceFilter: 0,
   stopOnTerminate: false,
   autoSync: false,
+  stationaryRadius: 0,
 });
 
-class GeoFence_ {
-  _started = false;
+const BG_POS_OPT = {
+  persist: false,
+  desiredAccuracy: 0,
+  timeout: 5000,
+};
 
+class BGGeoLocationWatcher_ {
   _init = false;
 
-  _cbMap = new Map();
+  _emitter = new EventEmitter();
 
-  _starts = 0;
+  _watching = false;
 
   on(event, cb, context) {
-    let emitter = this._cbMap.get(event);
-    if (!this._cbMap.has(event)) {
-      emitter = new EventEmitter();
-      this._cbMap.set(event, emitter);
-    }
-    emitter.on(event, cb, context);
-  }
+    check.assert.function(cb);
 
-  once(event, cb, context) {
-    let emitter = this._cbMap.get(event);
-    if (!this._cbMap.has(event)) {
-      emitter = new EventEmitter();
-      this._cbMap.set(event, emitter);
+    this._emitter.on(event, cb, context);
+    return () => {
+      this._emitter.removeListener(event, cb, context);
     }
-    emitter.once(event, cb, context);
   }
 
   off(event, cb, context) {
-    if (!this._cbMap.has(event)) return;
+    check.assert.function(cb);
 
-    const emitter = this._cbMap.get(event);
-    emitter.removeListener(event, cb, context);
+    this._emitter.removeListener(event, cb, context);
   }
 
-  start(cb: Function) {
-    if (!this._init) {
-      this._subscribe('motionchange');
-      this._subscribe('location');
-      this._subscribe('error');
-      this._subscribe('activitychange');
-      this._subscribe('heartbeat');
-      this._init = true;
+  watchPos(onStart) {
+    if (this._watching) onStart();
+
+    BackgroundGeolocation.changePace(true);
+    BackgroundGeolocation.watchPosition(
+      pos => {
+        if (!this._watching) {
+          onStart(pos, null);
+        }
+        this._watching = true;
+        this._emitter.emit('position', pos);
+      },
+      errorCode => onStart(null, errorCode),
+      BG_POS_OPT,
+    );
+  }
+
+  stopWatch() {
+    if (this._listenerCount('position') === 0) {
+      this._watching = false;
+      BackgroundGeolocation.changePace(false);
+      BackgroundGeolocation.stopWatchPosition();
     }
-
-    BackgroundGeolocation.start();
-
-    this._start(() => {
-      this._starts++;
-      caller(cb);
-    });
   }
 
-  _start(onSuccess, onError, count = 0) {
-    const successCb = () => {
-      this._starts++;
-      caller(onSuccess);
+  getPos(onPos: Function) {
+    check.assert.function(onPos);
+
+    BackgroundGeolocation.getCurrentPosition(
+      BG_POS_OPT,
+      pos => onPos(pos, null),
+      error => onPos(null, error),
+    );
+  }
+
+  _start(onSuccess: Function, onError: Function, count = 0) {
+    const successCb = pos => {
+
+      caller(onSuccess, pos);
     };
 
-    const errorCb = () => {
+    const errorCb = error => {
       if (count === 3) {
-        caller(onError);
-        return;
+        return caller(onError, error);
       }
       this._start(onSuccess, onError, count + 1);
     };
 
-    BackgroundGeolocation.getCurrentPosition({
-      persist: false,
-      desiredAccuracy: 10,
-      timeout: 5000
-    }, successCb, errorCb);
+    BackgroundGeolocation.getCurrentPosition(
+      BG_POS_OPT, successCb, errorCb);
   }
 
-  stop() {
-    if (this._starts === 0) {
-      BackgroundGeolocation.stop();
-      for (let emitter of this._cbMap.values()) {
-        emitter.removeAllListeners();
-      };
-      return;
-    }
-    this._starts--;
-  }
-
-  _subscribe(event) {
+  _subscribe(event: string) {
     BackgroundGeolocation.on(event, (...args) => {
-      if (!this._cbMap.has(event)) return;
-
-      const emitter = this._cbMap.get(event);
-      emitter.emit.apply(emitter, [event].concat(args));
+      this._emitter.emit(...[event].concat(args));
     });
+  }
+
+  _listenerCount(event) {
+    return this._emitter.listeners(event).length;
   }
 }
 
-export const GeoFence = new GeoFence_();
+export const BGGeoLocationWatcher = new BGGeoLocationWatcher_();
 
-const POS_OPT = {
+const NAV_POS_OPT = {
   enableHighAccuracy: true,
   timeout: 20000,
   maximumAge: 1000,
-  distanceFilter: 5,
 };
 
-const WATCH_EVENT = 'watch';
-
-class GeoWatcher_ {
-  _starts = 0;
-
+class NavGeoLocationWatcher_ {
   _watchId = null;
-
-  _cbMap = new Map();
 
   _emitter = new EventEmitter();
 
-  start(cb: Function) {
+  on(event: string, cb: Function, context: any): Function {
+    check.assert.function(cb);
+
+    this._emitter.on(event, cb, context);
+    return () => {
+      this._emitter.removeListener(event, cb, context);
+    }
+  }
+
+  off(event: string, cb: Function, context: any) {
+    check.assert.function(cb);
+
+    this._emitter.removeListener(event, cb, context);
+  }
+
+  watchPos(onStart: Function) {
+    check.assert.function(onStart);
+
     navigator.geolocation.getCurrentPosition(
       pos => {
-        this._starts++;
         this._startWatch();
-        caller(cb, pos, null);
+        caller(onStart, pos, null);
       },
       error => {
-        caller(cb, null, error);
+        caller(onStart, null, error);
       },
       POS_OPT,
     );
   }
 
-  watch(cb: Function, context: any): Function {
-    this._emitter.on(WATCH_EVENT, cb, context);
-
-    return () => {
-      this._emitter.removeListener(WATCH_EVENT, cb, context);
-    }
-  }
-
-  offWatch(cb: Function, context: any) {
-    check.assert.function(cb);
-
-    this._emitter.removeListener(WATCH_EVENT, cb, context);
-  }
-
-  stop() {
-    this._starts--;
-    if (this._starts === 0) {
+  stopWatch() {
+    if (this._listenerCount('position') === 0) {
       navigator.geolocation.clearWatch(this._watchId);
-      this._watchId = null;
     }
   }
 
-  getPos(cb: Function) {
+  getPos(onPos: Function) {
+    check.assert.function(onPos);
+
     navigator.geolocation.getCurrentPosition(
-      pos => caller(cb, pos, null),
-      error => caller(cb, null, error),
+      pos => caller(onPos, pos, null),
+      error => caller(onPos, null, error),
       POS_OPT,
     );
   }
@@ -174,9 +167,13 @@ class GeoWatcher_ {
     if (this._watchId) return;
 
     this._watchId = navigator.geolocation.watchPosition(pos => {
-      this._emitter.emit(WATCH_EVENT, pos);
+      this._emitter.emit('position', pos);
     }, null, POS_OPT);
+  }
+
+  _listenerCount(event) {
+    return this._emitter.listeners(event).length;
   }
 }
 
-export const GeoWatcher = new GeoWatcher_();
+export const NavGeoLocationWatcher = new NavGeoLocationWatcher_();

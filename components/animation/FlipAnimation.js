@@ -10,6 +10,8 @@ import Animation from './Animation';
 
 import {screenWidth} from '../styles/common';
 
+const FLIP_TIME = 500;
+
 export default class FlipAnimation {
   _rotY = new Animated.Value(0);
   _move1 = new Animated.Value(0);
@@ -88,7 +90,7 @@ export default class FlipAnimation {
       }
     });
 
-    const flip = Animation.timing(this._rotY, 1000,
+    const flip = Animation.timing(this._rotY, FLIP_TIME,
       stopVal, Easing.inOut(Easing.sin));
     Animation.animate([flip], callback);
   }

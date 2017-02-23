@@ -40,7 +40,7 @@ export default class TrackerScroll extends TrackerRenderer {
     const index = this.state.trackers.findIndex(
       _ => _ === tracker);
 
-    const scroll = this.refs.scroll.getIndex();
+    const scroll = this.refs.scroll.index;
      if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
     }

@@ -1,6 +1,6 @@
 'use strict'
 
-import React from 'react';
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -18,36 +18,30 @@ import BaseScroll from './BaseScroll';
 
 import {caller} from '../../utils/lang';
 
-const Scroll = React.createClass({
-  propTypes: {
+class Scroll extends Component {
+  static propTypes = {
     slides: React.PropTypes.array.isRequired,
     slideWidth: React.PropTypes.number.isRequired,
     scrollEnabled: React.PropTypes.bool,
-  },
+  };
 
-  getDefaultProps() {
-    return {
-      slides: [],
-      scrollEnabled: true,
-    }
-  },
+  static defaultProps = {
+    slides: [],
+    scrollEnabled: true,
+  };
 
-  getSize() {
-    return this.props.slides.length;
-  },
-
-  getIndex() {
+  get index() {
     return this.refs.scroll.index;
-  },
+  }
 
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
            this.props.scrollEnabled !== props.scrollEnabled;
-  },
+  }
 
   scrollTo(index, callback, animated) {
     this.refs.scroll.scrollTo(index, callback, animated);
-  },
+  }
 
   render() {
     const { centered, slideWidth } = this.props;
@@ -62,6 +56,6 @@ const Scroll = React.createClass({
       </BaseScroll>
     );
   }
-});
+}
 
 export default Scroll;

@@ -17,13 +17,30 @@ import {commonStyles, screenWidth} from '../styles/common';
 import {caller} from '../../utils/lang';
 
 class BaseScroll extends Component {
+  _index = 0;
+
+  _prevInd = 0;
+
   _offsetX = 0;
+
+  _pageX = 0;
 
   _isScrolling = false;
 
+  _onScrollToCb = null;
+
+  constructor(props) {
+    super(props);
+
+    const { slideWidth } = this.props;
+    this._index = 0;
+    this._prevInd = this._index;
+    this._offsetX = slideWidth * this._index;
+    this._pageX = slideWidth;
+  }
+
   static propTypes = {
     slideWidth: React.PropTypes.number.isRequired,
-    index: React.PropTypes.number,
     slides: React.PropTypes.array.isRequired,
     horizontal: React.PropTypes.bool,
     style: View.propTypes.style,
@@ -38,7 +55,6 @@ class BaseScroll extends Component {
   };
 
   static defaultProps = {
-    index: 0,
     slides: [],
     horizontal: true,
     pagingEnabled: true,
@@ -57,24 +73,9 @@ class BaseScroll extends Component {
     return this._index;
   }
 
-  get enabled() {
-    return this.props.scrollEnabled;
-  }
-
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
            this.props.scrollEnabled !== props.scrollEnabled;
-  }
-
-  componentWillMount() {
-    const { slideWidth, index } = this.props;
-
-    this._index = index;
-    this._prevInd = this._index;
-    this._offsetX = slideWidth * this._index;
-    this._pageX = slideWidth;
-    this._isScrolling = false;
-    this._onScrollToCb = null;
   }
 
   scrollTo(index: number,
@@ -88,20 +89,17 @@ class BaseScroll extends Component {
     }
 
     if (slides.length <= 1) {
-      caller(callback, false);
-      return;
+      return caller(callback, false);
     }
 
     if (this._isScrolling) return;
 
     index = Math.min(index, slides.length - 1);
-    const offsetX = Math.max(index * slideWidth, 0);
-
-    if (this._offsetX === offsetX) {
-      caller(callback, false);
-      return;
+    if (this._index === index) {
+      return caller(callback, false);
     }
 
+    const offsetX = Math.max(index * slideWidth, 0);
     this._onScrollToCb = callback;
     this._isScrolling = true;
     this.refs.scrollView.scrollTo({
@@ -122,21 +120,22 @@ class BaseScroll extends Component {
   _onTouchEnd(e) {}
 
   _onTouchMove(event) {
-    const { slides, slideWidth } = this.props;
+    const { slides, slideWidth, scrollEnabled } = this.props;
+    const length = slides.length;
 
-    if (!this.enabled || slides.length <= 1) return;
+    if (!scrollEnabled|| length <= 1) return;
 
     const dx = this._pageX - event.nativeEvent.pageX;
     this._pageX = event.nativeEvent.pageX;
 
     if (this._index === 0 && dx <= 0) return;
-    if (this._index === slides.length - 1 && dx >= 0) return;
+    if (this._index === length - 1 && dx >= 0) return;
 
     // Adjust offset and index after moving.
     // Offset and index become float.
     this._offsetX += dx;
     const index = this._index + (dx / slideWidth);
-    this._index = Math.min(Math.max(index, 0), slides.length - 1);
+    this._index = Math.min(Math.max(index, 0), length - 1);
 
     caller(this.props.onTouchMove, dx);
   }
@@ -178,18 +177,14 @@ class BaseScroll extends Component {
     const { slideWidth } = this.props;
 
     const diff = offsetX - this._offsetX;
-    if (!diff) return;
-
     // Sometimes it's not round integer. 
     this._index = Math.round(this._index + (diff / slideWidth)) >> 0;
     this._offsetX = slideWidth * this._index;
   }
 
   render() {
-    const {
-      slides, pagingEnabled,
-      contentStyle, scrollEnabled,
-    } = this.props;
+    const { slides, pagingEnabled,
+            contentStyle, scrollEnabled } = this.props;
 
     return (
       <ScrollView
@@ -199,7 +194,6 @@ class BaseScroll extends Component {
         scrollEnabled={scrollEnabled}
         pagingEnabled={pagingEnabled}
         contentContainerStyle={contentStyle}
-        contentOffset={{x: this._offsetX}}
         onTouchStart={::this._onTouchStart}
         onTouchEnd={::this._onTouchEnd}
         onTouchMove={::this._onTouchMove}

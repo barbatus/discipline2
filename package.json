@@ -21,7 +21,7 @@
     "react-mixin": "^2.0.2",
     "react-native-device-info": "^0.9.9",
     "react-native-linear-gradient": "^2.0.0",
-    "react-native-background-geolocation": "^2.4.1",
+    "react-native-background-geolocation": "https://github.com/transistorsoft/react-native-background-geolocation.git#ios-watchPosition",
     "react-native-maps": "^0.13.0",
     "react-native-navbar": "^1.6.0",
     "react-native-shake-event": "^3.0.0",

@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 import {
   Animated,
   StyleSheet,
+  InteractionManager,
 } from 'react-native';
 
 import {extend} from 'lodash';
@@ -87,7 +88,9 @@ export default class TrackerRenderer extends Component {
   }
 
   onProgress(tracker: Tracker, value?: number, data?: any) {
-    caller(this.props.onProgress, tracker, value, data);
+    InteractionManager.runAfterInteractions(() => {
+      caller(this.props.onProgress, tracker, value, data);
+    });
   }
 
   onUndo(tracker: Tracker) {

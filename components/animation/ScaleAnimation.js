@@ -11,7 +11,7 @@ import Animation from './Animation';
 export default class ScaleAnimation {
   _scale: Animated.Value;
 
-  constructor(scale: number = 1) {
+  constructor(scale = 1) {
     this._scale = new Animated.Value(scale);
   }
 

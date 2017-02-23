@@ -13,7 +13,7 @@ import {screenWidth} from '../styles/common';
 export default class ScreenSlideLeftRightAnim {
   _moveX: Animated.Value;
 
-  constructor(posX: number = 1) {
+  constructor(posX = 1) {
     this._moveX = new Animated.Value(posX);
   }
 

@@ -37,7 +37,6 @@ export default class Trackers extends Component {
   constructor(props) {
     super(props);
 
-    const { trackers } = this.props;
     this.state = {
       swTrackers: new List(),
       scTrackers: new List(),

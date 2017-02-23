@@ -24,7 +24,7 @@ export class MoveDownResponderAnim {
   get style(): Object {
     return {
       transform: [{
-        translateY: this._moveY
+        translateY: this._moveY,
       }]
     }
   }
