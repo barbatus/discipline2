@@ -1,21 +1,12 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Image,
-  Text
-} from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text } from 'react-native';
 
 class Menu extends Component {
   render() {
-    return (
-      <ScrollView style={styles.menu}>
-      </ScrollView>
-    );
+    return <ScrollView style={styles.menu} />;
   }
 }
 
@@ -28,8 +19,8 @@ const styles = StyleSheet.create({
     width: window.width,
     height: window.height,
     backgroundColor: 'gray',
-    padding: 20
-  }
+    padding: 20,
+  },
 });
 
 module.exports = Menu;

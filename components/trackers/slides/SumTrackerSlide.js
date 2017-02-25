@@ -13,22 +13,19 @@ import {
   Vibration,
 } from 'react-native';
 
-import {getIcon} from '../../../icons/icons';
+import { getIcon } from '../../../icons/icons';
 
-import {
-  trackerDef,
-  trackerStyles,
-} from '../styles/trackerStyles';
+import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
-import {slideWidth} from '../styles/slideStyles';
+import { slideWidth } from '../styles/slideStyles';
 
-import {isPhone5} from '../../styles/common';
+import { isPhone5 } from '../../styles/common';
 
 import TrackerSlide from './TrackerSlide';
 
 import Keyboard from '../../../utils/keyboard';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
 export default class SumTrackerSlide extends TrackerSlide {
   shouldComponentUpdate(props, state) {
@@ -68,25 +65,20 @@ export default class SumTrackerSlide extends TrackerSlide {
   get bodyControls() {
     const { tracker, responsive } = this.props;
     return (
-      <View style={[
-        trackerStyles.controls,
-        styles.controlsContainer
-      ]}>
+      <View style={[trackerStyles.controls, styles.controlsContainer]}>
         <View style={styles.controls}>
           <View style={styles.inputContainer}>
-             <TextInput
-              ref='added'
+            <TextInput
+              ref="added"
               editable={responsive}
-              placeholder='Enter value'
+              placeholder="Enter value"
               placeholderTextColor={trackerDef.hintText.color}
               style={styles.sumInput}
               onChangeText={added => this._onChangeText(added)}
               value={this.state.added}
               onSubmitEditing={::this._onPlus}
             />
-            <TouchableOpacity
-              disabled={!responsive}
-              onPress={::this._onPlus}>
+            <TouchableOpacity disabled={!responsive} onPress={::this._onPlus}>
               <Image
                 source={getIcon('plus_sm')}
                 style={[trackerStyles.circleBtnSm, styles.circleBtnSm]}
@@ -118,14 +110,14 @@ export default class SumTrackerSlide extends TrackerSlide {
     const added = parseFloat(this.state.added);
     if (added) {
       caller(onTick, added);
-      this.setState({added: ''});
+      this.setState({ added: '' });
     }
   }
 
   _onChangeText(sumAdded) {
-    this.setState({added: sumAdded});
+    this.setState({ added: sumAdded });
   }
-};
+}
 
 const WIDGET_WIDTH = slideWidth - 40;
 

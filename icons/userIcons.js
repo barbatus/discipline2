@@ -1,6 +1,6 @@
 'use strict';
 
-import {IconSize} from './consts';
+import { IconSize } from './consts';
 
 import Enum from '../depot/Enum';
 
@@ -11,207 +11,207 @@ const icon8Icons = './files/user/icon8';
 const UserIcons = new Enum({
   ASTRONAUT: {
     value: 'astronaut',
-    [IconSize.NORMAL]: require('./files/user/icon8/astronaut.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/astronaut.png'),
   },
   AIRPLANE_TAKEOFF: {
     value: 'airplane_takeoff',
-    [IconSize.NORMAL]: require('./files/user/icon8/airplane_take_off.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/airplane_take_off.png'),
   },
   BAR: {
     value: 'bar',
-    [IconSize.NORMAL]: require('./files/user/icon8/bar.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/bar.png'),
   },
   BARBELL: {
     value: 'barbell',
-    [IconSize.NORMAL]: require('./files/user/icon8/barbell.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/barbell.png'),
   },
   BELL: {
     value: 'bell',
-    [IconSize.NORMAL]: require('./files/user/icon8/bell.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/bell.png'),
   },
   BICYCLE: {
     value: 'bicycle',
-    [IconSize.NORMAL]: require('./files/user/icon8/bicycle.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/bicycle.png'),
   },
   BOOK_SHELF: {
     value: 'book_shelf',
-    [IconSize.NORMAL]: require('./files/user/icon8/book_shelf.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/book_shelf.png'),
   },
   BREAST: {
     value: 'breast',
-    [IconSize.NORMAL]: require('./files/user/icon8/breast.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/breast.png'),
   },
   BRIEFCASE: {
     value: 'briefcase',
-    [IconSize.NORMAL]: require('./files/user/icon8/briefcase.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/briefcase.png'),
   },
   CAMPING: {
     value: 'camping',
-    [IconSize.NORMAL]: require('./files/user/icon8/camping_tent.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/camping_tent.png'),
   },
   CAR: {
     value: 'car',
-    [IconSize.NORMAL]: require('./files/user/icon8/car.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/car.png'),
   },
   CHIP: {
     value: 'ship',
-    [IconSize.NORMAL]: require('./files/user/icon8/chip.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/chip.png'),
   },
   COFFEE: {
     value: 'coffee',
-    [IconSize.NORMAL]: require('./files/user/icon8/coffee_to_go.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/coffee_to_go.png'),
   },
   COMB: {
     value: 'comb',
-    [IconSize.NORMAL]: require('./files/user/icon8/comb.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/comb.png'),
   },
   COMET: {
     value: 'comet',
-    [IconSize.NORMAL]: require('./files/user/icon8/comet.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/comet.png'),
   },
   FAMILY: {
     value: 'family',
-    [IconSize.NORMAL]: require('./files/user/icon8/family.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/family.png'),
   },
   FOLDER: {
     value: 'folder',
-    [IconSize.NORMAL]: require('./files/user/icon8/folder.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/folder.png'),
   },
   GAS_STATION: {
     value: 'gas_station',
-    [IconSize.NORMAL]: require('./files/user/icon8/gas_station.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/gas_station.png'),
   },
   GLASSES: {
     value: 'glasses',
-    [IconSize.NORMAL]: require('./files/user/icon8/glasses.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/glasses.png'),
   },
   HAND: {
     value: 'hand',
-    [IconSize.NORMAL]: require('./files/user/icon8/hand_cursor.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/hand_cursor.png'),
   },
   HOME: {
     value: 'home',
-    [IconSize.NORMAL]: require('./files/user/icon8/home.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/home.png'),
   },
   IDEA: {
     value: 'idea',
-    [IconSize.NORMAL]: require('./files/user/icon8/idea.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/idea.png'),
   },
   IMAC: {
     value: 'imac',
-    [IconSize.NORMAL]: require('./files/user/icon8/imac.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/imac.png'),
   },
   INFO: {
     value: 'info',
-    [IconSize.NORMAL]: require('./files/user/icon8/info.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/info.png'),
   },
   LOCK: {
     value: 'lock',
-    [IconSize.NORMAL]: require('./files/user/icon8/lock.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/lock.png'),
   },
   MAP_MARKER: {
     value: 'map_marker',
-    [IconSize.NORMAL]: require('./files/user/icon8/map_marker.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/map_marker.png'),
   },
   MEDITATION: {
     value: 'meditation',
-    [IconSize.NORMAL]: require('./files/user/icon8/meditation_guru.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/meditation_guru.png'),
   },
   MUSIC: {
     value: 'music',
-    [IconSize.NORMAL]: require('./files/user/icon8/music.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/music.png'),
   },
   NATURAL_FOOD: {
     value: 'natural_food',
-    [IconSize.NORMAL]: require('./files/user/icon8/natural_food.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/natural_food.png'),
   },
   NEWS: {
     value: 'news',
-    [IconSize.NORMAL]: require('./files/user/icon8/news.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/news.png'),
   },
   PARTY_BALOONS: {
     value: 'party_baloons',
-    [IconSize.NORMAL]: require('./files/user/icon8/party_baloons.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/party_baloons.png'),
   },
   PILL: {
     value: 'pill',
-    [IconSize.NORMAL]: require('./files/user/icon8/pill.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/pill.png'),
   },
   PIZZA: {
     value: 'pizza',
-    [IconSize.NORMAL]: require('./files/user/icon8/pizza.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/pizza.png'),
   },
   PLANET: {
     value: 'planet',
-    [IconSize.NORMAL]: require('./files/user/icon8/planet.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/planet.png'),
   },
   READING: {
     value: 'reading',
-    [IconSize.NORMAL]: require('./files/user/icon8/reading.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/reading.png'),
   },
   SALES: {
     value: 'sales',
-    [IconSize.NORMAL]: require('./files/user/icon8/sales_performance.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/sales_performance.png'),
   },
   SHOPPING_CART: {
     value: 'shopping_cart',
-    [IconSize.NORMAL]: require('./files/user/icon8/shopping_cart.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/shopping_cart.png'),
   },
   SKIING: {
     value: 'skiing',
-    [IconSize.NORMAL]: require('./files/user/icon8/skiing.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/skiing.png'),
   },
   SMOKING: {
     value: 'smoking',
-    [IconSize.NORMAL]: require('./files/user/icon8/smoking.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/smoking.png'),
   },
   SPORT: {
     value: 'sport',
-    [IconSize.NORMAL]: require('./files/user/icon8/sport.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/sport.png'),
   },
   STOPWATCH: {
     value: 'stopwatch',
-    [IconSize.NORMAL]: require('./files/user/icon8/stopwatch.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/stopwatch.png'),
   },
   SUNBATHE: {
     value: 'sunbathe',
-    [IconSize.NORMAL]: require('./files/user/icon8/sunbathe.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/sunbathe.png'),
   },
   TAXI: {
     value: 'taxi',
-    [IconSize.NORMAL]: require('./files/user/icon8/taxi.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/taxi.png'),
   },
   TEETH: {
     value: 'teeth',
-    [IconSize.NORMAL]: require('./files/user/icon8/teeth.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/teeth.png'),
   },
   TOMATO: {
     value: 'tomato',
-    [IconSize.NORMAL]: require('./files/user/icon8/tomato.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/tomato.png'),
   },
   TRAINERS: {
     value: 'trainers',
-    [IconSize.NORMAL]: require('./files/user/icon8/trainers.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/trainers.png'),
   },
   TRAM: {
     value: 'tram',
-    [IconSize.NORMAL]: require('./files/user/icon8/tram.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/tram.png'),
   },
   TRASH: {
     value: 'trash',
-    [IconSize.NORMAL]: require('./files/user/icon8/trash.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/trash.png'),
   },
   TREKKING: {
     value: 'trekking',
-    [IconSize.NORMAL]: require('./files/user/icon8/trekking.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/trekking.png'),
   },
   WED_GIFT: {
     value: 'wed_gift',
-    [IconSize.NORMAL]: require('./files/user/icon8/wedding_gift.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/wedding_gift.png'),
   },
   XMAS_STOCKING: {
     value: 'xmas_stocking',
-    [IconSize.NORMAL]: require('./files/user/icon8/xmas_stocking.png')
+    [IconSize.NORMAL]: require('./files/user/icon8/xmas_stocking.png'),
   },
 });
 

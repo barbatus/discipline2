@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -12,15 +12,15 @@ import {
 
 import moment from 'moment';
 
-import {getIcon} from '../../icons/icons';
+import { getIcon } from '../../icons/icons';
 
 import Month from './Month';
 
 import styles from './styles';
 
-import {screenWidth} from '../styles/common';
+import { screenWidth } from '../styles/common';
 
-import {caller, int} from '../../utils/lang';
+import { caller, int } from '../../utils/lang';
 
 export default class Calendar extends Component {
   static propTypes = {
@@ -41,8 +41,18 @@ export default class Calendar extends Component {
     dayHeadings: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
     tickDates: [],
     monthNames: [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ],
     titleFormat: 'MMMM YYYY',
     todayMs: moment().valueOf(),
@@ -68,8 +78,8 @@ export default class Calendar extends Component {
       return true;
     }
     return this.props.todayMs !== props.todayMs ||
-           this.props.tickDates !== props.tickDates ||
-           this.state.selectedDate !== state.selectedDate;
+      this.props.tickDates !== props.tickDates ||
+      this.state.selectedDate !== state.selectedDate;
   }
 
   componentDidMount() {
@@ -104,7 +114,7 @@ export default class Calendar extends Component {
 
   _selectDate(dateMs: number) {
     const date = moment(dateMs);
-    this.setState({selectedDate: date});
+    this.setState({ selectedDate: date });
     caller(this.props.onDateSelect, date.format());
   }
 
@@ -127,9 +137,8 @@ export default class Calendar extends Component {
     const position = nativeEvent.contentOffset.x;
     const currentPage = position / screenWidth;
     const index = int(this.props.monthToRender / 2);
-    const newMonth = moment(currentMonth).add(
-      currentPage - index, 'month');
-    this.setState({currentMonth: newMonth});
+    const newMonth = moment(currentMonth).add(currentPage - index, 'month');
+    this.setState({ currentMonth: newMonth });
 
     caller(this.props.onMonthChanged, newMonth);
   }
@@ -143,11 +152,10 @@ export default class Calendar extends Component {
       headings.push(
         <Text
           key={i}
-          style={j === 0 || j === 6 ?
-            styles.weekendHeading :
-            styles.dayHeading}>
+          style={j === 0 || j === 6 ? styles.weekendHeading : styles.dayHeading}
+        >
           {dayHeadings[j]}
-        </Text>
+        </Text>,
       );
     }
 
@@ -165,22 +173,14 @@ export default class Calendar extends Component {
     const monthName = monthNames[currentMonth.month()];
     return (
       <View style={styles.calControls}>
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={::this._onPrev}>
-           <Image
-            source={getIcon('back')}
-            style={styles.navIcon} />
+        <TouchableOpacity style={styles.controlButton} onPress={::this._onPrev}>
+          <Image source={getIcon('back')} style={styles.navIcon} />
         </TouchableOpacity>
         <Text style={[styles.title, customStyle.title]}>
           {monthName}{','} {currentMonth.year()}
         </Text>
-        <TouchableOpacity
-          style={styles.controlButton}
-          onPress={::this._onNext}>
-          <Image
-            source={getIcon('next_')}
-            style={styles.navIcon} />
+        <TouchableOpacity style={styles.controlButton} onPress={::this._onNext}>
+          <Image source={getIcon('next_')} style={styles.navIcon} />
         </TouchableOpacity>
       </View>
     );
@@ -210,8 +210,8 @@ export default class Calendar extends Component {
 
     return (
       <View style={[styles.calContainer, customStyle.calContainer]}>
-        { this._renderTopBar() }
-        { this._renderHeading(titleFormat) }
+        {this._renderTopBar()}
+        {this._renderHeading(titleFormat)}
         <ScrollView
           ref={calendar => this._calendar = calendar}
           horizontal
@@ -219,8 +219,9 @@ export default class Calendar extends Component {
           scrollEventThrottle={1000}
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
-          onMomentumScrollEnd={::this._scrollEnded}>
-          { monthViews }
+          onMomentumScrollEnd={::this._scrollEnded}
+        >
+          {monthViews}
         </ScrollView>
       </View>
     );

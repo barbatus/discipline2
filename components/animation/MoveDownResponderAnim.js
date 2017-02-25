@@ -1,12 +1,12 @@
 'use strict';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
 import Animation from './Animation';
 
-import {MoveUpDownResponder} from './responders';
+import { MoveUpDownResponder } from './responders';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export class MoveDownResponderAnim {
   _moveY = new Animated.Value(0);
@@ -23,14 +23,20 @@ export class MoveDownResponderAnim {
 
   get style(): Object {
     return {
-      transform: [{
-        translateY: this._moveY,
-      }]
-    }
+      transform: [
+        {
+          translateY: this._moveY,
+        },
+      ],
+    };
   }
 
-  subscribe(responder: MoveUpDownResponder,
-            onMove?: Function, onStart?: Function, onDone?: Function) {
+  subscribe(
+    responder: MoveUpDownResponder,
+    onMove?: Function,
+    onStart?: Function,
+    onDone?: Function,
+  ) {
     assert.ok(responder);
 
     this._moveY.addListener(({ value }) => {
@@ -44,7 +50,7 @@ export class MoveDownResponderAnim {
       onMoveStart: onStart,
       onMoveDone: () => {
         this.animateIn(onDone);
-      }
+      },
     });
   }
 

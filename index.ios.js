@@ -1,14 +1,14 @@
- /* @flow */
+/* @flow */
 
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {AppRegistry, View} from 'react-native';
+import { AppRegistry, View } from 'react-native';
 
 import './globals';
 
-import {loadTestData} from './model/actions';
+import { loadTestData } from './model/actions';
 
 import createStore from './model/createStore';
 
@@ -16,6 +16,10 @@ import CreateApp from './app/App';
 
 const store = createStore();
 
-AppRegistry.registerComponent('Discipline', () => CreateApp(store));
+const App = CreateApp(store);
+
+export default App;
+
+AppRegistry.registerComponent('Discipline', () => App);
 
 store.dispatch(loadTestData());

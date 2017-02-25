@@ -1,14 +1,14 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {StyleSheet, View, Animated} from 'react-native';
+import { StyleSheet, View, Animated } from 'react-native';
 
 import Easing from 'Easing';
 
-import {commonStyles} from '../styles/common';
+import { commonStyles } from '../styles/common';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 import ScreenSlideLeftRightAnim from '../animation/ScreenSlideLeftRightAnim';
 
@@ -90,7 +90,8 @@ export default class ScreenView extends Component {
     return (
       <Animated.View
         shouldRasterizeIOS={true}
-        style={[commonStyles.absFilled, style1, style2]}>
+        style={[commonStyles.absFilled, style1, style2]}
+      >
         {this.props.content || this.content}
       </Animated.View>
     );

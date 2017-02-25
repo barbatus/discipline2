@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
@@ -12,11 +12,11 @@ import {
   Animated,
 } from 'react-native';
 
-import {commonStyles, screenWidth} from '../styles/common';
+import { commonStyles, screenWidth } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 class Scroll extends Component {
   static propTypes = {
@@ -36,7 +36,7 @@ class Scroll extends Component {
 
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
-           this.props.scrollEnabled !== props.scrollEnabled;
+      this.props.scrollEnabled !== props.scrollEnabled;
   }
 
   scrollTo(index, callback, animated) {
@@ -49,11 +49,11 @@ class Scroll extends Component {
 
     return (
       <BaseScroll
-        ref='scroll'
+        ref="scroll"
         {...this.props}
         pagingEnabled={false}
-        contentStyle={[commonStyles.centered, {marginLeft}]}>
-      </BaseScroll>
+        contentStyle={[commonStyles.centered, { marginLeft }]}
+      />
     );
   }
 }

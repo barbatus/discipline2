@@ -14,13 +14,13 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import {getIcon} from '../../../../icons/icons';
+import { getIcon } from '../../../../icons/icons';
 
-import {trackerDef, trackerStyles} from '../../styles/trackerStyles';
+import { trackerDef, trackerStyles } from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';
 
-import {slideWidth, slideHeight} from '../../styles/slideStyles';
+import { slideWidth, slideHeight } from '../../styles/slideStyles';
 
 export default class TrackerView extends BaseTrackerView {
   render() {
@@ -29,8 +29,8 @@ export default class TrackerView extends BaseTrackerView {
 
     return (
       <Animated.View style={[trackerStyles.innerView, style]}>
-        <TouchableWithoutFeedback style={{flex: 1}} onPress={onTap}>
-          <View style={{flex: 1}}>
+        <TouchableWithoutFeedback style={{ flex: 1 }} onPress={onTap}>
+          <View style={{ flex: 1 }}>
             <View style={trackerStyles.headerContainer}>
               <View style={trackerStyles.barContainer}>
                 <TouchableOpacity onPress={onEdit}>
@@ -52,7 +52,7 @@ export default class TrackerView extends BaseTrackerView {
                 </Text>
               </View>
             </View>
-            { this._renderContent(backImg) }
+            {this._renderContent(backImg)}
           </View>
         </TouchableWithoutFeedback>
       </Animated.View>
@@ -61,8 +61,10 @@ export default class TrackerView extends BaseTrackerView {
 
   _renderContent(backImg) {
     const {
-      bodyControls, footerControls,
-      bodyStyle, footerStyle,
+      bodyControls,
+      footerControls,
+      bodyStyle,
+      footerStyle,
     } = this.props;
 
     const body = (
@@ -76,22 +78,21 @@ export default class TrackerView extends BaseTrackerView {
       </View>
     );
 
-    return backImg ? (
-      <Image source={backImg} style={styles.backImg}>
-        { body }
-      </Image>
-    ) : body;
+    return backImg
+      ? <Image source={backImg} style={styles.backImg}>
+          {body}
+        </Image>
+      : body;
   }
-};
+}
 
-const flex = trackerDef.bodyContainer.flex +
-             trackerDef.footerContainer.flex;
+const flex = trackerDef.bodyContainer.flex + trackerDef.footerContainer.flex;
 const styles = StyleSheet.create({
   backImg: {
     flex: flex,
     width: undefined,
     height: undefined,
-    backgroundColor:'transparent',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     resizeMode: 'cover',

@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   View,
@@ -23,15 +23,15 @@ import {
 
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
-import {MoveUpDownResponder} from '../animation/responders';
+import { MoveUpDownResponder } from '../animation/responders';
 
-import {commonStyles, screenWidth} from '../styles/common';
+import { commonStyles, screenWidth } from '../styles/common';
 
-import {slideHeight} from './styles/slideStyles';
+import { slideHeight } from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class TrackerSwiper extends TrackerRenderer {
   _upDown = new ScreenSlideUpDownAnim(minScale);
@@ -68,8 +68,12 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   componentDidMount() {
     const { onScaleMove, onScaleDone, onScaleStart } = this.props;
-    this._moveScale.subscribe(this._responder,
-      onScaleMove, onScaleStart, onScaleDone);
+    this._moveScale.subscribe(
+      this._responder,
+      onScaleMove,
+      onScaleStart,
+      onScaleDone,
+    );
   }
 
   shouldComponentUpdate(props, state) {
@@ -77,7 +81,9 @@ export default class TrackerSwiper extends TrackerRenderer {
     return should || this.state.enabled !== state.enabled;
   }
 
-  componentWillReceiveProps({ enabled, trackers, removeIndex, addIndex, updateIndex }) {
+  componentWillReceiveProps(
+    { enabled, trackers, removeIndex, addIndex, updateIndex },
+  ) {
     const prevEnabled = this.props.enabled;
     if (prevEnabled !== enabled) {
       this.setState({ enabled });
@@ -87,7 +93,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     if (prevTrackers === trackers) return;
 
     if (removeIndex != null) {
-      this.setState({trackers: prevTrackers});
+      this.setState({ trackers: prevTrackers });
       caller(this.props.onRemoveCompleted, removeIndex);
       this._animateRemove(prevTrackers, removeIndex, () => {
         this.setState({ trackers, enabled: true });
@@ -113,7 +119,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   showEdit(callback) {
-    this.setState({enabled: false}, () => {
+    this.setState({ enabled: false }, () => {
       const trackerId = this.current.id;
       this.refs[trackerId].showEdit(callback);
     });
@@ -147,19 +153,19 @@ export default class TrackerSwiper extends TrackerRenderer {
     const prevInd = index + (index >= 1 ? -1 : 1);
 
     this.refs[trackerId].collapse(() => {
-       this.scrollTo(prevInd, () => {
-          InteractionManager.runAfterInteractions(() => {
-            // In case of removing the first tracker,
-            // we move to the next, so adjust the index accordingly.
-            this.scrollTo(index ? prevInd : 0, null, false);
-            caller(callback);
-          });
+      this.scrollTo(prevInd, () => {
+        InteractionManager.runAfterInteractions(() => {
+          // In case of removing the first tracker,
+          // we move to the next, so adjust the index accordingly.
+          this.scrollTo(index ? prevInd : 0, null, false);
+          caller(callback);
+        });
       });
     });
   }
 
   _onCancelEdit(callback) {
-    this.setState({enabled: true}, callback);
+    this.setState({ enabled: true }, callback);
   }
 
   render() {
@@ -169,22 +175,21 @@ export default class TrackerSwiper extends TrackerRenderer {
       width: screenWidth,
       height: slideHeight,
     };
-    const slides = trackers.map(
-      tracker => {
+    const slides = trackers
+      .map(tracker => {
         return (
-          <View
-            key={tracker.id}
-            style={[commonStyles.centered, slideStyle]}>
-            { this.renderTracker(tracker) }
+          <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
+            {this.renderTracker(tracker)}
           </View>
-        )
-      }).toArray();
+        );
+      })
+      .toArray();
 
     const { style, onScroll } = this.props;
     const { enabled } = this.state;
     const swiperView = (
       <Swiper
-        ref='swiper'
+        ref="swiper"
         {...this.props}
         style={commonStyles.flexFilled}
         slides={slides}
@@ -193,15 +198,13 @@ export default class TrackerSwiper extends TrackerRenderer {
       />
     );
 
-    const transform = Animation.combineStyles(
-      this._moveScale, this._upDown);
+    const transform = Animation.combineStyles(this._moveScale, this._upDown);
     const swiperStyle = [style, transform];
 
     return (
-      <Animated.View style={swiperStyle}
-        {...this._responder.panHandlers}>
+      <Animated.View style={swiperStyle} {...this._responder.panHandlers}>
         {swiperView}
       </Animated.View>
     );
   }
-};
+}

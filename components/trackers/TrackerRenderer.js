@@ -1,14 +1,10 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-  InteractionManager,
-} from 'react-native';
+import { Animated, StyleSheet, InteractionManager } from 'react-native';
 
-import {extend} from 'lodash';
+import { extend } from 'lodash';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
 
@@ -20,9 +16,9 @@ import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
 
 import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 
-import {TrackerType} from '../../depot/consts';
+import { TrackerType } from '../../depot/consts';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class TrackerRenderer extends Component {
   _opacity = new Animated.Value(0);
@@ -116,10 +112,14 @@ export default class TrackerRenderer extends Component {
     return this._renderTracker(tracker, scale, responsive, false);
   }
 
-  _renderTracker(tracker: Tracker, scale: number,
-                 responsive: boolean, editable: boolean,
-                 props: Object) {
-    props = extend({ responsive, editable, scale }, props); 
+  _renderTracker(
+    tracker: Tracker,
+    scale: number,
+    responsive: boolean,
+    editable: boolean,
+    props: Object,
+  ) {
+    props = extend({ responsive, editable, scale }, props);
     switch (tracker.type) {
       case TrackerType.GOAL:
         return this._renderSlide(GoalTrackerSlide, tracker, props);
@@ -152,4 +152,4 @@ export default class TrackerRenderer extends Component {
       />
     );
   }
-};
+}

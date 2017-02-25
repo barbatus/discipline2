@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
@@ -11,11 +11,11 @@ import {
   Animated,
 } from 'react-native';
 
-import {commonStyles, screenWidth} from '../styles/common';
+import { commonStyles, screenWidth } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class Swiper extends Component {
   _index = 0;
@@ -37,7 +37,7 @@ export default class Swiper extends Component {
 
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
-           this.props.scrollEnabled !== props.scrollEnabled;
+      this.props.scrollEnabled !== props.scrollEnabled;
   }
 
   scrollTo(index, callback, animated) {
@@ -49,18 +49,15 @@ export default class Swiper extends Component {
 
     const dots = [];
     const basicDot = [styles.basicDot, this._scaleDot(size)];
-    for(let i = 0; i < size; i++) {
-      const dotStyle = i === index ? 
-        [basicDot, styles.activeDot] : basicDot;
+    for (let i = 0; i < size; i++) {
+      const dotStyle = i === index ? [basicDot, styles.activeDot] : basicDot;
       dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
     }
 
     return (
-      <Animated.View
-        pointerEvents='none'
-        style={styles.dotsContainer}>
+      <Animated.View pointerEvents="none" style={styles.dotsContainer}>
         <View style={styles.dots}>
-          { dots }
+          {dots}
         </View>
       </Animated.View>
     );
@@ -70,16 +67,16 @@ export default class Swiper extends Component {
     if (this.refs['page' + prevInd]) {
       this.refs['page' + prevInd].setNativeProps({
         style: {
-          backgroundColor: stylesDef.basicDot.backgroundColor
-        }
+          backgroundColor: stylesDef.basicDot.backgroundColor,
+        },
       });
     }
 
     if (this.refs['page' + curInd]) {
       this.refs['page' + curInd].setNativeProps({
         style: {
-          backgroundColor: stylesDef.activeDot.backgroundColor
-        }
+          backgroundColor: stylesDef.activeDot.backgroundColor,
+        },
       });
     }
   }
@@ -93,8 +90,8 @@ export default class Swiper extends Component {
     let radius = 7, margin = 7;
     if (size >= 18) {
       let ratio = 18 / size;
-      radius = (7 * ratio) << 0;
-      margin = (7 * ratio) << 0;
+      radius = 7 * ratio << 0;
+      margin = 7 * ratio << 0;
     }
 
     return {
@@ -121,26 +118,30 @@ export default class Swiper extends Component {
 
   render() {
     const {
-      style, slides, onTouchMove,
-      scrollEnabled, onSlideNoChange,
+      style,
+      slides,
+      onTouchMove,
+      scrollEnabled,
+      onSlideNoChange,
     } = this.props;
 
-    const dots = slides.length >= 2 ?
-      this._renderDots(this._index, slides.length) : null;
+    const dots = slides.length >= 2
+      ? this._renderDots(this._index, slides.length)
+      : null;
 
     return (
       <View style={style}>
         <BaseScroll
-          ref='scroll'
+          ref="scroll"
           style={commonStyles.flexFilled}
           slides={slides}
           slideWidth={screenWidth}
           onTouchMove={onTouchMove}
           scrollEnabled={scrollEnabled}
           onSlideChange={::this._onSlideChange}
-          onSlideNoChange={onSlideNoChange}>
-        </BaseScroll>
-        { dots }
+          onSlideNoChange={onSlideNoChange}
+        />
+        {dots}
       </View>
     );
   }
@@ -157,7 +158,7 @@ const stylesDef = {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'transparent',
+    backgroundColor: 'transparent',
   },
   dotsContainer: {
     position: 'absolute',

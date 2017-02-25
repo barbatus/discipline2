@@ -2,13 +2,13 @@
 
 import Easing from 'Easing';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 import Animation from './Animation';
 
-import {screenWidth} from '../styles/common';
+import { screenWidth } from '../styles/common';
 
 export default class ScreenSlideLeftRightAnim {
   _moveX: Animated.Value;
@@ -19,13 +19,15 @@ export default class ScreenSlideLeftRightAnim {
 
   get style(): Object {
     return {
-      transform: [{
-        translateX: this._moveX.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [-(screenWidth + 1), 0, screenWidth + 1]
-        })
-      }]
-    }
+      transform: [
+        {
+          translateX: this._moveX.interpolate({
+            inputRange: [-1, 0, 1],
+            outputRange: [-(screenWidth + 1), 0, screenWidth + 1],
+          }),
+        },
+      ],
+    };
   }
 
   get value() {
@@ -33,13 +35,21 @@ export default class ScreenSlideLeftRightAnim {
   }
 
   get aIn() {
-    return Animation.timing(this._moveX, 500,
-      this.value + 1, Easing.inOut(Easing.linear));
+    return Animation.timing(
+      this._moveX,
+      500,
+      this.value + 1,
+      Easing.inOut(Easing.linear),
+    );
   }
 
   get aOut() {
-    return Animation.timing(this._moveX, 500,
-      this.value - 1, Easing.inOut(Easing.linear));
+    return Animation.timing(
+      this._moveX,
+      500,
+      this.value - 1,
+      Easing.inOut(Easing.linear),
+    );
   }
 
   animateIn(callback) {

@@ -1,8 +1,8 @@
 'use strict';
 
-import {Dimensions, StyleSheet} from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
-import {screenWidth} from '../styles/common';
+import { screenWidth } from '../styles/common';
 
 const styles = StyleSheet.create({
   calContainer: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   calControls: {
     marginTop: 10,
     marginBottom: 20,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   controlButton: {
     paddingLeft: 10,

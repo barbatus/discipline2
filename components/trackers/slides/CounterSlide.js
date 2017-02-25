@@ -9,16 +9,16 @@ import {
   Image,
   Text,
   StyleSheet,
-  Vibration
+  Vibration,
 } from 'react-native';
 
-import {getIcon} from '../../../icons/icons';
+import { getIcon } from '../../../icons/icons';
 
-import {trackerStyles} from '../styles/trackerStyles';
+import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
 export default class CounterSlide extends TrackerSlide {
   get bodyControls() {
@@ -26,24 +26,14 @@ export default class CounterSlide extends TrackerSlide {
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TouchableOpacity
-            disabled={!responsive}
-            onPress={::this._onUndo}>
-            <Image
-              source={getIcon('minus')}
-              style={trackerStyles.circleBtn}
-            />
+          <TouchableOpacity disabled={!responsive} onPress={::this._onUndo}>
+            <Image source={getIcon('minus')} style={trackerStyles.circleBtn} />
           </TouchableOpacity>
           <Text style={styles.countText} numberOfLines={1}>
             {tracker.count}
           </Text>
-          <TouchableOpacity
-            disabled={!responsive}
-            onPress={::this._onTick}>
-            <Image
-              source={getIcon('plus')}
-              style={trackerStyles.circleBtn}
-            />
+          <TouchableOpacity disabled={!responsive} onPress={::this._onTick}>
+            <Image source={getIcon('plus')} style={trackerStyles.circleBtn} />
           </TouchableOpacity>
         </View>
       </View>
@@ -66,7 +56,7 @@ export default class CounterSlide extends TrackerSlide {
   _onUndo() {
     caller(this.props.onUndo);
   }
-};
+}
 
 const styles = StyleSheet.create({
   controls: {

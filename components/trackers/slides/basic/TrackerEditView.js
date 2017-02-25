@@ -15,7 +15,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import {getIcon} from '../../../../icons/icons';
+import { getIcon } from '../../../../icons/icons';
 
 import {
   trackerStyles,
@@ -23,22 +23,20 @@ import {
   trackerDef,
 } from '../../styles/trackerStyles';
 
-import {TrackerType} from '../../../../depot/consts';
+import { TrackerType } from '../../../../depot/consts';
 
-import registry, {DlgType} from '../../../dlg/registry';
+import registry, { DlgType } from '../../../dlg/registry';
 
 import BaseTrackerView from './BaseTrackerView';
 
 import Trackers from '../../../../model/Trackers';
 
-import {caller} from '../../../../utils/lang';
+import { caller } from '../../../../utils/lang';
 
 function compareTrackers(track1, track2) {
-  return (
-    track1.typeId !== track2.typeId ||
+  return track1.typeId !== track2.typeId ||
     track1.iconId !== track2.iconId ||
-    track1.title !== track2.title
-  );
+    track1.title !== track2.title;
 }
 
 export default class TrackerEditView extends BaseTrackerView {
@@ -81,19 +79,20 @@ export default class TrackerEditView extends BaseTrackerView {
   }
 
   _renderDeleteRow() {
-    return this.props.allowDelete ? (
-      <View style={propsStyles.group}>
-        <View style={[propsStyles.row]}>
-          <TouchableOpacity
-            style={propsStyles.colLeft}
-            onPress={this.props.onRemove}>
-            <Text style={[propsStyles.text, styles.deleteText]}>
-              Delete
-            </Text>
-          </TouchableOpacity>
+    return this.props.allowDelete
+      ? <View style={propsStyles.group}>
+          <View style={[propsStyles.row]}>
+            <TouchableOpacity
+              style={propsStyles.colLeft}
+              onPress={this.props.onRemove}
+            >
+              <Text style={[propsStyles.text, styles.deleteText]}>
+                Delete
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    ) : null;
+      : null;
   }
 
   render() {
@@ -102,15 +101,13 @@ export default class TrackerEditView extends BaseTrackerView {
     const typeEnum = TrackerType.fromValue(typeId);
 
     return (
-      <Animated.View style={[
-          propsStyles.innerView,
-          this.props.style,
-        ]}>
+      <Animated.View style={[propsStyles.innerView, this.props.style]}>
         <View style={propsStyles.headerContainer}>
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
               style={styles.changeIconBox}
-              onPress={::this._onIconEdit}>
+              onPress={::this._onIconEdit}
+            >
               <Text style={styles.changeIconText}>
                 Change Icon
               </Text>
@@ -124,8 +121,8 @@ export default class TrackerEditView extends BaseTrackerView {
           </View>
           <View style={propsStyles.titleContainer}>
             <TextInput
-              ref='title'
-              placeholder='Add a title'
+              ref="title"
+              placeholder="Add a title"
               placeholderTextColor={trackerDef.hintText.color}
               style={propsStyles.titleInput}
               onChangeText={title => this._onTitleEdit(title)}
@@ -134,27 +131,27 @@ export default class TrackerEditView extends BaseTrackerView {
           </View>
         </View>
         <View style={propsStyles.bodyContainer}>
-          {
-            this.props.showType ? (
-              <View style={propsStyles.row}>
+          {this.props.showType
+            ? <View style={propsStyles.row}>
                 <View style={propsStyles.colLeft}>
                   <Text style={propsStyles.colText}>
                     Tracker Type
                   </Text>
                 </View>
                 <TouchableOpacity
-                    style={propsStyles.colRight}
-                    onPress={this.props.onTypeSelect}>
+                  style={propsStyles.colRight}
+                  onPress={this.props.onTypeSelect}
+                >
                   <Text style={[propsStyles.colText, styles.trackTypeText]}>
                     {typeEnum ? typeEnum.title : 'Select'}
                   </Text>
                   <Image
                     source={getIcon('next')}
-                    style={propsStyles.nextIcon} />
+                    style={propsStyles.nextIcon}
+                  />
                 </TouchableOpacity>
               </View>
-            ) : null
-          }
+            : null}
           <View style={propsStyles.group}>
             <View style={propsStyles.firstGroupRow}>
               <View style={propsStyles.colLeftWide}>
@@ -164,8 +161,9 @@ export default class TrackerEditView extends BaseTrackerView {
               </View>
               <View style={propsStyles.colRight}>
                 <Switch
-                  onValueChange={value => this.setState({sendNotif: value})}
-                  value={this.state.sendNotif} />
+                  onValueChange={value => this.setState({ sendNotif: value })}
+                  value={this.state.sendNotif}
+                />
               </View>
             </View>
             <View style={propsStyles.row}>
@@ -176,17 +174,18 @@ export default class TrackerEditView extends BaseTrackerView {
               </View>
               <View style={propsStyles.colRight}>
                 <Switch
-                  onValueChange={value => this.setState({saveGoog: value})}
-                  value={this.state.saveGoog} />
+                  onValueChange={value => this.setState({ saveGoog: value })}
+                  value={this.state.saveGoog}
+                />
               </View>
             </View>
           </View>
-          { this._renderDeleteRow() }
+          {this._renderDeleteRow()}
         </View>
       </Animated.View>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   barContainer: {

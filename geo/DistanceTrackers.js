@@ -4,17 +4,16 @@ import haversine from 'haversine';
 
 import EventEmitter from 'eventemitter3';
 
-import {BGGeoLocationWatcher, getMetersFromLatLon} from './geo';
+import { BGGeoLocationWatcher, getMetersFromLatLon } from './geo';
 
-import {caller} from '../utils/lang';
+import { caller } from '../utils/lang';
 
 class DistanceTrackers {
   _trackers = {};
 
   get(id: number, distInt: number, timeInt: number) {
     if (!this._trackers[id]) {
-      this._trackers[id] =
-        new DistanceTracker(distInt, timeInt);
+      this._trackers[id] = new DistanceTracker(distInt, timeInt);
     }
     return this._trackers[id];
   }
@@ -22,7 +21,7 @@ class DistanceTrackers {
   dispose(id: number) {
     if (this._trackers[id]) {
       this._trackers[id].dispose();
-      this._trackers[id] = null;
+      delete this._trackers[id];
     }
   }
 }
@@ -71,26 +70,7 @@ export class DistanceTracker {
       if (error) return;
 
       this._startTracking();
-      this._unwatch = BGGeoLocationWatcher.on(
-        'position', ::this._onPosition);
-    });
-  }
-
-  _onPosition(pos) {
-    this._updatePosition(pos);
-    this._engaged = true;
-  }
-
-  _trackPosition() {
-    if (this._engaged) {
-      return this._fireOnUpdate(this._track);
-    }
-
-    BGGeoLocationWatcher.getPos((loc, error) => {
-      if (!error) {
-        this._updateLocation(loc);
-        this._fireOnUpdate(this._track);
-      }
+      this._unwatch = BGGeoLocationWatcher.on('position', ::this._onPosition);
     });
   }
 
@@ -133,6 +113,14 @@ export class DistanceTracker {
     };
   }
 
+  _onPosition(pos) {
+    this._updatePosition(pos);
+  }
+
+  _trackPosition() {
+    this._fireOnUpdate(this._track);
+  }
+
   _fireOnStart(error: Object) {
     this.events.emit('onStart', error);
   }
@@ -148,11 +136,13 @@ export class DistanceTracker {
   _startTracking() {
     this._dist = 0;
     this._time = 0;
-    this._hInterval = setInterval(() => {
-      this._time += this._timeInterval;
-
-      this._trackPosition();
-    }, this._timeInterval);
+    this._hInterval = setInterval(
+      () => {
+        this._time += this._timeInterval;
+        this._trackPosition();
+      },
+      this._timeInterval,
+    );
   }
 
   _updatePosition({ coords }) {

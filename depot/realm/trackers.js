@@ -1,4 +1,4 @@
- /* @flow */
+/* @flow */
 
 'use strict';
 
@@ -30,8 +30,7 @@ class TrackersDepot {
   getOne(trackId: number): Tracker {
     check.assert.number(trackId);
 
-    const trackers = this._trackers
-      .filtered('id = $0', trackId);
+    const trackers = this._trackers.filtered('id = $0', trackId);
     return trackers[0];
   }
 
@@ -67,8 +66,7 @@ class TrackersDepot {
   remove(trackId: number): boolean {
     check.assert.number(trackId);
 
-    const tracker = this._trackers
-      .filtered('id = $0', trackId)[0];
+    const tracker = this._trackers.filtered('id = $0', trackId)[0];
     if (tracker) {
       DB.write(() => {
         DB.delete(tracker);
@@ -80,26 +78,26 @@ class TrackersDepot {
     return !!tracker;
   }
 
-  update(data: Tracker): boolean {
-    const tracker = this._trackers
-      .filtered('id = $0', data.id)[0];    
-    if (tracker) {
-      DB.write(() => {
-        Object.assign(tracker, data);
-      });
-    }
+  update(tracker: Tracker): Tracker {
+    const dbTracker = this._trackers.filtered('id = $0', tracker.id)[0];
+
+    if (!dbTracker) return null;
+
+    DB.write(() => {
+      Object.assign(dbTracker, tracker);
+    });
 
     this.events.emit('updated', {
       trackId: tracker.id,
     });
 
-    return !!tracker;
+    return tracker;
   }
 
   get _trackers() {
     return this._table.trackers;
   }
-};
+}
 
 const depot = new TrackersDepot();
 export default depot;

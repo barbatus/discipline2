@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   TouchableOpacity,
@@ -13,23 +13,23 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {first, last} from 'lodash';
+import { first, last } from 'lodash';
 
-import {getIcon} from '../../../icons/icons';
+import { getIcon } from '../../../icons/icons';
 
-import {slideStyles, slideDef} from '../styles/slideStyles';
+import { slideStyles, slideDef } from '../styles/slideStyles';
 
-import {commonStyles} from '../../styles/common';
+import { commonStyles } from '../../styles/common';
 
-import {TrackerType} from '../../../depot/consts';
+import { TrackerType } from '../../../depot/consts';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
 const clean = str => {
   check.assert.string(str);
 
   return str.replace(/\n/g, '').replace(/\s+/g, ' ');
-}
+};
 
 const TYPES = TrackerType.symbols();
 
@@ -64,34 +64,37 @@ export default class TrackerTypesSlide extends Component {
       return (
         <TouchableWithoutFeedback
           key={type.valueOf()}
-          onPress={this._onTypeChosen.bind(this, type)}>
+          onPress={this._onTypeChosen.bind(this, type)}
+        >
           <View
-            style={selected === type ?
-              [styles.type, styles.selected] : styles.type}>
-              <View style={styles.typeIconContainer}>
-                <Image source={getIcon(type.valueOf())}
-                  style={styles.typeIcon} />
-              </View>
-              <View style={styles.typeTitleContainer}>
-                <Text style={styles.typeTitle}>
-                  { type.title }
-                </Text>
-              </View>
+            style={
+              selected === type ? [styles.type, styles.selected] : styles.type
+            }
+          >
+            <View style={styles.typeIconContainer}>
+              <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
+            </View>
+            <View style={styles.typeTitleContainer}>
+              <Text style={styles.typeTitle}>
+                {type.title}
+              </Text>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       );
     });
 
-    const borderColor =
-      (selected == lastType || selected == firstType) ?
-      styles.selectedBorder : null;
+    const borderColor = selected == lastType || selected == firstType
+      ? styles.selectedBorder
+      : null;
     return (
       <ScrollView
         style={[styles.types, borderColor]}
         horizontal={true}
         pagingEnabled={false}
-        bounces={false}>
-        { types }
+        bounces={false}
+      >
+        {types}
       </ScrollView>
     );
   }
@@ -105,27 +108,18 @@ export default class TrackerTypesSlide extends Component {
     return (
       <View style={[slideStyles.slide, style]}>
         <View style={slideStyles.innerView}>
-          <View style={[
-              slideStyles.headerContainer,
-              styles.headerContainer
-            ]}>
+          <View style={[slideStyles.headerContainer, styles.headerContainer]}>
             <Text style={styles.title}>
-              { title }
+              {title}
             </Text>
           </View>
-          <View style={[
-              slideStyles.bodyContainer,
-              styles.bodyContainer
-            ]}>
+          <View style={[slideStyles.bodyContainer, styles.bodyContainer]}>
             <Text style={styles.desc}>
-              { clean(desc) }
+              {clean(desc)}
             </Text>
           </View>
-          <View style={[
-              slideStyles.footerContainer,
-              styles.footerContainer
-            ]}>
-            { this._renderTypes() }
+          <View style={[slideStyles.footerContainer, styles.footerContainer]}>
+            {this._renderTypes()}
           </View>
         </View>
       </View>
@@ -137,7 +131,7 @@ const styleDef = {
   centered: {
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 };
 
 const styles = StyleSheet.create({

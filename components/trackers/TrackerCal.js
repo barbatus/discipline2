@@ -1,13 +1,8 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  View,
-  StyleSheet,
-  Animated,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 
 import moment from 'moment';
 
@@ -15,9 +10,9 @@ import Calendar from '../calendar/Calendar';
 
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
-import {commonStyles} from '../styles/common';
+import { commonStyles } from '../styles/common';
 
-import {slideWidth} from './styles/slideStyles';
+import { slideWidth } from './styles/slideStyles';
 
 export default class TrackerCal extends Component {
   _opacity = new Animated.Value(0);
@@ -36,20 +31,18 @@ export default class TrackerCal extends Component {
   setShown(value: number) {
     this._opacity.setValue(value);
 
-    value === 0 ?
-      this._upDown.setOut():
-      this._upDown.setIn();
+    value === 0 ? this._upDown.setOut() : this._upDown.setIn();
   }
 
   render() {
     const { style, ticks, todayMs, dateMs, onMonthChanged } = this.props;
     const tickDates = ticks.map(tick => moment(tick.dateTimeMs));
 
-    const calStyle = [style, this._upDown.style, {opacity: this._opacity}];
+    const calStyle = [style, this._upDown.style, { opacity: this._opacity }];
     return (
       <Animated.View style={calStyle}>
         <Calendar
-          ref='calendar'
+          ref="calendar"
           customStyle={{
             calContainer: styles.container,
           }}
@@ -66,7 +59,7 @@ export default class TrackerCal extends Component {
       </Animated.View>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   container: {

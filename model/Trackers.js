@@ -1,10 +1,10 @@
 'use strict';
 
-import Tracker, {DistanceTracker} from './Tracker';
+import Tracker, { DistanceTracker } from './Tracker';
 
-import {TrackerType} from '../depot/consts';
+import { TrackerType } from '../depot/consts';
 
-import {Tracker as ITracker} from '../depot/interfaces';
+import { Tracker as ITracker } from '../depot/interfaces';
 
 import depot from '../depot/depot';
 

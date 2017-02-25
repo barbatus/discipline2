@@ -2,11 +2,11 @@
 
 import React from 'react';
 
-import {TextInput} from 'react-native';
+import { TextInput } from 'react-native';
 
-const {State: TextInputState} = TextInput;
+const { State: TextInputState } = TextInput;
 
-import {DeviceEventEmitter} from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 
 import EventEmitter from 'eventemitter3';
 
@@ -15,7 +15,9 @@ class Keyboard {
 
   constructor() {
     DeviceEventEmitter.addListener(
-      'keyboardWillHide', this._keyboardWillHide.bind(this));
+      'keyboardWillHide',
+      this._keyboardWillHide.bind(this),
+    );
   }
 
   dismiss() {

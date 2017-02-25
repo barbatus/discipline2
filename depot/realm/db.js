@@ -1,4 +1,4 @@
- /* @flow */
+/* @flow */
 
 'use strict';
 
@@ -87,8 +87,12 @@ const DistanceDataSchema = {
 
 const DB = new Realm({
   schema: [
-    AppInfoSchema, TrackersSchema, TrackerSchema,
-    TickSchema, TicksSchema, DistanceDataSchema,
+    AppInfoSchema,
+    TrackersSchema,
+    TrackerSchema,
+    TickSchema,
+    TicksSchema,
+    DistanceDataSchema,
   ],
 });
 export default DB;

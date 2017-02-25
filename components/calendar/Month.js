@@ -1,8 +1,8 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 
-import {View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import moment from 'moment';
 
@@ -10,14 +10,14 @@ import Day from './Day';
 
 import styles from './styles';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class Month extends Component {
   shouldComponentUpdate(props, state) {
     return this.props.monthMs !== props.monthMs ||
-           this.props.todayMs !== props.todayMs ||
-           this.props.tickDates !== props.tickDates ||
-           this.props.selectedDateMs !== props.selectedDateMs;
+      this.props.todayMs !== props.todayMs ||
+      this.props.tickDates !== props.tickDates ||
+      this.props.selectedDateMs !== props.selectedDateMs;
   }
 
   render() {
@@ -29,8 +29,7 @@ export default class Month extends Component {
       tickDates,
     } = this.props;
 
-    const
-      startOfMonth = moment(monthMs).startOf('month'),
+    const startOfMonth = moment(monthMs).startOf('month'),
       endOfMonth = moment(monthMs).endOf('month'),
       startOffset = startOfMonth.weekday(),
       endOffset = 6 - endOfMonth.weekday(),
@@ -41,7 +40,7 @@ export default class Month extends Component {
     const endDay = moment(endOfMonth).add(endOffset, 'day');
     let days = [];
     let weekRows = [];
-    while(startDay.isBefore(endDay)) {
+    while (startDay.isBefore(endDay)) {
       const isoWeekday = startDay.isoWeekday();
       const isOutDay = startDay.month() !== startOfMonth.month();
       const dayIndex = startDay.date() - 1;
@@ -55,13 +54,13 @@ export default class Month extends Component {
           hasTick={!isOutDay && tickDates[dayIndex] === true}
           customStyle={customStyle}
           outDay={isOutDay}
-        />
+        />,
       );
       if (startDay.weekday() === 6) {
         weekRows.push(
           <View key={weekRows.length} style={styles.weekRow}>
             {days}
-          </View>
+          </View>,
         );
         days = [];
       }

@@ -9,8 +9,7 @@ class DlgRegistry {
   _registry = new Map();
 
   register(dlgId: string, dlg: IModal) {
-    check.assert.not.null(this.get(dlgId),
-      'Dlg already registered');
+    check.assert.not.null(this.get(dlgId), 'Dlg already registered');
 
     this._registry.set(dlgId, dlg);
   }

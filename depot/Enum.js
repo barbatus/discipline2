@@ -1,6 +1,6 @@
 'use strict';
 
-import {has} from 'lodash';
+import { has } from 'lodash';
 
 class EnumSymbol {
   constructor(key: String, props: Object) {
@@ -35,8 +35,7 @@ export default class Enum {
   }
 
   symbols() {
-    return this.keys().map(
-      key => this[key]);
+    return this.keys().map(key => this[key]);
   }
 
   keys() {
@@ -44,13 +43,11 @@ export default class Enum {
   }
 
   values() {
-    return this.symbols().map(
-      sym => sym.valueOf());
+    return this.symbols().map(sym => sym.valueOf());
   }
 
   fromValue(value) {
-    let sym = this.symbols().find(
-      sym => sym == value);
+    let sym = this.symbols().find(sym => sym == value);
     return sym;
   }
 

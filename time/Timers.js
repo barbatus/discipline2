@@ -15,7 +15,7 @@ class Timers {
   dispose(id: number) {
     if (this._timers[id]) {
       this._timers[id].dispose();
-      this._timers[id] = null;
+      delete this._timers[id];
     }
   }
 }
@@ -48,10 +48,13 @@ export class Timer {
     if (this.active) return;
 
     this._pastMs = 0;
-    this._timer = setInterval(() => {
-      this._pastMs += this._int;
-      this.events.emit('onTimer', pos + this._pastMs);
-    }, this._int);
+    this._timer = setInterval(
+      () => {
+        this._pastMs += this._int;
+        this.events.emit('onTimer', pos + this._pastMs);
+      },
+      this._int,
+    );
   }
 
   stop() {

@@ -2,9 +2,9 @@
 
 import Easing from 'Easing';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 import Animation from './Animation';
 
@@ -17,8 +17,8 @@ export default class OpacityAnimation {
 
   get style(): Object {
     return {
-      opacity: this._op
-    }
+      opacity: this._op,
+    };
   }
 
   get value() {

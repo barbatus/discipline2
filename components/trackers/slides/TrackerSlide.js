@@ -1,21 +1,14 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  View,
-  StyleSheet,
-  Animated,
-} from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 
-import {
-  trackerStyles,
-  propsStyles,
-} from '../styles/trackerStyles';
+import { trackerStyles, propsStyles } from '../styles/trackerStyles';
 
 import Keyboard from '../../../utils/keyboard';
 
-import {commonStyles} from '../../styles/common';
+import { commonStyles } from '../../styles/common';
 
 import TrackerView from './basic/TrackerView';
 import TrackerEditView from './basic/TrackerEditView';
@@ -28,7 +21,7 @@ import Animation from '../../animation/Animation';
 import FlipAnimation from '../../animation/FlipAnimation';
 import ScaleAnimation from '../../animation/ScaleAnimation';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
 const absFilled = commonStyles.absoluteFilled;
 
@@ -92,8 +85,8 @@ export default class TrackerSlide extends Component {
     const slideStyle = [trackerStyles.slide, style];
     return (
       <Animated.View style={[slideStyle, this._scale.style]}>
-        { this._renderFrontView() }
-        { this._renderBackView() }
+        {this._renderFrontView()}
+        {this._renderBackView()}
       </Animated.View>
     );
   }
@@ -120,7 +113,7 @@ export default class TrackerSlide extends Component {
     if (editable) {
       return (
         <TrackerEditView
-          ref='editView'
+          ref="editView"
           style={[absFilled, this._flip.style2]}
           showType={false}
           allowDelete
@@ -136,7 +129,7 @@ export default class TrackerSlide extends Component {
     const { tracker } = this.props;
     return (
       <TrackerView
-        ref='trackerView'
+        ref="trackerView"
         style={this._flip.style1}
         tracker={tracker}
         backImg={this.backImg}
@@ -149,7 +142,7 @@ export default class TrackerSlide extends Component {
       />
     );
   }
-};
+}
 
 TrackerSlide.defaultProps = {
   scale: 1,

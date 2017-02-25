@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   View,
@@ -11,7 +11,7 @@ import {
   Animated,
 } from 'react-native';
 
-import {trackerStyles} from '../styles/trackerStyles';
+import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerEditView from './basic/TrackerEditView';
 
@@ -25,7 +25,7 @@ export default class NewTrackerSlide extends Component {
     return (
       <View style={[trackerStyles.slide, style]}>
         <TrackerEditView
-          ref='editView'
+          ref="editView"
           {...this.props}
           style={styles.editView}
         />
@@ -37,8 +37,10 @@ export default class NewTrackerSlide extends Component {
 const styles = StyleSheet.create({
   editView: {
     opacity: 1,
-    transform: [{
-      rotateY: '0deg',
-    }]
+    transform: [
+      {
+        rotateY: '0deg',
+      },
+    ],
   },
 });

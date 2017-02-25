@@ -1,13 +1,10 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  View,
-  Animated,
-} from 'react-native';
+import { View, Animated } from 'react-native';
 
-import {getIcon, UserIconsStore} from '../../../../icons/icons';
+import { getIcon, UserIconsStore } from '../../../../icons/icons';
 
 export default class BaseTrackerView extends Component {
   getMainIcon(iconId) {
@@ -17,4 +14,4 @@ export default class BaseTrackerView extends Component {
     }
     return getIcon('oval');
   }
-};
+}

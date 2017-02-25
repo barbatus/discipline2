@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -15,7 +15,7 @@ import styles from './styles';
 export default class Day extends Component {
   static defaultProps = {
     customStyle: {},
-  }
+  };
 
   static propTypes = {
     caption: PropTypes.any,
@@ -25,11 +25,11 @@ export default class Day extends Component {
     isToday: PropTypes.bool,
     isWeekend: PropTypes.bool,
     onPress: PropTypes.func,
-  }
+  };
 
   shouldComponentUpdate(props, state) {
     return this.props.isSelected !== props.isSelected ||
-           this.props.isToday !== props.isToday;
+      this.props.isToday !== props.isToday;
   }
 
   dayCircleStyle = (isSelected, isToday) => {
@@ -45,7 +45,7 @@ export default class Day extends Component {
     }
 
     return dayCircleStyle;
-  }
+  };
 
   dayTextStyle = (isSelected, isToday) => {
     const { customStyle } = this.props;
@@ -60,32 +60,30 @@ export default class Day extends Component {
     }
 
     return dayTextStyle;
-  }
+  };
 
   render() {
     const { caption, outDay, hasTick, isSelected, isToday } = this.props;
 
-    return outDay ? (
-        <TouchableWithoutFeedback>
+    return outDay
+      ? <TouchableWithoutFeedback>
           <View style={styles.dayButton}>
             <View style={styles.dayCircle}>
               <Text style={[styles.dayText, styles.outDayText]}>
-                { caption }
+                {caption}
               </Text>
             </View>
           </View>
         </TouchableWithoutFeedback>
-      ) : (
-      <TouchableOpacity onPress={this.props.onPress}>
-        <View style={styles.dayButton}>
-          <View style={this.dayCircleStyle(isSelected, isToday)}>
-            { hasTick ? <View style={styles.tickPoint} /> : null }
-            <Text style={this.dayTextStyle(isSelected, isToday)}>
-              { caption }
-            </Text>
+      : <TouchableOpacity onPress={this.props.onPress}>
+          <View style={styles.dayButton}>
+            <View style={this.dayCircleStyle(isSelected, isToday)}>
+              {hasTick ? <View style={styles.tickPoint} /> : null}
+              <Text style={this.dayTextStyle(isSelected, isToday)}>
+                {caption}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    );
+        </TouchableOpacity>;
   }
 }

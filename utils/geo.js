@@ -4,7 +4,7 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import EventEmitter from 'eventemitter3';
 
-import {caller} from './lang';
+import { caller } from './lang';
 
 BackgroundGeolocation.configure({
   distanceFilter: 3,
@@ -78,11 +78,15 @@ class GeoFence_ {
       this._start(onSuccess, onError, count + 1);
     };
 
-    BackgroundGeolocation.getCurrentPosition({
-      persist: false,
-      desiredAccuracy: 10,
-      timeout: 5000
-    }, successCb, errorCb);
+    BackgroundGeolocation.getCurrentPosition(
+      {
+        persist: false,
+        desiredAccuracy: 10,
+        timeout: 5000,
+      },
+      successCb,
+      errorCb,
+    );
   }
 
   stop() {
@@ -90,7 +94,7 @@ class GeoFence_ {
       BackgroundGeolocation.stop();
       for (let emitter of this._cbMap.values()) {
         emitter.removeAllListeners();
-      };
+      }
       return;
     }
     this._starts--;
@@ -136,7 +140,7 @@ class GeoWatcher_ {
       error => {
         caller(cb, null, error);
       },
-      POS_OPT
+      POS_OPT,
     );
   }
 
@@ -145,7 +149,7 @@ class GeoWatcher_ {
 
     return () => {
       this._emitter.removeListener(WATCH_EVENT, cb, context);
-    }
+    };
   }
 
   offWatch(cb: Function, context: any) {
@@ -164,16 +168,20 @@ class GeoWatcher_ {
     navigator.geolocation.getCurrentPosition(
       pos => caller(cb, pos, null),
       error => caller(cb, null, error),
-      POS_OPT
+      POS_OPT,
     );
   }
 
   _startWatch() {
     if (this._watchId) return;
 
-    this._watchId = navigator.geolocation.watchPosition(pos => {
-      this._emitter.emit(WATCH_EVENT, pos);
-    }, null, POS_OPT);
+    this._watchId = navigator.geolocation.watchPosition(
+      pos => {
+        this._emitter.emit(WATCH_EVENT, pos);
+      },
+      null,
+      POS_OPT,
+    );
   }
 }
 

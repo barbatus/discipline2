@@ -1,13 +1,8 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Text,
-  Animated,
-} from 'react-native';
+import { StyleSheet, View, Text, Animated } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
@@ -15,7 +10,7 @@ export default class Screen extends Component {
   getChildContext() {
     return {
       navBar: this.navBar,
-    }
+    };
   }
 
   get navBar() {
@@ -31,7 +26,7 @@ export default class Screen extends Component {
       },
       setOpacity: (dp: number) => {
         this.refs.navBar.setOpacity(dp);
-      }
+      },
     };
   }
 
@@ -47,7 +42,7 @@ export default class Screen extends Component {
         <View style={styles.background}>
           {background}
         </View>
-        <NavBar ref='navBar' />
+        <NavBar ref="navBar" />
         <View style={styles.content}>
           {content}
         </View>

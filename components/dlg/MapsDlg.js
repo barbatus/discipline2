@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
@@ -25,7 +25,6 @@ const DEFAULT_PADDING = {
 };
 
 export default class MapsDlg extends CommonModal {
-
   constructor(props) {
     super(props);
 
@@ -45,14 +44,15 @@ export default class MapsDlg extends CommonModal {
     return (
       <MapView
         style={styles.mapView}
-        ref='map'
+        ref="map"
         initRegion={initRegion}
         zoomEnabled
         loadingEnabled
-        showsMyLocationButton>
+        showsMyLocationButton
+      >
         <MapView.Polyline
           coordinates={path}
-          strokeColor='rgba(255,0,0,0.5)'
+          strokeColor="rgba(255,0,0,0.5)"
           strokeWidth={4}
         />
       </MapView>

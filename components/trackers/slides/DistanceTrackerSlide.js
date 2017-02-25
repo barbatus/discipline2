@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   View,
@@ -13,27 +13,25 @@ import {
   Vibration,
 } from 'react-native';
 
-import {
-  trackerDef,
-  trackerStyles,
-} from '../styles/trackerStyles';
+import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
-import registry, {DlgType} from '../../dlg/registry';
+import registry, { DlgType } from '../../dlg/registry';
 
-import {formatDistance} from '../../../utils/format';
+import { formatDistance } from '../../../utils/format';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
-import DistanceTrackers, {DistanceTracker} from '../../../geo/DistanceTrackers';
+import DistanceTrackers, {
+  DistanceTracker,
+} from '../../../geo/DistanceTrackers';
 
-import {slideWidth} from '../styles/slideStyles';
+import { slideWidth } from '../styles/slideStyles';
 
 import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
 class DistanceData extends Component {
-
   constructor(props) {
     super(props);
 
@@ -42,37 +40,30 @@ class DistanceData extends Component {
   }
 
   shouldComponentUpdate(props, state) {
-    if (props.dist !== this.props.dist ||
-        props.time !== this.props.time) {
+    if (props.dist !== this.props.dist || props.time !== this.props.time) {
       this.state.time = props.time;
       this.state.dist = props.dist;
       return true;
     }
 
-    return this.state.dist !== state.dist ||
-           this.state.time !== state.time;
+    return this.state.dist !== state.dist || this.state.time !== state.time;
   }
 
   render() {
     const { time, dist } = this.state;
-
     const format = formatDistance(dist);
     return (
       <View style={styles.distData}>
         <View style={[styles.label, styles.dist]}>
           <Text style={styles.labelText}>
-            { format.format }
+            {format.format}
           </Text>
           <Text style={styles.titleText}>
-            { format.unit }
+            {format.unit}
           </Text>
         </View>
         <View style={styles.label}>
-          <TimeLabel
-            style={styles.labelText}
-            width={200}
-            timeMs={time}
-          />
+          <TimeLabel style={styles.labelText} width={200} timeMs={time} />
         </View>
       </View>
     );
@@ -91,8 +82,11 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   constructor(props) {
     super(props);
     const { tracker } = props;
-    this._distTracker = DistanceTrackers.get(tracker.id,
-      DIST_INTRVL, TIME_INTRVL);
+    this._distTracker = DistanceTrackers.get(
+      tracker.id,
+      DIST_INTRVL,
+      TIME_INTRVL,
+    );
     this._distTracker.events.on('onStart', ::this._onDistStart);
     this._distTracker.events.on('onUpdate', ::this._onDistUpdate);
     this._distTracker.events.on('onStop', ::this._onDistStop);
@@ -112,11 +106,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <DistanceData
-            ref='dist'
-            dist={tracker.value}
-            time={tracker.time}
-          />
+          <DistanceData ref="dist" dist={tracker.value} time={tracker.time} />
         </View>
       </View>
     );
@@ -129,7 +119,8 @@ export default class DistanceTrackerSlide extends TrackerSlide {
         <TouchableOpacity
           style={styles.button}
           disabled={!responsive}
-          onPress={this::onPress}>
+          onPress={this::onPress}
+        >
           <Text style={styles.btnText}>
             {label}
           </Text>
@@ -141,18 +132,18 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     return (
       <View style={styles.footerControlsContainer}>
         <View style={styles.startStopBtn}>
-          { tracker.active ?
-              renderBtn('STOP', this._onStopBtn) :
-              renderBtn('START', this._onStartBtn) }
+          {tracker.active
+            ? renderBtn('STOP', this._onStopBtn)
+            : renderBtn('START', this._onStartBtn)}
         </View>
         <View style={styles.seeMap}>
           <Text style={trackerStyles.footerText}>
             See {
-              <Text
-                style={styles.seeMapLink}
-                onPress={::this._showMap}>
-                map
-              </Text>
+              (
+                <Text style={styles.seeMapLink} onPress={::this._showMap}>
+                  map
+                </Text>
+              )
             }
           </Text>
         </View>
@@ -184,7 +175,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     Vibration.vibrate();
 
     caller(this.props.onStart);
-    caller(this.props.onTick, 0, {time: 0});
+    caller(this.props.onTick, 0, { time: 0 });
   }
 
   _onDistStop({ dist, time, latitude, longitude }) {
@@ -201,7 +192,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     const dlg = registry.get(DlgType.MAPS);
     dlg.show(this._path.slice(0));
   }
-};
+}
 
 const styles = StyleSheet.create({
   bodyContainer: {

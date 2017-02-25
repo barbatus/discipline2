@@ -2,9 +2,9 @@
 
 import Easing from 'Easing';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 class AnimationManager {
   _on = false;
@@ -60,10 +60,9 @@ class AnimationManager {
   combineStyles(...anims) {
     let transform = [];
     for (const anim of anims) {
-      transform = transform.concat(
-        anim.style.transform);
+      transform = transform.concat(anim.style.transform);
     }
-    return { transform }
+    return { transform };
   }
 
   _animate(animations, callback) {

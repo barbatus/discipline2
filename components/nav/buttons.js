@@ -1,12 +1,12 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {TouchableOpacity, Text, Image} from 'react-native';
+import { TouchableOpacity, Text, Image } from 'react-native';
 
-import {debounce} from 'lodash';
+import { debounce } from 'lodash';
 
-import {getIcon} from '../../icons/icons';
+import { getIcon } from '../../icons/icons';
 
 import styles from './styles';
 
@@ -15,12 +15,11 @@ class NavButton extends Component {
     let onPress = debounce(this.props.onPress, 30);
 
     return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={this.props.style}>
+      <TouchableOpacity onPress={onPress} style={this.props.style}>
         <Image
           source={getIcon(this.props.icon)}
-          style={[styles.navBarIcon, this.props.iconStyle]} />
+          style={[styles.navBarIcon, this.props.iconStyle]}
+        />
       </TouchableOpacity>
     );
   }
@@ -29,7 +28,8 @@ class NavButton extends Component {
 class NavAddButton extends Component {
   render() {
     return (
-      <NavButton {...this.props}
+      <NavButton
+        {...this.props}
         icon={'new'}
         iconStyle={styles.newIcon}
         style={styles.navBarRightButton}
@@ -41,7 +41,8 @@ class NavAddButton extends Component {
 class NavBackButton extends Component {
   render() {
     return (
-      <NavButton {...this.props}
+      <NavButton
+        {...this.props}
         icon={'back'}
         iconStyle={styles.backIcon}
         style={styles.navBarLeftButton}
@@ -53,7 +54,8 @@ class NavBackButton extends Component {
 class NavMenuButton extends Component {
   render() {
     return (
-      <NavButton {...this.props}
+      <NavButton
+        {...this.props}
         icon={'menu'}
         iconStyle={styles.menuIcon}
         style={styles.navBarLeftButton}
@@ -93,5 +95,5 @@ module.exports = {
   NavBackButton,
   NavMenuButton,
   NavCancelButton,
-  NavAcceptButton
+  NavAcceptButton,
 };

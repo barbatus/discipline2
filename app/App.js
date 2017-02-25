@@ -2,11 +2,11 @@
 
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 
-import {Navigator, StyleSheet} from 'react-native';
+import { Navigator, StyleSheet } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
 
@@ -16,7 +16,7 @@ import Menu from '../components/nav/Menu';
 
 import DayUpdateEvent from './DayUpdateEvent';
 
-import {changeDay} from '../model/actions';
+import { changeDay } from '../model/actions';
 
 export default function CreateApp(store) {
   return () => <App store={store} />;
@@ -52,14 +52,11 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <SideMenu
-          disableGestures={true}
-          menu={menu}
-          isOpen={this.state.isOpen}>
+        <SideMenu disableGestures={true} menu={menu} isOpen={this.state.isOpen}>
           <Component
             navigator={navigator}
             route={route}
-            onMenu={() => this.setState({isOpen: true})}
+            onMenu={() => this.setState({ isOpen: true })}
           />
         </SideMenu>
       </Provider>
@@ -71,7 +68,7 @@ class App extends Component {
       <Navigator
         debugOverlay={false}
         initialRoute={{
-          component: MainScreen
+          component: MainScreen,
         }}
         renderScene={::this.renderScene}
       />

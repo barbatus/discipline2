@@ -2,7 +2,7 @@
 
 import UserIcons from './userIcons';
 
-import {IconSize} from './consts';
+import { IconSize } from './consts';
 
 class UserIcon {
   constructor(iconEnum) {
@@ -20,7 +20,7 @@ class UserIcon {
   get pngLarge() {
     return this._enum[IconSize.NORMAL];
   }
-};
+}
 
 export default class UserIconsStore {
   static get(iconId): UserIcon {
@@ -32,7 +32,6 @@ export default class UserIconsStore {
   }
 
   static getAll(): Array<UserIcon> {
-    return UserIcons.symbols().map(
-      icon => new UserIcon(icon));
+    return UserIcons.symbols().map(icon => new UserIcon(icon));
   }
 }

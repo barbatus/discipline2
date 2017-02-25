@@ -4,7 +4,7 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import EventEmitter from 'eventemitter3';
 
-import {caller} from '../utils/lang';
+import { caller } from '../utils/lang';
 
 BackgroundGeolocation.configure({
   distanceFilter: 0,
@@ -32,7 +32,7 @@ class BGGeoLocationWatcher_ {
     this._emitter.on(event, cb, context);
     return () => {
       this._emitter.removeListener(event, cb, context);
-    }
+    };
   }
 
   off(event, cb, context) {
@@ -78,7 +78,6 @@ class BGGeoLocationWatcher_ {
 
   _start(onSuccess: Function, onError: Function, count = 0) {
     const successCb = pos => {
-
       caller(onSuccess, pos);
     };
 
@@ -89,8 +88,7 @@ class BGGeoLocationWatcher_ {
       this._start(onSuccess, onError, count + 1);
     };
 
-    BackgroundGeolocation.getCurrentPosition(
-      BG_POS_OPT, successCb, errorCb);
+    BackgroundGeolocation.getCurrentPosition(BG_POS_OPT, successCb, errorCb);
   }
 
   _subscribe(event: string) {
@@ -123,7 +121,7 @@ class NavGeoLocationWatcher_ {
     this._emitter.on(event, cb, context);
     return () => {
       this._emitter.removeListener(event, cb, context);
-    }
+    };
   }
 
   off(event: string, cb: Function, context: any) {
@@ -166,9 +164,13 @@ class NavGeoLocationWatcher_ {
   _startWatch() {
     if (this._watchId) return;
 
-    this._watchId = navigator.geolocation.watchPosition(pos => {
-      this._emitter.emit('position', pos);
-    }, null, POS_OPT);
+    this._watchId = navigator.geolocation.watchPosition(
+      pos => {
+        this._emitter.emit('position', pos);
+      },
+      null,
+      POS_OPT,
+    );
   }
 
   _listenerCount(event) {

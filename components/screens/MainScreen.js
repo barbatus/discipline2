@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   ScrollView,
@@ -11,7 +11,7 @@ import {
   Animated,
 } from 'react-native';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import {
   NavAddButton,
@@ -31,15 +31,15 @@ import NewTrackerView from './NewTrackerView';
 
 import IconsDlg from '../dlg/IconsDlg';
 import MapsDlg from '../dlg/MapsDlg';
-import registry, {DlgType} from '../dlg/registry';
+import registry, { DlgType } from '../dlg/registry';
 
-import {addTracker} from '../../model/actions';
+import { addTracker } from '../../model/actions';
 
 import GradientSlider from '../common/GradientSlider';
 
-import {commonStyles} from '../styles/common';
+import { commonStyles } from '../styles/common';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 class MainScreen extends Component {
   constructor(props) {
@@ -70,15 +70,11 @@ class MainScreen extends Component {
   }
 
   _getNewBtn(onPress) {
-    return (
-      <NavAddButton onPress={this::onPress} />
-    );
+    return <NavAddButton onPress={this::onPress} />;
   }
 
   _getMenuBtn(onPress) {
-    return (
-      <NavMenuButton onPress={this::onPress} />
-    );
+    return <NavMenuButton onPress={this::onPress} />;
   }
 
   _setMainViewBtns(callback?: Function) {
@@ -88,7 +84,8 @@ class MainScreen extends Component {
       navBar.setButtons(
         this._getMenuBtn(this._onMenuToggle),
         this._getNewBtn(this._onNewTracker),
-        callback);
+        callback,
+      );
     }
   }
 
@@ -97,7 +94,7 @@ class MainScreen extends Component {
   _onAccept(tracker) {
     if (this.state.active) return;
 
-    this.setState({active: true});
+    this.setState({ active: true });
     this.props.onAdd(tracker, this.state.index + 1);
   }
 
@@ -111,7 +108,7 @@ class MainScreen extends Component {
       this.newTrackView.setShown();
     });
     this.trackersView.show(() => {
-      this.setState({active: false});
+      this.setState({ active: false });
     });
   }
 
@@ -133,11 +130,11 @@ class MainScreen extends Component {
   }
 
   _onSlideChange(index, previ) {
-    const dir = (index - previ) >= 0 ? 1 : -1;
+    const dir = index - previ >= 0 ? 1 : -1;
     this.refs.gradient.finishSlide(dir);
     this.setState({
       index,
-    })
+    });
   }
 
   _onSlideNoChange() {
@@ -152,7 +149,7 @@ class MainScreen extends Component {
     return (
       <View style={commonStyles.flexFilled}>
         <TrackersView
-          ref='trackersView'
+          ref="trackersView"
           posX={0}
           onScroll={::this._onScroll}
           onSlideNoChange={::this._onSlideNoChange}
@@ -163,13 +160,13 @@ class MainScreen extends Component {
           onCancel={::this._setMainViewBtns}
         />
         <NewTrackerView
-          ref='newTrackView'
+          ref="newTrackView"
           posX={1}
           onAccept={::this._onAccept}
           onCancel={::this._cancelNewTracker}
         />
-        <IconsDlg ref='iconsDlg' />
-        <MapsDlg ref='mapsDlg' />
+        <IconsDlg ref="iconsDlg" />
+        <MapsDlg ref="mapsDlg" />
       </View>
     );
   }
@@ -178,27 +175,21 @@ class MainScreen extends Component {
     const { navigator } = this.props;
 
     const gradient = (
-      <GradientSlider
-        ref='gradient'
-        style={commonStyles.absFilled}
-      />
+      <GradientSlider ref="gradient" style={commonStyles.absFilled} />
     );
     return (
       <Screen
-        ref='screen'
+        ref="screen"
         navigator={navigator}
         background={gradient}
         content={this._renderContent()}
       />
     );
   }
-};
+}
 
-export default connect(null,
-  dispatch => {
-    return {
-      onAdd: (tracker, index) => dispatch(
-        addTracker(tracker, index))
-    };
-  }
-)(MainScreen);
+export default connect(null, dispatch => {
+  return {
+    onAdd: (tracker, index) => dispatch(addTracker(tracker, index)),
+  };
+})(MainScreen);

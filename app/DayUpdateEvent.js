@@ -4,11 +4,11 @@ import assert from 'assert';
 
 import moment from 'moment';
 
-import {AppState} from 'react-native';
+import { AppState } from 'react-native';
 
 import EventEmitter from 'eventemitter3';
 
-import {caller} from '../utils/lang';
+import { caller } from '../utils/lang';
 
 class Timeout {
   _waitMs = 0;
@@ -75,13 +75,11 @@ export default class DayUpdateEvent {
   }
 
   _unsubscribe() {
-    AppState.removeEventListener('change',
-      ::this._handleAppStateChange);
+    AppState.removeEventListener('change', ::this._handleAppStateChange);
   }
 
   _subscribe() {
-    AppState.addEventListener('change',
-      ::this._handleAppStateChange);
+    AppState.addEventListener('change', ::this._handleAppStateChange);
   }
 
   _setDayTimer() {
@@ -92,9 +90,12 @@ export default class DayUpdateEvent {
       return;
     }
 
-    this._dayTimer = new Timeout(() => {
-      this.events.emit('change');
-    }, left);
+    this._dayTimer = new Timeout(
+      () => {
+        this.events.emit('change');
+      },
+      left,
+    );
   }
 
   _unsetDayTimer() {
@@ -122,8 +123,7 @@ export default class DayUpdateEvent {
 
     this._upDate = moment();
 
-    const dateChanged = !time.isSameDate(
-      this._upDate, this._downDate);
+    const dateChanged = !time.isSameDate(this._upDate, this._downDate);
 
     if (dateChanged) {
       this._fireCbs();

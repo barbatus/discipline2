@@ -2,13 +2,13 @@
 
 import Easing from 'Easing';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 import Animation from './Animation';
 
-import {screenHeight} from '../styles/common';
+import { screenHeight } from '../styles/common';
 
 export default class ScreenSlideUpDownAnim {
   _moveY = new Animated.Value(0);
@@ -19,13 +19,15 @@ export default class ScreenSlideUpDownAnim {
 
   get style(): Object {
     return {
-      transform: [{
-        translateY: this._moveY.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, screenHeight / this._scaleFactor]
-        })
-      }]
-    }
+      transform: [
+        {
+          translateY: this._moveY.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, screenHeight / this._scaleFactor],
+          }),
+        },
+      ],
+    };
   }
 
   get value() {

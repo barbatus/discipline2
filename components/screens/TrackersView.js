@@ -1,21 +1,14 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Animated,
-} from 'react-native';
+import { StyleSheet, View, Animated } from 'react-native';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import moment from 'moment';
 
-import {
-  NavCancelButton,
-  NavAcceptButton,
-} from '../nav/buttons';
+import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
 
@@ -37,9 +30,9 @@ import {
   stopTracker,
 } from '../../model/actions';
 
-import {commonStyles} from '../styles/common';
+import { commonStyles } from '../styles/common';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 class TrackersView extends ScreenView {
   constructor(props) {
@@ -53,21 +46,21 @@ class TrackersView extends ScreenView {
 
   shouldComponentUpdate(props, state) {
     return this.props.trackers !== props.trackers ||
-           this.props.ticks !== props.ticks ||
-           this.props.todayMs !== props.todayMs;
+      this.props.ticks !== props.ticks ||
+      this.props.todayMs !== props.todayMs;
   }
 
   get content() {
     return (
       <Animated.View style={commonStyles.flexFilled}>
         <TrackerCal
-          ref='calendar'
+          ref="calendar"
           {...this.props}
           style={commonStyles.absFilled}
           onMonthChanged={::this._onMonthChanged}
         />
         <Trackers
-          ref='trackers'
+          ref="trackers"
           {...this.props}
           style={commonStyles.absFilled}
           onRemove={::this._onRemove}
@@ -94,12 +87,12 @@ class TrackersView extends ScreenView {
   _onRemove(tracker: Tracker) {
     if (this.state.active) return;
 
-    this.setState({active: true});
+    this.setState({ active: true });
     this.props.onRemove(tracker);
   }
 
   _onRemoveCompleted(index: number) {
-    this.setState({active: false});
+    this.setState({ active: false });
     caller(this.props.onRemoveCompleted, index);
   }
 
@@ -107,7 +100,7 @@ class TrackersView extends ScreenView {
     if (Animation.on) return;
 
     const { changedTracker, current } = this.state;
-    this.setState({active: true});
+    this.setState({ active: true });
     this.props.onUpdate(changedTracker || current);
   }
 
@@ -120,15 +113,11 @@ class TrackersView extends ScreenView {
   }
 
   _getCancelBtn(onPress) {
-    return (
-      <NavCancelButton onPress={this::onPress} />
-    );
+    return <NavCancelButton onPress={this::onPress} />;
   }
 
   _getAcceptBtn(onPress) {
-    return (
-      <NavAcceptButton onPress={this::onPress} />
-    );
+    return <NavAcceptButton onPress={this::onPress} />;
   }
 
   _setEditTrackerBtns() {
@@ -137,7 +126,8 @@ class TrackersView extends ScreenView {
     navBar.setTitle('Edit Tracker');
     navBar.setButtons(
       this._getCancelBtn(this._cancelEdit),
-      this._getAcceptBtn(this._saveEdit));
+      this._getAcceptBtn(this._saveEdit),
+    );
   }
 
   _onSwiperScaleMove(dv: number) {
@@ -156,8 +146,7 @@ class TrackersView extends ScreenView {
     const dateMs = moment().valueOf();
     const startDateMs = time.subtractMonth(dateMs);
     const endDateMs = time.addMonth(dateMs);
-    this.props.onCalendarUpdate(current,
-      dateMs, startDateMs, endDateMs);
+    this.props.onCalendarUpdate(current, dateMs, startDateMs, endDateMs);
   }
 
   _onMonthChanged(date) {
@@ -165,8 +154,7 @@ class TrackersView extends ScreenView {
     const dateMs = date.valueOf();
     const startDateMs = time.subtractMonth(dateMs);
     const endDateMs = time.addMonth(dateMs);
-    this.props.onCalendarUpdate(current,
-      dateMs, startDateMs, endDateMs);
+    this.props.onCalendarUpdate(current, dateMs, startDateMs, endDateMs);
   }
 
   // Edit tracker events.
@@ -188,7 +176,7 @@ class TrackersView extends ScreenView {
       changedTracker: tracker,
     });
   }
-};
+}
 
 TrackersView.contextTypes = {
   navBar: React.PropTypes.object.isRequired,
@@ -208,15 +196,15 @@ export default connect(
   },
   (dispatch, props) => {
     return {
-      onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) => dispatch(
-        updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
+      onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>
+        dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
       onRemove: tracker => dispatch(removeTracker(tracker)),
       onUpdate: tracker => dispatch(updateTracker(tracker)),
-      onTick: (tracker, value, data) => dispatch(
-        tickTracker(tracker, value, data)),
+      onTick: (tracker, value, data) =>
+        dispatch(tickTracker(tracker, value, data)),
       onStart: tracker => dispatch(startTracker(tracker)),
-      onProgress: (tracker, value, data) => dispatch(
-        updateLastTick(tracker, value, data)),
+      onProgress: (tracker, value, data) =>
+        dispatch(updateLastTick(tracker, value, data)),
       onStop: tracker => dispatch(stopTracker(tracker)),
       onUndo: (tracker, value) => dispatch(undoLastTick(tracker)),
       onAddCompleted: index => {
@@ -232,6 +220,8 @@ export default connect(
         caller(props.onSaveCompleted, index);
       },
       dispatch,
-    }
-  }, null, {withRef: true}
+    };
+  },
+  null,
+  { withRef: true },
 )(TrackersView);

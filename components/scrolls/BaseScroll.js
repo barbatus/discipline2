@@ -1,20 +1,14 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Animated,
-} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native';
 
-import {isBoolean} from 'lodash';
+import { isBoolean } from 'lodash';
 
-import {commonStyles, screenWidth} from '../styles/common';
+import { commonStyles, screenWidth } from '../styles/common';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 class BaseScroll extends Component {
   _index = 0;
@@ -75,12 +69,10 @@ class BaseScroll extends Component {
 
   shouldComponentUpdate(props, state) {
     return this.props.slides !== props.slides ||
-           this.props.scrollEnabled !== props.scrollEnabled;
+      this.props.scrollEnabled !== props.scrollEnabled;
   }
 
-  scrollTo(index: number,
-           callback?: Function|boolean,
-           animated?: boolean) {
+  scrollTo(index: number, callback?: Function | boolean, animated?: boolean) {
     const { slides, slideWidth } = this.props;
 
     if (isBoolean(callback)) {
@@ -123,7 +115,7 @@ class BaseScroll extends Component {
     const { slides, slideWidth, scrollEnabled } = this.props;
     const length = slides.length;
 
-    if (!scrollEnabled|| length <= 1) return;
+    if (!scrollEnabled || length <= 1) return;
 
     const dx = this._pageX - event.nativeEvent.pageX;
     this._pageX = event.nativeEvent.pageX;
@@ -134,7 +126,7 @@ class BaseScroll extends Component {
     // Adjust offset and index after moving.
     // Offset and index become float.
     this._offsetX += dx;
-    const index = this._index + (dx / slideWidth);
+    const index = this._index + dx / slideWidth;
     this._index = Math.min(Math.max(index, 0), length - 1);
 
     caller(this.props.onTouchMove, dx);
@@ -154,8 +146,7 @@ class BaseScroll extends Component {
     }
 
     if (this._prevInd !== this._index) {
-      caller(this.props.onSlideChange,
-        this._index, this._prevInd);
+      caller(this.props.onSlideChange, this._index, this._prevInd);
       this._prevInd = this._index;
     }
 
@@ -172,25 +163,29 @@ class BaseScroll extends Component {
   // Used to update offset and current slide index
   // after scrolling. Offset and index are supposed to
   // be integer since slide width is an integer
-  // and scrolling happens for an exact number of slides. 
+  // and scrolling happens for an exact number of slides.
   _updateSlideIndexByOffset(offsetX: number) {
     const { slideWidth } = this.props;
 
     const diff = offsetX - this._offsetX;
-    // Sometimes it's not round integer. 
-    this._index = Math.round(this._index + (diff / slideWidth)) >> 0;
+    // Sometimes it's not round integer.
+    this._index = Math.round(this._index + diff / slideWidth) >> 0;
     this._offsetX = slideWidth * this._index;
   }
 
   render() {
-    const { slides, pagingEnabled,
-            contentStyle, scrollEnabled } = this.props;
+    const {
+      slides,
+      pagingEnabled,
+      contentStyle,
+      scrollEnabled,
+    } = this.props;
 
     return (
       <ScrollView
-        ref='scrollView'
+        ref="scrollView"
         {...this.props}
-        keyboardShouldPersistTaps='always'
+        keyboardShouldPersistTaps="always"
         scrollEnabled={scrollEnabled}
         pagingEnabled={pagingEnabled}
         contentContainerStyle={contentStyle}
@@ -198,8 +193,9 @@ class BaseScroll extends Component {
         onTouchEnd={::this._onTouchEnd}
         onTouchMove={::this._onTouchMove}
         onMomentumScrollBegin={::this._onScrollBegin}
-        onMomentumScrollEnd={::this._onScrollEnd}>
-        { slides }
+        onMomentumScrollEnd={::this._onScrollEnd}
+      >
+        {slides}
       </ScrollView>
     );
   }

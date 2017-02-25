@@ -6,18 +6,13 @@ import CommonModal from './CommonModal';
 
 import IconsGrid from '../icons/IconsGrid';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class IconsDlg extends CommonModal {
   _cb: Function = null;
 
   get content() {
-    return (
-      <IconsGrid
-        ref='iconsGrid'
-        onIconChosen={::this._onIconChosen}
-      />
-    );
+    return <IconsGrid ref="iconsGrid" onIconChosen={::this._onIconChosen} />;
   }
 
   onBeforeShown(cb: Function) {
@@ -32,4 +27,4 @@ export default class IconsDlg extends CommonModal {
     caller(this._cb, iconId);
     caller(this.props.onIconChosen, iconId);
   }
-};
+}

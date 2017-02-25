@@ -1,6 +1,6 @@
 'use strict';
 
-import {round, int} from './lang';
+import { round, int } from './lang';
 
 export const __ = digits => {
   return digits < 10 ? `0${digits}` : `${digits}`;
@@ -12,16 +12,16 @@ export function formatDistance(dist) {
   if (dist < 1) {
     return {
       format: int(dist * 1000),
-      unit: 'mm'
-    }
+      unit: 'mm',
+    };
   }
 
   const rounded = round(dist, 2);
   const km = int(rounded);
-  const mm = int((rounded * 100) % 100);
+  const mm = int(rounded * 100 % 100);
 
   return {
     format: `${km}.${__(mm)}`,
-    unit: 'km'
-  }
+    unit: 'km',
+  };
 }

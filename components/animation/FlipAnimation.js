@@ -2,13 +2,13 @@
 
 import Easing from 'Easing';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 import Animation from './Animation';
 
-import {screenWidth} from '../styles/common';
+import { screenWidth } from '../styles/common';
 
 const FLIP_TIME = 500;
 
@@ -26,17 +26,17 @@ export default class FlipAnimation {
         {
           rotateY: this._rotY.interpolate({
             inputRange: [0, 1],
-            outputRange: ['0deg', '-180deg']
-          })
+            outputRange: ['0deg', '-180deg'],
+          }),
         },
         {
           translateY: this._move1.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, 1000]
-          })
-        }
-      ]
-    }
+            outputRange: [0, 1000],
+          }),
+        },
+      ],
+    };
   }
 
   get style2() {
@@ -46,36 +46,34 @@ export default class FlipAnimation {
         {
           rotateY: this._rotY.interpolate({
             inputRange: [0, 1],
-            outputRange: ['-180deg', '0deg']
-          })
+            outputRange: ['-180deg', '0deg'],
+          }),
         },
         {
           translateY: this._move2.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, 1000]
-          })
-        }
-      ]
-    }
+            outputRange: [0, 1000],
+          }),
+        },
+      ],
+    };
   }
 
   animateIn(callback: Function) {
     this._move2.setValue(0);
 
-    this._animateFlip(1, 0, 1,
-      value => value > 0.5, () => {
-        this._move1.setValue(1);
-        caller(callback);
+    this._animateFlip(1, 0, 1, value => value > 0.5, () => {
+      this._move1.setValue(1);
+      caller(callback);
     });
   }
 
   animateOut(callback: Function) {
     this._move1.setValue(0);
 
-    this._animateFlip(0, 1, 0,
-      value => value <= 0.5, () => {
-        this._move2.setValue(1);
-        caller(callback);
+    this._animateFlip(0, 1, 0, value => value <= 0.5, () => {
+      this._move2.setValue(1);
+      caller(callback);
     });
   }
 
@@ -90,8 +88,12 @@ export default class FlipAnimation {
       }
     });
 
-    const flip = Animation.timing(this._rotY, FLIP_TIME,
-      stopVal, Easing.inOut(Easing.sin));
+    const flip = Animation.timing(
+      this._rotY,
+      FLIP_TIME,
+      stopVal,
+      Easing.inOut(Easing.sin),
+    );
     Animation.animate([flip], callback);
   }
 }

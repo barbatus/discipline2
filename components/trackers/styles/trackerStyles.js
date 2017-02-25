@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import {slideDef, slideWidth} from './slideStyles';
+import { slideDef, slideWidth } from './slideStyles';
 
 const trackerDef = {
   ...slideDef,
@@ -113,7 +113,7 @@ const editDef = {
   innerView: {
     ...trackerDef.innerView,
     opacity: 0,
-    transform: [{rotateY: '-180deg'}],
+    transform: [{ rotateY: '-180deg' }],
   },
   headerContainer: {
     ...trackerDef.headerContainer,
@@ -186,19 +186,19 @@ const editDef = {
     resizeMode: 'contain',
     height: 13,
     marginLeft: 10,
-  }
+  },
 };
 
 const propsStyles = StyleSheet.create({
   ...editDef,
   colLeftWide: {
     ...editDef.colLeft,
-    flex: 0.7
+    flex: 0.7,
   },
   firstGroupRow: {
     ...editDef.row,
     borderBottomWidth: 0,
-  }
+  },
 });
 
 module.exports = {

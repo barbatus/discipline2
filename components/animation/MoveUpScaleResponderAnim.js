@@ -1,12 +1,12 @@
 'use strict';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
 import Animation from './Animation';
 
-import {MoveUpDownResponder} from './responders';
+import { MoveUpDownResponder } from './responders';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export const minScale = 0.1;
 
@@ -23,17 +23,23 @@ export class MoveUpScaleResponderAnim {
 
   get style(): Object {
     return {
-      transform: [{
-        scale: this._scale
-      }]
-    }
+      transform: [
+        {
+          scale: this._scale,
+        },
+      ],
+    };
   }
 
-  subscribe(responder: MoveUpDownResponder, 
-            onScale?: Function, onStart?: Function, onDone?: Function) {
+  subscribe(
+    responder: MoveUpDownResponder,
+    onScale?: Function,
+    onStart?: Function,
+    onDone?: Function,
+  ) {
     assert.ok(responder);
 
-    this._scale.addListener(({value}) => {
+    this._scale.addListener(({ value }) => {
       caller(onScale, value <= minScale ? 0 : value);
     });
     responder.subscribeUp({
@@ -50,7 +56,7 @@ export class MoveUpScaleResponderAnim {
           const toMin = Animation.timing(this._scale, 200, minScale);
           Animation.animate([toMin], onDone);
         }
-      }
+      },
     });
   }
 

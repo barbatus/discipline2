@@ -1,4 +1,4 @@
- /* @flow */
+/* @flow */
 
 'use strict';
 
@@ -31,9 +31,11 @@ class TicksDepot {
       .map(tick => tick);
   }
 
-  getForPeriod(trackId: number,
-               minDateMs: number,
-               maxDateMs?: number): Array<Tick> {
+  getForPeriod(
+    trackId: number,
+    minDateMs: number,
+    maxDateMs?: number,
+  ): Array<Tick> {
     check.assert.number(trackId);
     check.assert.number(minDateMs);
 
@@ -43,10 +45,7 @@ class TicksDepot {
       query = `${query} AND dateTimeMs < ${maxDateMs}`;
     }
 
-    return ticks
-      .filtered(query)
-      .sorted('dateTimeMs')
-      .map(tick => tick);
+    return ticks.filtered(query).sorted('dateTimeMs').map(tick => tick);
   }
 
   getLast(trackId: number): Tick {
@@ -72,7 +71,8 @@ class TicksDepot {
 
     const { id, trackId } = tick;
     this.events.emit('added', {
-      id, trackId,
+      id,
+      trackId,
     });
 
     return tick;
@@ -142,7 +142,7 @@ class TicksDepot {
 
     return ids.length;
   }
-};
+}
 
 const depot = new TicksDepot();
 export default depot;

@@ -2,9 +2,9 @@
 
 import Easing from 'Easing';
 
-import {Animated} from 'react-native';
+import { Animated } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 import Animation from './Animation';
 
@@ -17,10 +17,12 @@ export default class ScaleAnimation {
 
   get style(): Object {
     return {
-      transform: [{
-        scale: this._scale
-      }]
-    }
+      transform: [
+        {
+          scale: this._scale,
+        },
+      ],
+    };
   }
 
   get value() {

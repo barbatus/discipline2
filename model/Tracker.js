@@ -2,9 +2,9 @@
 
 import moment from 'moment';
 
-import {TrackerType} from '../depot/consts';
+import { TrackerType } from '../depot/consts';
 
-import {Tracker as ITracker} from '../depot/interfaces';
+import { Tracker as ITracker } from '../depot/interfaces';
 
 import UserIconsStore from '../icons/UserIconsStore';
 

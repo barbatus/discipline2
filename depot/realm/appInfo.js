@@ -16,7 +16,7 @@ class AppInfoDepot {
       if (appInfo) {
         appInfo.ver = ver;
         return;
-      } 
+      }
       DB.create('AppInfo', { ver });
     });
   }
@@ -34,11 +34,11 @@ class AppInfoDepot {
         return;
       }
       DB.create('AppInfo', {
-        testTrackers: trackers
+        testTrackers: trackers,
       });
     });
   }
-};
+}
 
 let depot = new AppInfoDepot();
 export default depot;

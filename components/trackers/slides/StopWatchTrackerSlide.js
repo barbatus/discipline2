@@ -1,8 +1,8 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
 import {
   View,
@@ -14,18 +14,15 @@ import {
   Vibration,
 } from 'react-native';
 
-import {
-  trackerDef,
-  trackerStyles,
-} from '../styles/trackerStyles';
+import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
-import {slideWidth} from '../styles/slideStyles';
+import { slideWidth } from '../styles/slideStyles';
 
 import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
-import Timers, {Timer} from '../../../time/Timers';
+import Timers, { Timer } from '../../../time/Timers';
 
 export default class StopWatchTrackerSlide extends TrackerSlide {
   _timer: Timer = null;
@@ -43,11 +40,7 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TimeLabel
-            ref='time'
-            width={200}
-            timeMs={tracker.value}
-          />
+          <TimeLabel ref="time" width={200} timeMs={tracker.value} />
         </View>
       </View>
     );
@@ -61,7 +54,8 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
         <TouchableOpacity
           style={styles.button}
           disabled={!responsive}
-          onPress={this::onPress}>
+          onPress={this::onPress}
+        >
           <Text style={styles.btnText}>
             {label}
           </Text>
@@ -71,12 +65,10 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
 
     return (
       <View style={styles.footerContainer}>
-        {
-          tracker. active ?
-            renderBtn('STOP', this._onStop) :
-            renderBtn('START', this._onTick)
-        }
-        { renderBtn('LAP', this._onLap) }
+        {tracker.active
+          ? renderBtn('STOP', this._onStop)
+          : renderBtn('START', this._onTick)}
+        {renderBtn('LAP', this._onLap)}
       </View>
     );
   }
@@ -116,7 +108,7 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     const lapTimeMs = tracker.value + timeMs;
     this.refs.time.setTimeLap(lapTimeMs);
   }
-};
+}
 
 const styles = StyleSheet.create({
   controls: {

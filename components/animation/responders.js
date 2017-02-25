@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import {PanResponder} from 'react-native';
+import { PanResponder } from 'react-native';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 const ANGLE_TRESHOLD = Math.cos(89 * Math.PI / 180);
 
@@ -12,8 +12,7 @@ const DY_TRESHOLD = 20;
 
 export class MoveUpDownResponder {
   constructor() {
-    this._panHandlers =
-      this._createResponder().panHandlers;
+    this._panHandlers = this._createResponder().panHandlers;
   }
 
   get panHandlers() {
@@ -71,7 +70,7 @@ export class MoveUpDownResponder {
         if (isUp) caller(this._onMoveUpDone);
 
         if (!isUp) caller(this._onMoveDownDone);
-      }
+      },
     });
   }
 }

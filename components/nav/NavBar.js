@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   Text,
   Animated,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
 import Animation from '../animation/Animation';
@@ -17,9 +17,9 @@ import NavTitle from './Title';
 
 import NavigationBar from 'react-native-navbar';
 
-import {screenWidth, navHeight} from '../styles/common';
+import { screenWidth, navHeight } from '../styles/common';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 class NavBar extends Component {
   _active = false;
@@ -32,7 +32,7 @@ class NavBar extends Component {
     super(props);
 
     this.state = {
-      disabled: false
+      disabled: false,
     };
   }
 
@@ -40,7 +40,7 @@ class NavBar extends Component {
     const showButtons = () => {
       this.setState({
         leftBtn,
-        rightBtn
+        rightBtn,
       });
 
       this._showButtons(() => {
@@ -48,8 +48,7 @@ class NavBar extends Component {
       });
     };
 
-    if (!this.state.leftBtn &&
-        !this.state.rightBtn) {
+    if (!this.state.leftBtn && !this.state.rightBtn) {
       showButtons();
       return;
     }
@@ -67,14 +66,17 @@ class NavBar extends Component {
 
   setTitle(navTitle: string) {
     this.setState({
-      navTitle
+      navTitle,
     });
   }
 
   setDisabled(value, callback) {
-    this.setState({
-      disabled: value
-    }, callback);
+    this.setState(
+      {
+        disabled: value,
+      },
+      callback,
+    );
   }
 
   _hideButtons(callback: Function) {
@@ -92,40 +94,37 @@ class NavBar extends Component {
 
   _getAnimatedBtn(button) {
     const mode = this.state.disabled ? 'none' : 'auto';
-    const style = [{opacity: this._btnOpacity}];
+    const style = [{ opacity: this._btnOpacity }];
     return (
-      <Animated.View
-        pointerEvents={mode}
-        style={style}>
+      <Animated.View pointerEvents={mode} style={style}>
         {button}
       </Animated.View>
     );
   }
 
   render() {
-    const style = [styles.navbar, {opacity: this._opacity}];
+    const style = [styles.navbar, { opacity: this._opacity }];
     return (
       <Animated.View style={style}>
         <NavigationBar
-          ref='navBar'
-          tintColor='transparent'
+          ref="navBar"
+          tintColor="transparent"
           navigator={navigator}
-          title={
-            <NavTitle title={this.state.navTitle} />
-          }
+          title={<NavTitle title={this.state.navTitle} />}
           leftButton={this._getAnimatedBtn(this.state.leftBtn)}
-          rightButton={this._getAnimatedBtn(this.state.rightBtn)} />
+          rightButton={this._getAnimatedBtn(this.state.rightBtn)}
+        />
       </Animated.View>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   navbar: {
     height: navHeight,
     width: screenWidth,
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+  },
 });
 
 module.exports = NavBar;

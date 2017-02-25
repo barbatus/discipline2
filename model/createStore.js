@@ -1,14 +1,10 @@
 'use strict';
 
-import {
-  createStore,
-  applyMiddleware,
-  combineReducers,
-} from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 
 import thunk from 'redux-thunk';
 
-import {trackers} from './reducers';
+import { trackers } from './reducers';
 
 const middleware = applyMiddleware(thunk);
 

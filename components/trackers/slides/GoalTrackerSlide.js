@@ -12,26 +12,21 @@ import {
   Vibration,
 } from 'react-native';
 
-import {getIcon} from '../../../icons/icons';
+import { getIcon } from '../../../icons/icons';
 
-import {trackerStyles} from '../styles/trackerStyles';
+import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';
 
-import {caller} from '../../../utils/lang';
+import { caller } from '../../../utils/lang';
 
 export default class GoalTrackerSlide extends TrackerSlide {
   get bodyControls() {
     const { responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
-        <TouchableOpacity
-          disabled={!responsive}
-          onPress={::this.onTick}>
-          <Image
-            source={getIcon('check')}
-            style={this._checkStyle}
-          />
+        <TouchableOpacity disabled={!responsive} onPress={::this.onTick}>
+          <Image source={getIcon('check')} style={this._checkStyle} />
         </TouchableOpacity>
       </View>
     );
@@ -52,8 +47,8 @@ export default class GoalTrackerSlide extends TrackerSlide {
 
   get _checkStyle() {
     let { tracker } = this.props;
-    return tracker.checked ?
-      [trackerStyles.checkBtn, trackerStyles.filledBtn] :
-        trackerStyles.checkBtn;
+    return tracker.checked
+      ? [trackerStyles.checkBtn, trackerStyles.filledBtn]
+      : trackerStyles.checkBtn;
   }
-};
+}

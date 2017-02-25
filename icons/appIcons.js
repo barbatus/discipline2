@@ -19,7 +19,7 @@ const appIcons = {
   next: require('./files/app/next.png'),
   next_: require('./files/app/next_.png'),
   map: require('./files/app/map.png'),
-  distance: require('./files/app/distance.png')
+  distance: require('./files/app/distance.png'),
 };
 
 module.exports = appIcons;

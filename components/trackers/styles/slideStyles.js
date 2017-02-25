@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import {screenWidth, screenHeight, navHeight} from '../../styles/common';
+import { screenWidth, screenHeight, navHeight } from '../../styles/common';
 
 export const slideWidth = screenWidth - 40;
 
@@ -27,7 +27,7 @@ export const slideDef = {
       width: 0,
     },
     opacity: 1,
-    transform: [{rotateY: '0deg'}],
+    transform: [{ rotateY: '0deg' }],
     backgroundColor: 'white',
   },
   headerContainer: {

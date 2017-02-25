@@ -1,33 +1,28 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Animated,
-  InteractionManager,
-} from 'react-native';
+import { StyleSheet, View, Animated, InteractionManager } from 'react-native';
 
 import reactMixin from 'react-mixin';
 
 import TimerMixin from 'react-timer-mixin';
 
-import {List} from 'immutable';
+import { List } from 'immutable';
 
 import TrackerSwiper from './TrackerSwiper';
 
 import TrackerScroll from './TrackerScroll';
 
-import {MoveDownResponderAnim} from '../animation/MoveDownResponderAnim';
+import { MoveDownResponderAnim } from '../animation/MoveDownResponderAnim';
 
 import TrackerStore from '../../model/Trackers';
 
-import {commonStyles} from '../styles/common';
+import { commonStyles } from '../styles/common';
 
-import {slideHeight} from './styles/slideStyles';
+import { slideHeight } from './styles/slideStyles';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class Trackers extends Component {
   _opacity = new Animated.Value(0);
@@ -47,8 +42,8 @@ export default class Trackers extends Component {
 
   shouldComponentUpdate(props, state) {
     return this.state.swTrackers !== state.swTrackers ||
-           this.state.scTrackers !== state.scTrackers ||
-           this.state.swiperEnabled !== state.swiperEnabled;
+      this.state.scTrackers !== state.scTrackers ||
+      this.state.swiperEnabled !== state.swiperEnabled;
   }
 
   componentWillUnmount() {
@@ -68,16 +63,14 @@ export default class Trackers extends Component {
       });
     }
 
-    this._moveDown.subscribe(this._swiper.responder,
-      onSwiperMoveDown,
-      () => {
-        this.setState({
-          swiperEnabled: false,
-        });
-        InteractionManager.runAfterInteractions(() => {
-          caller(onSwiperMoveDownStart);
-        });
+    this._moveDown.subscribe(this._swiper.responder, onSwiperMoveDown, () => {
+      this.setState({
+        swiperEnabled: false,
       });
+      InteractionManager.runAfterInteractions(() => {
+        caller(onSwiperMoveDownStart);
+      });
+    });
   }
 
   componentWillReceiveProps({ trackers }) {
@@ -104,14 +97,18 @@ export default class Trackers extends Component {
   }
 
   _renderTracker(tracker, callback) {
-    this.setState({
-      swTrackers: new List([tracker]),
-    }, () => {
-      Animated.timing(this._opacity, {
-        duration: 500,
-        toValue: 1,
-      }).start(callback);
-    });
+    this.setState(
+      {
+        swTrackers: new List([tracker]),
+      },
+      () => {
+        Animated.timing(this._opacity, {
+            duration: 500,
+            toValue: 1,
+          })
+          .start(callback);
+      },
+    );
   }
 
   _renderTrackers(trackers, callback) {
@@ -120,9 +117,12 @@ export default class Trackers extends Component {
     });
 
     this.setTimeout(() => {
-      this.setState({
-        scTrackers: trackers,
-      }, callback);
+      this.setState(
+        {
+          scTrackers: trackers,
+        },
+        callback,
+      );
     });
   }
 
@@ -158,7 +158,7 @@ export default class Trackers extends Component {
       this._moveDown.animateOut(
         this.setState.bind(this, {
           swiperEnabled: true,
-        })
+        }),
       );
     }
   }
@@ -167,9 +167,13 @@ export default class Trackers extends Component {
     this._bscroll.hide();
     this._sscroll.hide();
 
-    this._swiper.scrollTo(index, () => {
-      this._swiper.show();
-    }, false);
+    this._swiper.scrollTo(
+      index,
+      () => {
+        this._swiper.show();
+      },
+      false,
+    );
   }
 
   _onSmallSlideTap(index: number) {
@@ -187,12 +191,14 @@ export default class Trackers extends Component {
     const { style } = this.props;
 
     const combinedStyle = [
-      style, this._moveDown.style, {opacity: this._opacity},
+      style,
+      this._moveDown.style,
+      { opacity: this._opacity },
     ];
     return (
       <Animated.View style={combinedStyle}>
         <TrackerScroll
-          ref='bscroll'
+          ref="bscroll"
           {...this.props}
           trackers={scTrackers}
           style={styles.bigScroll}
@@ -200,7 +206,7 @@ export default class Trackers extends Component {
           onCenterSlideTap={::this._onCenterSlideTap}
         />
         <TrackerScroll
-          ref='sscroll'
+          ref="sscroll"
           trackers={scTrackers}
           style={styles.smallScroll}
           scale={1 / 4}
@@ -208,7 +214,7 @@ export default class Trackers extends Component {
           onSlideTap={::this._onSmallSlideTap}
         />
         <TrackerSwiper
-          ref='swiper'
+          ref="swiper"
           {...this.props}
           enabled={swiperEnabled}
           trackers={swTrackers}
@@ -222,9 +228,9 @@ export default class Trackers extends Component {
           onSlideChange={::this._onSlideChange}
         />
       </Animated.View>
-    )
+    );
   }
-};
+}
 
 reactMixin(Trackers.prototype, TimerMixin);
 

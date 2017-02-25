@@ -9,4 +9,4 @@ export default function getIcon(iconId) {
   if (icon) return icon;
 
   return UserIconsStore.get(iconId);
-};
+}

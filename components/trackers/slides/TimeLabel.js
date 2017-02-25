@@ -1,12 +1,8 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 class TimeDigit extends Component {
   shouldComponentUpdate(props) {
@@ -15,7 +11,7 @@ class TimeDigit extends Component {
 
   render() {
     const { style, value, width } = this.props;
-    const align = [{textAlign: 'center'}];
+    const align = [{ textAlign: 'center' }];
     return (
       <View style={styles.slotStyle}>
         <Text style={[{ width }, align]}>
@@ -39,19 +35,19 @@ class TimeLabel extends Component {
 
     this.state = {
       timeMs: props.timeMs,
-      timeLapMs: 0
+      timeLapMs: 0,
     };
   }
 
   setTime(timeMs: number) {
     this.setState({
-      timeMs
+      timeMs,
     });
   }
 
   setTimeLap(timeLapMs: number) {
     this.setState({
-      timeLapMs
+      timeLapMs,
     });
   }
 
@@ -62,17 +58,17 @@ class TimeLabel extends Component {
       return true;
     }
     return this.state.timeMs != state.timeMs ||
-           this.state.timeLapMs != state.timeLapMs;
+      this.state.timeLapMs != state.timeLapMs;
   }
 
   componentWillReceiveProps({ timeMs }) {
     this.setState({
-      timeMs
+      timeMs,
     });
 
     if (!timeMs) {
       this.setState({
-        lapTimeMs: 0
+        lapTimeMs: 0,
       });
     }
   }
@@ -90,20 +86,20 @@ class TimeLabel extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          { hh ? <TimeDigit style={digitStyle} width={digWidth} value={hh} /> : null }
-          { hh ? <Text style={delimStyle}>:</Text> : null }
+          {hh
+            ? <TimeDigit style={digitStyle} width={digWidth} value={hh} />
+            : null}
+          {hh ? <Text style={delimStyle}>:</Text> : null}
           <TimeDigit style={digitStyle} width={digWidth} value={mm} />
           <Text style={delimStyle}>:</Text>
           <TimeDigit style={digitStyle} width={digWidth} value={ss} />
         </View>
         <View style={styles.textContainer}>
-          {
-            this.state.timeLapMs ?
-              <Text style={lapStyle}>
-                { timeLap.format() }
+          {this.state.timeLapMs
+            ? <Text style={lapStyle}>
+                {timeLap.format()}
               </Text>
-            : null
-          }
+            : null}
         </View>
       </View>
     );
@@ -111,7 +107,7 @@ class TimeLabel extends Component {
 }
 
 TimeLabel.defaultProps = {
-  timeLapMs: 0
+  timeLapMs: 0,
 };
 
 export default TimeLabel;

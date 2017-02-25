@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   TouchableOpacity,
@@ -29,9 +29,9 @@ import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 import Trackers from '../../model/Trackers';
 
-import {commonDef, commonStyles, screenWidth} from '../styles/common';
+import { commonDef, commonStyles, screenWidth } from '../styles/common';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class NewTrackerView extends ScreenView {
   constructor(props) {
@@ -54,19 +54,15 @@ export default class NewTrackerView extends ScreenView {
 
   shouldComponentUpdate(props, state) {
     return this.state.tracker !== state.tracker ||
-           this.state.typeId !== state.typeId;
+      this.state.typeId !== state.typeId;
   }
 
   _getCancelBtn(onPress: Function) {
-    return (
-      <NavCancelButton onPress={this::onPress} />
-    );
+    return <NavCancelButton onPress={this::onPress} />;
   }
 
   _getAcceptBtn(onPress: Function) {
-    return (
-      <NavAcceptButton onPress={this::onPress} />
-    );
+    return <NavAcceptButton onPress={this::onPress} />;
   }
 
   _setNewTrackerBtns(callback?: Function) {
@@ -77,7 +73,8 @@ export default class NewTrackerView extends ScreenView {
       navBar.setButtons(
         this._getCancelBtn(this.props.onCancel),
         this._getAcceptBtn(this._onAccept),
-        callback);
+        callback,
+      );
     }
   }
 
@@ -89,7 +86,8 @@ export default class NewTrackerView extends ScreenView {
       navBar.setButtons(
         this._getCancelBtn(this._onTypeCancel),
         this._getAcceptBtn(this._onTypeAccept),
-        callback);
+        callback,
+      );
     }
   }
 
@@ -147,14 +145,15 @@ export default class NewTrackerView extends ScreenView {
 
     return (
       <ScrollView
-        ref='scroll'
+        ref="scroll"
         horizontal
         pagingEnabled
         scrollEnabled={false}
         //removeClippedSubviews
         scrollEventThrottle={1000}
         showsHorizontalScrollIndicator={false}
-        automaticallyAdjustContentInsets>
+        automaticallyAdjustContentInsets
+      >
         <View key={0} style={styles.slideContainer}>
           <NewTrackerSlide
             tracker={tracker}
@@ -171,7 +170,7 @@ export default class NewTrackerView extends ScreenView {
       </ScrollView>
     );
   }
-};
+}
 
 NewTrackerView.contextTypes = {
   navBar: React.PropTypes.object.isRequired,

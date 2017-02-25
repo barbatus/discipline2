@@ -3,7 +3,7 @@
 import moment from 'moment';
 import 'moment-duration-format';
 
-import {__} from '../utils/format';
+import { __ } from '../utils/format';
 
 const SS_MS = 1000;
 const MM_MS = 60 * 1000;
@@ -12,11 +12,7 @@ const HH_MS = 60 * 60 * 1000;
 const time = {
   getDateMs: () => {
     const now = moment();
-    const dateMs = moment([
-      now.year(),
-      now.month(),
-      now.date(),
-    ]).valueOf();
+    const dateMs = moment([now.year(), now.month(), now.date()]).valueOf();
     return dateMs;
   },
 
@@ -24,7 +20,7 @@ const time = {
     return moment().valueOf();
   },
 
-  formatTimeMs: (timeMs) => {
+  formatTimeMs: timeMs => {
     const duration = moment.duration(timeMs);
 
     if (timeMs < MM_MS) {
@@ -33,7 +29,7 @@ const time = {
         hh: null,
         mm: '00',
         ss: __(ss),
-        format: () => `00:${f.ss}`
+        format: () => `00:${f.ss}`,
       };
       return f;
     }
@@ -45,7 +41,7 @@ const time = {
         hh: null,
         mm: __(mm),
         ss: __(ss),
-        format: () => `${f.mm}:${f.ss}`
+        format: () => `${f.mm}:${f.ss}`,
       };
       return f;
     }
@@ -57,7 +53,7 @@ const time = {
       hh: ss,
       mm: mm,
       ss: ss,
-      format: () => `${f.hh}:${f.mm}:${f.ss}`
+      format: () => `${f.hh}:${f.mm}:${f.ss}`,
     };
     return f;
   },
@@ -92,11 +88,8 @@ const time = {
   },
 
   subtractMonth(dateMs) {
-    return moment(dateMs)
-      .subtract(1, 'month')
-      .startOf('month')
-      .valueOf();
-  }
+    return moment(dateMs).subtract(1, 'month').startOf('month').valueOf();
+  },
 };
 
 module.exports = time;

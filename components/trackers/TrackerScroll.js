@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   View,
@@ -16,20 +16,21 @@ import Scroll from '../scrolls/Scroll';
 
 import BaseScroll from '../scrolls/BaseScroll';
 
-import {commonStyles, screenWidth} from '../styles/common';
+import { commonStyles, screenWidth } from '../styles/common';
 
-import {slideHeight} from './styles/slideStyles';
+import { slideHeight } from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
 
-import {caller} from '../../utils/lang';
+import { caller } from '../../utils/lang';
 
 export default class TrackerScroll extends TrackerRenderer {
   hide(callback) {
     Animated.timing(this._opacity, {
-      duration: 500,
-      toValue: 0,
-    }).start(callback);
+        duration: 500,
+        toValue: 0,
+      })
+      .start(callback);
   }
 
   scrollTo(index, callback, animated) {
@@ -37,11 +38,10 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   onTap(tracker: Tracker) {
-    const index = this.state.trackers.findIndex(
-      _ => _ === tracker);
+    const index = this.state.trackers.findIndex(_ => _ === tracker);
 
     const scroll = this.refs.scroll.index;
-     if (index === scroll) {
+    if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
     }
 
@@ -57,33 +57,36 @@ export default class TrackerScroll extends TrackerRenderer {
       width: screenWidth * scale,
       height: slideHeight * scale,
     };
-    const slides = this.state.trackers.map(
-      tracker => {
+    const slides = this.state.trackers
+      .map(tracker => {
         return (
-          <View
-            key={tracker.id}
-            style={[commonStyles.centered, slideStyle]}>
-            { this.renderScaledTracker(tracker, scale, responsive) }
+          <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
+            {this.renderScaledTracker(tracker, scale, responsive)}
           </View>
         );
-      }).toArray();
+      })
+      .toArray();
 
     return (
-      <Animated.View style={[style, {
-          opacity: this._opacity,
-        },
-      ]}>
+      <Animated.View
+        style={[
+          style,
+          {
+            opacity: this._opacity,
+          },
+        ]}
+      >
         <Scroll
-          ref='scroll'
+          ref="scroll"
           centered={true}
           style={commonStyles.flexFilled}
           slideWidth={screenWidth * scale}
-          slides={slides}>
-        </Scroll>
+          slides={slides}
+        />
       </Animated.View>
     );
   }
-};
+}
 
 TrackerScroll.defaultProps = {
   responsive: true,

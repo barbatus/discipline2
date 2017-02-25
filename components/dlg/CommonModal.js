@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
@@ -11,7 +11,7 @@ import {
   Text,
 } from 'react-native';
 
-import {commonStyles} from '../styles/common';
+import { commonStyles } from '../styles/common';
 
 export default class CommonModal extends Component {
   state: any = {
@@ -27,21 +27,25 @@ export default class CommonModal extends Component {
   }
 
   show(...args) {
-    check.assert.like(
-      this.state.modalVisible, true,
-      'Dlg already shown');
+    check.assert.like(this.state.modalVisible, true, 'Dlg already shown');
 
     this.onBeforeShown(...args);
-    this.setState({
-      modalVisible: true,
-    }, this.onAfterShown.bind(this, ...args));
+    this.setState(
+      {
+        modalVisible: true,
+      },
+      this.onAfterShown.bind(this, ...args),
+    );
   }
 
   hide() {
     this.onBeforeHidden();
-    this.setState({
-      modalVisible: false,
-    }, ::this.onAfterHidden);
+    this.setState(
+      {
+        modalVisible: false,
+      },
+      ::this.onAfterHidden,
+    );
   }
 
   onBeforeShown() {}
@@ -49,7 +53,7 @@ export default class CommonModal extends Component {
   onAfterShown() {}
 
   onBeforeHidden() {}
- 
+
   onAfterHidden() {}
 
   render() {
@@ -58,7 +62,8 @@ export default class CommonModal extends Component {
         <Modal
           animationType={'slide'}
           transparent={false}
-          visible={!!this.state.modalVisible}>
+          visible={!!this.state.modalVisible}
+        >
           <View style={commonStyles.flexFilled}>
             <View style={styles.headerContainer}>
               <TouchableOpacity onPress={::this.hide}>
@@ -68,7 +73,7 @@ export default class CommonModal extends Component {
               </TouchableOpacity>
             </View>
             <View style={commonStyles.flexFilled}>
-              { this.content }
+              {this.content}
             </View>
           </View>
         </Modal>
