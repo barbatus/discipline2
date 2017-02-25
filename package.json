@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "bundle": "react-native bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle"
+    "bundle": "react-native bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle",
+    "lint:staged": "lint-staged"
   },
   "dependencies": {
     "assert": "1.3.0",
@@ -43,9 +44,17 @@
     "babel-preset-react-native": "1.9.1",
     "jest": "19.0.0",
     "lint-staged": "^3.3.1",
+    "pre-commit": "^1.2.2",
     "react-test-renderer": "~15.4.0"
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote=true --trailing-comma='all' --write",
+      "git add"
+    ]
+  },
+  "pre-commit": "lint:staged"
 }
