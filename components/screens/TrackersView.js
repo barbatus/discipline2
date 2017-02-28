@@ -12,8 +12,6 @@ import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
 
-import ScreenView from './ScreenView';
-
 import TrackerCal from '../trackers/TrackerCal';
 
 import Trackers from '../trackers/Trackers';
@@ -34,7 +32,7 @@ import { commonStyles } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-class TrackersView extends ScreenView {
+class TrackersView extends Component {
   constructor(props) {
     super(props);
 
@@ -50,9 +48,11 @@ class TrackersView extends ScreenView {
       this.props.todayMs !== props.todayMs;
   }
 
-  get content() {
+  render() {
+    const { style } = this.props;
+
     return (
-      <Animated.View style={commonStyles.flexFilled}>
+      <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
           ref="calendar"
           {...this.props}

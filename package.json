@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
+    "test": "jest --silent=false",
     "bundle": "react-native bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle",
     "lint:staged": "lint-staged"
   },
@@ -48,11 +48,13 @@
     "react-test-renderer": "~15.4.0"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": ["./__tests__/setup.js"],
+    "testRegex": "(/__tests__/.*-test)\\.jsx?$"
   },
   "lint-staged": {
     "*.js": [
-      "prettier --single-quote=true --trailing-comma='all' --write",
+      "prettier --single-quote=true --trailing-comma=all --write",
       "git add"
     ]
   },

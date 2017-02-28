@@ -11,6 +11,7 @@ import Keyboard from '../../../utils/keyboard';
 import { commonStyles } from '../../styles/common';
 
 import TrackerView from './basic/TrackerView';
+
 import TrackerEditView from './basic/TrackerEditView';
 
 import UserIconsStore from '../../../icons/UserIconsStore';
@@ -18,7 +19,9 @@ import UserIconsStore from '../../../icons/UserIconsStore';
 import Tracker from '../../../model/Tracker';
 
 import Animation from '../../animation/Animation';
+
 import FlipAnimation from '../../animation/FlipAnimation';
+
 import ScaleAnimation from '../../animation/ScaleAnimation';
 
 import { caller } from '../../../utils/lang';

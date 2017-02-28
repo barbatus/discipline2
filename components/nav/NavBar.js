@@ -21,7 +21,7 @@ import { screenWidth, navHeight } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-class NavBar extends Component {
+export default class NavBar extends Component {
   _active = false;
 
   _opacity = new Animated.Value(1);
@@ -49,8 +49,7 @@ class NavBar extends Component {
     };
 
     if (!this.state.leftBtn && !this.state.rightBtn) {
-      showButtons();
-      return;
+      return showButtons();
     }
 
     this._hideButtons(() => {
@@ -126,5 +125,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
-
-module.exports = NavBar;

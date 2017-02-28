@@ -1,27 +1,12 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React from 'react';
 
-import {
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Text,
-  Animated,
-  ScrollView,
-} from 'react-native';
-
-import {
-  NavCancelButton,
-  NavAcceptButton,
-  NavBackButton,
-} from '../nav/buttons';
-
-import Easing from 'Easing';
+import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
 
-import ScreenView from './ScreenView';
+import ScrollScreenView from './ScrollScreenView';
 
 import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
 
@@ -29,11 +14,9 @@ import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 import Trackers from '../../model/Trackers';
 
-import { commonDef, commonStyles, screenWidth } from '../styles/common';
-
 import { caller } from '../../utils/lang';
 
-export default class NewTrackerView extends ScreenView {
+export default class NewTrackerScreenView extends ScrollScreenView {
   constructor(props) {
     super(props);
 
@@ -43,7 +26,7 @@ export default class NewTrackerView extends ScreenView {
     };
   }
 
-  onLeftMove() {
+  onRightMove() {
     this.setState({
       tracker: Trackers.create({}),
       typeId: null,
@@ -57,6 +40,29 @@ export default class NewTrackerView extends ScreenView {
       this.state.typeId !== state.typeId;
   }
 
+  get leftView() {
+    const { tracker } = this.state;
+    return (
+      <NewTrackerSlide
+        ref="left"
+        tracker={tracker}
+        onTypeSelect={::this._onTypeSelect}
+        onTrackerChange={::this._onTrackerChange}
+      />
+    );
+  }
+
+  get rightView() {
+    const { tracker } = this.state;
+    return (
+      <TrackerTypesSlide
+        ref="right"
+        typeId={tracker.typeId}
+        onTypeChosen={::this._onTypeChosen}
+      />
+    );
+  }
+
   _getCancelBtn(onPress: Function) {
     return <NavCancelButton onPress={this::onPress} />;
   }
@@ -67,7 +73,6 @@ export default class NewTrackerView extends ScreenView {
 
   _setNewTrackerBtns(callback?: Function) {
     const { navBar } = this.context;
-
     if (navBar) {
       navBar.setTitle('New Tracker');
       navBar.setButtons(
@@ -80,7 +85,6 @@ export default class NewTrackerView extends ScreenView {
 
   _setTrackerTypeBtns(callback?: Function) {
     const { navBar } = this.context;
-
     if (navBar) {
       navBar.setTitle('Choose Type');
       navBar.setButtons(
@@ -92,9 +96,7 @@ export default class NewTrackerView extends ScreenView {
   }
 
   _onTrackerChange(tracker: Tracker) {
-    this.setState({
-      tracker,
-    });
+    this.setState({ tracker });
   }
 
   _onAccept() {
@@ -105,14 +107,14 @@ export default class NewTrackerView extends ScreenView {
     if (Animation.on) return;
 
     this._setNewTrackerBtns();
-    this._moveTo(0);
+    this.moveLeft();
   }
 
   _onTypeSelect() {
     if (Animation.on) return;
 
     this._setTrackerTypeBtns();
-    this._moveTo(1);
+    this.moveRight();
   }
 
   _onTypeChosen(typeId) {
@@ -125,7 +127,7 @@ export default class NewTrackerView extends ScreenView {
     if (Animation.on) return;
 
     this._setNewTrackerBtns();
-    this._moveTo(0);
+    this.moveLeft();
 
     let { tracker, typeId } = this.state;
     tracker = Trackers.create(tracker);
@@ -134,52 +136,8 @@ export default class NewTrackerView extends ScreenView {
       tracker,
     });
   }
-
-  _moveTo(index: number) {
-    const scrollToX = index * screenWidth;
-    this.refs.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
-  }
-
-  get content() {
-    const { tracker } = this.state;
-
-    return (
-      <ScrollView
-        ref="scroll"
-        horizontal
-        pagingEnabled
-        scrollEnabled={false}
-        //removeClippedSubviews
-        scrollEventThrottle={1000}
-        showsHorizontalScrollIndicator={false}
-        automaticallyAdjustContentInsets
-      >
-        <View key={0} style={styles.slideContainer}>
-          <NewTrackerSlide
-            tracker={tracker}
-            onTypeSelect={::this._onTypeSelect}
-            onTrackerChange={::this._onTrackerChange}
-          />
-        </View>
-        <View key={1} style={styles.slideContainer}>
-          <TrackerTypesSlide
-            typeId={tracker.typeId}
-            onTypeChosen={::this._onTypeChosen}
-          />
-        </View>
-      </ScrollView>
-    );
-  }
 }
 
-NewTrackerView.contextTypes = {
+NewTrackerScreenView.contextTypes = {
   navBar: React.PropTypes.object.isRequired,
 };
-
-const styles = StyleSheet.create({
-  slideContainer: {
-    ...commonDef.flexFilled,
-    width: screenWidth,
-    alignItems: 'center',
-  },
-});
