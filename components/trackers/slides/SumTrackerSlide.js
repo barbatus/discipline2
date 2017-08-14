@@ -28,6 +28,11 @@ import Keyboard from '../../../utils/keyboard';
 import { caller } from '../../../utils/lang';
 
 export default class SumTrackerSlide extends TrackerSlide {
+  constructor(props) {
+    super(props);
+    this._onPlus = ::this._onPlus;
+  }
+
   shouldComponentUpdate(props, state) {
     const should = super.shouldComponentUpdate(props, state);
     return should || this.state.added !== state.added;
@@ -76,9 +81,9 @@ export default class SumTrackerSlide extends TrackerSlide {
               style={styles.sumInput}
               onChangeText={added => this._onChangeText(added)}
               value={this.state.added}
-              onSubmitEditing={::this._onPlus}
+              onSubmitEditing={this._onPlus}
             />
-            <TouchableOpacity disabled={!responsive} onPress={::this._onPlus}>
+            <TouchableOpacity disabled={!responsive} onPress={this._onPlus}>
               <Image
                 source={getIcon('plus_sm')}
                 style={[trackerStyles.circleBtnSm, styles.circleBtnSm]}

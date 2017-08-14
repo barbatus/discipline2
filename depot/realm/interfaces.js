@@ -1,14 +1,14 @@
- /* @flow */
+/* @flow */
 
 declare type TrackersSchemaType = {
   nextId: number,
-  trackers: List<Tracker>
+  trackers: List<Tracker>,
 };
 
 declare class List<T> extends Array<T> {
-  filtered(query: string, ...args: any[]): Array<T>;
-};
+  filtered(query: string, ...args: any[]): Array<T>,
+}
 
 declare type TickSchemaType = {
-  nextId: number
+  nextId: number,
 };

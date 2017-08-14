@@ -34,7 +34,7 @@ export const slideDef = {
     flex: 0.2,
   },
   bodyContainer: {
-    flex: 0.5,
+    flex: 0.7,
   },
   footerContainer: {
     flex: 0.3,

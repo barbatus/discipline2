@@ -20,15 +20,102 @@ import { TrackerType } from '../../depot/consts';
 
 import { caller } from '../../utils/lang';
 
+// TODO: get rid of it once we get rid of refs.
+class TrackerWrapper extends Component {
+  constructor(props) {
+    super(props);
+    this.onEdit = ::this.onEdit;
+    this.onRemove = ::this.onRemove;
+    this.onTap = ::this.onTap;
+    this.onTick = ::this.onTick;
+    this.onUndo = ::this.onUndo;
+    this.onStart = ::this.onStart;
+    this.onStop = ::this.onStop;
+  }
+
+  onEdit(...args) {
+    const { onEdit, tracker } = this.props;
+    caller(onEdit, tracker, ...args);
+  }
+
+  onRemove(...args) {
+    const { onRemove, tracker } = this.props;
+    caller(onRemove, tracker, ...args);
+  }
+
+  onTap(...args) {
+    const { onTap, tracker } = this.props;
+    caller(onTap, tracker, ...args);
+  }
+
+  onTick(...args) {
+    const { onTick, tracker } = this.props;
+    caller(onTick, tracker, ...args);
+  }
+
+  onUndo(...args) {
+    const { onUndo, tracker } = this.props;
+    caller(onUndo, tracker, ...args);
+  }
+
+  onStart(...args) {
+    const { onStart, tracker } = this.props;
+    caller(onStart, tracker, ...args);
+  }
+
+  onStop(...args) {
+    const { onStop, tracker } = this.props;
+    caller(onStop, tracker, ...args);
+  }
+
+  showEdit(...args) {
+    this.refs.tracker.showEdit(...args);
+  }
+
+  cancelEdit(...args) {
+    this.refs.tracker.cancelEdit(...args);
+  }
+
+  shake() {
+    this.refs.tracker.shake();
+  }
+
+  collapse(...args) {
+    this.refs.tracker.collapse(...args);
+  }
+
+  render() {
+    const { component, ...rest } = this.props;
+    return React.createElement(component, {
+      ...rest,
+      ref: 'tracker',
+      onEdit: this.onEdit,
+      onRemove: this.onRemove,
+      onTap: this.onTap,
+      onTick: this.onTick,
+      onUndo: this.onUndo,
+      onStart: this.onStart,
+      onStop: this.onStop,
+    });
+  }
+}
+
 export default class TrackerRenderer extends Component {
   _opacity = new Animated.Value(0);
 
   constructor(props) {
     super(props);
-
     this.state = {
       trackers: props.trackers,
     };
+    this.onEdit = ::this.onEdit;
+    this.onRemove = ::this.onRemove;
+    this.onTap = ::this.onTap;
+    this.onTick = ::this.onTick;
+    this.onUndo = ::this.onUndo;
+    this.onStart = ::this.onStart;
+    this.onStop = ::this.onStop;
+    this.onTrackerChange = ::this.onTrackerChange;
   }
 
   get opacity() {
@@ -119,35 +206,36 @@ export default class TrackerRenderer extends Component {
     editable: boolean,
     props: Object,
   ) {
-    props = extend({ responsive, editable, scale }, props);
+    const trackProps = extend({ responsive, editable, scale }, props);
     switch (tracker.type) {
       case TrackerType.GOAL:
-        return this._renderSlide(GoalTrackerSlide, tracker, props);
+        return this._renderSlide(GoalTrackerSlide, tracker, trackProps);
       case TrackerType.COUNTER:
-        return this._renderSlide(CounterSlide, tracker, props);
+        return this._renderSlide(CounterSlide, tracker, trackProps);
       case TrackerType.SUM:
-        return this._renderSlide(SumTrackerSlide, tracker, props);
+        return this._renderSlide(SumTrackerSlide, tracker, trackProps);
       case TrackerType.STOPWATCH:
-        return this._renderSlide(StopWatchTrackerSlide, tracker, props);
+        return this._renderSlide(StopWatchTrackerSlide, tracker, trackProps);
       case TrackerType.DISTANCE:
-        return this._renderSlide(DistanceTrackerSlide, tracker, props);
+        return this._renderSlide(DistanceTrackerSlide, tracker, trackProps);
     }
   }
 
   _renderSlide(Component, tracker: Tracker, props: Object) {
     return (
-      <Component
+      <TrackerWrapper
         {...props}
+        component={Component}
         ref={tracker.id}
         key={tracker.id}
-        onEdit={this.onEdit.bind(this, tracker)}
-        onRemove={this.onRemove.bind(this, tracker)}
-        onTap={this.onTap.bind(this, tracker)}
-        onTick={this.onTick.bind(this, tracker)}
-        onUndo={this.onUndo.bind(this, tracker)}
-        onStart={this.onStart.bind(this, tracker)}
-        onStop={this.onStop.bind(this, tracker)}
-        onTrackerChange={::this.onTrackerChange}
+        onEdit={this.onEdit}
+        onRemove={this.onRemove}
+        onTap={this.onTap}
+        onTick={this.onTick}
+        onUndo={this.onUndo}
+        onStart={this.onStart}
+        onStop={this.onStop}
+        onTrackerChange={this.onTrackerChange}
         tracker={tracker}
       />
     );

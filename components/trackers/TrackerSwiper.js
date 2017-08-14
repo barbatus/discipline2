@@ -81,9 +81,13 @@ export default class TrackerSwiper extends TrackerRenderer {
     return should || this.state.enabled !== state.enabled;
   }
 
-  componentWillReceiveProps(
-    { enabled, trackers, removeIndex, addIndex, updateIndex },
-  ) {
+  componentWillReceiveProps({
+    enabled,
+    trackers,
+    removeIndex,
+    addIndex,
+    updateIndex,
+  }) {
     const prevEnabled = this.props.enabled;
     if (prevEnabled !== enabled) {
       this.setState({ enabled });

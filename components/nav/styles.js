@@ -3,10 +3,13 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  navTitle: {
+    paddingBottom: 5,
+  },
   navTitleText: {
     fontSize: 18,
     fontWeight: '300',
-    color: '#FFF',
+    color: 'white',
   },
   navBarIcon: {
     marginVertical: 10,

@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { StyleSheet, View, Animated } from 'react-native';
 
@@ -8,7 +8,12 @@ import { connect } from 'react-redux';
 
 import moment from 'moment';
 
-import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
+import {
+  NavCancelButton,
+  NavAcceptButton,
+  NavLeftButton,
+  NavRightButton,
+} from '../nav/buttons';
 
 import Animation from '../animation/Animation';
 
@@ -32,7 +37,26 @@ import { commonStyles } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-class TrackersView extends Component {
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const styles = StyleSheet.create({
+  navTitle: { fontSize: 19, fontWeight: '200' },
+});
+
+class TrackersView extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -40,38 +64,44 @@ class TrackersView extends Component {
       current: props.trackers.get(0),
       changedTracker: null,
     };
-  }
-
-  shouldComponentUpdate(props, state) {
-    return this.props.trackers !== props.trackers ||
-      this.props.ticks !== props.ticks ||
-      this.props.todayMs !== props.todayMs;
+    this._onEdit = ::this._onEdit;
+    this._onRemove = ::this._onRemove;
+    this._onRemoveCompleted = ::this._onRemoveCompleted;
+    this._onSaveCompleted = ::this._onSaveCompleted;
+    this._onSwiperScaleMove = ::this._onSwiperScaleMove;
+    this._onSwiperMoveDown = ::this._onSwiperMoveDown;
+    this._onSwiperMoveDownStart = ::this._onSwiperMoveDownStart;
+    this._onTrackerChange = ::this._onTrackerChange;
+    this._onSlideChange = ::this._onSlideChange;
+    this._onMonthChanged = ::this._onMonthChanged;
+    this._onNextMonth = ::this._onNextMonth;
+    this._onPrevMonth = ::this._onPrevMonth;
   }
 
   render() {
-    const { style } = this.props;
-
+    const { style, onMoveUp } = this.props;
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
           ref="calendar"
           {...this.props}
-          style={commonStyles.absFilled}
-          onMonthChanged={::this._onMonthChanged}
+          style={[commonStyles.absFilled, { top: 0 }]}
+          onMonthChanged={this._onMonthChanged}
         />
         <Trackers
           ref="trackers"
           {...this.props}
-          style={commonStyles.absFilled}
-          onRemove={::this._onRemove}
-          onRemoveCompleted={::this._onRemoveCompleted}
-          onEdit={::this._onEdit}
-          onSaveCompleted={::this._onSaveCompleted}
-          onSwiperScaleMove={::this._onSwiperScaleMove}
-          onSwiperMoveDown={::this._onSwiperMoveDown}
-          onSwiperMoveDownStart={::this._onSwiperMoveDownStart}
-          onTrackerChange={::this._onTrackerChange}
-          onSlideChange={::this._onSlideChange}
+          style={commonStyles.flexFilled}
+          onRemove={this._onRemove}
+          onRemoveCompleted={this._onRemoveCompleted}
+          onEdit={this._onEdit}
+          onSaveCompleted={this._onSaveCompleted}
+          onSwiperScaleMove={this._onSwiperScaleMove}
+          onSwiperMoveDown={this._onSwiperMoveDown}
+          onSwiperMoveDownStart={this._onSwiperMoveDownStart}
+          onSwiperMoveUpStart={onMoveUp}
+          onTrackerChange={this._onTrackerChange}
+          onSlideChange={this._onSlideChange}
         />
       </Animated.View>
     );
@@ -130,31 +160,70 @@ class TrackersView extends Component {
     );
   }
 
+  _setCalendarBtns() {
+    const { navBar } = this.context;
+    navBar.setButtons(
+      <NavLeftButton icon="back" onPress={this._onPrevMonth} />,
+      <NavRightButton icon="next_" onPress={this._onNextMonth} />,
+    );
+  }
+
+  _onNextMonth() {
+    const { dateMs } = this.props;
+    const { current } = this.state;
+    const nextMonthMs = time.getNextMonthDateMs(dateMs);
+    this._setNavBatMonth(nextMonthMs);
+
+    const startDateMs = time.subtractMonth(nextMonthMs);
+    const endDateMs = time.addMonth(nextMonthMs);
+    this.props.onCalendarUpdate(current, nextMonthMs, startDateMs, endDateMs);
+  }
+
+  _onPrevMonth() {
+    const { dateMs } = this.props;
+    const { current } = this.state;
+    const nextMonthMs = time.getPrevMonthDateMs(dateMs);
+    this._setNavBatMonth(nextMonthMs);
+
+    const startDateMs = time.subtractMonth(nextMonthMs);
+    const endDateMs = time.addMonth(nextMonthMs);
+    this.props.onCalendarUpdate(current, nextMonthMs, startDateMs, endDateMs);
+  }
+
   _onSwiperScaleMove(dv: number) {
     const { navBar } = this.context;
     navBar.setOpacity(dv);
   }
 
   _onSwiperMoveDown(dv: number) {
-    const { navBar } = this.context;
-    navBar.setOpacity(1 - dv);
     this.refs.calendar.setShown(dv);
   }
 
   _onSwiperMoveDownStart() {
     const { current } = this.state;
-    const dateMs = moment().valueOf();
-    const startDateMs = time.subtractMonth(dateMs);
-    const endDateMs = time.addMonth(dateMs);
-    this.props.onCalendarUpdate(current, dateMs, startDateMs, endDateMs);
+    const monthDateMs = time.getCurMonthDateMs();
+    this._setCalendarBtns();
+    this._setNavBatMonth(monthDateMs);
+
+    const startDateMs = time.subtractMonth(monthDateMs);
+    const endDateMs = time.addMonth(monthDateMs);
+    this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
   }
 
-  _onMonthChanged(date) {
+  _onMonthChanged(monthDateMs) {
     const { current } = this.state;
-    const dateMs = date.valueOf();
-    const startDateMs = time.subtractMonth(dateMs);
-    const endDateMs = time.addMonth(dateMs);
-    this.props.onCalendarUpdate(current, dateMs, startDateMs, endDateMs);
+    this._setNavBatMonth(monthDateMs);
+
+    const startDateMs = time.subtractMonth(monthDateMs);
+    const endDateMs = time.addMonth(monthDateMs);
+    this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
+  }
+
+  _setNavBatMonth(monthDateMs) {
+    const date = moment(monthDateMs);
+    const monthName = MONTH_NAMES[date.month()];
+    const { navBar } = this.context;
+    navBar.setTitle(monthName, styles.navTitle);
   }
 
   // Edit tracker events.

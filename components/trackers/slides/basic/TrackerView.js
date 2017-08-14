@@ -60,33 +60,30 @@ export default class TrackerView extends BaseTrackerView {
   }
 
   _renderContent(backImg) {
-    const {
-      bodyControls,
-      footerControls,
-      bodyStyle,
-      footerStyle,
-    } = this.props;
+    const { bodyControls, footerControls, bodyStyle, footerStyle } = this.props;
 
-    const body = (
-      <View style={styles.wrapper}>
-        <View style={[trackerStyles.bodyContainer, bodyStyle]}>
-          {bodyControls}
-        </View>
-        <View style={[trackerStyles.footerContainer, footerStyle]}>
-          {footerControls}
-        </View>
-      </View>
-    );
+    const content = [
+      <View key="body" style={[trackerStyles.bodyContainer, bodyStyle]}>
+        {bodyControls}
+      </View>,
+      <View key="footer" style={[trackerStyles.footerContainer, footerStyle]}>
+        {footerControls}
+      </View>,
+    ];
 
     return backImg
       ? <Image source={backImg} style={styles.backImg}>
-          {body}
+          {content}
         </Image>
-      : body;
+      : <View style={styles.wrapper}>
+          {content}
+        </View>;
   }
 }
 
-const flex = trackerDef.bodyContainer.flex + trackerDef.footerContainer.flex;
+const flex = 1 - trackerDef.headerContainer.flex;
+
+//trackerDef.bodyContainer.flex + trackerDef.footerContainer.flex;
 const styles = StyleSheet.create({
   backImg: {
     flex: flex,

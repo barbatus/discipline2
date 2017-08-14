@@ -21,18 +21,16 @@ const trackerDef = {
   },
   bodyContainer: {
     ...slideDef.bodyContainer,
-    flex: 0.4,
   },
   footerContainer: {
     ...slideDef.footerContainer,
     ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
-    flex: 0.15,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   barContainer: {
-    flex: 0.20,
+    flex: 0.2,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'flex-start',

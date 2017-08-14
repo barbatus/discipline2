@@ -2,16 +2,18 @@
 
 'use strict';
 
+import EventEmitter from 'eventemitter3';
+
+import { omit } from 'lodash';
+
 import ticksDB from './ticks';
 
 import DB from './db';
 
-import EventEmitter from 'eventemitter3';
-
 class TrackersDepot {
   events: EventEmitter = new EventEmitter();
 
-  _table: TrackersSchemaType;
+  table: TrackersSchemaType;
 
   constructor() {
     const table = DB.objects('Trackers');
@@ -20,17 +22,17 @@ class TrackersDepot {
         DB.create('Trackers', {});
       });
     }
-    this._table = table[0];
+    this.table = table[0];
   }
 
   getAll(): Array<Tracker> {
-    return this._trackers.slice();
+    return this.trackers.slice();
   }
 
   getOne(trackId: number): Tracker {
     check.assert.number(trackId);
 
-    const trackers = this._trackers.filtered('id = $0', trackId);
+    const trackers = this.trackers.filtered('id = $0', trackId);
     return trackers[0];
   }
 
@@ -41,9 +43,9 @@ class TrackersDepot {
 
   addAt(tracker: Tracker, index: number): Tracker {
     DB.write(() => {
-      tracker.id = this._table.nextId;
-      this._trackers.splice(index, 0, tracker);
-      this._table.nextId = tracker.id + 1;
+      tracker.id = this.table.nextId;
+      this.trackers.splice(index, 0, tracker);
+      this.table.nextId = tracker.id + 1;
     });
 
     return tracker;
@@ -51,9 +53,9 @@ class TrackersDepot {
 
   add(tracker: Tracker): Tracker {
     DB.write(() => {
-      tracker.id = this._table.nextId;
-      this._trackers.push(tracker);
-      this._table.nextId = tracker.id + 1;
+      tracker.id = this.table.nextId;
+      this.trackers.push(tracker);
+      this.table.nextId = tracker.id + 1;
     });
 
     this.events.emit('added', {
@@ -66,7 +68,7 @@ class TrackersDepot {
   remove(trackId: number): boolean {
     check.assert.number(trackId);
 
-    const tracker = this._trackers.filtered('id = $0', trackId)[0];
+    const tracker = this.trackers.filtered('id = $0', trackId)[0];
     if (tracker) {
       DB.write(() => {
         DB.delete(tracker);
@@ -79,12 +81,12 @@ class TrackersDepot {
   }
 
   update(tracker: Tracker): Tracker {
-    const dbTracker = this._trackers.filtered('id = $0', tracker.id)[0];
+    const dbTracker = this.trackers.filtered('id = $0', tracker.id)[0];
 
     if (!dbTracker) return null;
 
     DB.write(() => {
-      Object.assign(dbTracker, tracker);
+      Object.assign(dbTracker, omit(tracker, 'id'));
     });
 
     this.events.emit('updated', {
@@ -94,8 +96,8 @@ class TrackersDepot {
     return tracker;
   }
 
-  get _trackers() {
-    return this._table.trackers;
+  get trackers() {
+    return this.table.trackers;
   }
 }
 

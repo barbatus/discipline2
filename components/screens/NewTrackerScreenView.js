@@ -24,6 +24,9 @@ export default class NewTrackerScreenView extends ScrollScreenView {
       tracker: Trackers.create({}),
       typeId: null,
     };
+    this._onTypeSelect = ::this._onTypeSelect;
+    this._onTrackerChange = ::this._onTrackerChange;
+    this._onTypeChosen = ::this._onTypeChosen;
   }
 
   onRightMove() {
@@ -36,8 +39,9 @@ export default class NewTrackerScreenView extends ScrollScreenView {
   }
 
   shouldComponentUpdate(props, state) {
-    return this.state.tracker !== state.tracker ||
-      this.state.typeId !== state.typeId;
+    return (
+      this.state.tracker !== state.tracker || this.state.typeId !== state.typeId
+    );
   }
 
   get leftView() {
@@ -46,8 +50,8 @@ export default class NewTrackerScreenView extends ScrollScreenView {
       <NewTrackerSlide
         ref="left"
         tracker={tracker}
-        onTypeSelect={::this._onTypeSelect}
-        onTrackerChange={::this._onTrackerChange}
+        onTypeSelect={this._onTypeSelect}
+        onTrackerChange={this._onTrackerChange}
       />
     );
   }
@@ -58,7 +62,7 @@ export default class NewTrackerScreenView extends ScrollScreenView {
       <TrackerTypesSlide
         ref="right"
         typeId={tracker.typeId}
-        onTypeChosen={::this._onTypeChosen}
+        onTypeChosen={this._onTypeChosen}
       />
     );
   }

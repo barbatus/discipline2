@@ -1,5 +1,5 @@
 declare interface IModal {
-  hide();
+  hide(): void,
 
-  show(onChosen: Function);
-};
+  show(onChosen: Function): void,
+}

@@ -21,9 +21,7 @@ import { formatDistance } from '../../../utils/format';
 
 import { caller } from '../../../utils/lang';
 
-import DistanceTrackers, {
-  DistanceTracker,
-} from '../../../geo/DistanceTrackers';
+import DistanceTrackers, { DistanceTracker } from '../../../geo/DistanceTrackers';
 
 import { slideWidth } from '../styles/slideStyles';
 
@@ -75,29 +73,22 @@ const DIST_INTRVL = 5.0;
 const TIME_INTRVL = 100; // ms
 
 export default class DistanceTrackerSlide extends TrackerSlide {
-  _distTracker: DistanceTracker = null;
+  distTracker: DistanceTracker = null;
 
-  _path = [];
+  path = [];
 
   constructor(props) {
     super(props);
     const { tracker } = props;
-    this._distTracker = DistanceTrackers.get(
+    this.distTracker = DistanceTrackers.get(
       tracker.id,
       DIST_INTRVL,
       TIME_INTRVL,
     );
-    this._distTracker.events.on('onStart', ::this._onDistStart);
-    this._distTracker.events.on('onUpdate', ::this._onDistUpdate);
-    this._distTracker.events.on('onStop', ::this._onDistStop);
-  }
-
-  get bodyStyle() {
-    return styles.bodyContainer;
-  }
-
-  get footerStyle() {
-    return styles.footerContainer;
+    this.distTracker.events.on('onStart', ::this.onDistStart);
+    this.distTracker.events.on('onUpdate', ::this.onDistUpdate);
+    this.distTracker.events.on('onStop', ::this.onDistStop);
+    this.showMap = ::this.showMap;
   }
 
   get bodyControls() {
@@ -105,9 +96,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
     return (
       <View style={trackerStyles.controls}>
-        <View style={styles.controls}>
-          <DistanceData ref="dist" dist={tracker.value} time={tracker.time} />
-        </View>
+        <DistanceData ref="dist" dist={tracker.value} time={tracker.time} />
       </View>
     );
   }
@@ -133,17 +122,16 @@ export default class DistanceTrackerSlide extends TrackerSlide {
       <View style={styles.footerControlsContainer}>
         <View style={styles.startStopBtn}>
           {tracker.active
-            ? renderBtn('STOP', this._onStopBtn)
-            : renderBtn('START', this._onStartBtn)}
+            ? renderBtn('STOP', this.onStopBtn)
+            : renderBtn('START', this.onStartBtn)}
         </View>
         <View style={styles.seeMap}>
           <Text style={trackerStyles.footerText}>
-            See {
-              (
-                <Text style={styles.seeMapLink} onPress={::this._showMap}>
-                  map
-                </Text>
-              )
+            See{' '}
+            {
+              <Text style={styles.seeMapLink} onPress={this.showMap}>
+                map
+              </Text>
             }
           </Text>
         </View>
@@ -154,23 +142,23 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   componentWillUnmount() {
     const { tracker } = this.props;
     DistanceTrackers.dispose(tracker.id);
-    this._distTracker = null;
+    this.distTracker = null;
   }
 
-  _onStartBtn() {
-    this._distTracker.start();
+  onStartBtn() {
+    this.distTracker.start();
   }
 
-  _onStopBtn() {
-    this._distTracker.stop();
+  onStopBtn() {
+    this.distTracker.stop();
   }
 
-  _onDistStart(error) {
+  onDistStart(error) {
     if (error) return;
 
     const { tracker } = this.props;
-    this._initDist = tracker.value;
-    this._initTime = tracker.time;
+    this.initDist = tracker.value;
+    this.initTime = tracker.time;
 
     Vibration.vibrate();
 
@@ -178,35 +166,23 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     caller(this.props.onTick, 0, { time: 0 });
   }
 
-  _onDistStop({ dist, time, latitude, longitude }) {
-    this._onDistUpdate({ dist, time, latitude, longitude });
+  onDistStop({ dist, time, latitude, longitude }) {
+    this.onDistUpdate({ dist, time, latitude, longitude });
     caller(this.props.onStop);
   }
 
-  _onDistUpdate({ dist, time, latitude, longitude }) {
+  onDistUpdate({ dist, time, latitude, longitude }) {
     caller(this.props.onProgress, dist, { time });
-    this._path.push({ latitude, longitude });
+    this.path.push({ latitude, longitude });
   }
 
-  _showMap() {
+  showMap() {
     const dlg = registry.get(DlgType.MAPS);
-    dlg.show(this._path.slice(0));
+    dlg.show(this.path.slice(0));
   }
 }
 
 const styles = StyleSheet.create({
-  bodyContainer: {
-    flex: 0.35,
-  },
-  footerContainer: {
-    flex: 0.2,
-  },
-  controls: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   distData: {
     flex: 1,
     flexDirection: 'column',
@@ -234,13 +210,13 @@ const styles = StyleSheet.create({
     fontWeight: '100',
   },
   label: {
-    flex: 1,
     width: slideWidth,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dist: {
+    marginBottom: 20,
     alignItems: 'flex-end',
   },
   labelText: {

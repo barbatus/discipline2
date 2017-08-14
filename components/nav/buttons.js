@@ -1,6 +1,8 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+
+import { pure } from 'recompose';
 
 import { TouchableOpacity, Text, Image } from 'react-native';
 
@@ -10,10 +12,11 @@ import { getIcon } from '../../icons/icons';
 
 import styles from './styles';
 
-class NavButton extends Component {
+class NavButton extends PureComponent {
   render() {
-    let onPress = debounce(this.props.onPress, 30);
-
+    const onPress = this.props.onPress
+      ? debounce(this.props.onPress, 30)
+      : null;
     return (
       <TouchableOpacity onPress={onPress} style={this.props.style}>
         <Image
@@ -25,25 +28,40 @@ class NavButton extends Component {
   }
 }
 
-class NavAddButton extends Component {
-  render() {
-    return (
-      <NavButton
-        {...this.props}
-        icon={'new'}
-        iconStyle={styles.newIcon}
-        style={styles.navBarRightButton}
-      />
-    );
-  }
-}
+const NavLeftButtonFn = props =>
+  <NavButton
+    {...props}
+    iconStyle={styles.newIcon}
+    style={styles.navBarLeftButton}
+  />;
 
-class NavBackButton extends Component {
+const NavLeftButton = pure(NavLeftButtonFn);
+
+const NavRightButtonFn = props =>
+  <NavButton
+    {...props}
+    iconStyle={styles.newIcon}
+    style={styles.navBarRightButton}
+  />;
+
+const NavRightButton = pure(NavRightButtonFn);
+
+const NavAddButtonFn = props =>
+  <NavButton
+    {...props}
+    icon="new"
+    iconStyle={styles.newIcon}
+    style={styles.navBarRightButton}
+  />;
+
+const NavAddButton = pure(NavAddButtonFn);
+
+class NavBackButton extends PureComponent {
   render() {
     return (
       <NavButton
         {...this.props}
-        icon={'back'}
+        icon="back"
         iconStyle={styles.backIcon}
         style={styles.navBarLeftButton}
       />
@@ -51,12 +69,12 @@ class NavBackButton extends Component {
   }
 }
 
-class NavMenuButton extends Component {
+class NavMenuButton extends PureComponent {
   render() {
     return (
       <NavButton
         {...this.props}
-        icon={'menu'}
+        icon="menu"
         iconStyle={styles.menuIcon}
         style={styles.navBarLeftButton}
       />
@@ -64,12 +82,12 @@ class NavMenuButton extends Component {
   }
 }
 
-class NavCancelButton extends Component {
+class NavCancelButton extends PureComponent {
   render() {
     return (
       <NavButton
         {...this.props}
-        icon={'cancel'}
+        icon="cancel"
         iconStyle={styles.cancelIcon}
         style={styles.navBarLeftButton}
       />
@@ -77,12 +95,12 @@ class NavCancelButton extends Component {
   }
 }
 
-class NavAcceptButton extends Component {
+class NavAcceptButton extends PureComponent {
   render() {
     return (
       <NavButton
         {...this.props}
-        icon={'accept'}
+        icon="accept"
         style={styles.navBarRightButton}
       />
     );
@@ -96,4 +114,6 @@ module.exports = {
   NavMenuButton,
   NavCancelButton,
   NavAcceptButton,
+  NavLeftButton,
+  NavRightButton,
 };

@@ -31,11 +31,7 @@ export default class Screen extends Component {
   }
 
   render() {
-    const {
-      content,
-      background,
-      navigator,
-    } = this.props;
+    const { content, background } = this.props;
 
     return (
       <View style={styles.container}>

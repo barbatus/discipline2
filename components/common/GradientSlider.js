@@ -98,76 +98,74 @@ export default class GradientSlider extends Component {
 
     if (dir > 0) {
       Animated.parallel([
-          Animated.timing(this.state[this._slides[2]].move, {
-            toValue: 0,
-          }),
-          Animated.timing(this.state[this._slides[1]].move, {
-            toValue: leftOut,
-          }),
-          Animated.timing(this.state[this._slides[0]].move, {
-            toValue: leftOut,
-          }),
-        ])
-        .start(() => {
-          this._gradInd += 1;
-          const slide0 = this._slides[0];
-          const slide1 = this._slides[1];
-          this.state[slide0].move.setValue(rightOut);
-          this.setState(
-            {
-              [slide0]: {
-                grad: this._getGrad(this._gradInd + 1),
-                move: this.state[slide0].move,
-              },
-              [slide1]: {
-                grad: this._getGrad(this._gradInd - 1),
-                move: this.state[slide1].move,
-              },
+        Animated.timing(this.state[this._slides[2]].move, {
+          toValue: 0,
+        }),
+        Animated.timing(this.state[this._slides[1]].move, {
+          toValue: leftOut,
+        }),
+        Animated.timing(this.state[this._slides[0]].move, {
+          toValue: leftOut,
+        }),
+      ]).start(() => {
+        this._gradInd += 1;
+        const slide0 = this._slides[0];
+        const slide1 = this._slides[1];
+        this.state[slide0].move.setValue(rightOut);
+        this.setState(
+          {
+            [slide0]: {
+              grad: this._getGrad(this._gradInd + 1),
+              move: this.state[slide0].move,
             },
-            () => {
-              this._isAnimated = false;
+            [slide1]: {
+              grad: this._getGrad(this._gradInd - 1),
+              move: this.state[slide1].move,
             },
-          );
+          },
+          () => {
+            this._isAnimated = false;
+          },
+        );
 
-          this._slides.push(slide0);
-          this._slides.shift();
-        });
+        this._slides.push(slide0);
+        this._slides.shift();
+      });
     } else {
       Animated.parallel([
-          Animated.timing(this.state[this._slides[0]].move, {
-            toValue: 0,
-          }),
-          Animated.timing(this.state[this._slides[1]].move, {
-            toValue: rightOut,
-          }),
-          Animated.timing(this.state[this._slides[2]].move, {
-            toValue: rightOut,
-          }),
-        ])
-        .start(() => {
-          this._gradInd -= 1;
-          const slide2 = this._slides[2];
-          const slide1 = this._slides[1];
-          this.state[slide2].move.setValue(leftOut);
-          this.setState(
-            {
-              [slide2]: {
-                grad: this._getGrad(this._gradInd - 1),
-                move: this.state[slide2].move,
-              },
-              [slide1]: {
-                grad: this._getGrad(this._gradInd + 1),
-                move: this.state[slide1].move,
-              },
+        Animated.timing(this.state[this._slides[0]].move, {
+          toValue: 0,
+        }),
+        Animated.timing(this.state[this._slides[1]].move, {
+          toValue: rightOut,
+        }),
+        Animated.timing(this.state[this._slides[2]].move, {
+          toValue: rightOut,
+        }),
+      ]).start(() => {
+        this._gradInd -= 1;
+        const slide2 = this._slides[2];
+        const slide1 = this._slides[1];
+        this.state[slide2].move.setValue(leftOut);
+        this.setState(
+          {
+            [slide2]: {
+              grad: this._getGrad(this._gradInd - 1),
+              move: this.state[slide2].move,
             },
-            () => {
-              this._isAnimated = false;
+            [slide1]: {
+              grad: this._getGrad(this._gradInd + 1),
+              move: this.state[slide1].move,
             },
-          );
+          },
+          () => {
+            this._isAnimated = false;
+          },
+        );
 
-          this._slides.pop();
-          this._slides.splice(0, 0, slide2);
-        });
+        this._slides.pop();
+        this._slides.splice(0, 0, slide2);
+      });
     }
   }
 
@@ -176,19 +174,18 @@ export default class GradientSlider extends Component {
 
     this._isAnimated = true;
     Animated.parallel([
-        Animated.timing(this.state[this._slides[2]].move, {
-          toValue: rightOut,
-        }),
-        Animated.timing(this.state[this._slides[1]].move, {
-          toValue: 0,
-        }),
-        Animated.timing(this.state[this._slides[0]].move, {
-          toValue: leftOut,
-        }),
-      ])
-      .start(() => {
-        this._isAnimated = false;
-      });
+      Animated.timing(this.state[this._slides[2]].move, {
+        toValue: rightOut,
+      }),
+      Animated.timing(this.state[this._slides[1]].move, {
+        toValue: 0,
+      }),
+      Animated.timing(this.state[this._slides[0]].move, {
+        toValue: leftOut,
+      }),
+    ]).start(() => {
+      this._isAnimated = false;
+    });
   }
 
   render() {

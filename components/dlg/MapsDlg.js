@@ -45,7 +45,7 @@ export default class MapsDlg extends CommonModal {
       <MapView
         style={styles.mapView}
         ref="map"
-        initRegion={initRegion}
+        //initRegion={initRegion}
         zoomEnabled
         loadingEnabled
         showsMyLocationButton

@@ -9,23 +9,19 @@ import { MoveUpDownResponder } from './responders';
 import { caller } from '../../utils/lang';
 
 export class MoveDownResponderAnim {
-  _moveY = new Animated.Value(0);
+  moveY = new Animated.Value(0);
 
-  _in: boolean = false;
+  in: boolean = false;
 
   constructor(slideHeight: number) {
-    this._maxDy = 0.5 * slideHeight;
-  }
-
-  get in() {
-    return this._in;
+    this.maxDy = 0.5 * slideHeight;
   }
 
   get style(): Object {
     return {
       transform: [
         {
-          translateY: this._moveY,
+          translateY: this.moveY,
         },
       ],
     };
@@ -39,13 +35,13 @@ export class MoveDownResponderAnim {
   ) {
     assert.ok(responder);
 
-    this._moveY.addListener(({ value }) => {
-      caller(onMove, value / this._maxDy);
+    this.moveY.addListener(({ value }) => {
+      caller(onMove, value / this.maxDy);
     });
     responder.subscribeDown({
       onMove: dy => {
-        dy = Math.min(Math.abs(dy), this._maxDy);
-        this._moveY.setValue(dy);
+        dy = Math.min(Math.abs(dy), this.maxDy);
+        this.moveY.setValue(dy);
       },
       onMoveStart: onStart,
       onMoveDone: () => {
@@ -55,21 +51,22 @@ export class MoveDownResponderAnim {
   }
 
   dispose() {
-    this._moveY.removeAllListeners();
+    this.moveY.removeAllListeners();
   }
 
   animateIn(callback?: Function) {
-    const inn = Animation.timing(this._moveY, 500, this._maxDy);
+    const nu = (this.maxDy - this.moveY._value) / this.maxDy;
+    const inn = Animation.timing(this.moveY, nu * 300, this.maxDy);
     Animation.animate([inn], () => {
-      this._in = true;
+      this.in = true;
       caller(callback);
     });
   }
 
   animateOut(callback?: Function) {
-    const out = Animation.timing(this._moveY, 500, 0);
+    const out = Animation.timing(this.moveY, 300, 0);
     Animation.animate([out], () => {
-      this._in = false;
+      this.in = false;
       caller(callback);
     });
   }

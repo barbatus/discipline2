@@ -31,19 +31,29 @@ export default class Trackers extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       swTrackers: new List(),
       scTrackers: new List(),
       swiperEnabled: true,
       index: 0,
     };
+    this._onCenterSlideTap = ::this._onCenterSlideTap;
+    this._onSmallSlideTap = ::this._onSmallSlideTap;
+    this._onScaleStart = ::this._onScaleStart;
+    this._onScaleMove = ::this._onScaleMove;
+    this._onScaleDone = ::this._onScaleDone;
+    this._onTap = ::this._onTap;
+    this._onRemove = ::this._onRemove;
+    this._onEdit = ::this._onEdit;
+    this._onSlideChange = ::this._onSlideChange;
   }
 
   shouldComponentUpdate(props, state) {
-    return this.state.swTrackers !== state.swTrackers ||
+    return (
+      this.state.swTrackers !== state.swTrackers ||
       this.state.scTrackers !== state.scTrackers ||
-      this.state.swiperEnabled !== state.swiperEnabled;
+      this.state.swiperEnabled !== state.swiperEnabled
+    );
   }
 
   componentWillUnmount() {
@@ -51,11 +61,7 @@ export default class Trackers extends Component {
   }
 
   componentDidMount() {
-    const {
-      trackers,
-      onSwiperMoveDown,
-      onSwiperMoveDownStart,
-    } = this.props;
+    const { trackers, onSwiperMoveDown, onSwiperMoveDownStart } = this.props;
 
     if (trackers) {
       this._renderTracker(trackers.first(), () => {
@@ -103,10 +109,9 @@ export default class Trackers extends Component {
       },
       () => {
         Animated.timing(this._opacity, {
-            duration: 500,
-            toValue: 1,
-          })
-          .start(callback);
+          duration: 500,
+          toValue: 1,
+        }).start(callback);
       },
     );
   }
@@ -155,10 +160,15 @@ export default class Trackers extends Component {
 
   _onTap() {
     if (this._moveDown.in) {
+      caller(this.props.onSwiperMoveUpStart);
       this._moveDown.animateOut(
-        this.setState.bind(this, {
-          swiperEnabled: true,
-        }),
+        this.setState.bind(
+          this,
+          {
+            swiperEnabled: true,
+          },
+          this.props.onSwiperMoveUpDone,
+        ),
       );
     }
   }
@@ -203,7 +213,7 @@ export default class Trackers extends Component {
           trackers={scTrackers}
           style={styles.bigScroll}
           scale={1 / 1.6}
-          onCenterSlideTap={::this._onCenterSlideTap}
+          onCenterSlideTap={this._onCenterSlideTap}
         />
         <TrackerScroll
           ref="sscroll"
@@ -211,7 +221,7 @@ export default class Trackers extends Component {
           style={styles.smallScroll}
           scale={1 / 4}
           responsive={false}
-          onSlideTap={::this._onSmallSlideTap}
+          onSlideTap={this._onSmallSlideTap}
         />
         <TrackerSwiper
           ref="swiper"
@@ -219,13 +229,13 @@ export default class Trackers extends Component {
           enabled={swiperEnabled}
           trackers={swTrackers}
           style={commonStyles.absFilled}
-          onScaleStart={::this._onScaleStart}
-          onScaleMove={::this._onScaleMove}
-          onScaleDone={::this._onScaleDone}
-          onTap={::this._onTap}
-          onRemove={::this._onRemove}
-          onEdit={::this._onEdit}
-          onSlideChange={::this._onSlideChange}
+          onScaleStart={this._onScaleStart}
+          onScaleMove={this._onScaleMove}
+          onScaleDone={this._onScaleDone}
+          onTap={this._onTap}
+          onRemove={this._onRemove}
+          onEdit={this._onEdit}
+          onSlideChange={this._onSlideChange}
         />
       </Animated.View>
     );

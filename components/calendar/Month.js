@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 
 import { View, StyleSheet } from 'react-native';
 
@@ -12,14 +12,7 @@ import styles from './styles';
 
 import { caller } from '../../utils/lang';
 
-export default class Month extends Component {
-  shouldComponentUpdate(props, state) {
-    return this.props.monthMs !== props.monthMs ||
-      this.props.todayMs !== props.todayMs ||
-      this.props.tickDates !== props.tickDates ||
-      this.props.selectedDateMs !== props.selectedDateMs;
-  }
-
+export default class Month extends PureComponent {
   render() {
     const {
       customStyle,

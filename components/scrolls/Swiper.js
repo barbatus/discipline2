@@ -36,8 +36,10 @@ export default class Swiper extends Component {
   }
 
   shouldComponentUpdate(props, state) {
-    return this.props.slides !== props.slides ||
-      this.props.scrollEnabled !== props.scrollEnabled;
+    return (
+      this.props.slides !== props.slides ||
+      this.props.scrollEnabled !== props.scrollEnabled
+    );
   }
 
   scrollTo(index, callback, animated) {
@@ -87,11 +89,12 @@ export default class Swiper extends Component {
    * propor. to the number of slides.
    */
   _scaleDot(size) {
-    let radius = 7, margin = 7;
+    let radius = 7,
+      margin = 7;
     if (size >= 18) {
       let ratio = 18 / size;
-      radius = 7 * ratio << 0;
-      margin = 7 * ratio << 0;
+      radius = (7 * ratio) << 0;
+      margin = (7 * ratio) << 0;
     }
 
     return {

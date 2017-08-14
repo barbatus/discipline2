@@ -1,12 +1,12 @@
 /* @flow */
 
-'use strict';
-
 import React, { Component } from 'react';
 
 import { Provider } from 'react-redux';
 
-import { Navigator, StyleSheet } from 'react-native';
+import { Navigator } from 'react-native-deprecated-custom-components';
+
+import { StackNavigator } from 'react-navigation';
 
 import SideMenu from 'react-native-side-menu';
 
@@ -19,10 +19,15 @@ import DayUpdateEvent from './DayUpdateEvent';
 import { changeDay } from '../model/actions';
 
 export default function CreateApp(store) {
-  return () => <App store={store} />;
+  return StackNavigator(
+    {
+      Home: { screen: () => <Home store={store} /> },
+    },
+    { headerMode: 'none' },
+  );
 }
 
-class App extends Component {
+class Home extends Component {
   state: any;
 
   constructor(props: any) {
@@ -31,54 +36,35 @@ class App extends Component {
       touchToClose: false,
       isOpen: false,
     };
-    this._dayUpdate = new DayUpdateEvent();
+    this.dayUpdate = new DayUpdateEvent();
   }
 
   componentWillMount() {
     const store = this.props.store;
-    this._dayUpdate.on(() => {
+    this.dayUpdate.on(() => {
       store.dispatch(changeDay());
     });
   }
 
   componentWillUnmount() {
-    this._dayUpdate.destroy();
+    this.dayUpdate.destroy();
   }
 
-  renderScene(route: any, navigator: any) {
-    const Component = route.component;
-    const menu = <Menu navigator={navigator} />;
-    const store = this.props.store;
-
+  render() {
+    const { store, navigation } = this.props;
     return (
       <Provider store={store}>
-        <SideMenu disableGestures={true} menu={menu} isOpen={this.state.isOpen}>
-          <Component
-            navigator={navigator}
-            route={route}
+        <SideMenu
+          disableGestures
+          menu={<Menu navigator={navigation} />}
+          isOpen={this.state.isOpen}
+        >
+          <MainScreen
+            navigator={navigation}
             onMenu={() => this.setState({ isOpen: true })}
           />
         </SideMenu>
       </Provider>
     );
   }
-
-  render() {
-    return (
-      <Navigator
-        debugOverlay={false}
-        initialRoute={{
-          component: MainScreen,
-        }}
-        renderScene={::this.renderScene}
-      />
-    );
-  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-});

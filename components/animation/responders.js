@@ -6,49 +6,45 @@ import { PanResponder } from 'react-native';
 
 import { caller } from '../../utils/lang';
 
-const ANGLE_TRESHOLD = Math.cos(89 * Math.PI / 180);
+const ANGLE_TRESHOLD = Math.sin(10 * Math.PI / 180);
 
 const DY_TRESHOLD = 20;
 
 export class MoveUpDownResponder {
   constructor() {
-    this._panHandlers = this._createResponder().panHandlers;
-  }
-
-  get panHandlers() {
-    return this._panHandlers;
+    this.panHandlers = this.createResponder().panHandlers;
   }
 
   subscribeUp({ onMove, onMoveStart, onMoveDone }) {
-    this._onMoveUp = onMove;
-    this._onMoveUpStart = onMoveStart;
-    this._onMoveUpDone = onMoveDone;
+    this.onMoveUp = onMove;
+    this.onMoveUpStart = onMoveStart;
+    this.onMoveUpDone = onMoveDone;
   }
 
   subscribeDown({ onMove, onMoveStart, onMoveDone }) {
-    this._onMoveDown = onMove;
-    this._onMoveDownStart = onMoveStart;
-    this._onMoveDownDone = onMoveDone;
+    this.onMoveDown = onMove;
+    this.onMoveDownStart = onMoveStart;
+    this.onMoveDownDone = onMoveDone;
   }
 
   dispose() {
-    this._onMoveUp = null;
-    this._onMoveUpStart = null;
-    this._onMoveUpDone = null;
-    this._onMoveDown = null;
-    this._onMoveDownStart = null;
-    this._onMoveDownDone = null;
+    this.onMoveUp = null;
+    this.onMoveUpStart = null;
+    this.onMoveUpDone = null;
+    this.onMoveDown = null;
+    this.onMoveDownStart = null;
+    this.onMoveDownDone = null;
   }
 
-  _createResponder() {
+  createResponder() {
     let isUp = false;
 
     return PanResponder.create({
       onMoveShouldSetPanResponderCapture: (e: Object, state: Object) => {
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
-        const cos = dx / dy;
-        const captured = cos <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
+        const sin = dx / Math.sqrt(dy * dy + dx * dx);
+        const captured = sin <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
         isUp = state.vy < 0;
         return captured;
       },
@@ -57,19 +53,19 @@ export class MoveUpDownResponder {
 
         if (!isUp && state.vy < 0) return;
 
-        if (isUp) caller(this._onMoveUp, state.dy);
+        if (isUp) caller(this.onMoveUp, state.dy);
 
-        if (!isUp) caller(this._onMoveDown, state.dy);
+        if (!isUp) caller(this.onMoveDown, state.dy);
       },
       onPanResponderGrant: (e: Object, state: Object) => {
-        if (isUp) caller(this._onMoveUpStart);
+        if (isUp) caller(this.onMoveUpStart);
 
-        if (!isUp) caller(this._onMoveDownStart);
+        if (!isUp) caller(this.onMoveDownStart);
       },
       onPanResponderRelease: (e: Object, state: Object) => {
-        if (isUp) caller(this._onMoveUpDone);
+        if (isUp) caller(this.onMoveUpDone);
 
-        if (!isUp) caller(this._onMoveDownDone);
+        if (!isUp) caller(this.onMoveDownDone);
       },
     });
   }

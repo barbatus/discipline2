@@ -27,10 +27,9 @@ import { caller } from '../../utils/lang';
 export default class TrackerScroll extends TrackerRenderer {
   hide(callback) {
     Animated.timing(this._opacity, {
-        duration: 500,
-        toValue: 0,
-      })
-      .start(callback);
+      duration: 500,
+      toValue: 0,
+    }).start(callback);
   }
 
   scrollTo(index, callback, animated) {
@@ -58,13 +57,11 @@ export default class TrackerScroll extends TrackerRenderer {
       height: slideHeight * scale,
     };
     const slides = this.state.trackers
-      .map(tracker => {
-        return (
-          <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
-            {this.renderScaledTracker(tracker, scale, responsive)}
-          </View>
-        );
-      })
+      .map(tracker =>
+        <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
+          {this.renderScaledTracker(tracker, scale, responsive)}
+        </View>,
+      )
       .toArray();
 
     return (
@@ -78,7 +75,7 @@ export default class TrackerScroll extends TrackerRenderer {
       >
         <Scroll
           ref="scroll"
-          centered={true}
+          centered
           style={commonStyles.flexFilled}
           slideWidth={screenWidth * scale}
           slides={slides}

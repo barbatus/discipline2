@@ -79,6 +79,26 @@ const time = {
     return now.diff(start, 'milliseconds');
   },
 
+  getCurMonthDateMs() {
+    return moment().startOf('month').valueOf();
+  },
+
+  getNextMonthDateMs(dateMs) {
+    return moment(dateMs)
+      .startOf('month')
+      .add(1, 'month')
+      .startOf('month')
+      .valueOf();
+  },
+
+  getPrevMonthDateMs(dateMs) {
+    return moment(dateMs)
+      .startOf('month')
+      .subtract(1, 'month')
+      .startOf('month')
+      .valueOf();
+  },
+
   addMonth(dateMs) {
     return moment(dateMs)
       .add(1, 'month')

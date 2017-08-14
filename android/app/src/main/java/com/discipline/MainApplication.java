@@ -1,15 +1,14 @@
 package com.discipline;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.facebook.react.ReactApplication;
 import io.realm.react.RealmReactPackage;
 import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.facebook.react.ReactInstanceManager;
+import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -32,9 +31,10 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RealmReactPackage(),
             new RNShakeEventPackage(),
-            new MapsPackage(),
             new LinearGradientPackage(),
-            new RNDeviceInfo()
+            new RNDeviceInfo(),
+            new RNBackgroundGeolocation(),
+            new MapsPackage()
       );
     }
   };

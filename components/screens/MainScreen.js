@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { View } from 'react-native';
 
@@ -18,7 +18,7 @@ import MainScreenView from './MainScreenView';
 
 import { commonStyles } from '../styles/common';
 
-export default class MainScreen extends Component {
+export default class MainScreen extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -26,10 +26,9 @@ export default class MainScreen extends Component {
       index: 0,
       active: false,
     };
-  }
-
-  shouldComponentUpdate(props, state) {
-    return false;
+    this.onScroll = ::this.onScroll;
+    this.onSlideChange = ::this.onSlideChange;
+    this.onSlideNoChange = ::this.onSlideNoChange;
   }
 
   componentDidMount() {
@@ -37,27 +36,27 @@ export default class MainScreen extends Component {
     registry.register(DlgType.MAPS, this.refs.mapsDlg);
   }
 
-  _onSlideChange(index, previ) {
+  onSlideChange(index, previ) {
     const dir = index - previ >= 0 ? 1 : -1;
     this.refs.gradient.finishSlide(dir);
   }
 
-  _onSlideNoChange() {
+  onSlideNoChange() {
     this.refs.gradient.finishNoSlide();
   }
 
-  _onScroll(dx) {
+  onScroll(dx) {
     this.refs.gradient.slide(dx);
   }
 
-  _renderContent() {
+  renderContent() {
     return (
       <View style={commonStyles.flexFilled}>
         <MainScreenView
           {...this.props}
-          onScroll={::this._onScroll}
-          onSlideChange={::this._onSlideChange}
-          onSlideNoChange={::this._onSlideNoChange}
+          onScroll={this.onScroll}
+          onSlideChange={this.onSlideChange}
+          onSlideNoChange={this.onSlideNoChange}
         />
         <IconsDlg ref="iconsDlg" />
         <MapsDlg ref="mapsDlg" />
@@ -75,7 +74,7 @@ export default class MainScreen extends Component {
         ref="screen"
         navigator={navigator}
         background={gradient}
-        content={this._renderContent()}
+        content={this.renderContent()}
       />
     );
   }

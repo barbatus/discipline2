@@ -21,12 +21,17 @@ import TrackerSlide from './TrackerSlide';
 import { caller } from '../../../utils/lang';
 
 export default class GoalTrackerSlide extends TrackerSlide {
+  constructor(props) {
+    super(props);
+    this.onTick = ::this.onTick;
+  }
+
   get bodyControls() {
     const { responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
-        <TouchableOpacity disabled={!responsive} onPress={::this.onTick}>
-          <Image source={getIcon('check')} style={this._checkStyle} />
+        <TouchableOpacity disabled={!responsive} onPress={this.onTick}>
+          <Image source={getIcon('check')} style={this.checkStyle} />
         </TouchableOpacity>
       </View>
     );
@@ -45,7 +50,7 @@ export default class GoalTrackerSlide extends TrackerSlide {
     caller(this.props.onTick);
   }
 
-  get _checkStyle() {
+  get checkStyle() {
     let { tracker } = this.props;
     return tracker.checked
       ? [trackerStyles.checkBtn, trackerStyles.filledBtn]

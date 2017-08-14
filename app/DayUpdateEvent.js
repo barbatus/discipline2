@@ -90,12 +90,9 @@ export default class DayUpdateEvent {
       return;
     }
 
-    this._dayTimer = new Timeout(
-      () => {
-        this.events.emit('change');
-      },
-      left,
-    );
+    this._dayTimer = new Timeout(() => {
+      this.events.emit('change');
+    }, left);
   }
 
   _unsetDayTimer() {

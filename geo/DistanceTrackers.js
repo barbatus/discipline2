@@ -136,13 +136,10 @@ export class DistanceTracker {
   _startTracking() {
     this._dist = 0;
     this._time = 0;
-    this._hInterval = setInterval(
-      () => {
-        this._time += this._timeInterval;
-        this._trackPosition();
-      },
-      this._timeInterval,
-    );
+    this._hInterval = setInterval(() => {
+      this._time += this._timeInterval;
+      this._trackPosition();
+    }, this._timeInterval);
   }
 
   _updatePosition({ coords }) {

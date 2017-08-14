@@ -21,18 +21,24 @@ import TrackerSlide from './TrackerSlide';
 import { caller } from '../../../utils/lang';
 
 export default class CounterSlide extends TrackerSlide {
+  constructor(props) {
+    super(props);
+    this._onUndo = ::this._onUndo;
+    this._onTick = ::this._onTick;
+  }
+
   get bodyControls() {
     const { tracker, responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TouchableOpacity disabled={!responsive} onPress={::this._onUndo}>
+          <TouchableOpacity disabled={!responsive} onPress={this._onUndo}>
             <Image source={getIcon('minus')} style={trackerStyles.circleBtn} />
           </TouchableOpacity>
           <Text style={styles.countText} numberOfLines={1}>
             {tracker.count}
           </Text>
-          <TouchableOpacity disabled={!responsive} onPress={::this._onTick}>
+          <TouchableOpacity disabled={!responsive} onPress={this._onTick}>
             <Image source={getIcon('plus')} style={trackerStyles.circleBtn} />
           </TouchableOpacity>
         </View>

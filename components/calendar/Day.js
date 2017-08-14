@@ -1,25 +1,24 @@
 'use strict';
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
+
 import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   StyleSheet,
-  PixelRatio,
 } from 'react-native';
 
-import styles from './styles';
+import { screenWidth } from '../styles/common';
 
-export default class Day extends Component {
-  static defaultProps = {
-    customStyle: {},
-  };
+import { calWidth } from './styles';
 
+import Tooltip from '../tooltip/Tooltip';
+
+export default class Day extends PureComponent {
   static propTypes = {
     caption: PropTypes.any,
-    customStyle: PropTypes.object,
     hasTick: PropTypes.bool,
     isSelected: PropTypes.bool,
     isToday: PropTypes.bool,
@@ -27,43 +26,25 @@ export default class Day extends Component {
     onPress: PropTypes.func,
   };
 
-  shouldComponentUpdate(props, state) {
-    return this.props.isSelected !== props.isSelected ||
-      this.props.isToday !== props.isToday;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tooltipShown: false,
+    };
   }
 
-  dayCircleStyle = (isSelected, isToday) => {
-    const { customStyle } = this.props;
-    const dayCircleStyle = [styles.dayCircle];
-
-    if (isToday) {
-      dayCircleStyle.push(styles.currentDayCircle);
-    }
-
-    if (isSelected) {
-      dayCircleStyle.push(styles.selectedDayCircle);
-    }
-
-    return dayCircleStyle;
-  };
-
-  dayTextStyle = (isSelected, isToday) => {
-    const { customStyle } = this.props;
-    const dayTextStyle = [styles.dayText];
-
-    if (!isSelected) {
-      dayTextStyle.push(styles.currentDayText);
-    }
-
-    if (isSelected) {
-      dayTextStyle.push(styles.selectedDayText);
-    }
-
-    return dayTextStyle;
-  };
-
   render() {
-    const { caption, outDay, hasTick, isSelected, isToday } = this.props;
+    const {
+      caption,
+      outDay,
+      hasTick,
+      isSelected,
+      isToday,
+      onPress,
+    } = this.props;
+
+    const { tooltipShown } = this.state;
 
     return outDay
       ? <TouchableWithoutFeedback>
@@ -75,15 +56,100 @@ export default class Day extends Component {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      : <TouchableOpacity onPress={this.props.onPress}>
+      : <TouchableOpacity onPress={::this._onPress}>
           <View style={styles.dayButton}>
-            <View style={this.dayCircleStyle(isSelected, isToday)}>
+            <Tooltip shown={tooltipShown}>
+              <Text>tooltip</Text>
+            </Tooltip>
+            <View style={this._dayCircleStyle(isSelected, isToday)}>
               {hasTick ? <View style={styles.tickPoint} /> : null}
-              <Text style={this.dayTextStyle(isSelected, isToday)}>
+              <Text style={this._dayTextStyle(isSelected, isToday)}>
                 {caption}
               </Text>
             </View>
           </View>
         </TouchableOpacity>;
   }
+
+  _onPress(event) {
+    const { hasTick, onPress } = this.props;
+    this.setState({
+      tooltipShown: true,
+    });
+    onPress();
+  }
+
+  _dayCircleStyle(isSelected, isToday) {
+    const dayCircleStyle = [styles.dayCircle];
+
+    if (isToday) {
+      dayCircleStyle.push(styles.currentDayCircle);
+    }
+
+    if (isSelected) {
+      dayCircleStyle.push(styles.selectedDayCircle);
+    }
+
+    return dayCircleStyle;
+  }
+
+  _dayTextStyle(isSelected, isToday) {
+    const dayTextStyle = [styles.dayText];
+
+    if (!isSelected) {
+      dayTextStyle.push(styles.currentDayText);
+    }
+
+    if (isSelected) {
+      dayTextStyle.push(styles.selectedDayText);
+    }
+
+    return dayTextStyle;
+  }
 }
+
+const styles = StyleSheet.create({
+  dayButton: {
+    alignItems: 'center',
+    padding: 0,
+    borderTopWidth: 1,
+    borderTopColor: 'transparent',
+  },
+  dayText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: '300',
+  },
+  outDayText: {
+    color: 'rgba(255, 255, 255, 0.2)',
+  },
+  dayCircle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    width: 33,
+    height: 33,
+    borderRadius: 16,
+  },
+  currentDayCircle: {
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  currentDayText: {
+    color: 'white',
+  },
+  selectedDayCircle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  selectedDayText: {
+    color: 'white',
+  },
+  tickPoint: {
+    position: 'absolute',
+    width: 5,
+    height: 5,
+    backgroundColor: 'white',
+    borderRadius: 3,
+    left: 27,
+    top: 3,
+  },
+});

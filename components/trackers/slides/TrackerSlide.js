@@ -37,6 +37,9 @@ export default class TrackerSlide extends Component {
     this.state = {
       tracker: props.tracker,
     };
+    this.onTap = ::this.onTap;
+    this.onEdit = ::this.onEdit;
+    this.onRemove = ::this.onRemove;
   }
 
   shouldComponentUpdate(props, state) {
@@ -121,7 +124,7 @@ export default class TrackerSlide extends Component {
           showType={false}
           allowDelete
           tracker={tracker}
-          onRemove={::this.onRemove}
+          onRemove={this.onRemove}
           onTrackerChange={onTrackerChange}
         />
       );
@@ -138,8 +141,8 @@ export default class TrackerSlide extends Component {
         backImg={this.backImg}
         bodyControls={this.bodyControls}
         footerControls={this.footerControls}
-        onTap={::this.onTap}
-        onEdit={::this.onEdit}
+        onTap={this.onTap}
+        onEdit={this.onEdit}
         bodyStyle={this.bodyStyle}
         footerStyle={this.footerStyle}
       />

@@ -1,15 +1,16 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { View, Text, Image } from 'react-native';
 
 import styles from './styles';
 
-class NavTitle extends Component {
+export default class NavTitle extends PureComponent {
   render() {
+    const { style } = this.props;
     const navTitle = (
-      <View style={styles.navTitle}>
+      <View style={[styles.navTitle, style]}>
         <Text style={styles.navTitleText}>
           {this.props.title}
         </Text>
@@ -19,5 +20,3 @@ class NavTitle extends Component {
     return navTitle;
   }
 }
-
-module.exports = NavTitle;

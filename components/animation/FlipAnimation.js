@@ -62,19 +62,31 @@ export default class FlipAnimation {
   animateIn(callback: Function) {
     this._move2.setValue(0);
 
-    this._animateFlip(1, 0, 1, value => value > 0.5, () => {
-      this._move1.setValue(1);
-      caller(callback);
-    });
+    this._animateFlip(
+      1,
+      0,
+      1,
+      value => value > 0.5,
+      () => {
+        this._move1.setValue(1);
+        caller(callback);
+      },
+    );
   }
 
   animateOut(callback: Function) {
     this._move1.setValue(0);
 
-    this._animateFlip(0, 1, 0, value => value <= 0.5, () => {
-      this._move2.setValue(1);
-      caller(callback);
-    });
+    this._animateFlip(
+      0,
+      1,
+      0,
+      value => value <= 0.5,
+      () => {
+        this._move2.setValue(1);
+        caller(callback);
+      },
+    );
   }
 
   _animateFlip(stopVal, op1, op2, opCondition, callback) {

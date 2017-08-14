@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
@@ -21,7 +21,7 @@ import { screenWidth, navHeight } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-export default class NavBar extends Component {
+export default class NavBar extends PureComponent {
   _active = false;
 
   _opacity = new Animated.Value(1);
@@ -63,9 +63,10 @@ export default class NavBar extends Component {
     this._opacity.setValue(dx);
   }
 
-  setTitle(navTitle: string) {
+  setTitle(title: string, titleStyle: Object) {
     this.setState({
-      navTitle,
+      title,
+      titleStyle,
     });
   }
 
@@ -102,6 +103,7 @@ export default class NavBar extends Component {
   }
 
   render() {
+    const { title, titleStyle, leftBtn, rightBtn } = this.state;
     const style = [styles.navbar, { opacity: this._opacity }];
     return (
       <Animated.View style={style}>
@@ -109,9 +111,9 @@ export default class NavBar extends Component {
           ref="navBar"
           tintColor="transparent"
           navigator={navigator}
-          title={<NavTitle title={this.state.navTitle} />}
-          leftButton={this._getAnimatedBtn(this.state.leftBtn)}
-          rightButton={this._getAnimatedBtn(this.state.rightBtn)}
+          title={<NavTitle style={titleStyle} title={title} />}
+          leftButton={this._getAnimatedBtn(leftBtn)}
+          rightButton={this._getAnimatedBtn(rightBtn)}
         />
       </Animated.View>
     );

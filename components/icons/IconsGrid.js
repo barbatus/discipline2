@@ -60,7 +60,7 @@ const IconsGrid = React.createClass({
     }
 
     const pad = count * 0;
-    const width = (window.width - pad) / count >> 0;
+    const width = ((window.width - pad) / count) >> 0;
 
     return { width, count };
   },

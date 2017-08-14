@@ -33,6 +33,11 @@ class MainScreenView extends ScrollScreenView {
       index: 0,
       active: false,
     };
+    this._onSlideChange = ::this._onSlideChange;
+    this._onAddCompleted = ::this._onAddCompleted;
+    this._setMainViewBtns = ::this._setMainViewBtns;
+    this._onAcceptNewTracker = ::this._onAcceptNewTracker;
+    this._cancelNewTracker = ::this._cancelNewTracker;
   }
 
   get leftView() {
@@ -41,11 +46,12 @@ class MainScreenView extends ScrollScreenView {
         ref="left"
         {...this.props}
         style={commonStyles.absFilled}
-        onSlideChange={::this._onSlideChange}
-        onAddCompleted={::this._onAddCompleted}
-        onRemoveCompleted={::this._setMainViewBtns}
-        onSaveCompleted={::this._setMainViewBtns}
-        onCancel={::this._setMainViewBtns}
+        onSlideChange={this._onSlideChange}
+        onAddCompleted={this._onAddCompleted}
+        onRemoveCompleted={this._setMainViewBtns}
+        onSaveCompleted={this._setMainViewBtns}
+        onCancel={this._setMainViewBtns}
+        onMoveUp={this._setMainViewBtns}
       />
     );
   }
@@ -54,8 +60,8 @@ class MainScreenView extends ScrollScreenView {
     return (
       <NewTrackerScreenView
         ref="right"
-        onAccept={::this._onAcceptNewTracker}
-        onCancel={::this._cancelNewTracker}
+        onAccept={this._onAcceptNewTracker}
+        onCancel={this._cancelNewTracker}
       />
     );
   }
@@ -93,12 +99,6 @@ class MainScreenView extends ScrollScreenView {
     this.props.onAdd(tracker, this.state.index + 1);
   }
 
-  _onSlideChange(index, previ) {
-    const dir = index - previ >= 0 ? 1 : -1;
-    this.setState({ index });
-    caller(this.props.onSlideChange, index, previ);
-  }
-
   _onAddCompleted() {
     this._setMainViewBtns();
 
@@ -118,6 +118,11 @@ class MainScreenView extends ScrollScreenView {
   }
 
   // Common
+
+  _onSlideChange(index, previ) {
+    this.setState({ index });
+    caller(this.props.onSlideChange, index, previ);
+  }
 
   _onMenuToggle() {
     caller(this.props.onMenu);

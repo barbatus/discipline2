@@ -35,8 +35,10 @@ class Scroll extends Component {
   }
 
   shouldComponentUpdate(props, state) {
-    return this.props.slides !== props.slides ||
-      this.props.scrollEnabled !== props.scrollEnabled;
+    return (
+      this.props.slides !== props.slides ||
+      this.props.scrollEnabled !== props.scrollEnabled
+    );
   }
 
   scrollTo(index, callback, animated) {
@@ -45,14 +47,18 @@ class Scroll extends Component {
 
   render() {
     const { centered, slideWidth } = this.props;
-    const marginLeft = centered ? (screenWidth - slideWidth) / 2 : 0;
+    const padding = centered ? (screenWidth - slideWidth) / 2 : 0;
+    const paddingStyle = {
+      paddingLeft: padding,
+      paddingRight: padding,
+    };
 
     return (
       <BaseScroll
         ref="scroll"
         {...this.props}
         pagingEnabled={false}
-        contentStyle={[commonStyles.centered, { marginLeft }]}
+        contentStyle={[commonStyles.centered, paddingStyle]}
       />
     );
   }
