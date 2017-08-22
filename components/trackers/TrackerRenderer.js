@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { Animated, StyleSheet, InteractionManager } from 'react-native';
 
@@ -21,7 +21,7 @@ import { TrackerType } from '../../depot/consts';
 import { caller } from '../../utils/lang';
 
 // TODO: get rid of it once we get rid of refs.
-class TrackerWrapper extends Component {
+class TrackerWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.onEdit = ::this.onEdit;
@@ -100,7 +100,7 @@ class TrackerWrapper extends Component {
   }
 }
 
-export default class TrackerRenderer extends Component {
+export default class TrackerRenderer extends PureComponent {
   _opacity = new Animated.Value(0);
 
   constructor(props) {
@@ -130,12 +130,10 @@ export default class TrackerRenderer extends Component {
     return this.opacity._value === 1;
   }
 
-  shouldComponentUpdate(props, state) {
+  componentWillReceiveProps(props) {
     if (this.props.trackers !== props.trackers) {
       this.state.trackers = props.trackers;
-      return true;
     }
-    return this.state.trackers !== state.trackers;
   }
 
   hide(callback) {
@@ -187,7 +185,7 @@ export default class TrackerRenderer extends Component {
   renderTracker(tracker: Tracker) {
     // Generate onProgress events only
     // for the main tracker slides (swiper's ones)
-    return this._renderTracker(tracker, 1.0, true, true, {
+    return this.renderTrackerInternal(tracker, 1.0, true, true, {
       onProgress: this.onProgress.bind(this, tracker),
     });
   }
@@ -196,10 +194,10 @@ export default class TrackerRenderer extends Component {
     check.assert.number(scale);
     check.assert.boolean(responsive);
 
-    return this._renderTracker(tracker, scale, responsive, false);
+    return this.renderTrackerInternal(tracker, scale, responsive, false);
   }
 
-  _renderTracker(
+  renderTrackerInternal(
     tracker: Tracker,
     scale: number,
     responsive: boolean,
@@ -209,19 +207,19 @@ export default class TrackerRenderer extends Component {
     const trackProps = extend({ responsive, editable, scale }, props);
     switch (tracker.type) {
       case TrackerType.GOAL:
-        return this._renderSlide(GoalTrackerSlide, tracker, trackProps);
+        return this.renderSlide(GoalTrackerSlide, tracker, trackProps);
       case TrackerType.COUNTER:
-        return this._renderSlide(CounterSlide, tracker, trackProps);
+        return this.renderSlide(CounterSlide, tracker, trackProps);
       case TrackerType.SUM:
-        return this._renderSlide(SumTrackerSlide, tracker, trackProps);
+        return this.renderSlide(SumTrackerSlide, tracker, trackProps);
       case TrackerType.STOPWATCH:
-        return this._renderSlide(StopWatchTrackerSlide, tracker, trackProps);
+        return this.renderSlide(StopWatchTrackerSlide, tracker, trackProps);
       case TrackerType.DISTANCE:
-        return this._renderSlide(DistanceTrackerSlide, tracker, trackProps);
+        return this.renderSlide(DistanceTrackerSlide, tracker, trackProps);
     }
   }
 
-  _renderSlide(Component, tracker: Tracker, props: Object) {
+  renderSlide(Component, tracker: Tracker, props: Object) {
     return (
       <TrackerWrapper
         {...props}

@@ -20,50 +20,6 @@ import TrackerSlide from './TrackerSlide';
 
 import { caller } from '../../../utils/lang';
 
-export default class CounterSlide extends TrackerSlide {
-  constructor(props) {
-    super(props);
-    this._onUndo = ::this._onUndo;
-    this._onTick = ::this._onTick;
-  }
-
-  get bodyControls() {
-    const { tracker, responsive } = this.props;
-    return (
-      <View style={trackerStyles.controls}>
-        <View style={styles.controls}>
-          <TouchableOpacity disabled={!responsive} onPress={this._onUndo}>
-            <Image source={getIcon('minus')} style={trackerStyles.circleBtn} />
-          </TouchableOpacity>
-          <Text style={styles.countText} numberOfLines={1}>
-            {tracker.count}
-          </Text>
-          <TouchableOpacity disabled={!responsive} onPress={this._onTick}>
-            <Image source={getIcon('plus')} style={trackerStyles.circleBtn} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
-  get footerControls() {
-    return (
-      <Text style={trackerStyles.footerText}>
-        Tap to count the thing you've done
-      </Text>
-    );
-  }
-
-  _onTick() {
-    Vibration.vibrate();
-    caller(this.props.onTick);
-  }
-
-  _onUndo() {
-    caller(this.props.onUndo);
-  }
-}
-
 const styles = StyleSheet.create({
   controls: {
     flex: 1,
@@ -79,3 +35,47 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
   },
 });
+
+export default class CounterSlide extends TrackerSlide {
+  constructor(props) {
+    super(props);
+    this.onUndo = ::this.onUndo;
+    this.onTick = ::this.onTick;
+  }
+
+  get bodyControls() {
+    const { tracker, responsive } = this.props;
+    return (
+      <View style={trackerStyles.controls}>
+        <View style={styles.controls}>
+          <TouchableOpacity disabled={!responsive} onPress={this.onUndo}>
+            <Image source={getIcon('minus')} style={trackerStyles.circleBtn} />
+          </TouchableOpacity>
+          <Text style={styles.countText} numberOfLines={1}>
+            {tracker.count}
+          </Text>
+          <TouchableOpacity disabled={!responsive} onPress={this.onTick}>
+            <Image source={getIcon('plus')} style={trackerStyles.circleBtn} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  get footerControls() {
+    return (
+      <Text style={trackerStyles.footerText}>
+        Tap to count the thing you've done
+      </Text>
+    );
+  }
+
+  onTick() {
+    Vibration.vibrate();
+    caller(this.props.onTick);
+  }
+
+  onUndo() {
+    caller(this.props.onUndo);
+  }
+}

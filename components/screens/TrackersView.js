@@ -57,6 +57,10 @@ const styles = StyleSheet.create({
 });
 
 class TrackersView extends PureComponent {
+  static contextTypes = {
+    navBar: React.PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -64,77 +68,80 @@ class TrackersView extends PureComponent {
       current: props.trackers.get(0),
       changedTracker: null,
     };
-    this._onEdit = ::this._onEdit;
-    this._onRemove = ::this._onRemove;
-    this._onRemoveCompleted = ::this._onRemoveCompleted;
-    this._onSaveCompleted = ::this._onSaveCompleted;
-    this._onSwiperScaleMove = ::this._onSwiperScaleMove;
-    this._onSwiperMoveDown = ::this._onSwiperMoveDown;
-    this._onSwiperMoveDownStart = ::this._onSwiperMoveDownStart;
-    this._onTrackerChange = ::this._onTrackerChange;
-    this._onSlideChange = ::this._onSlideChange;
-    this._onMonthChanged = ::this._onMonthChanged;
-    this._onNextMonth = ::this._onNextMonth;
-    this._onPrevMonth = ::this._onPrevMonth;
+    this.active = false;
+    this.onEdit = ::this.onEdit;
+    this.onRemove = ::this.onRemove;
+    this.onRemoveCompleted = ::this.onRemoveCompleted;
+    this.onSaveCompleted = ::this.onSaveCompleted;
+    this.onSwiperScaleMove = ::this.onSwiperScaleMove;
+    this.onSwiperMoveDown = ::this.onSwiperMoveDown;
+    this.onSwiperMoveDownStart = ::this.onSwiperMoveDownStart;
+    this.onTrackerChange = ::this.onTrackerChange;
+    this.onSlideChange = ::this.onSlideChange;
+    this.onMonthChanged = ::this.onMonthChanged;
+    this.onNextMonth = ::this.onNextMonth;
+    this.onPrevMonth = ::this.onPrevMonth;
   }
 
   render() {
     const { style, onMoveUp } = this.props;
+    const { current } = this.state;
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
           ref="calendar"
           {...this.props}
+          tracker={current}
           style={[commonStyles.absFilled, { top: 0 }]}
-          onMonthChanged={this._onMonthChanged}
+          onMonthChanged={this.onMonthChanged}
         />
         <Trackers
           ref="trackers"
           {...this.props}
           style={commonStyles.flexFilled}
-          onRemove={this._onRemove}
-          onRemoveCompleted={this._onRemoveCompleted}
-          onEdit={this._onEdit}
-          onSaveCompleted={this._onSaveCompleted}
-          onSwiperScaleMove={this._onSwiperScaleMove}
-          onSwiperMoveDown={this._onSwiperMoveDown}
-          onSwiperMoveDownStart={this._onSwiperMoveDownStart}
+          onRemove={this.onRemove}
+          onRemoveCompleted={this.onRemoveCompleted}
+          onEdit={this.onEdit}
+          onSaveCompleted={this.onSaveCompleted}
+          onSwiperScaleMove={this.onSwiperScaleMove}
+          onSwiperMoveDown={this.onSwiperMoveDown}
+          onSwiperMoveDownStart={this.onSwiperMoveDownStart}
           onSwiperMoveUpStart={onMoveUp}
-          onTrackerChange={this._onTrackerChange}
-          onSlideChange={this._onSlideChange}
+          onTrackerChange={this.onTrackerChange}
+          onSlideChange={this.onSlideChange}
         />
       </Animated.View>
     );
   }
 
-  _onSlideChange(index: number, previ: number) {
+  onSlideChange(index: number, previ: number) {
     this.setState({
       current: this.props.trackers.get(index),
     });
     caller(this.props.onSlideChange, index, previ);
   }
 
-  _onRemove(tracker: Tracker) {
-    if (this.state.active) return;
+  onRemove(tracker: Tracker) {
+    if (this.active) return;
 
-    this.setState({ active: true });
+    this.active = true;
     this.props.onRemove(tracker);
   }
 
-  _onRemoveCompleted(index: number) {
-    this.setState({ active: false });
+  onRemoveCompleted(index: number) {
+    this.active = false;
     caller(this.props.onRemoveCompleted, index);
   }
 
-  _saveEdit() {
+  saveEdit() {
     if (Animation.on) return;
 
+    this.active = true;
     const { changedTracker, current } = this.state;
-    this.setState({ active: true });
     this.props.onUpdate(changedTracker || current);
   }
 
-  _onSaveCompleted(index) {
+  onSaveCompleted(index) {
     this.setState({
       active: false,
       changedTracker: null,
@@ -142,155 +149,147 @@ class TrackersView extends PureComponent {
     caller(this.props.onSaveCompleted, index);
   }
 
-  _getCancelBtn(onPress) {
+  getCancelBtn(onPress) {
     return <NavCancelButton onPress={this::onPress} />;
   }
 
-  _getAcceptBtn(onPress) {
+  getAcceptBtn(onPress) {
     return <NavAcceptButton onPress={this::onPress} />;
   }
 
-  _setEditTrackerBtns() {
+  setEditTrackerBtns() {
     const { navBar } = this.context;
 
     navBar.setTitle('Edit Tracker');
     navBar.setButtons(
-      this._getCancelBtn(this._cancelEdit),
-      this._getAcceptBtn(this._saveEdit),
+      this.getCancelBtn(this.cancelEdit),
+      this.getAcceptBtn(this.saveEdit),
     );
   }
 
-  _setCalendarBtns() {
+  setCalendarBtns() {
     const { navBar } = this.context;
     navBar.setButtons(
-      <NavLeftButton icon="back" onPress={this._onPrevMonth} />,
-      <NavRightButton icon="next_" onPress={this._onNextMonth} />,
+      <NavLeftButton icon="back" onPress={this.onPrevMonth} />,
+      <NavRightButton icon="next_" onPress={this.onNextMonth} />,
     );
   }
 
-  _onNextMonth() {
+  onNextMonth() {
     const { dateMs } = this.props;
     const { current } = this.state;
-    const nextMonthMs = time.getNextMonthDateMs(dateMs);
-    this._setNavBatMonth(nextMonthMs);
+    const monthMs = time.getNextMonthDateMs(dateMs);
+    this.setNavBarMonth(monthMs);
 
-    const startDateMs = time.subtractMonth(nextMonthMs);
-    const endDateMs = time.addMonth(nextMonthMs);
-    this.props.onCalendarUpdate(current, nextMonthMs, startDateMs, endDateMs);
+    const startMs = time.subtractMonth(monthMs);
+    const endMs = time.addMonth(monthMs);
+    this.refs.calendar.scrollToNextMonth();
   }
 
-  _onPrevMonth() {
+  onPrevMonth() {
     const { dateMs } = this.props;
     const { current } = this.state;
-    const nextMonthMs = time.getPrevMonthDateMs(dateMs);
-    this._setNavBatMonth(nextMonthMs);
+    const monthMs = time.getPrevMonthDateMs(dateMs);
+    this.setNavBarMonth(monthMs);
 
-    const startDateMs = time.subtractMonth(nextMonthMs);
-    const endDateMs = time.addMonth(nextMonthMs);
-    this.props.onCalendarUpdate(current, nextMonthMs, startDateMs, endDateMs);
+    const startMs = time.subtractMonth(monthMs);
+    const endMs = time.addMonth(monthMs);
+    this.refs.calendar.scrollToPrevMonth();
   }
 
-  _onSwiperScaleMove(dv: number) {
+  onSwiperScaleMove(dv: number) {
     const { navBar } = this.context;
     navBar.setOpacity(dv);
   }
 
-  _onSwiperMoveDown(dv: number) {
+  onSwiperMoveDown(dv: number) {
     this.refs.calendar.setShown(dv);
   }
 
-  _onSwiperMoveDownStart() {
+  onSwiperMoveDownStart() {
     const { current } = this.state;
     const monthDateMs = time.getCurMonthDateMs();
-    this._setCalendarBtns();
-    this._setNavBatMonth(monthDateMs);
+    this.setCalendarBtns();
+    this.setNavBarMonth(monthDateMs);
 
     const startDateMs = time.subtractMonth(monthDateMs);
     const endDateMs = time.addMonth(monthDateMs);
     this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
   }
 
-  _onMonthChanged(monthDateMs) {
+  onMonthChanged(monthDateMs) {
     const { current } = this.state;
-    this._setNavBatMonth(monthDateMs);
+    this.setNavBarMonth(monthDateMs);
 
     const startDateMs = time.subtractMonth(monthDateMs);
     const endDateMs = time.addMonth(monthDateMs);
     this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
   }
 
-  _setNavBatMonth(monthDateMs) {
+  setNavBarMonth(monthDateMs) {
     const date = moment(monthDateMs);
-    const monthName = MONTH_NAMES[date.month()];
+    const monthName = `${MONTH_NAMES[date.month()]}, ${date.year()}`;
     const { navBar } = this.context;
     navBar.setTitle(monthName, styles.navTitle);
   }
 
   // Edit tracker events.
 
-  _cancelEdit() {
+  cancelEdit() {
     if (Animation.on) return;
 
     this.refs.trackers.cancelEdit();
   }
 
-  _onEdit() {
+  onEdit() {
     if (Animation.on) return;
 
-    this._setEditTrackerBtns();
+    this.setEditTrackerBtns();
   }
 
-  _onTrackerChange(tracker: Tracker) {
+  onTrackerChange(tracker: Tracker) {
     this.setState({
       changedTracker: tracker,
     });
   }
 }
 
-TrackersView.contextTypes = {
-  navBar: React.PropTypes.object.isRequired,
-};
-
 export default connect(
-  state => {
-    return {
-      trackers: state.trackers.trackers,
-      addIndex: state.trackers.addIndex,
-      removeIndex: state.trackers.removeIndex,
-      updateIndex: state.trackers.updateIndex,
-      ticks: state.trackers.ticks || [],
-      todayMs: state.trackers.todayMs,
-      dateMs: state.trackers.dateMs,
-    };
-  },
-  (dispatch, props) => {
-    return {
-      onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>
-        dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
-      onRemove: tracker => dispatch(removeTracker(tracker)),
-      onUpdate: tracker => dispatch(updateTracker(tracker)),
-      onTick: (tracker, value, data) =>
-        dispatch(tickTracker(tracker, value, data)),
-      onStart: tracker => dispatch(startTracker(tracker)),
-      onProgress: (tracker, value, data) =>
-        dispatch(updateLastTick(tracker, value, data)),
-      onStop: tracker => dispatch(stopTracker(tracker)),
-      onUndo: (tracker, value) => dispatch(undoLastTick(tracker)),
-      onAddCompleted: index => {
-        dispatch(completeChange(index));
-        caller(props.onAddCompleted, index);
-      },
-      onRemoveCompleted: index => {
-        dispatch(completeChange(index));
-        caller(props.onRemoveCompleted, index);
-      },
-      onSaveCompleted: index => {
-        dispatch(completeChange(index));
-        caller(props.onSaveCompleted, index);
-      },
-      dispatch,
-    };
-  },
+  state => ({
+    trackers: state.trackers.trackers,
+    addIndex: state.trackers.addIndex,
+    removeIndex: state.trackers.removeIndex,
+    updateIndex: state.trackers.updateIndex,
+    ticks: state.trackers.ticks || [],
+    todayMs: state.trackers.todayMs,
+    dateMs: state.trackers.dateMs,
+  }),
+  (dispatch, props) => ({
+    onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>
+      dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
+    onRemove: tracker => dispatch(removeTracker(tracker)),
+    onUpdate: tracker => dispatch(updateTracker(tracker)),
+    onTick: (tracker, value, data) =>
+      dispatch(tickTracker(tracker, value, data)),
+    onStart: tracker => dispatch(startTracker(tracker)),
+    onProgress: (tracker, value, data) =>
+      dispatch(updateLastTick(tracker, value, data)),
+    onStop: tracker => dispatch(stopTracker(tracker)),
+    onUndo: (tracker, value) => dispatch(undoLastTick(tracker)),
+    onAddCompleted: index => {
+      dispatch(completeChange(index));
+      caller(props.onAddCompleted, index);
+    },
+    onRemoveCompleted: index => {
+      dispatch(completeChange(index));
+      caller(props.onRemoveCompleted, index);
+    },
+    onSaveCompleted: index => {
+      dispatch(completeChange(index));
+      caller(props.onSaveCompleted, index);
+    },
+    dispatch,
+  }),
   null,
   { withRef: true },
 )(TrackersView);

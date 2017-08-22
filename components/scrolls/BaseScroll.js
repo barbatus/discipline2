@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native';
 
@@ -10,7 +10,7 @@ import { commonStyles, screenWidth } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-class BaseScroll extends Component {
+class BaseScroll extends PureComponent {
   index = 0;
 
   prevInd = 0;
@@ -64,19 +64,6 @@ class BaseScroll extends Component {
     automaticallyAdjustContentInsets: false,
     keyboardDismissMode: 'on-drag',
   };
-
-  // This is not reliable since it might be
-  // incorrect if slides list has changed
-  // get index() {
-  //   return this._index;
-  // }
-
-  shouldComponentUpdate(props, state) {
-    return (
-      this.props.slides !== props.slides ||
-      this.props.scrollEnabled !== props.scrollEnabled
-    );
-  }
 
   scrollTo(index: number, callback?: Function | boolean, animated?: boolean) {
     const { slides, slideWidth } = this.props;

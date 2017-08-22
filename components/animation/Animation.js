@@ -20,7 +20,7 @@ class AnimationManager {
   }
 
   timing(field, duration, toValue, easing) {
-    let config = { duration, toValue };
+    const config = { duration, toValue };
     if (easing) {
       config.easing = easing;
     }
@@ -39,13 +39,11 @@ class AnimationManager {
     });
     this._callback.push(callback);
     this._timeout = setTimeout(() => {
-      const callbacks = this._callback.slice();
-      const animations = this._animations.slice();
+      const allCb = this._callback.slice();
+      const allAnim = this._animations.slice();
       this._callback.length = 0;
       this._animations.length = 0;
-      this._animate(animations, () => {
-        callbacks.forEach(cb => caller(cb));
-      });
+      this._animate(allAnim, () => allCb.forEach(cb => caller(cb)));
     });
   }
 

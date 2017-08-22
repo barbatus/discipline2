@@ -1,12 +1,16 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { StyleSheet, View, Text, Animated } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
-export default class Screen extends Component {
+export default class Screen extends PureComponent {
+  static childContextTypes = {
+    navBar: React.PropTypes.object.isRequired,
+  };
+
   getChildContext() {
     return {
       navBar: this.navBar,
@@ -46,10 +50,6 @@ export default class Screen extends Component {
     );
   }
 }
-
-Screen.childContextTypes = {
-  navBar: React.PropTypes.object.isRequired,
-};
 
 const Dimensions = require('Dimensions');
 const window = Dimensions.get('window');

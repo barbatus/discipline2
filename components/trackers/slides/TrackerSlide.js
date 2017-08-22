@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { View, StyleSheet, Animated } from 'react-native';
 
@@ -28,12 +28,24 @@ import { caller } from '../../../utils/lang';
 
 const absFilled = commonStyles.absoluteFilled;
 
-export default class TrackerSlide extends Component {
+export default class TrackerSlide extends PureComponent {
+  static defaultProps = {
+    scale: 1,
+    editable: true,
+  };
+
+  static propTypes = {
+    index: React.PropTypes.number,
+    editable: React.PropTypes.bool,
+    style: View.propTypes.style,
+    tracker: React.PropTypes.instanceOf(Tracker),
+  };
+
   constructor(props) {
     super(props);
     const { scale } = props;
-    this._flip = new FlipAnimation();
-    this._scale = new ScaleAnimation(scale);
+    this.flip = new FlipAnimation();
+    this.scale = new ScaleAnimation(scale);
     this.state = {
       tracker: props.tracker,
     };
@@ -42,12 +54,10 @@ export default class TrackerSlide extends Component {
     this.onRemove = ::this.onRemove;
   }
 
-  shouldComponentUpdate(props, state) {
+  componentWillReceiveNewProps(props) {
     if (this.props.tracker !== props.tracker) {
       this.state.tracker = props.tracker;
-      return true;
     }
-    return this.state.tracker !== state.tracker;
   }
 
   get bodyControls() {
@@ -72,16 +82,16 @@ export default class TrackerSlide extends Component {
       tracker: tracker.clone(),
     });
     Keyboard.dismiss();
-    this._flip.animateIn(callback);
+    this.flip.animateIn(callback);
   }
 
   cancelEdit(callback) {
     Keyboard.dismiss();
-    this._flip.animateOut(callback);
+    this.flip.animateOut(callback);
   }
 
   collapse(callback) {
-    this._scale.animateOut(callback);
+    this.scale.animateOut(callback);
   }
 
   shake(callback) {}
@@ -90,9 +100,9 @@ export default class TrackerSlide extends Component {
     const { style } = this.props;
     const slideStyle = [trackerStyles.slide, style];
     return (
-      <Animated.View style={[slideStyle, this._scale.style]}>
-        {this._renderFrontView()}
-        {this._renderBackView()}
+      <Animated.View style={[slideStyle, this.scale.style]}>
+        {this.renderFrontView()}
+        {this.renderBackView()}
       </Animated.View>
     );
   }
@@ -113,14 +123,14 @@ export default class TrackerSlide extends Component {
     }
   }
 
-  _renderBackView() {
+  renderBackView() {
     const { editable, onTrackerChange } = this.props;
     const { tracker } = this.state;
     if (editable) {
       return (
         <TrackerEditView
           ref="editView"
-          style={[absFilled, this._flip.style2]}
+          style={[absFilled, this.flip.style2]}
           showType={false}
           allowDelete
           tracker={tracker}
@@ -131,12 +141,12 @@ export default class TrackerSlide extends Component {
     }
   }
 
-  _renderFrontView() {
+  renderFrontView() {
     const { tracker } = this.props;
     return (
       <TrackerView
         ref="trackerView"
-        style={this._flip.style1}
+        style={this.flip.style1}
         tracker={tracker}
         backImg={this.backImg}
         bodyControls={this.bodyControls}
@@ -149,15 +159,3 @@ export default class TrackerSlide extends Component {
     );
   }
 }
-
-TrackerSlide.defaultProps = {
-  scale: 1,
-  editable: true,
-};
-
-TrackerSlide.propTypes = {
-  index: React.PropTypes.number,
-  editable: React.PropTypes.bool,
-  style: View.propTypes.style,
-  tracker: React.PropTypes.instanceOf(Tracker),
-};

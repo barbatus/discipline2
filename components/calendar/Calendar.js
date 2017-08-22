@@ -1,10 +1,11 @@
 'use strict';
 
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 
 import {
   Dimensions,
   ScrollView,
+  FlatList,
   Text,
   TouchableOpacity,
   View,
@@ -23,7 +24,7 @@ import { screenWidth } from '../styles/common';
 
 import { caller, int } from '../../utils/lang';
 
-export default class Calendar extends React.PureComponent {
+export default class Calendar extends PureComponent {
   static propTypes = {
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
@@ -51,32 +52,8 @@ export default class Calendar extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      dateMs: this.props.dateMs,
-      selectedDate: null,
-    };
     this.selectDate = ::this.selectDate;
     this.scrollEnded = ::this.scrollEnded;
-    this.onPrev = ::this.onPrev;
-    this.onNext = ::this.onNext;
-  }
-
-  componentWillReceiveProps(props) {
-    if (this.props.dateMs !== props.dateMs) {
-      this.state.selectedDate = null;
-      if (!this.props.shown) {
-        this.state.dateMs = props.dateMs;
-        return;
-      }
-      if (props.dateMs > this.props.dateMs) {
-        this.isScrolling = true;
-        setImmediate(() => this.onNext());
-      }
-      if (props.dateMs < this.props.dateMs) {
-        this.isScrolling = true;
-        setImmediate(() => this.onPrev());
-      }
-    }
   }
 
   componentDidMount() {
@@ -89,36 +66,24 @@ export default class Calendar extends React.PureComponent {
     this.scrollToItem(index, false);
   }
 
-  getMonthsToRender(month) {
+  getMonthsToRender(monthMs) {
     const months = [];
     const index = int(this.props.monthToRender / 2);
     for (let i = -index; i <= index; i++) {
-      months.push(moment(month).add(i, 'month'));
+      months.push(moment(monthMs).add(i, 'month'));
     }
     return months;
   }
 
-  prepareTickDates(tickDates) {
-    const dates = {};
-    tickDates.forEach(date => {
-      const month = date.month();
-      dates[month] = dates[month] || {};
-      dates[month][date.date() - 1] = true;
-    });
-    return dates;
-  }
-
   selectDate(dateMs: number) {
-    const date = moment(dateMs);
-    this.setState({ selectedDate: date });
-    caller(this.props.onDateSelect, date.format());
+    caller(this.props.onDateSelect, dateMs);
   }
 
-  onPrev() {
+  scrollToPrevMonth() {
     this.scrollToItem(0);
   }
 
-  onNext() {
+  scrollToNextMonth() {
     this.scrollToItem(2);
   }
 
@@ -128,22 +93,16 @@ export default class Calendar extends React.PureComponent {
   }
 
   scrollEnded({ nativeEvent }) {
-    const { dateMs } = this.state;
+    const { dateMs } = this.props;
     const position = nativeEvent.contentOffset.x;
     const currentPage = position / screenWidth;
     const index = int(this.props.monthToRender / 2);
     const newMonth = moment(dateMs).add(currentPage - index, 'month');
-    this.setState({ dateMs: newMonth.valueOf() }, () => {
-      if (!this.isScrolling) {
-        caller(this.props.onMonthChanged, newMonth);
-      }
-      this.isScrolling = false;
-    });
+    caller(this.props.onMonthChanged, newMonth.valueOf());
   }
 
   renderHeading() {
     const { weekStart, dayHeadings } = this.props;
-
     const headings = [];
     for (let i = 0; i < 7; i++) {
       const j = (i + weekStart) % 7;
@@ -162,22 +121,27 @@ export default class Calendar extends React.PureComponent {
   }
 
   render() {
-    const { customStyle, titleFormat, tickDates, todayMs } = this.props;
-    const { dateMs, selectedDate } = this.state;
+    const {
+      customStyle,
+      ticks,
+      todayMs,
+      dateMs,
+      selDateMs,
+      titleFormat,
+    } = this.props;
 
-    const monthsToRender = this.getMonthsToRender(moment(dateMs));
-    const tickDatesMap = this.prepareTickDates(tickDates);
-    const monthViews = monthsToRender.map(month => {
-      const monthTickDates = tickDatesMap[month.month()] || {};
-      const selectedDateMs = selectedDate ? selectedDate.valueOf() : 0;
+    const monthsToRender = this.getMonthsToRender(dateMs);
+    const monthViews = monthsToRender.map(monthDate => {
+      const monthTicks = ticks[monthDate.month()] || {};
       return (
         <Month
-          key={month.valueOf()}
+          key={monthDate.valueOf()}
           customStyle={customStyle}
-          monthMs={month.valueOf()}
+          monthMs={monthDate.valueOf()}
+          shown={dateMs === monthDate.valueOf()}
           todayMs={todayMs}
-          selectedDateMs={selectedDateMs}
-          tickDates={monthTickDates}
+          selDateMs={selDateMs}
+          ticks={monthTicks}
           onDateSelect={this.selectDate}
         />
       );
@@ -190,6 +154,7 @@ export default class Calendar extends React.PureComponent {
           ref="calendar"
           horizontal
           pagingEnabled
+          style={styles.scrollView}
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
           onMomentumScrollEnd={this.scrollEnded}

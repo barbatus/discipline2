@@ -1,14 +1,10 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
-class TimeDigit extends Component {
-  shouldComponentUpdate(props) {
-    return props.value !== this.props.value;
-  }
-
+class TimeDigit extends PureComponent {
   render() {
     const { style, value, width } = this.props;
     const align = [{ textAlign: 'center' }];
@@ -30,6 +26,10 @@ class TimeDigit extends Component {
 }
 
 class TimeLabel extends Component {
+  static defaultProps = {
+    timeLapMs: 0,
+  };
+
   constructor(props) {
     super(props);
 
@@ -57,8 +57,10 @@ class TimeLabel extends Component {
       this.state.timeLapMs = props.timeLapMs;
       return true;
     }
-    return this.state.timeMs != state.timeMs ||
-      this.state.timeLapMs != state.timeLapMs;
+    return (
+      this.state.timeMs != state.timeMs ||
+      this.state.timeLapMs != state.timeLapMs
+    );
   }
 
   componentWillReceiveProps({ timeMs }) {
@@ -105,10 +107,6 @@ class TimeLabel extends Component {
     );
   }
 }
-
-TimeLabel.defaultProps = {
-  timeLapMs: 0,
-};
 
 export default TimeLabel;
 

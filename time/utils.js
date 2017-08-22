@@ -1,6 +1,7 @@
 'user strict';
 
 import moment from 'moment';
+
 import 'moment-duration-format';
 
 import { __ } from '../utils/format';

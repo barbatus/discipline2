@@ -141,7 +141,7 @@ const editDef = {
     flex: 0.35,
   },
   titleInput: {
-    flex: 0.35,
+    flex: 1,
     paddingRight: 0,
     width: slideWidth - 40,
     fontSize: 30,

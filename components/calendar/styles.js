@@ -10,10 +10,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  monthContainer: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    width: screenWidth,
+  scrollView: {
+    zIndex: 2,
+    overflow: 'visible',
   },
   calControls: {
     marginTop: 10,
@@ -36,6 +35,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    zIndex: 1,
   },
   dayHeading: {
     fontSize: 13,
@@ -44,11 +44,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     color: 'white',
     fontWeight: '200',
-  },
-  weekRow: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
   },
 });
 

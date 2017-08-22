@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   View,
@@ -15,11 +15,7 @@ import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerEditView from './basic/TrackerEditView';
 
-export default class NewTrackerSlide extends Component {
-  shouldComponentUpdate(props, state) {
-    return this.props.tracker !== props.tracker;
-  }
-
+export default class NewTrackerSlide extends PureComponent {
   render() {
     const { style } = this.props;
     return (

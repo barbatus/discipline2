@@ -34,12 +34,19 @@ import Trackers from '../../../../model/Trackers';
 import { caller } from '../../../../utils/lang';
 
 function compareTrackers(track1, track2) {
-  return track1.typeId !== track2.typeId ||
+  return (
+    track1.typeId !== track2.typeId ||
     track1.iconId !== track2.iconId ||
-    track1.title !== track2.title;
+    track1.title !== track2.title
+  );
 }
 
 export default class TrackerEditView extends BaseTrackerView {
+  static defaultProps = {
+    showType: true,
+    title: '',
+  };
+
   constructor(props) {
     super(props);
 
@@ -49,17 +56,16 @@ export default class TrackerEditView extends BaseTrackerView {
       sendNotif: false,
       saveGoog: false,
     };
+    this.onIconEdit = ::this.onIconEdit;
   }
 
-  shouldComponentUpdate(props, state) {
-    if (this.props.tracker !== props.tracker) {
-      this.state.tracker = props.tracker;
-      return true;
+  componentWillReceiveProps({ tracker }) {
+    if (this.props.tracker !== tracker) {
+      this.state.tracker = tracker;
     }
-    return this.state.tracker !== state.tracker;
   }
 
-  _onIconEdit() {
+  onIconEdit() {
     const dlg = registry.get(DlgType.ICONS);
     dlg.show(iconId => {
       let tracker = this.state.tracker;
@@ -70,7 +76,7 @@ export default class TrackerEditView extends BaseTrackerView {
     });
   }
 
-  _onTitleEdit(title: string) {
+  onTitleEdit(title: string) {
     let tracker = this.state.tracker;
     tracker = Trackers.create(tracker);
     tracker.title = title;
@@ -78,7 +84,7 @@ export default class TrackerEditView extends BaseTrackerView {
     caller(this.props.onTrackerChange, tracker);
   }
 
-  _renderDeleteRow() {
+  renderDeleteRow() {
     return this.props.allowDelete
       ? <View style={propsStyles.group}>
           <View style={[propsStyles.row]}>
@@ -86,9 +92,7 @@ export default class TrackerEditView extends BaseTrackerView {
               style={propsStyles.colLeft}
               onPress={this.props.onRemove}
             >
-              <Text style={[propsStyles.text, styles.deleteText]}>
-                Delete
-              </Text>
+              <Text style={[propsStyles.text, styles.deleteText]}>Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -106,11 +110,9 @@ export default class TrackerEditView extends BaseTrackerView {
           <View style={[trackerStyles.barContainer, styles.barContainer]}>
             <TouchableOpacity
               style={styles.changeIconBox}
-              onPress={::this._onIconEdit}
+              onPress={this.onIconEdit}
             >
-              <Text style={styles.changeIconText}>
-                Change Icon
-              </Text>
+              <Text style={styles.changeIconText}>Change Icon</Text>
             </TouchableOpacity>
           </View>
           <View style={propsStyles.iconContainer}>
@@ -125,7 +127,7 @@ export default class TrackerEditView extends BaseTrackerView {
               placeholder="Add a title"
               placeholderTextColor={trackerDef.hintText.color}
               style={propsStyles.titleInput}
-              onChangeText={title => this._onTitleEdit(title)}
+              onChangeText={title => this.onTitleEdit(title)}
               value={title}
             />
           </View>
@@ -134,9 +136,7 @@ export default class TrackerEditView extends BaseTrackerView {
           {this.props.showType
             ? <View style={propsStyles.row}>
                 <View style={propsStyles.colLeft}>
-                  <Text style={propsStyles.colText}>
-                    Tracker Type
-                  </Text>
+                  <Text style={propsStyles.colText}>Tracker Type</Text>
                 </View>
                 <TouchableOpacity
                   style={propsStyles.colRight}
@@ -155,9 +155,7 @@ export default class TrackerEditView extends BaseTrackerView {
           <View style={propsStyles.group}>
             <View style={propsStyles.firstGroupRow}>
               <View style={propsStyles.colLeftWide}>
-                <Text style={propsStyles.colText}>
-                  Send Notifications
-                </Text>
+                <Text style={propsStyles.colText}>Send Notifications</Text>
               </View>
               <View style={propsStyles.colRight}>
                 <Switch
@@ -168,9 +166,7 @@ export default class TrackerEditView extends BaseTrackerView {
             </View>
             <View style={propsStyles.row}>
               <View style={propsStyles.colLeftWide}>
-                <Text style={propsStyles.colText}>
-                  Save in Google Cal
-                </Text>
+                <Text style={propsStyles.colText}>Save in Google Cal</Text>
               </View>
               <View style={propsStyles.colRight}>
                 <Switch
@@ -180,7 +176,7 @@ export default class TrackerEditView extends BaseTrackerView {
               </View>
             </View>
           </View>
-          {this._renderDeleteRow()}
+          {this.renderDeleteRow()}
         </View>
       </Animated.View>
     );
@@ -212,8 +208,3 @@ const styles = StyleSheet.create({
     color: '#C4C4C4',
   },
 });
-
-TrackerEditView.defaultProps = {
-  showType: true,
-  title: '',
-};

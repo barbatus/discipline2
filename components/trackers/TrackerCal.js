@@ -12,42 +12,80 @@ import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
 import { slideWidth } from './styles/slideStyles';
 
-export default class TrackerCal extends PureComponent {
-  _opacity = new Animated.Value(0);
+import { TrackerType } from '../../depot/consts';
 
-  _upDown = new ScreenSlideUpDownAnim();
+export default class TrackerCal extends PureComponent {
+  opacity = new Animated.Value(0);
+
+  upDown = new ScreenSlideUpDownAnim();
 
   constructor(props) {
     super(props);
     this.state = {
-      shown: false,
+      selDateMs: null,
     };
-    this._upDown.setOut();
+    this.upDown.setOut();
+    this.onDateSelect = ::this.onDateSelect;
   }
 
   setShown(value: number) {
-    this._opacity.setValue(value);
-
-    value === 0 ? this._upDown.setOut() : this._upDown.setIn();
-
+    this.opacity.setValue(value);
     if (value === 0) {
-      this.setState({
-        shown: false,
-      });
+      this.upDown.setOut();
+      this.onDateSelect(null);
+      return;
     }
-    if (value === 1) {
-      this.setState({
-        shown: true,
+    this.upDown.setIn();
+  }
+
+  onDateSelect(selDateMs) {
+    this.setState({ selDateMs });
+  }
+
+  scrollToPrevMonth() {
+    this.refs.calendar.scrollToPrevMonth();
+  }
+
+  scrollToNextMonth() {
+    this.refs.calendar.scrollToNextMonth();
+  }
+
+  prepareTicks() {
+    const { ticks } = this.props;
+    const dates = new Map();
+    ticks.forEach(tick => {
+      const tickDate = moment(tick.dateTimeMs);
+      const month = tickDate.month();
+      const date = tickDate.date() - 1;
+      dates[month] = dates[month] || new Map();
+      dates[month][date] = dates[month][date] || [];
+      dates[month][date].push({
+        dateMs: tick.dateTimeMs,
+        desc: this.printTick(tick),
       });
+    });
+    return dates;
+  }
+
+  printTick(tick) {
+    const { tracker } = this.props;
+    switch (tracker.type) {
+      case TrackerType.GOAL:
+        return 'The goal was achieved';
+      case TrackerType.COUNTER:
+        return 'The target increased';
+      case TrackerType.SUM:
+        return `$${tick.value} added`;
     }
   }
 
   render() {
-    const { style, ticks, todayMs, dateMs, onMonthChanged } = this.props;
-    const { shown } = this.state;
-    const tickDates = ticks.map(tick => moment(tick.dateTimeMs));
+    const { style, tracker, todayMs, dateMs } = this.props;
+    const { onMonthChanged } = this.props;
+    const { selDateMs } = this.state;
 
-    const calStyle = [style, this._upDown.style, { opacity: this._opacity }];
+    const tickMap = this.prepareTicks();
+    const calStyle = [style, this.upDown.style, { opacity: this.opacity }];
     return (
       <Animated.View style={calStyle}>
         <Calendar
@@ -56,11 +94,12 @@ export default class TrackerCal extends PureComponent {
           dateMs={dateMs}
           scrollEnabled
           showControls
-          shown={shown}
-          tickDates={tickDates}
+          selDateMs={selDateMs}
+          ticks={tickMap}
           titleFormat="MMMM YYYY"
           prevButtonText="Prev"
           nextButtonText="Next"
+          onDateSelect={this.onDateSelect}
           onMonthChanged={onMonthChanged}
         />
       </Animated.View>

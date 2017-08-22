@@ -17,6 +17,10 @@ import Trackers from '../../model/Trackers';
 import { caller } from '../../utils/lang';
 
 export default class NewTrackerScreenView extends ScrollScreenView {
+  static contextTypes = {
+    navBar: React.PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -36,12 +40,6 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     });
 
     this._setNewTrackerBtns();
-  }
-
-  shouldComponentUpdate(props, state) {
-    return (
-      this.state.tracker !== state.tracker || this.state.typeId !== state.typeId
-    );
   }
 
   get leftView() {
@@ -141,7 +139,3 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     });
   }
 }
-
-NewTrackerScreenView.contextTypes = {
-  navBar: React.PropTypes.object.isRequired,
-};

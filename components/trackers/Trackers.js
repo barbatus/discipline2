@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { StyleSheet, View, Animated, InteractionManager } from 'react-native';
 
@@ -24,7 +24,7 @@ import { slideHeight } from './styles/slideStyles';
 
 import { caller } from '../../utils/lang';
 
-export default class Trackers extends Component {
+export default class Trackers extends PureComponent {
   _opacity = new Animated.Value(0);
 
   _moveDown = new MoveDownResponderAnim(slideHeight);
@@ -46,14 +46,6 @@ export default class Trackers extends Component {
     this._onRemove = ::this._onRemove;
     this._onEdit = ::this._onEdit;
     this._onSlideChange = ::this._onSlideChange;
-  }
-
-  shouldComponentUpdate(props, state) {
-    return (
-      this.state.swTrackers !== state.swTrackers ||
-      this.state.scTrackers !== state.scTrackers ||
-      this.state.swiperEnabled !== state.swiperEnabled
-    );
   }
 
   componentWillUnmount() {
@@ -107,12 +99,11 @@ export default class Trackers extends Component {
       {
         swTrackers: new List([tracker]),
       },
-      () => {
+      () =>
         Animated.timing(this._opacity, {
           duration: 500,
           toValue: 1,
-        }).start(callback);
-      },
+        }).start(callback),
     );
   }
 
@@ -161,15 +152,10 @@ export default class Trackers extends Component {
   _onTap() {
     if (this._moveDown.in) {
       caller(this.props.onSwiperMoveUpStart);
-      this._moveDown.animateOut(
-        this.setState.bind(
-          this,
-          {
-            swiperEnabled: true,
-          },
-          this.props.onSwiperMoveUpDone,
-        ),
-      );
+      this._moveDown.animateOut(() => {
+        this.setState({ swiperEnabled: true });
+        caller(this.props.onSwiperMoveUpDone);
+      });
     }
   }
 
@@ -177,13 +163,7 @@ export default class Trackers extends Component {
     this._bscroll.hide();
     this._sscroll.hide();
 
-    this._swiper.scrollTo(
-      index,
-      () => {
-        this._swiper.show();
-      },
-      false,
-    );
+    this._swiper.scrollTo(index, () => this._swiper.show(), false);
   }
 
   _onSmallSlideTap(index: number) {

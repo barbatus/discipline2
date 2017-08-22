@@ -59,6 +59,7 @@ export const trackers = handleActions(
         ...state,
         removeIndex: index,
         trackers,
+        ticks: null,
       };
     },
     [ADD_TRACKER]: (state, { tracker, index }) => {

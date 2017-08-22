@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
@@ -18,7 +18,7 @@ import BaseScroll from './BaseScroll';
 
 import { caller } from '../../utils/lang';
 
-class Scroll extends Component {
+class Scroll extends PureComponent {
   static propTypes = {
     slides: React.PropTypes.array.isRequired,
     slideWidth: React.PropTypes.number.isRequired,
@@ -32,13 +32,6 @@ class Scroll extends Component {
 
   get index() {
     return this.refs.scroll.index;
-  }
-
-  shouldComponentUpdate(props, state) {
-    return (
-      this.props.slides !== props.slides ||
-      this.props.scrollEnabled !== props.scrollEnabled
-    );
   }
 
   scrollTo(index, callback, animated) {

@@ -33,11 +33,6 @@ export default class SumTrackerSlide extends TrackerSlide {
     this._onPlus = ::this._onPlus;
   }
 
-  shouldComponentUpdate(props, state) {
-    const should = super.shouldComponentUpdate(props, state);
-    return should || this.state.added !== state.added;
-  }
-
   cancelEdit(callback) {
     super.cancelEdit(callback);
     Keyboard.dismiss();
@@ -102,11 +97,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   get footerControls() {
-    return (
-      <Text style={trackerStyles.footerText}>
-        Shake to undo
-      </Text>
-    );
+    return <Text style={trackerStyles.footerText}>Shake to undo</Text>;
   }
 
   _onPlus() {

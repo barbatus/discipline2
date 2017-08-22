@@ -25,6 +25,10 @@ import TrackerRenderer from './TrackerRenderer';
 import { caller } from '../../utils/lang';
 
 export default class TrackerScroll extends TrackerRenderer {
+  static defaultProps = {
+    responsive: true,
+  };
+
   hide(callback) {
     Animated.timing(this._opacity, {
       duration: 500,

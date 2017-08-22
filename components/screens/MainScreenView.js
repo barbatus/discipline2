@@ -25,7 +25,11 @@ import { caller } from '../../utils/lang';
 
 import { commonStyles } from '../styles/common';
 
-class MainScreenView extends ScrollScreenView {
+export class MainScreenView extends ScrollScreenView {
+  static contextTypes = {
+    navBar: React.PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -128,10 +132,6 @@ class MainScreenView extends ScrollScreenView {
     caller(this.props.onMenu);
   }
 }
-
-MainScreenView.contextTypes = {
-  navBar: React.PropTypes.object.isRequired,
-};
 
 export default connect(null, dispatch => {
   return {

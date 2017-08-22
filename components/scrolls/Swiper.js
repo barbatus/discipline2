@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
@@ -17,7 +17,7 @@ import BaseScroll from './BaseScroll';
 
 import { caller } from '../../utils/lang';
 
-export default class Swiper extends Component {
+export default class Swiper extends PureComponent {
   _index = 0;
 
   static propTypes = {
@@ -33,13 +33,6 @@ export default class Swiper extends Component {
 
   get index() {
     return this._index;
-  }
-
-  shouldComponentUpdate(props, state) {
-    return (
-      this.props.slides !== props.slides ||
-      this.props.scrollEnabled !== props.scrollEnabled
-    );
   }
 
   scrollTo(index, callback, animated) {
@@ -128,9 +121,8 @@ export default class Swiper extends Component {
       onSlideNoChange,
     } = this.props;
 
-    const dots = slides.length >= 2
-      ? this._renderDots(this._index, slides.length)
-      : null;
+    const dots =
+      slides.length >= 2 ? this._renderDots(this._index, slides.length) : null;
 
     return (
       <View style={style}>

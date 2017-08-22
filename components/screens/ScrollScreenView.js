@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { ScrollView, StyleSheet, View } from 'react-native';
 
@@ -8,7 +8,22 @@ import { commonDef, commonStyles, screenWidth } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-export default class ScrollScreenView extends Component {
+const styles = StyleSheet.create({
+  scroll: {
+    overflow: 'hidden',
+  },
+  slideContainer: {
+    ...commonDef.flexFilled,
+    width: screenWidth,
+    alignItems: 'center',
+  },
+});
+
+export default class ScrollScreenView extends PureComponent {
+  static contextTypes = {
+    navBar: React.PropTypes.object.isRequired,
+  };
+
   get rightView() {
     return null;
   }
@@ -24,7 +39,7 @@ export default class ScrollScreenView extends Component {
     if (this.refs.right.onLeftMove) {
       this.refs.right.onLeftMove();
     }
-    this._moveTo(0, callback);
+    this.moveTo(0, callback);
   }
 
   moveRight(callback?: Function) {
@@ -34,7 +49,7 @@ export default class ScrollScreenView extends Component {
     if (this.refs.right.onRightMove) {
       this.refs.right.onRightMove();
     }
-    this._moveTo(1, callback);
+    this.moveTo(1, callback);
   }
 
   render() {
@@ -63,23 +78,8 @@ export default class ScrollScreenView extends Component {
     );
   }
 
-  _moveTo(index: number) {
+  moveTo(index: number) {
     const scrollToX = index * screenWidth;
     this.refs.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
   }
 }
-
-ScrollScreenView.contextTypes = {
-  navBar: React.PropTypes.object.isRequired,
-};
-
-const styles = StyleSheet.create({
-  scroll: {
-    overflow: 'hidden',
-  },
-  slideContainer: {
-    ...commonDef.flexFilled,
-    width: screenWidth,
-    alignItems: 'center',
-  },
-});
