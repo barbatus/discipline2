@@ -34,15 +34,25 @@ const styles = StyleSheet.create({
   tooltipContent: {
     flex: 1,
     padding: 10,
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
   },
 });
+
+const TextRow = styled.View`
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding-bottom: ${({ isLast }) => (isLast ? 0 : 5)}px;
+`;
 
 const TickText = styled.Text`
   color: #f5f5f5;
   font-size: 15px;
-  padding-bottom: ${({ isLast }) => (isLast ? 0 : 5)}px;
+`;
+
+const TimeText = styled(TickText)`
+  width: 80px;
 `;
 
 const PADDING = 15;
@@ -76,7 +86,7 @@ export default class Month extends PureComponent {
   }
 
   render() {
-    const { monthMs, todayMs, selectedDateMs, ticks } = this.props;
+    const { monthMs, todayMs, selDateMs, ticks } = this.props;
 
     const startOfMonth = moment(monthMs).startOf('month');
     const endOfMonth = moment(monthMs).endOf('month');
@@ -99,7 +109,7 @@ export default class Month extends PureComponent {
           onPress={this.selectDate}
           value={startDay.date()}
           isToday={startDay.isSame(todayMs, 'day')}
-          isSelected={startDay.isSame(selectedDateMs, 'day')}
+          isSelected={startDay.isSame(selDateMs, 'day')}
           hasTicks={!isOutDay ? !!ticks[dayIndex] : false}
           isOutDay={isOutDay}
         />,
@@ -133,19 +143,24 @@ export default class Month extends PureComponent {
   }
 
   renderTooltip() {
-    const { ticks, selectedDateMs } = this.props;
-    const dayIndex = moment(selectedDateMs).date() - 1;
+    const { ticks, selDateMs } = this.props;
+    const dayIndex = moment(selDateMs).date() - 1;
     const ticksToRender = ticks[dayIndex].slice(0, 2);
     const tickList = ticksToRender.map((tick, index) => {
       const timeStr = moment(tick.dateMs).format('LT');
       return (
-        <TickText key={index} isLast={index === ticksToRender.length - 1}>
-          {`${timeStr} ${tick.desc}`}
-        </TickText>
+        <TextRow key={index} isLast={index === ticksToRender.length - 1}>
+          <TimeText>
+            {timeStr}
+          </TimeText>
+          <TickText>
+            {tick.desc}
+          </TickText>
+        </TextRow>
       );
     });
 
-    const tooltipPos = this.getTooltipPos(selectedDateMs);
+    const tooltipPos = this.getTooltipPos(selDateMs);
     return (
       <Tooltip x={tooltipPos.x} y={tooltipPos.y}>
         <View style={styles.tooltipContent}>

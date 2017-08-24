@@ -1,5 +1,3 @@
-'use strict';
-
 import { handleActions } from 'redux-actions';
 
 import { List } from 'immutable';
@@ -21,20 +19,18 @@ import {
 
 import Trackers from './Trackers';
 
-const trackEqual = tracker1 => {
-  return tracker2 => tracker1.id === tracker2.id;
-};
+const trackEqual = tracker1 => tracker2 => tracker1.id === tracker2.id;
 
 const findIndex = (trackers, tracker) => {
   const equal = trackEqual(tracker);
-  return trackers.findIndex(tracker => equal(tracker));
+  return trackers.findIndex(nTracker => equal(nTracker));
 };
 
 const cloneTracker = (trackers, tracker, index?: number) => {
   if (index == null) {
     index = findIndex(trackers, tracker);
   }
-  return trackers.update(index, _ => Trackers.clone(tracker));
+  return trackers.update(index, () => Trackers.clone(tracker));
 };
 
 const insertTracker = (trackers, tracker, index?: number) => {
@@ -44,7 +40,7 @@ const insertTracker = (trackers, tracker, index?: number) => {
   return trackers.insert(index, Trackers.create(tracker));
 };
 
-export const trackers = handleActions(
+export const trackersReducer = handleActions(
   {
     [LOAD_TEST_DATA]: (state, { trackers }) => {
       return {
@@ -114,29 +110,23 @@ export const trackers = handleActions(
         trackers,
       };
     },
-    [CHANGE_DAY]: (state, { trackers }) => {
-      return {
-        ...state,
-        trackers: new List(
-          trackers.map(tracker => Trackers.getOne(tracker.id)),
-        ),
-      };
-    },
-    [UPDATE_CALENDAR]: (state, { tracker, dateMs, ticks }) => {
+    [CHANGE_DAY]: (state, { trackers }) => ({
+      ...state,
+      trackers: new List(trackers.map(tracker => Trackers.getOne(tracker.id))),
+    }),
+    [UPDATE_CALENDAR]: (state, { dateMs, ticks }) => {
       return {
         ...state,
         dateMs,
         ticks,
       };
     },
-    [COMPLETE_CHANGE]: (state, { index }) => {
-      return {
-        ...state,
-        addIndex: null,
-        removeIndex: null,
-        updateIndex: null,
-      };
-    },
+    [COMPLETE_CHANGE]: state => ({
+      ...state,
+      addIndex: null,
+      removeIndex: null,
+      updateIndex: null,
+    }),
   },
   {},
 );

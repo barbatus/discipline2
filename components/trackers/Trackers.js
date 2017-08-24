@@ -24,10 +24,19 @@ import { slideHeight } from './styles/slideStyles';
 
 import { caller } from '../../utils/lang';
 
-export default class Trackers extends PureComponent {
-  _opacity = new Animated.Value(0);
+const styles = StyleSheet.create({
+  bigScroll: {
+    flex: 0.65,
+  },
+  smallScroll: {
+    flex: 0.35,
+  },
+});
 
-  _moveDown = new MoveDownResponderAnim(slideHeight);
+export default class Trackers extends PureComponent {
+  opacity = new Animated.Value(0);
+
+  moveDown = new MoveDownResponderAnim(slideHeight);
 
   constructor(props) {
     super(props);
@@ -37,34 +46,30 @@ export default class Trackers extends PureComponent {
       swiperEnabled: true,
       index: 0,
     };
-    this._onCenterSlideTap = ::this._onCenterSlideTap;
-    this._onSmallSlideTap = ::this._onSmallSlideTap;
-    this._onScaleStart = ::this._onScaleStart;
-    this._onScaleMove = ::this._onScaleMove;
-    this._onScaleDone = ::this._onScaleDone;
-    this._onTap = ::this._onTap;
-    this._onRemove = ::this._onRemove;
-    this._onEdit = ::this._onEdit;
-    this._onSlideChange = ::this._onSlideChange;
+    this.onCenterSlideTap = ::this.onCenterSlideTap;
+    this.onSmallSlideTap = ::this.onSmallSlideTap;
+    this.onScaleStart = ::this.onScaleStart;
+    this.onScaleMove = ::this.onScaleMove;
+    this.onScaleDone = ::this.onScaleDone;
+    this.onTap = ::this.onTap;
+    this.onRemove = ::this.onRemove;
+    this.onEdit = ::this.onEdit;
+    this.onSlideChange = ::this.onSlideChange;
   }
 
   componentWillUnmount() {
-    this._moveDown.dispose();
+    this.moveDown.dispose();
   }
 
   componentDidMount() {
     const { trackers, onSwiperMoveDown, onSwiperMoveDownStart } = this.props;
 
     if (trackers) {
-      this._renderTracker(trackers.first(), () => {
-        this._renderTrackers(trackers);
-      });
+      this.renderTracker(trackers.first(), () => this.renderTrackers(trackers));
     }
 
-    this._moveDown.subscribe(this._swiper.responder, onSwiperMoveDown, () => {
-      this.setState({
-        swiperEnabled: false,
-      });
+    this.moveDown.subscribe(this.swiper.responder, onSwiperMoveDown, () => {
+      this.setState({ swiperEnabled: false });
       InteractionManager.runAfterInteractions(() => {
         caller(onSwiperMoveDownStart);
       });
@@ -73,41 +78,41 @@ export default class Trackers extends PureComponent {
 
   componentWillReceiveProps({ trackers }) {
     if (this.props.trackers !== trackers) {
-      this._renderTrackers(trackers);
+      this.renderTrackers(trackers);
     }
   }
 
   cancelEdit() {
-    this._swiper.cancelEdit();
+    this.swiper.cancelEdit();
     caller(this.props.onCancel);
   }
 
-  get _swiper() {
+  get swiper() {
     return this.refs.swiper;
   }
 
-  get _bscroll() {
+  get bscroll() {
     return this.refs.bscroll;
   }
 
-  get _sscroll() {
+  get sscroll() {
     return this.refs.sscroll;
   }
 
-  _renderTracker(tracker, callback) {
+  renderTracker(tracker, callback) {
     this.setState(
       {
         swTrackers: new List([tracker]),
       },
       () =>
-        Animated.timing(this._opacity, {
+        Animated.timing(this.opacity, {
           duration: 500,
           toValue: 1,
         }).start(callback),
     );
   }
 
-  _renderTrackers(trackers, callback) {
+  renderTrackers(trackers, callback) {
     this.setState({
       swTrackers: trackers,
     });
@@ -122,56 +127,56 @@ export default class Trackers extends PureComponent {
     });
   }
 
-  _onEdit(tracker: Tracker) {
-    this._swiper.showEdit();
+  onEdit(tracker: Tracker) {
+    this.swiper.showEdit();
     caller(this.props.onEdit, tracker);
   }
 
-  _onRemove(tracker: Tracker) {
+  onRemove(tracker: Tracker) {
     caller(this.props.onRemove, tracker);
   }
 
-  _onScaleStart() {
-    this._bscroll.hide();
-    this._bscroll.scrollTo(this.state.index, false);
-    this._sscroll.scrollTo(this.state.index, false);
+  onScaleStart() {
+    this.bscroll.hide();
+    this.bscroll.scrollTo(this.state.index, false);
+    this.sscroll.scrollTo(this.state.index, false);
   }
 
-  _onScaleMove(dv) {
-    this._bscroll.opacity = 1 - dv;
-    this._sscroll.opacity = 1 - dv;
+  onScaleMove(dv) {
+    this.bscroll.opacity = 1 - dv;
+    this.sscroll.opacity = 1 - dv;
     caller(this.props.onSwiperScaleMove, dv);
   }
 
-  _onScaleDone() {
-    this._bscroll.show();
-    this._sscroll.show();
-    this._swiper.hide();
+  onScaleDone() {
+    this.bscroll.show();
+    this.sscroll.show();
+    this.swiper.hide();
   }
 
-  _onTap() {
-    if (this._moveDown.in) {
+  onTap() {
+    if (this.moveDown.in) {
       caller(this.props.onSwiperMoveUpStart);
-      this._moveDown.animateOut(() => {
+      this.moveDown.animateOut(() => {
         this.setState({ swiperEnabled: true });
         caller(this.props.onSwiperMoveUpDone);
       });
     }
   }
 
-  _onCenterSlideTap(index: number) {
-    this._bscroll.hide();
-    this._sscroll.hide();
+  onCenterSlideTap(index: number) {
+    this.bscroll.hide();
+    this.sscroll.hide();
 
-    this._swiper.scrollTo(index, () => this._swiper.show(), false);
+    this.swiper.scrollTo(index, () => this.swiper.show(), false);
   }
 
-  _onSmallSlideTap(index: number) {
-    this._bscroll.scrollTo(index, true);
-    this._sscroll.scrollTo(index, true);
+  onSmallSlideTap(index: number) {
+    this.bscroll.scrollTo(index, true);
+    this.sscroll.scrollTo(index, true);
   }
 
-  _onSlideChange(index: number, previ: number) {
+  onSlideChange(index: number, previ: number) {
     this.setState({ index });
     caller(this.props.onSlideChange, index, previ);
   }
@@ -182,8 +187,8 @@ export default class Trackers extends PureComponent {
 
     const combinedStyle = [
       style,
-      this._moveDown.style,
-      { opacity: this._opacity },
+      this.moveDown.style,
+      { opacity: this.opacity },
     ];
     return (
       <Animated.View style={combinedStyle}>
@@ -193,7 +198,7 @@ export default class Trackers extends PureComponent {
           trackers={scTrackers}
           style={styles.bigScroll}
           scale={1 / 1.6}
-          onCenterSlideTap={this._onCenterSlideTap}
+          onCenterSlideTap={this.onCenterSlideTap}
         />
         <TrackerScroll
           ref="sscroll"
@@ -201,7 +206,7 @@ export default class Trackers extends PureComponent {
           style={styles.smallScroll}
           scale={1 / 4}
           responsive={false}
-          onSlideTap={this._onSmallSlideTap}
+          onSlideTap={this.onSmallSlideTap}
         />
         <TrackerSwiper
           ref="swiper"
@@ -209,13 +214,13 @@ export default class Trackers extends PureComponent {
           enabled={swiperEnabled}
           trackers={swTrackers}
           style={commonStyles.absFilled}
-          onScaleStart={this._onScaleStart}
-          onScaleMove={this._onScaleMove}
-          onScaleDone={this._onScaleDone}
-          onTap={this._onTap}
-          onRemove={this._onRemove}
-          onEdit={this._onEdit}
-          onSlideChange={this._onSlideChange}
+          onScaleStart={this.onScaleStart}
+          onScaleMove={this.onScaleMove}
+          onScaleDone={this.onScaleDone}
+          onTap={this.onTap}
+          onRemove={this.onRemove}
+          onEdit={this.onEdit}
+          onSlideChange={this.onSlideChange}
         />
       </Animated.View>
     );
@@ -223,12 +228,3 @@ export default class Trackers extends PureComponent {
 }
 
 reactMixin(Trackers.prototype, TimerMixin);
-
-const styles = StyleSheet.create({
-  bigScroll: {
-    flex: 0.65,
-  },
-  smallScroll: {
-    flex: 0.35,
-  },
-});

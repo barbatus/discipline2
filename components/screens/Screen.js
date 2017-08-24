@@ -6,6 +6,24 @@ import { StyleSheet, View, Text, Animated } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
+const Dimensions = require('Dimensions');
+const window = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'transparent',
+  },
+  background: {
+    position: 'absolute',
+    height: window.height,
+    width: window.width,
+  },
+  content: {
+    height: window.height - 64,
+    width: window.width,
+  },
+});
+
 export default class Screen extends PureComponent {
   static childContextTypes = {
     navBar: React.PropTypes.object.isRequired,
@@ -50,21 +68,3 @@ export default class Screen extends PureComponent {
     );
   }
 }
-
-const Dimensions = require('Dimensions');
-const window = Dimensions.get('window');
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'transparent',
-  },
-  background: {
-    position: 'absolute',
-    height: window.height,
-    width: window.width,
-  },
-  content: {
-    height: window.height - 64,
-    width: window.width,
-  },
-});

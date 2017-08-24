@@ -6,6 +6,10 @@ import { StyleSheet } from 'react-native';
 
 import { slideDef, slideWidth } from './slideStyles';
 
+const BACK_COLOR = '#f5f5f5';
+
+const HINT_COLOR = '#dfdfdf';
+
 const trackerDef = {
   ...slideDef,
   innerView: {
@@ -17,7 +21,7 @@ const trackerDef = {
     ...slideDef.borderRadius,
     ...slideDef.borderTopRadius,
     flex: 0.45,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: BACK_COLOR,
   },
   bodyContainer: {
     ...slideDef.bodyContainer,
@@ -94,14 +98,14 @@ const trackerDef = {
     backgroundColor: '#3DCF43',
   },
   footerText: {
-    color: '#C4C4C4',
+    color: '#c4c4c4',
     fontSize: 15,
     textAlign: 'center',
     width: 150,
     fontWeight: '200',
   },
   hintText: {
-    color: '#DFDFDF',
+    color: HINT_COLOR,
   },
 };
 
@@ -120,7 +124,7 @@ const editDef = {
   bodyContainer: {
     ...trackerDef.bodyContainer,
     flex: 0.55,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: BACK_COLOR,
     ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
   },
@@ -146,7 +150,7 @@ const editDef = {
     width: slideWidth - 40,
     fontSize: 30,
     textAlign: 'center',
-    color: '#4A4A4A',
+    color: '#4a4a4a',
     fontWeight: '200',
   },
   group: {

@@ -1,5 +1,3 @@
-'use strict';
-
 import Easing from 'Easing';
 
 import { Animated } from 'react-native';

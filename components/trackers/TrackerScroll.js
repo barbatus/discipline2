@@ -88,7 +88,3 @@ export default class TrackerScroll extends TrackerRenderer {
     );
   }
 }
-
-TrackerScroll.defaultProps = {
-  responsive: true,
-};

@@ -31,6 +31,11 @@ export default class Swiper extends PureComponent {
     scrollEnabled: true,
   };
 
+  constructor(props) {
+    super(props);
+    this._onSlideChange = ::this._onSlideChange;
+  }
+
   get index() {
     return this._index;
   }
@@ -133,7 +138,7 @@ export default class Swiper extends PureComponent {
           slideWidth={screenWidth}
           onTouchMove={onTouchMove}
           scrollEnabled={scrollEnabled}
-          onSlideChange={::this._onSlideChange}
+          onSlideChange={this._onSlideChange}
           onSlideNoChange={onSlideNoChange}
         />
         {dots}

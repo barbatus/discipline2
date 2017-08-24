@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   TouchableOpacity,
@@ -12,6 +12,8 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+
+import styled from 'styled-components/native';
 
 import { first, last } from 'lodash';
 
@@ -33,7 +35,89 @@ const clean = str => {
 
 const TYPES = TrackerType.symbols();
 
-export default class TrackerTypesSlide extends Component {
+const styleDef = {
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+};
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    ...styleDef.centered,
+    flex: 0.15,
+    justifyContent: 'flex-start',
+  },
+  bodyContainer: {
+    ...styleDef.centered,
+    flex: 0.65,
+    borderBottomColor: 'rgba(185, 185, 185, 0.4)',
+    borderBottomWidth: 1,
+  },
+  footerContainer: {
+    flex: 0.2,
+  },
+  title: {
+    fontSize: 28,
+    color: '#4A4A4A',
+    paddingTop: 20,
+    fontWeight: '200',
+  },
+  desc: {
+    fontSize: 18,
+    lineHeight: 25,
+    color: '#9B9B9B',
+    textAlign: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  types: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#F5F5F5',
+    ...slideDef.borderRadius,
+    ...slideDef.borderBottomRadius,
+  },
+  typeIconContainer: {
+    ...styleDef.centered,
+    flex: 0.75,
+  },
+  typeTitleContainer: {
+    ...styleDef.centered,
+    justifyContent: 'flex-start',
+    flex: 0.25,
+  },
+  typeTitle: {
+    fontSize: 12,
+  },
+  typeIcon: {
+    resizeMode: 'contain',
+    height: 40,
+  },
+  selectedBorder: {
+    borderColor: '#E6E6E6',
+  },
+});
+
+const TypeView = styled.View`
+  width: 75px;
+  flex-direction: column;
+  shadow-color: rgba(185, 185, 185, 0.4);
+  shadow-opacity: 1;
+  shadow-radius: 0;
+  shadow-offset: 0px -1px;
+  border-top-width: 4px;
+  border-top-color: ${({ isSelected }) =>
+    isSelected ? '#1a7cf9' : 'transparent'};
+  background-color: ${({ isSelected }) =>
+    isSelected ? '#e6e6e6' : 'transparent'};
+`;
+
+export default class TrackerTypesSlide extends PureComponent {
+  static defaultProps = {
+    typeId: TYPES[0].valueOf(),
+  };
+
   constructor(props) {
     super(props);
 
@@ -42,20 +126,18 @@ export default class TrackerTypesSlide extends Component {
     };
   }
 
-  shouldComponentUpdate(props, state) {
+  componentWillReceiveProps(props) {
     if (this.props.typeId !== props.typeId) {
       this.state.type = TrackerType.fromValue(props.typeId);
-      return true;
     }
-    return this.state.type !== state.type;
   }
 
-  _onTypeChosen(type) {
+  onTypeChosen(type) {
     this.setState({ type });
     caller(this.props.onTypeChosen, type.valueOf());
   }
 
-  _renderTypes() {
+  renderTypes() {
     const selected = this.state.type;
     const lastType = last(TYPES);
     const firstType = first(TYPES);
@@ -64,13 +146,9 @@ export default class TrackerTypesSlide extends Component {
       return (
         <TouchableWithoutFeedback
           key={type.valueOf()}
-          onPress={this._onTypeChosen.bind(this, type)}
+          onPress={this.onTypeChosen.bind(this, type)}
         >
-          <View
-            style={
-              selected === type ? [styles.type, styles.selected] : styles.type
-            }
-          >
+          <TypeView isSelected={selected === type}>
             <View style={styles.typeIconContainer}>
               <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
             </View>
@@ -79,18 +157,19 @@ export default class TrackerTypesSlide extends Component {
                 {type.title}
               </Text>
             </View>
-          </View>
+          </TypeView>
         </TouchableWithoutFeedback>
       );
     });
 
-    const borderColor = selected == lastType || selected == firstType
-      ? styles.selectedBorder
-      : null;
+    const borderColor =
+      selected == lastType || selected == firstType
+        ? styles.selectedBorder
+        : null;
     return (
       <ScrollView
         style={[styles.types, borderColor]}
-        horizontal={true}
+        horizontal
         pagingEnabled={false}
         bounces={false}
       >
@@ -119,91 +198,10 @@ export default class TrackerTypesSlide extends Component {
             </Text>
           </View>
           <View style={[slideStyles.footerContainer, styles.footerContainer]}>
-            {this._renderTypes()}
+            {this.renderTypes()}
           </View>
         </View>
       </View>
     );
   }
 }
-
-const styleDef = {
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-};
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    ...styleDef.centered,
-    flex: 0.3,
-    justifyContent: 'flex-start',
-  },
-  bodyContainer: {
-    ...styleDef.centered,
-    justifyContent: 'flex-start',
-  },
-  footerContainer: {
-    flex: 0.20,
-  },
-  title: {
-    fontSize: 28,
-    color: '#4A4A4A',
-    paddingTop: 20,
-    fontWeight: '200',
-  },
-  desc: {
-    fontSize: 17,
-    color: '#9B9B9B',
-    textAlign: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  types: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#F5F5F5',
-    ...slideDef.borderRadius,
-    ...slideDef.borderBottomRadius,
-    borderWidth: 1,
-    borderColor: '#F5F5F5',
-  },
-  type: {
-    width: 80,
-    borderTopWidth: 4,
-    borderTopColor: 'transparent',
-    flexDirection: 'column',
-    shadowColor: 'rgba(185, 185, 185, 0.4)',
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    shadowOffset: {
-      height: -1,
-      width: 0,
-    },
-  },
-  typeIconContainer: {
-    ...styleDef.centered,
-    flex: 0.75,
-  },
-  typeTitleContainer: {
-    ...styleDef.centered,
-    justifyContent: 'flex-start',
-    flex: 0.25,
-  },
-  typeTitle: {
-    fontSize: 12,
-  },
-  typeIcon: {
-    resizeMode: 'contain',
-    height: 40,
-  },
-  selected: {
-    borderTopWidth: 4,
-    borderTopColor: '#1A7CF9',
-    backgroundColor: '#E6E6E6',
-  },
-  selectedBorder: {
-    borderColor: '#E6E6E6',
-  },
-});

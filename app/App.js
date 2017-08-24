@@ -1,10 +1,8 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { Provider } from 'react-redux';
-
-import { Navigator } from 'react-native-deprecated-custom-components';
 
 import { StackNavigator } from 'react-navigation';
 
@@ -27,9 +25,7 @@ export default function CreateApp(store) {
   );
 }
 
-class Home extends Component {
-  state: any;
-
+class Home extends PureComponent {
   constructor(props: any) {
     super(props);
     this.state = {

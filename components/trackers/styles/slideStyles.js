@@ -19,9 +19,9 @@ export const slideDef = {
   innerView: {
     width: slideWidth,
     height: slideHeight,
-    shadowColor: 'white',
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
+    shadowColor: 'black',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
     shadowOffset: {
       height: 2,
       width: 0,

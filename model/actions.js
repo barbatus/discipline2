@@ -124,12 +124,10 @@ export const updateLastTick = (tracker, value, data) => dispatch =>
 
 export const COMPLETE_CHANGE = 'COMPLETE_CHANGE';
 
-export const completeChange = index => {
-  return {
-    type: COMPLETE_CHANGE,
-    index,
-  };
-};
+export const completeChange = index => ({
+  type: COMPLETE_CHANGE,
+  index,
+});
 
 export const CHANGE_DAY = 'CHANGE_DAY';
 

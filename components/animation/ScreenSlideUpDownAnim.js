@@ -1,5 +1,3 @@
-'use strict';
-
 import Easing from 'Easing';
 
 import { Animated } from 'react-native';
@@ -11,19 +9,19 @@ import Animation from './Animation';
 import { screenHeight } from '../styles/common';
 
 export default class ScreenSlideUpDownAnim {
-  _moveY = new Animated.Value(0);
+  moveY = new Animated.Value(0);
 
   constructor(scaleFactor: number = 1) {
-    this._scaleFactor = scaleFactor;
+    this.scaleFactor = scaleFactor;
   }
 
   get style(): Object {
     return {
       transform: [
         {
-          translateY: this._moveY.interpolate({
+          translateY: this.moveY.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, screenHeight / this._scaleFactor],
+            outputRange: [0, screenHeight / this.scaleFactor],
           }),
         },
       ],
@@ -31,14 +29,14 @@ export default class ScreenSlideUpDownAnim {
   }
 
   get value() {
-    return this._moveY._value;
+    return this.moveY._value;
   }
 
   setIn() {
-    this._moveY.setValue(0);
+    this.moveY.setValue(0);
   }
 
   setOut() {
-    this._moveY.setValue(1);
+    this.moveY.setValue(1);
   }
 }

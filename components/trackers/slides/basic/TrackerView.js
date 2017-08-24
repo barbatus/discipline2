@@ -26,7 +26,6 @@ export default class TrackerView extends BaseTrackerView {
   render() {
     const { tracker, style, backImg, onTap, onEdit } = this.props;
     const { title, iconId } = tracker;
-
     return (
       <Animated.View style={[trackerStyles.innerView, style]}>
         <TouchableWithoutFeedback style={{ flex: 1 }} onPress={onTap}>
@@ -52,14 +51,14 @@ export default class TrackerView extends BaseTrackerView {
                 </Text>
               </View>
             </View>
-            {this._renderContent(backImg)}
+            {this.renderContent(backImg)}
           </View>
         </TouchableWithoutFeedback>
       </Animated.View>
     );
   }
 
-  _renderContent(backImg) {
+  renderContent(backImg) {
     const { bodyControls, footerControls, bodyStyle, footerStyle } = this.props;
 
     const content = [
@@ -83,7 +82,6 @@ export default class TrackerView extends BaseTrackerView {
 
 const flex = 1 - trackerDef.headerContainer.flex;
 
-//trackerDef.bodyContainer.flex + trackerDef.footerContainer.flex;
 const styles = StyleSheet.create({
   backImg: {
     flex: flex,

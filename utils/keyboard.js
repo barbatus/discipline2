@@ -1,22 +1,18 @@
-'use strict';
-
-import React from 'react';
-
 import { TextInput } from 'react-native';
-
-const { State: TextInputState } = TextInput;
 
 import { DeviceEventEmitter } from 'react-native';
 
 import EventEmitter from 'eventemitter3';
 
-class Keyboard {
-  _events: EventEmitter = new EventEmitter();
+const { State: TextInputState } = TextInput;
+
+export class Keyboard {
+  events: EventEmitter = new EventEmitter();
 
   constructor() {
     DeviceEventEmitter.addListener(
       'keyboardWillHide',
-      this._keyboardWillHide.bind(this),
+      this.keyboardWillHide.bind(this),
     );
   }
 
@@ -29,15 +25,15 @@ class Keyboard {
   }
 
   addHideListener(cb: Function) {
-    this._events.on('willHide', cb);
+    this.events.on('willHide', cb);
   }
 
   removeHideListener(cb: Function) {
-    this._events.removeListener('willHide', cb);
+    this.events.removeListener('willHide', cb);
   }
 
-  _keyboardWillHide() {
-    this._events.emit('willHide');
+  keyboardWillHide() {
+    this.events.emit('willHide');
   }
 }
 

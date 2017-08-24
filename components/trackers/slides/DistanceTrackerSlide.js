@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   View,
@@ -21,7 +21,9 @@ import { formatDistance } from '../../../utils/format';
 
 import { caller } from '../../../utils/lang';
 
-import DistanceTrackers, { DistanceTracker } from '../../../geo/DistanceTrackers';
+import DistanceTrackers, {
+  DistanceTracker,
+} from '../../../geo/DistanceTrackers';
 
 import { slideWidth } from '../styles/slideStyles';
 
@@ -29,7 +31,70 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
-class DistanceData extends Component {
+const styles = StyleSheet.create({
+  distData: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  footerControlsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    width: 70,
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#D9DADB',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  btnText: {
+    fontSize: 15,
+    color: '#9b9b9b',
+    fontWeight: '100',
+  },
+  label: {
+    width: slideWidth,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dist: {
+    marginBottom: 20,
+    alignItems: 'flex-end',
+  },
+  labelText: {
+    fontSize: 50,
+    fontWeight: '100',
+    textAlign: 'center',
+  },
+  titleText: {
+    fontSize: 15,
+    paddingBottom: 10,
+    paddingLeft: 5,
+    color: '#9b9b9b',
+    textAlign: 'center',
+    fontWeight: '200',
+  },
+  startStopBtn: {
+    flex: 0.5,
+    justifyContent: 'center',
+  },
+  seeMap: {
+    flex: 0.5,
+    justifyContent: 'center',
+  },
+  seeMapLink: {
+    textDecorationLine: 'underline',
+  },
+});
+
+export class DistanceData extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -37,14 +102,11 @@ class DistanceData extends Component {
     this.state = { time, dist };
   }
 
-  shouldComponentUpdate(props, state) {
+  componentWillReceiveProps(props) {
     if (props.dist !== this.props.dist || props.time !== this.props.time) {
       this.state.time = props.time;
       this.state.dist = props.dist;
-      return true;
     }
-
-    return this.state.dist !== state.dist || this.state.time !== state.time;
   }
 
   render() {
@@ -93,7 +155,6 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
   get bodyControls() {
     const { tracker } = this.props;
-
     return (
       <View style={trackerStyles.controls}>
         <DistanceData ref="dist" dist={tracker.value} time={tracker.time} />
@@ -103,19 +164,16 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
   get footerControls() {
     const { responsive } = this.props;
-    const renderBtn = (label, onPress) => {
-      return (
-        <TouchableOpacity
-          style={styles.button}
-          disabled={!responsive}
-          onPress={this::onPress}
-        >
-          <Text style={styles.btnText}>
-            {label}
-          </Text>
-        </TouchableOpacity>
-      );
-    };
+    const renderBtn = (label, onPress) =>
+      <TouchableOpacity
+        style={styles.button}
+        disabled={!responsive}
+        onPress={this::onPress}
+      >
+        <Text style={styles.btnText}>
+          {label}
+        </Text>
+      </TouchableOpacity>;
 
     const { tracker } = this.props;
     return (
@@ -127,12 +185,10 @@ export default class DistanceTrackerSlide extends TrackerSlide {
         </View>
         <View style={styles.seeMap}>
           <Text style={trackerStyles.footerText}>
-            See{' '}
-            {
-              <Text style={styles.seeMapLink} onPress={this.showMap}>
-                map
-              </Text>
-            }
+            See&nbsp;
+            <Text style={styles.seeMapLink} onPress={this.showMap}>
+              map
+            </Text>
           </Text>
         </View>
       </View>
@@ -181,66 +237,3 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     dlg.show(this.path.slice(0));
   }
 }
-
-const styles = StyleSheet.create({
-  distData: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  footerControlsContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    width: 70,
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#D9DADB',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  btnText: {
-    fontSize: 15,
-    color: '#9B9B9B',
-    fontWeight: '100',
-  },
-  label: {
-    width: slideWidth,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dist: {
-    marginBottom: 20,
-    alignItems: 'flex-end',
-  },
-  labelText: {
-    fontSize: 50,
-    fontWeight: '100',
-    textAlign: 'center',
-  },
-  titleText: {
-    fontSize: 15,
-    paddingBottom: 10,
-    paddingLeft: 5,
-    color: '#9B9B9B',
-    textAlign: 'center',
-    fontWeight: '200',
-  },
-  startStopBtn: {
-    flex: 0.5,
-    justifyContent: 'center',
-  },
-  seeMap: {
-    flex: 0.5,
-    justifyContent: 'center',
-  },
-  seeMapLink: {
-    textDecorationLine: 'underline',
-  },
-});

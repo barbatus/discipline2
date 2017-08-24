@@ -33,13 +33,31 @@ import Trackers from '../../../../model/Trackers';
 
 import { caller } from '../../../../utils/lang';
 
-function compareTrackers(track1, track2) {
-  return (
-    track1.typeId !== track2.typeId ||
-    track1.iconId !== track2.iconId ||
-    track1.title !== track2.title
-  );
-}
+const styles = StyleSheet.create({
+  barContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  changeIconBox: {
+    borderWidth: 1,
+    borderColor: '#d4d4d4',
+    padding: 3,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 15,
+  },
+  changeIconText: {
+    fontSize: 16,
+    color: '#c4c4c4',
+    fontWeight: '300',
+  },
+  deleteText: {
+    color: '#ff001f',
+  },
+  trackTypeText: {
+    color: '#c4c4c4',
+  },
+});
 
 export default class TrackerEditView extends BaseTrackerView {
   static defaultProps = {
@@ -103,7 +121,6 @@ export default class TrackerEditView extends BaseTrackerView {
     const { tracker } = this.state;
     const { typeId, iconId, title } = tracker;
     const typeEnum = TrackerType.fromValue(typeId);
-
     return (
       <Animated.View style={[propsStyles.innerView, this.props.style]}>
         <View style={propsStyles.headerContainer}>
@@ -182,29 +199,3 @@ export default class TrackerEditView extends BaseTrackerView {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  barContainer: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  changeIconBox: {
-    borderWidth: 1,
-    borderColor: '#D4D4D4',
-    padding: 3,
-    paddingRight: 10,
-    paddingLeft: 10,
-    borderRadius: 15,
-  },
-  changeIconText: {
-    fontSize: 16,
-    color: '#C4C4C4',
-    fontWeight: '300',
-  },
-  deleteText: {
-    color: '#FF001F',
-  },
-  trackTypeText: {
-    color: '#C4C4C4',
-  },
-});

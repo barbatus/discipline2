@@ -54,7 +54,7 @@ export default class TrackerSlide extends PureComponent {
     this.onRemove = ::this.onRemove;
   }
 
-  componentWillReceiveNewProps(props) {
+  componentWillReceiveProps(props) {
     if (this.props.tracker !== props.tracker) {
       this.state.tracker = props.tracker;
     }
@@ -95,17 +95,6 @@ export default class TrackerSlide extends PureComponent {
   }
 
   shake(callback) {}
-
-  render() {
-    const { style } = this.props;
-    const slideStyle = [trackerStyles.slide, style];
-    return (
-      <Animated.View style={[slideStyle, this.scale.style]}>
-        {this.renderFrontView()}
-        {this.renderBackView()}
-      </Animated.View>
-    );
-  }
 
   onTap() {
     caller(this.props.onTap);
@@ -156,6 +145,17 @@ export default class TrackerSlide extends PureComponent {
         bodyStyle={this.bodyStyle}
         footerStyle={this.footerStyle}
       />
+    );
+  }
+
+  render() {
+    const { style } = this.props;
+    const slideStyle = [trackerStyles.slide, style];
+    return (
+      <Animated.View style={[slideStyle, this.scale.style]}>
+        {this.renderFrontView()}
+        {this.renderBackView()}
+      </Animated.View>
     );
   }
 }

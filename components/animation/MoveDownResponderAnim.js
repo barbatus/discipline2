@@ -1,5 +1,3 @@
-'use strict';
-
 import { Animated } from 'react-native';
 
 import Animation from './Animation';

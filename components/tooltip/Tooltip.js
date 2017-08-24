@@ -4,9 +4,23 @@ import React, { PureComponent } from 'react';
 
 import { Animated, StyleSheet, View, Text, findNodeHandle } from 'react-native';
 
+import styled from 'styled-components/native';
+
 import NativeMethodsMixin from 'NativeMethodsMixin';
 
+import reactMixin from 'react-mixin';
+
+import TimerMixin from 'react-timer-mixin';
+
+import { pure } from 'recompose';
+
 import { commonStyles, screenWidth, navHeight } from '../styles/common';
+
+const ARROW_WIDTH = 25;
+
+const ARROW_HEIHGT = 10;
+
+const TOP_MARGIN = 15;
 
 const styles = StyleSheet.create({
   view: {
@@ -24,7 +38,43 @@ const styles = StyleSheet.create({
     },
     zIndex: 3,
   },
+  arrDown: {
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderTopWidth: ARROW_HEIHGT,
+    borderRightWidth: ARROW_WIDTH / 2,
+    borderBottomWidth: 0,
+    borderLeftWidth: ARROW_WIDTH / 2,
+    borderTopColor: '#BD8E83',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderLeftColor: 'transparent',
+  },
+  arrUp: {
+    borderTopWidth: 0,
+    borderRightWidth: ARROW_WIDTH / 2,
+    borderBottomWidth: ARROW_HEIHGT,
+    borderLeftWidth: ARROW_WIDTH / 2,
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#BD8E83',
+    borderLeftColor: 'transparent',
+  },
 });
+
+const ArrowView = styled.View`
+  width: 0;
+  height: 0;
+  position: absolute;
+`;
+
+const ArrowFn = ({ x, y }) => {
+  const arrStyle = y > 0 ? [styles.arrDown] : [styles.arrUp];
+  arrStyle.push({ left: x, top: y });
+  return <ArrowView style={arrStyle} />;
+};
+
+const Arrow = pure(ArrowFn);
 
 export default class Tooltip extends PureComponent {
   opacity = new Animated.Value(0);
@@ -33,10 +83,18 @@ export default class Tooltip extends PureComponent {
 
   moveX = new Animated.Value(0);
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      arrLeft: 0,
+      arrTop: 0,
+    };
+  }
+
   componentDidMount() {
     const node = findNodeHandle(this.refs.view);
     if (node) {
-      setTimeout(
+      this.setTimeout(
         () =>
           NativeMethodsMixin.measure.call(
             node,
@@ -45,22 +103,33 @@ export default class Tooltip extends PureComponent {
               const rightX = x + width / 2 - screenWidth;
               const leftX = x - width / 2;
               let xPos = -haflW;
+              let arrLeft = (width - ARROW_WIDTH) / 2;
+              // If tooltip is out of the screen on the right.
               if (rightX >= 0) {
                 xPos = -haflW - rightX - 10;
+                arrLeft = arrLeft + rightX + 10;
               }
 
+              // If tooltip is out of the screen on the left.
               if (leftX <= 0) {
                 xPos = -haflW + Math.abs(leftX) + 10;
+                arrLeft = arrLeft + leftX - 10;
               }
 
-              let yPos = -height - 8;
+              let yPos = -height - TOP_MARGIN;
+              let arrTop = height;
               if (navHeight > pageY + yPos) {
-                yPos = Math.abs(33 + 8);
+                yPos = Math.abs(33 + TOP_MARGIN);
+                arrTop = -ARROW_HEIHGT;
               }
 
               this.moveY.setValue(yPos);
               this.moveX.setValue(xPos);
               this.opacity.setValue(1);
+              this.setState({
+                arrTop,
+                arrLeft,
+              });
             },
           ),
         15,
@@ -70,16 +139,24 @@ export default class Tooltip extends PureComponent {
 
   render() {
     const { x, y } = this.props;
+    const { arrLeft, arrTop } = this.state;
     const animStyle = {
       left: x,
       top: y,
       opacity: this.opacity,
       transform: [{ translateY: this.moveY }, { translateX: this.moveX }],
     };
+    const arrStyle = arrTop > 0 ? [styles.arrDown] : [styles.arrUp];
+    arrStyle.push({ left: arrLeft, top: arrTop });
     return (
       <Animated.View ref="view" style={[styles.view, animStyle]}>
-        {this.props.children}
+        <View>
+          {this.props.children}
+        </View>
+        <Arrow x={arrLeft} y={arrTop} />
       </Animated.View>
     );
   }
 }
+
+reactMixin(Tooltip.prototype, TimerMixin);

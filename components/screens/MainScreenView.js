@@ -30,18 +30,18 @@ export class MainScreenView extends ScrollScreenView {
     navBar: React.PropTypes.object.isRequired,
   };
 
+  index = 0;
+
+  active = false;
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      index: 0,
-      active: false,
-    };
-    this._onSlideChange = ::this._onSlideChange;
-    this._onAddCompleted = ::this._onAddCompleted;
-    this._setMainViewBtns = ::this._setMainViewBtns;
-    this._onAcceptNewTracker = ::this._onAcceptNewTracker;
-    this._cancelNewTracker = ::this._cancelNewTracker;
+    this.onSlideChange = ::this.onSlideChange;
+    this.onAddCompleted = ::this.onAddCompleted;
+    this.setMainViewBtns = ::this.setMainViewBtns;
+    this.onAcceptNewTracker = ::this.onAcceptNewTracker;
+    this.cancelNewTracker = ::this.cancelNewTracker;
   }
 
   get leftView() {
@@ -50,12 +50,12 @@ export class MainScreenView extends ScrollScreenView {
         ref="left"
         {...this.props}
         style={commonStyles.absFilled}
-        onSlideChange={this._onSlideChange}
-        onAddCompleted={this._onAddCompleted}
-        onRemoveCompleted={this._setMainViewBtns}
-        onSaveCompleted={this._setMainViewBtns}
-        onCancel={this._setMainViewBtns}
-        onMoveUp={this._setMainViewBtns}
+        onSlideChange={this.onSlideChange}
+        onAddCompleted={this.onAddCompleted}
+        onRemoveCompleted={this.setMainViewBtns}
+        onSaveCompleted={this.setMainViewBtns}
+        onCancel={this.setMainViewBtns}
+        onMoveUp={this.setMainViewBtns}
       />
     );
   }
@@ -64,31 +64,31 @@ export class MainScreenView extends ScrollScreenView {
     return (
       <NewTrackerScreenView
         ref="right"
-        onAccept={this._onAcceptNewTracker}
-        onCancel={this._cancelNewTracker}
+        onAccept={this.onAcceptNewTracker}
+        onCancel={this.cancelNewTracker}
       />
     );
   }
 
   componentDidMount() {
-    this._setMainViewBtns();
+    this.setMainViewBtns();
   }
 
-  _getNewBtn(onPress) {
+  getNewBtn(onPress) {
     return <NavAddButton onPress={this::onPress} />;
   }
 
-  _getMenuBtn(onPress) {
+  getMenuBtn(onPress) {
     return <NavMenuButton onPress={this::onPress} />;
   }
 
-  _setMainViewBtns(callback?: Function) {
+  setMainViewBtns(callback?: Function) {
     const { navBar } = this.context;
     if (navBar) {
       navBar.setTitle('Trackers');
       navBar.setButtons(
-        this._getMenuBtn(this._onMenuToggle),
-        this._getNewBtn(this._onNewTracker),
+        this.getMenuBtn(this.onMenuToggle),
+        this.getNewBtn(this.onNewTracker),
         callback,
       );
     }
@@ -96,39 +96,39 @@ export class MainScreenView extends ScrollScreenView {
 
   // New tracker events.
 
-  _onAcceptNewTracker(tracker) {
-    if (this.state.active) return;
+  onAcceptNewTracker(tracker) {
+    if (this.active) return;
 
-    this.setState({ active: true });
-    this.props.onAdd(tracker, this.state.index + 1);
+    this.active = true;
+    this.props.onAdd(tracker, this.index + 1);
   }
 
-  _onAddCompleted() {
-    this._setMainViewBtns();
+  onAddCompleted() {
+    this.setMainViewBtns();
 
-    this.setState({ active: false });
+    this.active = false;
     this.moveLeft();
   }
 
-  _cancelNewTracker() {
+  cancelNewTracker() {
     if (Animation.on) return;
 
-    this._setMainViewBtns();
+    this.setMainViewBtns();
     this.moveLeft();
   }
 
-  _onNewTracker() {
+  onNewTracker() {
     this.moveRight();
   }
 
   // Common
 
-  _onSlideChange(index, previ) {
-    this.setState({ index });
+  onSlideChange(index, previ) {
+    this.index = index;
     caller(this.props.onSlideChange, index, previ);
   }
 
-  _onMenuToggle() {
+  onMenuToggle() {
     caller(this.props.onMenu);
   }
 }

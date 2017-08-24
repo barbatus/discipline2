@@ -9,7 +9,7 @@ export const TrackerType = new Enum({
     title: 'Daily Goal',
     value: 'goal',
     desc: `Make a daily goal and set it as reached with the help of this tracker,
-           e.g., track when you visit a gym.`,
+           e.g., track your gym visits.`,
   },
 
   COUNTER: {

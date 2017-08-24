@@ -1,16 +1,14 @@
-'use strict';
-
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 
 import thunk from 'redux-thunk';
 
-import { trackers } from './reducers';
+import { trackersReducer } from './reducers';
 
 const middleware = applyMiddleware(thunk);
 
 export default (data = {}) => {
   const rootReducer = combineReducers({
-    trackers,
+    trackers: trackersReducer,
   });
   return createStore(rootReducer, data, middleware);
 };

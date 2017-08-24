@@ -10,7 +10,7 @@ import { commonStyles, screenWidth } from '../styles/common';
 
 import { caller } from '../../utils/lang';
 
-class BaseScroll extends PureComponent {
+export default class BaseScroll extends PureComponent {
   index = 0;
 
   prevInd = 0;
@@ -168,7 +168,6 @@ class BaseScroll extends PureComponent {
 
   render() {
     const { slides, pagingEnabled, contentStyle, scrollEnabled } = this.props;
-
     return (
       <ScrollView
         ref="scrollView"
@@ -189,5 +188,3 @@ class BaseScroll extends PureComponent {
     );
   }
 }
-
-export default BaseScroll;

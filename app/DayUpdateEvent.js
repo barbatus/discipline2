@@ -1,134 +1,132 @@
-'use strict';
-
 import assert from 'assert';
 
 import moment from 'moment';
 
 import { AppState } from 'react-native';
 
-import EventEmitter from 'eventemitter3';
+export class Timeout {
+  waitMs = 0;
 
-import { caller } from '../utils/lang';
+  cb = null;
 
-class Timeout {
-  _waitMs = 0;
-
-  _cb = null;
-
-  _timeout = null;
+  timeout = null;
 
   constructor(cb: Function, waitMs: number = 0) {
-    this._cb = cb;
-    this._waitMs = waitMs;
+    this.cb = cb;
+    this.waitMs = waitMs;
     this.start();
   }
 
   get active() {
-    return !!this._timeout;
+    return !!this.timeout;
   }
 
   restart(leftMs: number) {
     this.stop();
 
-    this._waitMs = leftMs;
+    this.waitMs = leftMs;
     this.start();
   }
 
   start() {
-    if (!this._timeout) return;
+    if (!this.timeout) return;
 
-    this._timeout = setTimeout(this._cb, this._waitMs);
+    this.timeout = setTimeout(this.cb, this.waitMs);
   }
 
   stop() {
     if (!this.active) return;
 
-    clearTimeout(this._timeout);
-    this._timeout = null;
+    clearTimeout(this.timeout);
+    this.timeout = null;
   }
 }
 
 export default class DayUpdateEvent {
-  _downDate = null;
+  downDate = null;
 
-  _upDate = null;
+  upDate = null;
 
-  _dayTimer = null;
+  dayTimer = null;
 
-  _cbs = [];
+  cbs = [];
 
-  _subscribed = false;
+  subscribed = false;
+
+  constructor() {
+    this.handleAppStateChange = ::this.handleAppStateChange;
+  }
 
   on(cb: Function) {
     assert.ok(cb);
-    this._cbs.push(cb);
-    if (!this._subscribed) {
-      this._subscribe();
-      this._setDayTimer();
-      this._subscribed = true;
+    this.cbs.push(cb);
+    if (!this.subscribed) {
+      this.subscribe();
+      this.setDayTimer();
+      this.subscribed = true;
     }
   }
 
   destroy() {
-    this._unsubscribe();
-    this._unsetDayTimer();
+    this.unsubscribe();
+    this.unsetDayTimer();
   }
 
-  _unsubscribe() {
-    AppState.removeEventListener('change', ::this._handleAppStateChange);
+  unsubscribe() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
-  _subscribe() {
-    AppState.addEventListener('change', ::this._handleAppStateChange);
+  subscribe() {
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
 
-  _setDayTimer() {
+  setDayTimer() {
     const left = time.getToDayEndMs();
 
-    if (this._dayTimer) {
-      this._dayTimer.restart(left);
+    if (this.dayTimer) {
+      this.dayTimer.restart(left);
       return;
     }
 
-    this._dayTimer = new Timeout(() => {
+    this.dayTimer = new Timeout(() => {
       this.events.emit('change');
     }, left);
   }
 
-  _unsetDayTimer() {
-    if (this._dayTimer) {
-      this._dayTimer.stop();
+  unsetDayTimer() {
+    if (this.dayTimer) {
+      this.dayTimer.stop();
     }
   }
 
-  _handleAppStateChange(state) {
+  handleAppStateChange(state) {
     if (state === 'background') {
-      this._onAppBackground();
+      this.onAppBackground();
     }
 
     if (state === 'active') {
-      this._onAppActive();
+      this.onAppActive();
     }
   }
 
-  _onAppBackground() {
-    this._downDate = moment();
+  onAppBackground() {
+    this.downDate = moment();
   }
 
-  _onAppActive() {
-    if (!this._downDate) return;
+  onAppActive() {
+    if (!this.downDate) return;
 
-    this._upDate = moment();
+    this.upDate = moment();
 
-    const dateChanged = !time.isSameDate(this._upDate, this._downDate);
+    const dateChanged = !time.isSameDate(this.upDate, this.downDate);
 
     if (dateChanged) {
-      this._fireCbs();
+      this.fireCbs();
     }
-    this._setDayTimer();
+    this.setDayTimer();
   }
 
-  _fireCbs() {
-    this._cbs.forEach(cb => cb());
+  fireCbs() {
+    this.cbs.forEach(cb => cb());
   }
 }

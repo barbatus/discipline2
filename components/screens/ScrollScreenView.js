@@ -52,6 +52,11 @@ export default class ScrollScreenView extends PureComponent {
     this.moveTo(1, callback);
   }
 
+  moveTo(index: number) {
+    const scrollToX = index * screenWidth;
+    this.refs.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
+  }
+
   render() {
     const { style } = this.props;
     return (
@@ -76,10 +81,5 @@ export default class ScrollScreenView extends PureComponent {
         </ScrollView>
       </View>
     );
-  }
-
-  moveTo(index: number) {
-    const scrollToX = index * screenWidth;
-    this.refs.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
   }
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 import Tracker, { DistanceTracker } from './Tracker';
 
 import { TrackerType } from '../depot/consts';

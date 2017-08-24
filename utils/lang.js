@@ -1,5 +1,3 @@
-'use strict';
-
 import { isFunction } from 'lodash';
 
 export function caller(cb, ...args: any[]) {
@@ -9,7 +7,7 @@ export function caller(cb, ...args: any[]) {
 }
 
 export function round(number, precision) {
-  const factor = Math.pow(10, precision);
+  const factor = 10 ** precision;
   const factored = number * factor;
   const rounded = Math.round(factored);
   return rounded / factor;

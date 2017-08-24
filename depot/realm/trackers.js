@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 import EventEmitter from 'eventemitter3';
 
 import { omit } from 'lodash';
