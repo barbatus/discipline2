@@ -1,18 +1,17 @@
-'use strict';
-
-import React, { Component } from 'react';
+import React from 'react';
 
 import { caller } from '../../../utils/lang';
 
 import {
   View,
-  TouchableHighlight,
   TouchableOpacity,
   Image,
   Text,
   StyleSheet,
   Vibration,
 } from 'react-native';
+
+import { pure } from 'recompose';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
@@ -23,92 +22,6 @@ import TrackerSlide from './TrackerSlide';
 import TimeLabel from './TimeLabel';
 
 import Timers, { Timer } from '../../../time/Timers';
-
-export default class StopWatchTrackerSlide extends TrackerSlide {
-  _timer: Timer = null;
-
-  constructor(props) {
-    super(props);
-
-    const { tracker } = props;
-    this._timer = Timers.get(tracker.id, 1000);
-    this._timer.events.on('onTimer', ::this._onTimer);
-  }
-
-  get bodyControls() {
-    const { tracker } = this.props;
-    return (
-      <View style={trackerStyles.controls}>
-        <View style={styles.controls}>
-          <TimeLabel ref="time" width={200} timeMs={tracker.value} />
-        </View>
-      </View>
-    );
-  }
-
-  get footerControls() {
-    const { tracker, responsive } = this.props;
-
-    const renderBtn = (label, onPress) => {
-      return (
-        <TouchableOpacity
-          style={styles.button}
-          disabled={!responsive}
-          onPress={this::onPress}
-        >
-          <Text style={styles.btnText}>
-            {label}
-          </Text>
-        </TouchableOpacity>
-      );
-    };
-
-    return (
-      <View style={styles.footerContainer}>
-        {tracker.active
-          ? renderBtn('STOP', this._onStop)
-          : renderBtn('START', this._onTick)}
-        {renderBtn('LAP', this._onLap)}
-      </View>
-    );
-  }
-
-  componentWillUnmount() {
-    const { tracker } = this.props;
-    Timers.dispose(tracker.id);
-    this._timer = null;
-  }
-
-  onEdit() {
-    const { tracker } = this.props;
-    if (tracker.active) return;
-    super.onEdit();
-  }
-
-  _onTick() {
-    Vibration.vibrate();
-
-    this._timer.start(0);
-    caller(this.props.onStart);
-    caller(this.props.onTick);
-  }
-
-  _onTimer(timeMs: number) {
-    caller(this.props.onProgress, timeMs);
-  }
-
-  _onStop() {
-    this._timer.stop();
-    caller(this.props.onStop);
-  }
-
-  _onLap() {
-    const { tracker } = this.props;
-    const timeMs = this._timer.active ? this._timer.timeMs : 0;
-    const lapTimeMs = tracker.value + timeMs;
-    this.refs.time.setTimeLap(lapTimeMs);
-  }
-}
 
 const styles = StyleSheet.create({
   controls: {
@@ -138,3 +51,111 @@ const styles = StyleSheet.create({
     fontWeight: '200',
   },
 });
+
+const FooterBtnFn = ({ label, responsive, onPress }) => (
+  <TouchableOpacity
+    style={styles.button}
+    disabled={!responsive}
+    onPress={onPress}
+  >
+    <Text style={styles.btnText}>
+      {label}
+    </Text>
+  </TouchableOpacity>
+);
+
+const FooterBtn = pure(FooterBtnFn);
+
+export default class StopWatchTrackerSlide extends TrackerSlide {
+  timer: Timer = null;
+
+  constructor(props) {
+    super(props);
+    const { tracker } = props;
+    this.state = {
+      ...this.state,
+      lapTimeMs: 0,
+    };
+    this.timer = Timers.get(tracker.id, 1000);
+    this.timer.events.on('onTimer', ::this.onTimer);
+    this.onLap = ::this.onLap;
+    this.onTick = ::this.onTick;
+    this.onStop = ::this.onStop;
+  }
+
+  get bodyControls() {
+    const { tracker } = this.props;
+    const { lapTimeMs } = this.state;
+    return (
+      <View style={trackerStyles.controls}>
+        <View style={styles.controls}>
+          <TimeLabel
+            width={200}
+            timeMs={tracker.value}
+            lapTimeMs={lapTimeMs}
+          />
+        </View>
+      </View>
+    );
+  }
+
+  get footerControls() {
+    const { tracker, responsive } = this.props;
+    return (
+      <View style={styles.footerContainer}>
+        {
+          tracker.active ?
+            <FooterBtn
+              label="STOP"
+              responsive={responsive}
+              onPress={this.onStop}
+            /> :
+              <FooterBtn
+                label="START"
+                responsive={responsive}
+                onPress={this.onTick}
+              />
+        }
+        <FooterBtn
+          label="LAP"
+          responsive={responsive}
+          onPress={this.onLap}
+        />
+      </View>
+    );
+  }
+
+  componentWillUnmount() {
+    const { tracker } = this.props;
+    Timers.dispose(tracker.id);
+    this.timer = null;
+  }
+
+  onEdit() {
+    const { tracker } = this.props;
+    if (tracker.active) return;
+    super.onEdit();
+  }
+
+  onTick() {
+    Vibration.vibrate();
+
+    this.timer.start(0);
+    caller(this.props.onStart);
+    caller(this.props.onTick);
+  }
+
+  onTimer(timeMs: number) {
+    caller(this.props.onProgress, timeMs);
+  }
+
+  onStop() {
+    this.timer.stop();
+    caller(this.props.onStop);
+  }
+
+  onLap() {
+    const { tracker } = this.props;
+    this.setState({ lapTimeMs: tracker.value });
+  }
+}

@@ -1,8 +1,6 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, View, Animated, InteractionManager } from 'react-native';
+import { StyleSheet, Animated, InteractionManager } from 'react-native';
 
 import reactMixin from 'react-mixin';
 
@@ -14,9 +12,9 @@ import TrackerSwiper from './TrackerSwiper';
 
 import TrackerScroll from './TrackerScroll';
 
-import { MoveDownResponderAnim } from '../animation/MoveDownResponderAnim';
+import MoveDownResponderAnim from '../animation/MoveDownResponderAnim';
 
-import TrackerStore from '../../model/Trackers';
+import { MoveUpScaleResponderAnim } from '../animation/MoveUpScaleResponderAnim';
 
 import { commonStyles } from '../styles/common';
 
@@ -44,7 +42,6 @@ export default class Trackers extends PureComponent {
       swTrackers: new List(),
       scTrackers: new List(),
       swiperEnabled: true,
-      index: 0,
     };
     this.onCenterSlideTap = ::this.onCenterSlideTap;
     this.onSmallSlideTap = ::this.onSmallSlideTap;
@@ -62,17 +59,17 @@ export default class Trackers extends PureComponent {
   }
 
   componentDidMount() {
-    const { trackers, onSwiperMoveDown, onSwiperMoveDownStart } = this.props;
-
-    if (trackers) {
-      this.renderTracker(trackers.first(), () => this.renderTrackers(trackers));
-    }
+    const {
+      trackers,
+      onSwiperMoveDown,
+      onSwiperMoveDownStart,
+    } = this.props;
+    this.renderTracker(trackers.first(),
+      () => this.renderTrackers(trackers));
 
     this.moveDown.subscribe(this.swiper.responder, onSwiperMoveDown, () => {
       this.setState({ swiperEnabled: false });
-      InteractionManager.runAfterInteractions(() => {
-        caller(onSwiperMoveDownStart);
-      });
+      caller(onSwiperMoveDownStart);
     });
   }
 
@@ -100,15 +97,11 @@ export default class Trackers extends PureComponent {
   }
 
   renderTracker(tracker, callback) {
-    this.setState(
-      {
-        swTrackers: new List([tracker]),
-      },
-      () =>
-        Animated.timing(this.opacity, {
-          duration: 500,
-          toValue: 1,
-        }).start(callback),
+    this.setState({ swTrackers: new List([tracker]) },
+      () => Animated.timing(this.opacity, {
+        duration: 500,
+        toValue: 1,
+      }).start(callback),
     );
   }
 
@@ -138,8 +131,6 @@ export default class Trackers extends PureComponent {
 
   onScaleStart() {
     this.bscroll.hide();
-    this.bscroll.scrollTo(this.state.index, false);
-    this.sscroll.scrollTo(this.state.index, false);
   }
 
   onScaleMove(dv) {
@@ -177,7 +168,8 @@ export default class Trackers extends PureComponent {
   }
 
   onSlideChange(index: number, previ: number) {
-    this.setState({ index });
+    this.bscroll.scrollTo(index, false);
+    this.sscroll.scrollTo(index, false);
     caller(this.props.onSlideChange, index, previ);
   }
 

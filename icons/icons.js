@@ -1,5 +1,3 @@
-'use strict';
-
 import AppIconsStore from './AppIconsStore';
 
 import UserIconsStore from './UserIconsStore';

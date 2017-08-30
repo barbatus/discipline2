@@ -4,7 +4,7 @@ import { PanResponder } from 'react-native';
 
 import { caller } from '../../utils/lang';
 
-const ANGLE_TRESHOLD = Math.sin(10 * Math.PI / 180);
+const ANGLE_TRESHOLD = Math.sin(10 * (Math.PI / 180));
 
 const DY_TRESHOLD = 20;
 
@@ -55,12 +55,12 @@ export class MoveUpDownResponder {
 
         if (!isUp) caller(this.onMoveDown, state.dy);
       },
-      onPanResponderGrant: (e: Object, state: Object) => {
+      onPanResponderGrant: (e: Object) => {
         if (isUp) caller(this.onMoveUpStart);
 
         if (!isUp) caller(this.onMoveDownStart);
       },
-      onPanResponderRelease: (e: Object, state: Object) => {
+      onPanResponderRelease: (e: Object) => {
         if (isUp) caller(this.onMoveUpDone);
 
         if (!isUp) caller(this.onMoveDownDone);

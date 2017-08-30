@@ -1,21 +1,19 @@
-'use strict';
-
 import EventEmitter from 'eventemitter3';
 
 class Timers {
-  _timers = {};
+  timers = {};
 
   get(id: number, int: number) {
-    if (!this._timers[id]) {
-      this._timers[id] = new Timer(int);
+    if (!this.timers[id]) {
+      this.timers[id] = new Timer(int);
     }
-    return this._timers[id];
+    return this.timers[id];
   }
 
   dispose(id: number) {
-    if (this._timers[id]) {
-      this._timers[id].dispose();
-      delete this._timers[id];
+    if (this.timers[id]) {
+      this.timers[id].dispose();
+      delete this.timers[id];
     }
   }
 }
@@ -24,41 +22,41 @@ const timers = new Timers();
 export default timers;
 
 export class Timer {
-  _pastMs = 0;
+  pastMs = 0;
 
-  _int = 0;
+  int = 0;
 
-  _timer = null;
+  timer = null;
 
   events: EventEmitter = new EventEmitter();
 
   constructor(int: number = 0) {
-    this._int = int;
+    this.int = int;
   }
 
   get active() {
-    return !!this._timer;
+    return !!this.timer;
   }
 
   get timeMs() {
-    return this._pastMs;
+    return this.pastMs;
   }
 
   start(pos: number = 0) {
     if (this.active) return;
 
-    this._pastMs = 0;
-    this._timer = setInterval(() => {
-      this._pastMs += this._int;
-      this.events.emit('onTimer', pos + this._pastMs);
-    }, this._int);
+    this.pastMs = 0;
+    this.timer = setInterval(() => {
+      this.pastMs += this.int;
+      this.events.emit('onTimer', pos + this.pastMs);
+    }, this.int);
   }
 
   stop() {
     if (!this.active) return;
 
-    clearInterval(this._timer);
-    this._timer = null;
+    clearInterval(this.timer);
+    this.timer = null;
   }
 
   dispose() {

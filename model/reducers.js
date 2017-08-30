@@ -19,11 +19,11 @@ import {
 
 import Trackers from './Trackers';
 
-const trackEqual = tracker1 => tracker2 => tracker1.id === tracker2.id;
+const trackEqual = (tracker1) => (tracker2) => tracker1.id === tracker2.id;
 
 const findIndex = (trackers, tracker) => {
   const equal = trackEqual(tracker);
-  return trackers.findIndex(nTracker => equal(nTracker));
+  return trackers.findIndex((nTracker) => equal(nTracker));
 };
 
 const cloneTracker = (trackers, tracker, index?: number) => {
@@ -42,12 +42,11 @@ const insertTracker = (trackers, tracker, index?: number) => {
 
 export const trackersReducer = handleActions(
   {
-    [LOAD_TEST_DATA]: (state, { trackers }) => {
-      return {
-        ...state,
-        trackers: new List(trackers.map(tracker => Trackers.create(tracker))),
-      };
-    },
+    [LOAD_TEST_DATA]: (state, { trackers }) => ({
+      ...state,
+      trackers: new List(trackers.map(
+        (tracker) => Trackers.create(tracker))),
+    }),
     [REMOVE_TRACKER]: (state, { tracker }) => {
       const index = findIndex(state.trackers, tracker);
       const trackers = state.trackers.delete(index);
@@ -112,7 +111,8 @@ export const trackersReducer = handleActions(
     },
     [CHANGE_DAY]: (state, { trackers }) => ({
       ...state,
-      trackers: new List(trackers.map(tracker => Trackers.getOne(tracker.id))),
+      trackers: new List(trackers.map(
+        (tracker) => Trackers.getOne(tracker.id))),
     }),
     [UPDATE_CALENDAR]: (state, { dateMs, ticks }) => {
       return {
@@ -121,7 +121,7 @@ export const trackersReducer = handleActions(
         ticks,
       };
     },
-    [COMPLETE_CHANGE]: state => ({
+    [COMPLETE_CHANGE]: (state) => ({
       ...state,
       addIndex: null,
       removeIndex: null,

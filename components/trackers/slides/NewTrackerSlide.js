@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import {
@@ -15,6 +13,17 @@ import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerEditView from './basic/TrackerEditView';
 
+const styles = StyleSheet.create({
+  editView: {
+    opacity: 1,
+    transform: [
+      {
+        rotateY: '0deg',
+      },
+    ],
+  },
+});
+
 export default class NewTrackerSlide extends PureComponent {
   render() {
     const { style } = this.props;
@@ -29,14 +38,3 @@ export default class NewTrackerSlide extends PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  editView: {
-    opacity: 1,
-    transform: [
-      {
-        rotateY: '0deg',
-      },
-    ],
-  },
-});

@@ -1,20 +1,11 @@
-'use strict';
-
-import React, { Component } from 'react';
+import React from 'react';
 
 import {
   View,
-  ListView,
-  StyleSheet,
-  Text,
   Animated,
-  ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 
 import Scroll from '../scrolls/Scroll';
-
-import BaseScroll from '../scrolls/BaseScroll';
 
 import { commonStyles, screenWidth } from '../styles/common';
 
@@ -27,10 +18,11 @@ import { caller } from '../../utils/lang';
 export default class TrackerScroll extends TrackerRenderer {
   static defaultProps = {
     responsive: true,
+    index: 0,
   };
 
   hide(callback) {
-    Animated.timing(this._opacity, {
+    Animated.timing(this.opacity, {
       duration: 500,
       toValue: 0,
     }).start(callback);
@@ -41,46 +33,41 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   onTap(tracker: Tracker) {
-    const index = this.state.trackers.findIndex(_ => _ === tracker);
+    const index = this.state.trackers.findIndex(
+      (nTracker) => nTracker === tracker);
 
     const scroll = this.refs.scroll.index;
     if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
     }
 
-    this.scrollTo(index, () => {
-      caller(this.props.onSlideTap, index);
-    });
+    this.scrollTo(index, () =>
+      caller(this.props.onSlideTap, index));
   }
 
   render() {
-    const { style, responsive, scale } = this.props;
+    const { style, index, responsive, scale } = this.props;
 
     const slideStyle = {
       width: screenWidth * scale,
       height: slideHeight * scale,
     };
     const slides = this.state.trackers
-      .map(tracker =>
+      .map((tracker) => (
         <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
           {this.renderScaledTracker(tracker, scale, responsive)}
-        </View>,
-      )
-      .toArray();
+        </View>
+      )).toArray();
 
     return (
       <Animated.View
-        style={[
-          style,
-          {
-            opacity: this._opacity,
-          },
-        ]}
+        style={[style, { opacity: this.opacity }]}
       >
         <Scroll
           ref="scroll"
-          centered
           style={commonStyles.flexFilled}
+          centered
+          index={index}
           slideWidth={screenWidth * scale}
           slides={slides}
         />

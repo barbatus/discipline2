@@ -1,8 +1,6 @@
-'use strict';
-
 import { round, int } from './lang';
 
-export const __ = digits => {
+export const __ = (digits) => {
   return digits < 10 ? `0${digits}` : `${digits}`;
 };
 
@@ -12,7 +10,7 @@ export function formatDistance(dist) {
   if (dist < 1) {
     return {
       format: int(dist * 1000),
-      unit: 'mm',
+      unit: 'm',
     };
   }
 

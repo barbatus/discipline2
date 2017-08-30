@@ -1,6 +1,4 @@
-'use strict';
-
-import { has } from 'lodash';
+import has from 'lodash/has';
 
 class EnumSymbol {
   constructor(key: String, props: Object) {

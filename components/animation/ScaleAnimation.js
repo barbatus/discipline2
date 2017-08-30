@@ -7,33 +7,29 @@ import { caller } from '../../utils/lang';
 import Animation from './Animation';
 
 export default class ScaleAnimation {
-  _scale: Animated.Value;
+  scale: Animated.Value;
 
   constructor(scale = 1) {
-    this._scale = new Animated.Value(scale);
+    this.scale = new Animated.Value(scale);
   }
 
   get style(): Object {
     return {
-      transform: [
-        {
-          scale: this._scale,
-        },
-      ],
+      transform: [{ scale: this.scale }],
     };
   }
 
   get value() {
-    return this._scale._value;
+    return this.scale._value;
   }
 
   animateIn(callback?: Function) {
-    const inn = Animation.timing(this._scale, 500, 1);
+    const inn = Animation.timing(this.scale, 500, 1);
     Animation.animate([inn], callback);
   }
 
   animateOut(callback?: Function) {
-    const out = Animation.timing(this._scale, 500, 0);
+    const out = Animation.timing(this.scale, 500, 0);
     Animation.animate([out], callback);
   }
 }

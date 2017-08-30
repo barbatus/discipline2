@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import {
@@ -12,6 +10,8 @@ import {
   TextInput,
   Vibration,
 } from 'react-native';
+
+import { pure } from 'recompose';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 15,
-    color: '#9b9b9b',
+    color: '#9B9B9B',
     fontWeight: '100',
   },
   label: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingBottom: 10,
     paddingLeft: 5,
-    color: '#9b9b9b',
+    color: '#9B9B9B',
     textAlign: 'center',
     fontWeight: '200',
   },
@@ -94,23 +94,23 @@ const styles = StyleSheet.create({
   },
 });
 
+const FooterBtnFn = ({ label, responsive, onPress }) => (
+  <TouchableOpacity
+    style={styles.button}
+    disabled={!responsive}
+    onPress={onPress}
+  >
+    <Text style={styles.btnText}>
+      {label}
+    </Text>
+  </TouchableOpacity>
+);
+
+const FooterBtn = pure(FooterBtnFn);
+
 export class DistanceData extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    const { time, dist } = props;
-    this.state = { time, dist };
-  }
-
-  componentWillReceiveProps(props) {
-    if (props.dist !== this.props.dist || props.time !== this.props.time) {
-      this.state.time = props.time;
-      this.state.dist = props.dist;
-    }
-  }
-
   render() {
-    const { time, dist } = this.state;
+    const { time, dist } = this.props;
     const format = formatDistance(dist);
     return (
       <View style={styles.distData}>
@@ -123,7 +123,11 @@ export class DistanceData extends PureComponent {
           </Text>
         </View>
         <View style={styles.label}>
-          <TimeLabel style={styles.labelText} width={200} timeMs={time} />
+          <TimeLabel
+            style={styles.labelText}
+            width={200}
+            timeMs={time}
+          />
         </View>
       </View>
     );
@@ -132,7 +136,7 @@ export class DistanceData extends PureComponent {
 
 const DIST_INTRVL = 5.0;
 
-const TIME_INTRVL = 100; // ms
+const TIME_INTRVL = 1000; // ms
 
 export default class DistanceTrackerSlide extends TrackerSlide {
   distTracker: DistanceTracker = null;
@@ -151,37 +155,40 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     this.distTracker.events.on('onUpdate', ::this.onDistUpdate);
     this.distTracker.events.on('onStop', ::this.onDistStop);
     this.showMap = ::this.showMap;
+    this.onStopBtn = ::this.onStopBtn;
+    this.onStartBtn = ::this.onStartBtn;
   }
 
   get bodyControls() {
     const { tracker } = this.props;
     return (
       <View style={trackerStyles.controls}>
-        <DistanceData ref="dist" dist={tracker.value} time={tracker.time} />
+        <DistanceData
+          dist={tracker.value}
+          time={tracker.time}
+        />
       </View>
     );
   }
 
   get footerControls() {
-    const { responsive } = this.props;
-    const renderBtn = (label, onPress) =>
-      <TouchableOpacity
-        style={styles.button}
-        disabled={!responsive}
-        onPress={this::onPress}
-      >
-        <Text style={styles.btnText}>
-          {label}
-        </Text>
-      </TouchableOpacity>;
-
-    const { tracker } = this.props;
+    const { tracker, responsive } = this.props;
     return (
       <View style={styles.footerControlsContainer}>
         <View style={styles.startStopBtn}>
-          {tracker.active
-            ? renderBtn('STOP', this.onStopBtn)
-            : renderBtn('START', this.onStartBtn)}
+          {
+            tracker.active ?
+              <FooterBtn
+                label="STOP"
+                responsive={responsive}
+                onPress={this.onStopBtn}
+              /> :
+                <FooterBtn
+                  label="START"
+                  responsive={responsive}
+                  onPress={this.onStartBtn}
+                />
+          }
         </View>
         <View style={styles.seeMap}>
           <Text style={trackerStyles.footerText}>
@@ -222,14 +229,14 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     caller(this.props.onTick, 0, { time: 0 });
   }
 
-  onDistStop({ dist, time, latitude, longitude }) {
-    this.onDistUpdate({ dist, time, latitude, longitude });
+  onDistStop(track) {
+    this.onDistUpdate(track);
     caller(this.props.onStop);
   }
 
-  onDistUpdate({ dist, time, latitude, longitude }) {
+  onDistUpdate({ dist, time, lat, lon }) {
     caller(this.props.onProgress, dist, { time });
-    this.path.push({ latitude, longitude });
+    this.path.push({ latitude: lat, longitude: lon });
   }
 
   showMap() {

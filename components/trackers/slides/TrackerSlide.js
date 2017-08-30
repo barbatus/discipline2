@@ -1,8 +1,6 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, StyleSheet, Animated, InteractionManager } from 'react-native';
 
 import { trackerStyles, propsStyles } from '../styles/trackerStyles';
 
@@ -43,21 +41,13 @@ export default class TrackerSlide extends PureComponent {
 
   constructor(props) {
     super(props);
-    const { scale } = props;
+    const { scale, tracker } = props;
     this.flip = new FlipAnimation();
     this.scale = new ScaleAnimation(scale);
-    this.state = {
-      tracker: props.tracker,
-    };
+    this.state = { clonedTracker: null };
     this.onTap = ::this.onTap;
     this.onEdit = ::this.onEdit;
     this.onRemove = ::this.onRemove;
-  }
-
-  componentWillReceiveProps(props) {
-    if (this.props.tracker !== props.tracker) {
-      this.state.tracker = props.tracker;
-    }
   }
 
   get bodyControls() {
@@ -78,11 +68,10 @@ export default class TrackerSlide extends PureComponent {
 
   showEdit(callback) {
     const { tracker } = this.props;
-    this.setState({
-      tracker: tracker.clone(),
-    });
     Keyboard.dismiss();
-    this.flip.animateIn(callback);
+    this.setState({
+      clonedTracker: tracker.clone(),
+    }, () => this.flip.animateIn(callback));
   }
 
   cancelEdit(callback) {
@@ -114,15 +103,15 @@ export default class TrackerSlide extends PureComponent {
 
   renderBackView() {
     const { editable, onTrackerChange } = this.props;
-    const { tracker } = this.state;
-    if (editable) {
+    const { clonedTracker } = this.state;
+    if (editable && clonedTracker) {
       return (
         <TrackerEditView
           ref="editView"
           style={[absFilled, this.flip.style2]}
           showType={false}
           allowDelete
-          tracker={tracker}
+          tracker={clonedTracker}
           onRemove={this.onRemove}
           onTrackerChange={onTrackerChange}
         />

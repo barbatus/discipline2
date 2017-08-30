@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 import DB from './db';
 
 import EventEmitter from 'eventemitter3';

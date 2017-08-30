@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -25,11 +23,11 @@ export default class ScrollScreenView extends PureComponent {
   };
 
   get rightView() {
-    return null;
+    throw new Error('rightView is not implemented');
   }
 
   get leftView() {
-    return null;
+    throw new Error('leftView is not implemented');
   }
 
   moveLeft(callback?: Function) {
@@ -71,6 +69,8 @@ export default class ScrollScreenView extends PureComponent {
           scrollEventThrottle={1000}
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
+          keyboardShouldPersistTaps="always"
+          keyboardDismissMode="on-drag"
         >
           <View key={0} style={styles.slideContainer}>
             {this.leftView}

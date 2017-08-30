@@ -1,6 +1,4 @@
-'use strict';
-
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
@@ -13,17 +11,32 @@ import {
 
 import { commonStyles } from '../styles/common';
 
-export default class CommonModal extends Component {
+const styles = StyleSheet.create({
+  headerContainer: {
+    height: 64,
+    paddingTop: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    borderBottomColor: 'rgba(185, 185, 185, 0.5)',
+    borderBottomWidth: 1,
+  },
+  cancelText: {
+    fontSize: 17,
+    color: '#1A7CF9',
+  },
+});
+
+export default class CommonModal extends PureComponent {
   state: any = {
     modalVisible: false,
   };
 
   get content() {
     return null;
-  }
-
-  shouldComponentUpdate(props, state) {
-    return this.state.modalVisible !== state.modalVisible;
   }
 
   show(...args) {
@@ -60,7 +73,7 @@ export default class CommonModal extends Component {
     return (
       <View>
         <Modal
-          animationType={'slide'}
+          animationType="slide"
           transparent={false}
           visible={!!this.state.modalVisible}
         >
@@ -81,22 +94,3 @@ export default class CommonModal extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    height: 64,
-    paddingTop: 10,
-    paddingLeft: 15,
-    paddingRight: 15,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderBottomColor: 'rgba(185, 185, 185, 0.5)',
-    borderBottomWidth: 1,
-  },
-  cancelText: {
-    fontSize: 17,
-    color: '#1A7CF9',
-  },
-});

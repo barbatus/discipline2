@@ -85,7 +85,7 @@ export default class TrackerEditView extends BaseTrackerView {
 
   onIconEdit() {
     const dlg = registry.get(DlgType.ICONS);
-    dlg.show(iconId => {
+    dlg.show((iconId) => {
       let tracker = this.state.tracker;
       tracker = Trackers.create(tracker);
       tracker.iconId = iconId;
@@ -110,7 +110,9 @@ export default class TrackerEditView extends BaseTrackerView {
               style={propsStyles.colLeft}
               onPress={this.props.onRemove}
             >
-              <Text style={[propsStyles.text, styles.deleteText]}>Delete</Text>
+              <Text style={[propsStyles.text, styles.deleteText]}>
+                Delete
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

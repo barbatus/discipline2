@@ -1,14 +1,10 @@
-'use strict';
-
 import React from 'react';
 
 import {
   View,
-  TouchableHighlight,
   TouchableOpacity,
   Image,
   Text,
-  TextInput,
   StyleSheet,
   Animated,
   TouchableWithoutFeedback,
@@ -20,7 +16,22 @@ import { trackerDef, trackerStyles } from '../../styles/trackerStyles';
 
 import BaseTrackerView from './BaseTrackerView';
 
-import { slideWidth, slideHeight } from '../../styles/slideStyles';
+const flex = 1 - trackerDef.headerContainer.flex;
+
+const styles = StyleSheet.create({
+  backImg: {
+    flex,
+    width: undefined,
+    height: undefined,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    resizeMode: 'cover',
+  },
+  wrapper: {
+    flex,
+  },
+});
 
 export default class TrackerView extends BaseTrackerView {
   render() {
@@ -70,29 +81,12 @@ export default class TrackerView extends BaseTrackerView {
       </View>,
     ];
 
-    return backImg
-      ? <Image source={backImg} style={styles.backImg}>
-          {content}
-        </Image>
-      : <View style={styles.wrapper}>
-          {content}
-        </View>;
+    return backImg ?
+      <Image source={backImg} style={styles.backImg}>
+        {content}
+      </Image> :
+      <View style={styles.wrapper}>
+        {content}
+      </View>;
   }
 }
-
-const flex = 1 - trackerDef.headerContainer.flex;
-
-const styles = StyleSheet.create({
-  backImg: {
-    flex: flex,
-    width: undefined,
-    height: undefined,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
-    resizeMode: 'cover',
-  },
-  wrapper: {
-    flex,
-  },
-});

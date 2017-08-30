@@ -1,5 +1,3 @@
-'use strict';
-
 import appIcons from './appIcons';
 
 export default class AppIconsStore {

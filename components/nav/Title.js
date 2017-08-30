@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { View, Text, Image } from 'react-native';

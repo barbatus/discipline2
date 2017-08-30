@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { Animated, StyleSheet, View, Text, findNodeHandle } from 'react-native';

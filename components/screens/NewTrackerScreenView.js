@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 
 import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
@@ -14,7 +12,13 @@ import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 import Trackers from '../../model/Trackers';
 
+import { TrackerType } from '../../depot/consts';
+
 import { caller } from '../../utils/lang';
+
+const TYPES = TrackerType.symbols();
+
+const createNewTracker = () => Trackers.create({});
 
 export default class NewTrackerScreenView extends ScrollScreenView {
   static contextTypes = {
@@ -25,21 +29,22 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     super(props);
 
     this.state = {
-      tracker: Trackers.create({}),
-      typeId: null,
+      tracker: createNewTracker(),
+      typeId: TYPES[0].valueOf(),
     };
-    this._onTypeSelect = ::this._onTypeSelect;
-    this._onTrackerChange = ::this._onTrackerChange;
-    this._onTypeChosen = ::this._onTypeChosen;
+    this.onTypeSelect = ::this.onTypeSelect;
+    this.onTrackerChange = ::this.onTrackerChange;
+    this.onTypeChosen = ::this.onTypeChosen;
   }
 
   onRightMove() {
+    const newTracker = createNewTracker();
     this.setState({
-      tracker: Trackers.create({}),
-      typeId: null,
+      tracker: newTracker,
+      typeId: TYPES[0].valueOf(),
     });
 
-    this._setNewTrackerBtns();
+    this.setNewTrackerBtns();
   }
 
   get leftView() {
@@ -48,87 +53,87 @@ export default class NewTrackerScreenView extends ScrollScreenView {
       <NewTrackerSlide
         ref="left"
         tracker={tracker}
-        onTypeSelect={this._onTypeSelect}
-        onTrackerChange={this._onTrackerChange}
+        onTypeSelect={this.onTypeSelect}
+        onTrackerChange={this.onTrackerChange}
       />
     );
   }
 
   get rightView() {
-    const { tracker } = this.state;
+    const { typeId } = this.state;
     return (
       <TrackerTypesSlide
         ref="right"
-        typeId={tracker.typeId}
-        onTypeChosen={this._onTypeChosen}
+        typeId={typeId}
+        onTypeChosen={this.onTypeChosen}
       />
     );
   }
 
-  _getCancelBtn(onPress: Function) {
+  getCancelBtn(onPress: Function) {
     return <NavCancelButton onPress={this::onPress} />;
   }
 
-  _getAcceptBtn(onPress: Function) {
+  getAcceptBtn(onPress: Function) {
     return <NavAcceptButton onPress={this::onPress} />;
   }
 
-  _setNewTrackerBtns(callback?: Function) {
+  setNewTrackerBtns(callback?: Function) {
     const { navBar } = this.context;
     if (navBar) {
       navBar.setTitle('New Tracker');
       navBar.setButtons(
-        this._getCancelBtn(this.props.onCancel),
-        this._getAcceptBtn(this._onAccept),
+        this.getCancelBtn(this.props.onCancel),
+        this.getAcceptBtn(this.onAccept),
         callback,
       );
     }
   }
 
-  _setTrackerTypeBtns(callback?: Function) {
+  setTrackerTypeBtns(callback?: Function) {
     const { navBar } = this.context;
     if (navBar) {
       navBar.setTitle('Choose Type');
       navBar.setButtons(
-        this._getCancelBtn(this._onTypeCancel),
-        this._getAcceptBtn(this._onTypeAccept),
+        this.getCancelBtn(this.onTypeCancel),
+        this.getAcceptBtn(this.onTypeAccept),
         callback,
       );
     }
   }
 
-  _onTrackerChange(tracker: Tracker) {
+  onTrackerChange(tracker: Tracker) {
     this.setState({ tracker });
   }
 
-  _onAccept() {
+  onAccept() {
     caller(this.props.onAccept, this.state.tracker);
   }
 
-  _onTypeCancel() {
+  onTypeCancel() {
     if (Animation.on) return;
 
-    this._setNewTrackerBtns();
+    this.setNewTrackerBtns();
     this.moveLeft();
   }
 
-  _onTypeSelect() {
+  onTypeSelect() {
     if (Animation.on) return;
 
-    this._setTrackerTypeBtns();
+    this.setTrackerTypeBtns();
     this.moveRight();
   }
 
-  _onTypeChosen(typeId) {
+  onTypeChosen(typeId) {
     this.setState({
       typeId,
     });
   }
 
-  _onTypeAccept() {
+  onTypeAccept() {
     if (Animation.on) return;
 
-    this._setNewTrackerBtns();
+    this.setNewTrackerBtns();
     this.moveLeft();
 
     let { tracker, typeId } = this.state;

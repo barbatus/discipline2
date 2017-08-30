@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 
 import {
@@ -45,15 +43,15 @@ export default class GoalTrackerSlide extends TrackerSlide {
     );
   }
 
-  onTick() {
-    Vibration.vibrate();
-    caller(this.props.onTick);
-  }
-
   get checkStyle() {
     const { tracker } = this.props;
     return tracker.checked
       ? [trackerStyles.checkBtn, trackerStyles.filledBtn]
       : trackerStyles.checkBtn;
+  }
+
+  onTick() {
+    Vibration.vibrate();
+    caller(this.props.onTick);
   }
 }

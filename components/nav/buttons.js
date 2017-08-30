@@ -1,12 +1,10 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { pure } from 'recompose';
 
 import { TouchableOpacity, Text, Image } from 'react-native';
 
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 
 import { getIcon } from '../../icons/icons';
 

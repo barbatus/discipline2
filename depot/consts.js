@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 import Enum from './Enum';
 
 export const TrackerType = new Enum({
@@ -29,12 +27,12 @@ export const TrackerType = new Enum({
   STOPWATCH: {
     title: 'Stopwatch',
     value: 'stopwatch',
-    desc: `Track time you spend on a task or activity during the day.`,
+    desc: 'Track time you spend on a task or activity during the day.',
   },
 
   DISTANCE: {
     title: 'Distance',
     value: 'distance',
-    desc: `Measure the distance you cover for a particular task or activity per day.`,
+    desc: 'Measure the distance you cover for a particular task or activity per day.',
   },
 });

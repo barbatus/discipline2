@@ -1,5 +1,3 @@
-'use strict';
-
 import { Dimensions, StyleSheet } from 'react-native';
 
 import { screenWidth } from '../styles/common';

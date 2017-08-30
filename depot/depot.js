@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 import trackers from './realm/trackers';
 
 import ticks from './realm/ticks';

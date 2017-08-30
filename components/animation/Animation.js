@@ -1,70 +1,64 @@
 import Easing from 'Easing';
 
-import { Animated } from 'react-native';
+import { Animated, InteractionManager } from 'react-native';
+
+import flatten from 'lodash/flatten';
 
 import { caller } from '../../utils/lang';
 
-class AnimationManager {
-  _on = false;
+export class AnimationManager {
+  on = false;
 
-  _animations = [];
+  animations = [];
 
-  _callback = [];
+  callback = [];
 
-  _timeout = null;
-
-  get on(): boolean {
-    return this._on;
-  }
+  timeout = null;
 
   timing(field, duration, toValue, easing) {
     const config = { duration, toValue };
     if (easing) {
       config.easing = easing;
     }
-
     return Animated.timing(field, config);
   }
 
   animate(animations, callback) {
-    if (this._timeout) {
-      clearTimeout(this._timeout);
-      this._timeout = null;
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
     }
 
-    animations.forEach(anim => {
-      this._animations.push(anim);
+    animations.forEach((anim) => {
+      this.animations.push(anim);
     });
-    this._callback.push(callback);
-    this._timeout = setTimeout(() => {
-      const allCb = this._callback.slice();
-      const allAnim = this._animations.slice();
-      this._callback.length = 0;
-      this._animations.length = 0;
-      this._animate(allAnim, () => allCb.forEach(cb => caller(cb)));
+    this.callback.push(callback);
+    this.timeout = setTimeout(() => {
+      const allCb = this.callback.slice();
+      const allAnim = this.animations.slice();
+      this.callback.length = 0;
+      this.animations.length = 0;
+      this.animate(allAnim, () => allCb.forEach((cb) => caller(cb)));
     });
   }
 
   animateIn(animations, callback) {
-    this.animate(animations.map(an => an.aIn), callback);
+    this.animate(animations.map((an) => an.aIn), callback);
   }
 
   animateOut(animations, callback) {
-    this.animate(animations.map(an => an.aOut), callback);
+    this.animate(animations.map((an) => an.aOut), callback);
   }
 
   combineStyles(...anims) {
-    let transform = [];
-    for (const anim of anims) {
-      transform = transform.concat(anim.style.transform);
-    }
+    const transform = flatten(anims.map((anim) => anim.style.transform));
     return { transform };
   }
 
-  _animate(animations, callback) {
-    this._on = true;
+  animate(animations, callback) {
+    this.on = true;
     Animated.parallel(animations).start(() => {
-      this._on = false;
+      this.on = false;
       caller(callback);
     });
   }

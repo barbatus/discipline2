@@ -1,8 +1,6 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, View, Animated } from 'react-native';
+import { StyleSheet, View, Animated, InteractionManager } from 'react-native';
 
 import { connect } from 'react-redux';
 
@@ -66,8 +64,8 @@ class TrackersView extends PureComponent {
 
     this.state = {
       current: props.trackers.get(0),
-      changedTracker: null,
     };
+    this.changedTracker = null;
     this.active = false;
     this.onEdit = ::this.onEdit;
     this.onRemove = ::this.onRemove;
@@ -137,15 +135,13 @@ class TrackersView extends PureComponent {
     if (Animation.on) return;
 
     this.active = true;
-    const { changedTracker, current } = this.state;
-    this.props.onUpdate(changedTracker || current);
+    const { current } = this.state;
+    this.props.onUpdate(this.changedTracker || current);
   }
 
   onSaveCompleted(index) {
-    this.setState({
-      active: false,
-      changedTracker: null,
-    });
+    this.active = false;
+    this.changedTracker = null;
     caller(this.props.onSaveCompleted, index);
   }
 
@@ -214,7 +210,9 @@ class TrackersView extends PureComponent {
 
     const startDateMs = time.subtractMonth(monthDateMs);
     const endDateMs = time.addMonth(monthDateMs);
-    this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
+    InteractionManager.runAfterInteractions(() =>
+      this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs)
+    );
   }
 
   onMonthChanged(monthDateMs) {
@@ -248,43 +246,36 @@ class TrackersView extends PureComponent {
   }
 
   onTrackerChange(tracker: Tracker) {
-    this.setState({
-      changedTracker: tracker,
-    });
+    this.changedTracker = tracker;
   }
 }
 
 export default connect(
-  state => ({
-    trackers: state.trackers.trackers,
-    addIndex: state.trackers.addIndex,
-    removeIndex: state.trackers.removeIndex,
-    updateIndex: state.trackers.updateIndex,
+  (state) => ({
+    ...state.trackers,
     ticks: state.trackers.ticks || [],
-    todayMs: state.trackers.todayMs,
-    dateMs: state.trackers.dateMs,
   }),
   (dispatch, props) => ({
     onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>
       dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
-    onRemove: tracker => dispatch(removeTracker(tracker)),
-    onUpdate: tracker => dispatch(updateTracker(tracker)),
+    onRemove: (tracker) => dispatch(removeTracker(tracker)),
+    onUpdate: (tracker) => dispatch(updateTracker(tracker)),
     onTick: (tracker, value, data) =>
       dispatch(tickTracker(tracker, value, data)),
-    onStart: tracker => dispatch(startTracker(tracker)),
+    onStart: (tracker) => dispatch(startTracker(tracker)),
     onProgress: (tracker, value, data) =>
       dispatch(updateLastTick(tracker, value, data)),
-    onStop: tracker => dispatch(stopTracker(tracker)),
+    onStop: (tracker) => dispatch(stopTracker(tracker)),
     onUndo: (tracker, value) => dispatch(undoLastTick(tracker)),
-    onAddCompleted: index => {
+    onAddCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onAddCompleted, index);
     },
-    onRemoveCompleted: index => {
+    onRemoveCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onRemoveCompleted, index);
     },
-    onSaveCompleted: index => {
+    onSaveCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onSaveCompleted, index);
     },

@@ -1,5 +1,3 @@
-'user strict';
-
 import moment from 'moment';
 
 import 'moment-duration-format';
@@ -7,21 +5,22 @@ import 'moment-duration-format';
 import { __ } from '../utils/format';
 
 const SS_MS = 1000;
-const MM_MS = 60 * 1000;
-const HH_MS = 60 * 60 * 1000;
+const MM_MS = 60 * SS_MS;
+const HH_MS = 60 * 60 * SS_MS;
 
 const time = {
-  getDateMs: () => {
+  getDateMs() {
     const now = moment();
-    const dateMs = moment([now.year(), now.month(), now.date()]).valueOf();
-    return dateMs;
+    return moment([
+      now.year(), now.month(), now.date(),
+    ]).valueOf();
   },
 
-  getDateTimeMs: () => {
+  getDateTimeMs() {
     return moment().valueOf();
   },
 
-  formatTimeMs: timeMs => {
+  formatTimeMs(timeMs) {
     const duration = moment.duration(timeMs);
 
     if (timeMs < MM_MS) {
@@ -52,8 +51,8 @@ const time = {
     const hh = duration.hours();
     const f = {
       hh: ss,
-      mm: mm,
-      ss: ss,
+      mm,
+      ss,
       format: () => `${f.hh}:${f.mm}:${f.ss}`,
     };
     return f;
@@ -109,7 +108,10 @@ const time = {
   },
 
   subtractMonth(dateMs) {
-    return moment(dateMs).subtract(1, 'month').startOf('month').valueOf();
+    return moment(dateMs)
+      .subtract(1, 'month')
+      .startOf('month')
+      .valueOf();
   },
 };
 

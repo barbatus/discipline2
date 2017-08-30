@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 import Realm from 'realm';
 
 const AppInfoSchema = {

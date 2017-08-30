@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent, PropTypes } from 'react';
 
 import { View, Text, StyleSheet, findNodeHandle } from 'react-native';
@@ -135,7 +133,14 @@ export default class Month extends PureComponent {
   }
 
   selectDate(day: number) {
-    const { monthMs } = this.props;
+    const { monthMs, selDateMs } = this.props;
+    const selDay = selDateMs ? moment(selDateMs).date() : null;
+    if (selDay === day) {
+      const tooltipShown = this.state.tooltipShown;
+      this.setState({ tooltipShown: !tooltipShown });
+      return;
+    }
+
     this.setState({ tooltipShown: false }, () => {
       const dateMs = moment(monthMs).date(day).valueOf();
       caller(this.props.onDateSelect, dateMs);

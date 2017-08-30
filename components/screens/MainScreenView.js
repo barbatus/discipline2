@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 
 import { connect } from 'react-redux';
@@ -133,7 +131,7 @@ export class MainScreenView extends ScrollScreenView {
   }
 }
 
-export default connect(null, dispatch => {
+export default connect(null, (dispatch) => {
   return {
     onAdd: (tracker, index) => dispatch(addTracker(tracker, index)),
   };

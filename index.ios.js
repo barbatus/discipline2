@@ -1,10 +1,6 @@
 /* @flow */
 
-'use strict';
-
-import React, { Component } from 'react';
-
-import { AppRegistry, View } from 'react-native';
+import { AppRegistry } from 'react-native';
 
 import './globals';
 

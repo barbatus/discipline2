@@ -1,8 +1,6 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, View, Text, Animated } from 'react-native';
+import { StyleSheet, View, Animated } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
@@ -38,16 +36,16 @@ export default class Screen extends PureComponent {
   get navBar() {
     return {
       setButtons: (leftBtn, rightBtn, callback) => {
-        this.refs.navBar.setButtons(leftBtn, rightBtn, callback);
+        this.navBarRef.setButtons(leftBtn, rightBtn, callback);
       },
       setDisabled: (disabled, callback) => {
-        this.refs.navBar.setDisabled(disabled, callback);
+        this.navBarRef.setDisabled(disabled, callback);
       },
       setTitle: (navTitle: string) => {
-        this.refs.navBar.setTitle(navTitle);
+        this.navBarRef.setTitle(navTitle);
       },
       setOpacity: (dp: number) => {
-        this.refs.navBar.setOpacity(dp);
+        this.navBarRef.setOpacity(dp);
       },
     };
   }
@@ -60,7 +58,7 @@ export default class Screen extends PureComponent {
         <View style={styles.background}>
           {background}
         </View>
-        <NavBar ref="navBar" />
+        <NavBar ref={(el) => this.navBarRef = el} />
         <View style={styles.content}>
           {content}
         </View>

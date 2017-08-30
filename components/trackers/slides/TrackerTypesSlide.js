@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import {
@@ -27,9 +25,8 @@ import { TrackerType } from '../../../depot/consts';
 
 import { caller } from '../../../utils/lang';
 
-const clean = str => {
+const clean = (str) => {
   check.assert.string(str);
-
   return str.replace(/\n/g, '').replace(/\s+/g, ' ');
 };
 
@@ -108,14 +105,15 @@ const TypeView = styled.View`
   shadow-offset: 0px -1px;
   border-top-width: 4px;
   border-top-color: ${({ isSelected }) =>
-    isSelected ? '#1a7cf9' : 'transparent'};
+    isSelected ? '#1A7CF9' : 'transparent'};
   background-color: ${({ isSelected }) =>
-    isSelected ? '#e6e6e6' : 'transparent'};
+    isSelected ? '#E6E6E6' : 'transparent'};
 `;
 
 export default class TrackerTypesSlide extends PureComponent {
-  static defaultProps = {
-    typeId: TYPES[0].valueOf(),
+  static propTypes = {
+    typeId: React.PropTypes.string.isRequired,
+    onTypeChosen: React.PropTypes.func,
   };
 
   constructor(props) {
@@ -142,7 +140,7 @@ export default class TrackerTypesSlide extends PureComponent {
     const lastType = last(TYPES);
     const firstType = first(TYPES);
 
-    const types = TYPES.map(type => {
+    const types = TYPES.map((type) => {
       return (
         <TouchableWithoutFeedback
           key={type.valueOf()}
@@ -162,10 +160,8 @@ export default class TrackerTypesSlide extends PureComponent {
       );
     });
 
-    const borderColor =
-      selected == lastType || selected == firstType
-        ? styles.selectedBorder
-        : null;
+    const borderColor = (selected === lastType || selected === firstType) ?
+      styles.selectedBorder : null;
     return (
       <ScrollView
         style={[styles.types, borderColor]}

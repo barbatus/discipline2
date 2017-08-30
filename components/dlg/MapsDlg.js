@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { Component } from 'react';
 
 import {
@@ -24,6 +22,12 @@ const DEFAULT_PADDING = {
   left: 40,
 };
 
+const styles = StyleSheet.create({
+  mapView: {
+    flex: 1,
+  },
+});
+
 export default class MapsDlg extends CommonModal {
   constructor(props) {
     super(props);
@@ -44,7 +48,7 @@ export default class MapsDlg extends CommonModal {
     return (
       <MapView
         style={styles.mapView}
-        ref="map"
+        ref={(el) => this.map = el}
         //initRegion={initRegion}
         zoomEnabled
         loadingEnabled
@@ -66,15 +70,9 @@ export default class MapsDlg extends CommonModal {
   }
 
   onAfterShown(path = []) {
-    this.refs.map.fitToCoordinates(path, {
+    this.map.fitToCoordinates(path, {
       edgePadding: DEFAULT_PADDING,
       animated: true,
     });
   }
 }
-
-const styles = StyleSheet.create({
-  mapView: {
-    flex: 1,
-  },
-});

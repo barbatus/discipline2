@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 
 import {
@@ -124,7 +122,6 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   get bodyControls() {
     const { tracker, responsive } = this.props;
-    const { fontSize } = this.state;
     return (
       <View style={[trackerStyles.controls, styles.controlsContainer]}>
         <View style={styles.inputContainer}>
@@ -134,7 +131,7 @@ export default class SumTrackerSlide extends TrackerSlide {
             placeholder="Enter value"
             placeholderTextColor={trackerDef.hintText.color}
             style={styles.sumInput}
-            onChangeText={added => this.onChangeText(added)}
+            onChangeText={(added) => this.onChangeText(added)}
             value={this.state.added}
             onSubmitEditing={this.onPlus}
           />
@@ -160,7 +157,11 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   get footerControls() {
-    return <Text style={trackerStyles.footerText}>Shake to undo</Text>;
+    return (
+      <Text style={trackerStyles.footerText}>
+        Shake to undo
+      </Text>
+    );
   }
 
   onPlus() {

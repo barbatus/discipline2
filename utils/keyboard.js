@@ -1,6 +1,4 @@
-import { TextInput } from 'react-native';
-
-import { DeviceEventEmitter } from 'react-native';
+import { TextInput, DeviceEventEmitter } from 'react-native';
 
 import EventEmitter from 'eventemitter3';
 
@@ -17,7 +15,8 @@ export class Keyboard {
   }
 
   dismiss() {
-    TextInputState.blurTextInput(TextInputState.currentlyFocusedField());
+    TextInputState.blurTextInput(
+      TextInputState.currentlyFocusedField());
   }
 
   shown() {
@@ -37,5 +36,4 @@ export class Keyboard {
   }
 }
 
-const keyboard = new Keyboard();
-export default keyboard;
+export default new Keyboard();

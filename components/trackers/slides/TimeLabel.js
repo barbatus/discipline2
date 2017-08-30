@@ -1,114 +1,6 @@
-'use strict';
-
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
-
-class TimeDigit extends PureComponent {
-  render() {
-    const { style, value, width } = this.props;
-    const align = [{ textAlign: 'center' }];
-    return (
-      <View style={styles.slotStyle}>
-        <Text style={[{ width }, align]}>
-          <Text style={style}>
-            {value[0]}
-          </Text>
-        </Text>
-        <Text style={[{ width }, align]}>
-          <Text style={style}>
-            {value[1]}
-          </Text>
-        </Text>
-      </View>
-    );
-  }
-}
-
-class TimeLabel extends Component {
-  static defaultProps = {
-    timeLapMs: 0,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      timeMs: props.timeMs,
-      timeLapMs: 0,
-    };
-  }
-
-  setTime(timeMs: number) {
-    this.setState({
-      timeMs,
-    });
-  }
-
-  setTimeLap(timeLapMs: number) {
-    this.setState({
-      timeLapMs,
-    });
-  }
-
-  shouldComponentUpdate(props, state) {
-    if (props.timeMs != this.props.timeMs) {
-      this.state.timeMs = props.timeMs;
-      this.state.timeLapMs = props.timeLapMs;
-      return true;
-    }
-    return (
-      this.state.timeMs != state.timeMs ||
-      this.state.timeLapMs != state.timeLapMs
-    );
-  }
-
-  componentWillReceiveProps({ timeMs }) {
-    this.setState({
-      timeMs,
-    });
-
-    if (!timeMs) {
-      this.setState({
-        lapTimeMs: 0,
-      });
-    }
-  }
-
-  render() {
-    const { style, width } = this.props;
-
-    const { hh, mm, ss } = time.formatTimeMs(this.state.timeMs);
-    const timeLap = time.formatTimeMs(this.state.timeLapMs);
-    const digWidth = width / 6;
-    const delimStyle = [styles.timeText, styles.delimStyle, style];
-    const digitStyle = [styles.timeText, style];
-    const trueWidth = hh ? width : 4 * digWidth;
-    const lapStyle = [{ width: trueWidth }, styles.lapText];
-    return (
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          {hh
-            ? <TimeDigit style={digitStyle} width={digWidth} value={hh} />
-            : null}
-          {hh ? <Text style={delimStyle}>:</Text> : null}
-          <TimeDigit style={digitStyle} width={digWidth} value={mm} />
-          <Text style={delimStyle}>:</Text>
-          <TimeDigit style={digitStyle} width={digWidth} value={ss} />
-        </View>
-        <View style={styles.textContainer}>
-          {this.state.timeLapMs
-            ? <Text style={lapStyle}>
-                {timeLap.format()}
-              </Text>
-            : null}
-        </View>
-      </View>
-    );
-  }
-}
-
-export default TimeLabel;
 
 const styles = StyleSheet.create({
   container: {
@@ -143,3 +35,62 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+
+class TimeDigit extends PureComponent {
+  render() {
+    const { style, value, width } = this.props;
+    const align = [{ textAlign: 'center' }];
+    return (
+      <View style={styles.slotStyle}>
+        <Text style={[{ width }, align]}>
+          <Text style={style}>
+            {value[0]}
+          </Text>
+        </Text>
+        <Text style={[{ width }, align]}>
+          <Text style={style}>
+            {value[1]}
+          </Text>
+        </Text>
+      </View>
+    );
+  }
+}
+
+export default class TimeLabel extends PureComponent {
+  static defaultProps = {
+    lapTimeMs: 0,
+  };
+
+  render() {
+    const { style, width, timeMs, lapTimeMs } = this.props;
+    const { hh, mm, ss } = time.formatTimeMs(timeMs);
+
+    const timeLap = time.formatTimeMs(lapTimeMs);
+    const digWidth = width / 6;
+    const delimStyle = [styles.timeText, styles.delimStyle, style];
+    const digitStyle = [styles.timeText, style];
+    const trueWidth = hh ? width : 4 * digWidth;
+    const lapStyle = [{ width: trueWidth }, styles.lapText];
+    return (
+      <View style={styles.container}>
+        <View style={styles.textContainer}>
+          {hh ? <TimeDigit style={digitStyle} width={digWidth} value={hh} /> : null}
+          {hh ? <Text style={delimStyle}>:</Text> : null}
+          <TimeDigit style={digitStyle} width={digWidth} value={mm} />
+          <Text style={delimStyle}>:</Text>
+          <TimeDigit style={digitStyle} width={digWidth} value={ss} />
+        </View>
+        <View style={styles.textContainer}>
+          {
+            lapTimeMs ?
+              <Text style={lapStyle}>
+                {timeLap.format()}
+              </Text>
+              : null
+          }
+        </View>
+      </View>
+    );
+  }
+}

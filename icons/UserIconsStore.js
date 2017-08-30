@@ -1,24 +1,22 @@
-'use strict';
-
 import UserIcons from './userIcons';
 
 import { IconSize } from './consts';
 
 class UserIcon {
   constructor(iconEnum) {
-    this._enum = iconEnum;
+    this.enum = iconEnum;
   }
 
   get id() {
-    return this._enum.valueOf();
+    return this.enum.valueOf();
   }
 
   get png() {
-    return this._enum[IconSize.NORMAL];
+    return this.enum[IconSize.NORMAL];
   }
 
   get pngLarge() {
-    return this._enum[IconSize.NORMAL];
+    return this.enum[IconSize.NORMAL];
   }
 }
 
@@ -32,6 +30,6 @@ export default class UserIconsStore {
   }
 
   static getAll(): Array<UserIcon> {
-    return UserIcons.symbols().map(icon => new UserIcon(icon));
+    return UserIcons.symbols().map((icon) => new UserIcon(icon));
   }
 }

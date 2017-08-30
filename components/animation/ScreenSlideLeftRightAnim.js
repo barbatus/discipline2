@@ -9,17 +9,17 @@ import Animation from './Animation';
 import { screenWidth } from '../styles/common';
 
 export default class ScreenSlideLeftRightAnim {
-  _moveX: Animated.Value;
+  moveX: Animated.Value;
 
   constructor(posX = 1) {
-    this._moveX = new Animated.Value(posX);
+    this.moveX = new Animated.Value(posX);
   }
 
   get style(): Object {
     return {
       transform: [
         {
-          translateX: this._moveX.interpolate({
+          translateX: this.moveX.interpolate({
             inputRange: [-1, 0, 1],
             outputRange: [-(screenWidth + 1), 0, screenWidth + 1],
           }),
@@ -29,12 +29,12 @@ export default class ScreenSlideLeftRightAnim {
   }
 
   get value() {
-    return this._moveX._value;
+    return this.moveX._value;
   }
 
   get aIn() {
     return Animation.timing(
-      this._moveX,
+      this.moveX,
       500,
       this.value + 1,
       Easing.inOut(Easing.linear),
@@ -43,7 +43,7 @@ export default class ScreenSlideLeftRightAnim {
 
   get aOut() {
     return Animation.timing(
-      this._moveX,
+      this.moveX,
       500,
       this.value - 1,
       Easing.inOut(Easing.linear),
@@ -55,7 +55,7 @@ export default class ScreenSlideLeftRightAnim {
   }
 
   setIn() {
-    this._moveX.setValue(this.value + 1);
+    this.moveX.setValue(this.value + 1);
   }
 
   animateOut(callback) {
@@ -63,6 +63,6 @@ export default class ScreenSlideLeftRightAnim {
   }
 
   setOut() {
-    this._moveX.setValue(this.value - 1);
+    this.moveX.setValue(this.value - 1);
   }
 }

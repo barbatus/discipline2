@@ -5,13 +5,14 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest --silent=false",
+    "test2": "jest --silent=false",
     "bundle": "react-native bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle",
     "lint:staged": "lint-staged",
     "prettify": "prettier --single-quote=true --trailing-comma=all --write **/**/*.js",
     "lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore",
-    "lint:js": "npm run lint:eslint -- . "
+    "lint:js": "npm run lint:eslint -- . ",
+    "react-devtools": "react-devtools"
   },
   "dependencies": {
     "assert": "1.3.0",
@@ -147,6 +148,5 @@
       "prettier --single-quote=true --trailing-comma=all --write",
       "git add"
     ]
-  },
-  "pre-commit": "lint:staged"
+  }
 }

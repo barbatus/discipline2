@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { View, StyleSheet, Animated, TouchableOpacity } from 'react-native';
@@ -43,11 +41,11 @@ export default class TrackerCal extends PureComponent {
   }
 
   scrollToPrevMonth() {
-    this.refs.calendar.scrollToPrevMonth();
+    this.calendar.scrollToPrevMonth();
   }
 
   scrollToNextMonth() {
-    this.refs.calendar.scrollToNextMonth();
+    this.calendar.scrollToNextMonth();
   }
 
   prepareTicks() {
@@ -80,8 +78,7 @@ export default class TrackerCal extends PureComponent {
   }
 
   render() {
-    const { style, tracker, todayMs, dateMs } = this.props;
-    const { onMonthChanged } = this.props;
+    const { style, tracker, todayMs, dateMs, onMonthChanged } = this.props;
     const { selDateMs } = this.state;
 
     const tickMap = this.prepareTicks();
@@ -89,7 +86,7 @@ export default class TrackerCal extends PureComponent {
     return (
       <Animated.View style={calStyle}>
         <Calendar
-          ref="calendar"
+          ref={(el) => this.calendar = el}
           todayMs={todayMs}
           dateMs={dateMs}
           scrollEnabled

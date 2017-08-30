@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent, PropTypes } from 'react';
 
 import {

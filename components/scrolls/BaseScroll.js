@@ -1,10 +1,8 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native';
 
-import { isBoolean } from 'lodash';
+import isBoolean from 'lodash/isBoolean';
 
 import { commonStyles, screenWidth } from '../styles/common';
 
@@ -53,6 +51,7 @@ export default class BaseScroll extends PureComponent {
   };
 
   static defaultProps = {
+    index: 0,
     slides: [],
     horizontal: true,
     pagingEnabled: true,
@@ -65,7 +64,11 @@ export default class BaseScroll extends PureComponent {
     keyboardDismissMode: 'on-drag',
   };
 
-  scrollTo(index: number, callback?: Function | boolean, animated?: boolean) {
+  scrollTo(
+    index: number,
+    callback?: Function | boolean,
+    animated?: boolean,
+  ) {
     const { slides, slideWidth } = this.props;
 
     if (isBoolean(callback)) {
@@ -167,11 +170,12 @@ export default class BaseScroll extends PureComponent {
   }
 
   render() {
-    const { slides, pagingEnabled, contentStyle, scrollEnabled } = this.props;
+    const { slides, index, slideWidth, pagingEnabled, contentStyle, scrollEnabled } = this.props;
     return (
       <ScrollView
         ref="scrollView"
         {...this.props}
+        contentOffset={{ x: index * slideWidth, y: 0 }}
         keyboardShouldPersistTaps="always"
         automaticallyAdjustContentInsets={false}
         scrollEnabled={scrollEnabled}

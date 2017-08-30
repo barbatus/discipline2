@@ -1,13 +1,16 @@
-'use strict';
-
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { StyleSheet, View, Animated } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 
 import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
+
+import { commonDef, screenWidth } from '../styles';
+
+const styles = StyleSheet.create({
+  gradient: commonDef.absFilled,
+});
 
 const grads = [
   {
@@ -40,173 +43,174 @@ const grads = [
   },
 ];
 
-const rightOut = window.width - 1;
-const leftOut = -window.width + 1;
+const rightOut = screenWidth - 1;
+const leftOut = -screenWidth + 1;
 
-export default class GradientSlider extends Component {
+export default class GradientSlider extends PureComponent {
+  slides = ['left', 'center', 'right'];
+
+  gradInd = 0;
+
+  isSliding = false;
+
   constructor(props) {
     super(props);
 
-    this._slides = ['left', 'center', 'right'];
-    this._gradInd = 0;
-
     this.state = {
       left: {
-        grad: this._getGrad(-1),
+        grad: this.getGrad(-1),
         move: new Animated.Value(leftOut),
       },
       center: {
-        grad: this._getGrad(0),
+        grad: this.getGrad(0),
         move: new Animated.Value(0),
       },
       right: {
-        grad: this._getGrad(1),
+        grad: this.getGrad(1),
         move: new Animated.Value(rightOut),
       },
     };
   }
 
-  _getGrad(index) {
+  getGrad(index) {
     const residue = index % grads.length;
-    const grad = residue >= 0 ? grads[residue] : grads[grads.length + residue];
+    const grad = residue >= 0 ?
+      grads[residue] : grads[grads.length + residue];
     return [grad.start, grad.end];
   }
 
   slide(dx) {
-    if (this._isAnimated) return;
+    if (this.isSliding) return;
 
-    const left = this.state[this._slides[0]];
+    const left = this.state[this.slides[0]];
     const leftVal = left.move._value;
     const leftDx = Math.min(leftVal - dx, 0);
     left.move.setValue(leftDx);
 
-    const center = this.state[this._slides[1]];
+    const center = this.state[this.slides[1]];
     const centerVal = center.move._value;
     const centerDx = centerVal - dx;
     center.move.setValue(centerDx);
 
-    const right = this.state[this._slides[2]];
+    const right = this.state[this.slides[2]];
     const rightVal = right.move._value;
     const rightDx = Math.max(rightVal - dx, 0);
     right.move.setValue(rightDx);
   }
 
   finishSlide(dir) {
-    if (this._isAnimated) return;
+    if (this.isSliding) return;
 
-    this._isAnimated = true;
+    this.isSliding = true;
 
     if (dir > 0) {
       Animated.parallel([
-        Animated.timing(this.state[this._slides[2]].move, {
+        Animated.timing(this.state[this.slides[2]].move, {
           toValue: 0,
         }),
-        Animated.timing(this.state[this._slides[1]].move, {
+        Animated.timing(this.state[this.slides[1]].move, {
           toValue: leftOut,
         }),
-        Animated.timing(this.state[this._slides[0]].move, {
+        Animated.timing(this.state[this.slides[0]].move, {
           toValue: leftOut,
         }),
       ]).start(() => {
-        this._gradInd += 1;
-        const slide0 = this._slides[0];
-        const slide1 = this._slides[1];
+        this.gradInd += 1;
+        const slide0 = this.slides[0];
+        const slide1 = this.slides[1];
         this.state[slide0].move.setValue(rightOut);
         this.setState(
           {
             [slide0]: {
-              grad: this._getGrad(this._gradInd + 1),
+              grad: this.getGrad(this.gradInd + 1),
               move: this.state[slide0].move,
             },
             [slide1]: {
-              grad: this._getGrad(this._gradInd - 1),
+              grad: this.getGrad(this.gradInd - 1),
               move: this.state[slide1].move,
             },
           },
           () => {
-            this._isAnimated = false;
+            this.isSliding = false;
           },
         );
 
-        this._slides.push(slide0);
-        this._slides.shift();
+        this.slides.push(slide0);
+        this.slides.shift();
       });
     } else {
       Animated.parallel([
-        Animated.timing(this.state[this._slides[0]].move, {
+        Animated.timing(this.state[this.slides[0]].move, {
           toValue: 0,
         }),
-        Animated.timing(this.state[this._slides[1]].move, {
+        Animated.timing(this.state[this.slides[1]].move, {
           toValue: rightOut,
         }),
-        Animated.timing(this.state[this._slides[2]].move, {
+        Animated.timing(this.state[this.slides[2]].move, {
           toValue: rightOut,
         }),
       ]).start(() => {
-        this._gradInd -= 1;
-        const slide2 = this._slides[2];
-        const slide1 = this._slides[1];
+        this.gradInd -= 1;
+        const slide2 = this.slides[2];
+        const slide1 = this.slides[1];
         this.state[slide2].move.setValue(leftOut);
         this.setState(
           {
             [slide2]: {
-              grad: this._getGrad(this._gradInd - 1),
+              grad: this.getGrad(this.gradInd - 1),
               move: this.state[slide2].move,
             },
             [slide1]: {
-              grad: this._getGrad(this._gradInd + 1),
+              grad: this.getGrad(this.gradInd + 1),
               move: this.state[slide1].move,
             },
           },
           () => {
-            this._isAnimated = false;
+            this.isSliding = false;
           },
         );
 
-        this._slides.pop();
-        this._slides.splice(0, 0, slide2);
+        this.slides.pop();
+        this.slides.splice(0, 0, slide2);
       });
     }
   }
 
   finishNoSlide() {
-    if (this._isAnimated) return;
+    if (this.isSliding) return;
 
-    this._isAnimated = true;
+    this.isSliding = true;
     Animated.parallel([
-      Animated.timing(this.state[this._slides[2]].move, {
+      Animated.timing(this.state[this.slides[2]].move, {
         toValue: rightOut,
       }),
-      Animated.timing(this.state[this._slides[1]].move, {
+      Animated.timing(this.state[this.slides[1]].move, {
         toValue: 0,
       }),
-      Animated.timing(this.state[this._slides[0]].move, {
+      Animated.timing(this.state[this.slides[0]].move, {
         toValue: leftOut,
       }),
     ]).start(() => {
-      this._isAnimated = false;
+      this.isSliding = false;
     });
   }
 
   render() {
+    const { left, center, right } = this.state;
     return (
       <View style={this.props.style}>
         <Animated.View
           style={[
             styles.gradient,
             {
-              transform: [
-                {
-                  translateX: this.state.left.move,
-                },
-              ],
+              transform: [{ translateX: left.move }],
             },
           ]}
         >
           <LinearGradient
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
-            colors={this.state.left.grad}
+            colors={left.grad}
             style={styles.gradient}
           />
         </Animated.View>
@@ -214,18 +218,14 @@ export default class GradientSlider extends Component {
           style={[
             styles.gradient,
             {
-              transform: [
-                {
-                  translateX: this.state.center.move,
-                },
-              ],
+              transform: [{ translateX: center.move }],
             },
           ]}
         >
           <LinearGradient
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
-            colors={this.state.center.grad}
+            colors={center.grad}
             style={styles.gradient}
           />
         </Animated.View>
@@ -233,18 +233,14 @@ export default class GradientSlider extends Component {
           style={[
             styles.gradient,
             {
-              transform: [
-                {
-                  translateX: this.state.right.move,
-                },
-              ],
+              transform: [{ translateX: right.move }],
             },
           ]}
         >
           <LinearGradient
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
-            colors={this.state.right.grad}
+            colors={right.grad}
             style={styles.gradient}
           />
         </Animated.View>
@@ -252,13 +248,3 @@ export default class GradientSlider extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  gradient: {
-    position: 'absolute',
-    bottom: 0,
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-});

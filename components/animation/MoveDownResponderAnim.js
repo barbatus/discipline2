@@ -6,7 +6,7 @@ import { MoveUpDownResponder } from './responders';
 
 import { caller } from '../../utils/lang';
 
-export class MoveDownResponderAnim {
+export default class MoveDownResponderAnim {
   moveY = new Animated.Value(0);
 
   in: boolean = false;
@@ -17,11 +17,7 @@ export class MoveDownResponderAnim {
 
   get style(): Object {
     return {
-      transform: [
-        {
-          translateY: this.moveY,
-        },
-      ],
+      transform: [{ translateY: this.moveY }],
     };
   }
 
@@ -42,9 +38,7 @@ export class MoveDownResponderAnim {
         this.moveY.setValue(dy);
       },
       onMoveStart: onStart,
-      onMoveDone: () => {
-        this.animateIn(onDone);
-      },
+      onMoveDone: () => this.animateIn(onDone),
     });
   }
 

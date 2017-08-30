@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { Animated, StyleSheet, InteractionManager } from 'react-native';
@@ -31,6 +29,7 @@ class TrackerWrapper extends PureComponent {
     this.onUndo = ::this.onUndo;
     this.onStart = ::this.onStart;
     this.onStop = ::this.onStop;
+    this.onProgress = ::this.onProgress;
   }
 
   onEdit(...args) {
@@ -68,6 +67,11 @@ class TrackerWrapper extends PureComponent {
     caller(onStop, tracker, ...args);
   }
 
+  onProgress(...args) {
+    const { onProgress, tracker } = this.props;
+    caller(onProgress, tracker, ...args);
+  }
+
   showEdit(...args) {
     this.refs.tracker.showEdit(...args);
   }
@@ -85,7 +89,7 @@ class TrackerWrapper extends PureComponent {
   }
 
   render() {
-    const { component, ...rest } = this.props;
+    const { component, progressive, ...rest } = this.props;
     return React.createElement(component, {
       ...rest,
       ref: 'tracker',
@@ -96,12 +100,13 @@ class TrackerWrapper extends PureComponent {
       onUndo: this.onUndo,
       onStart: this.onStart,
       onStop: this.onStop,
+      onProgress: progressive ? this.onProgress : null,
     });
   }
 }
 
 export default class TrackerRenderer extends PureComponent {
-  _opacity = new Animated.Value(0);
+  inOpacity = new Animated.Value(0);
 
   constructor(props) {
     super(props);
@@ -115,24 +120,28 @@ export default class TrackerRenderer extends PureComponent {
     this.onUndo = ::this.onUndo;
     this.onStart = ::this.onStart;
     this.onStop = ::this.onStop;
+    this.onProgress = ::this.onProgress;
     this.onTrackerChange = ::this.onTrackerChange;
   }
 
   get opacity() {
-    return this._opacity;
+    return this.inOpacity;
   }
 
   set opacity(value) {
-    this._opacity.setValue(value);
+    this.inOpacity.setValue(value);
   }
 
   get shown() {
-    return this.opacity._value === 1;
+    return this.inOpacity._value === 1;
   }
 
   componentWillReceiveProps(props) {
     if (this.props.trackers !== props.trackers) {
       this.state.trackers = props.trackers;
+    }
+    if (this.props.enabled !== props.enabled) {
+      this.state.enabled = props.enabled;
     }
   }
 
@@ -169,9 +178,9 @@ export default class TrackerRenderer extends PureComponent {
   }
 
   onProgress(tracker: Tracker, value?: number, data?: any) {
-    InteractionManager.runAfterInteractions(() => {
-      caller(this.props.onProgress, tracker, value, data);
-    });
+    InteractionManager.runAfterInteractions(() =>
+      caller(this.props.onProgress, tracker, value, data)
+    );
   }
 
   onUndo(tracker: Tracker) {
@@ -183,18 +192,16 @@ export default class TrackerRenderer extends PureComponent {
   }
 
   renderTracker(tracker: Tracker) {
-    // Generate onProgress events only
-    // for the main tracker slides (swiper's ones)
-    return this.renderTrackerInternal(tracker, 1.0, true, true, {
-      onProgress: this.onProgress.bind(this, tracker),
-    });
+    // Render swiper's tracker slides as progressive
+    // (i.e. they can update state progressively)
+    return this.renderTrackerInternal(tracker, 1.0, true, true, true);
   }
 
   renderScaledTracker(tracker: Tracker, scale: number, responsive: boolean) {
     check.assert.number(scale);
     check.assert.boolean(responsive);
 
-    return this.renderTrackerInternal(tracker, scale, responsive, false);
+    return this.renderTrackerInternal(tracker, scale, responsive, false, false);
   }
 
   renderTrackerInternal(
@@ -202,9 +209,9 @@ export default class TrackerRenderer extends PureComponent {
     scale: number,
     responsive: boolean,
     editable: boolean,
-    props: Object,
+    progressive: boolean,
   ) {
-    const trackProps = extend({ responsive, editable, scale }, props);
+    const trackProps = { responsive, editable, scale, progressive };
     switch (tracker.type) {
       case TrackerType.GOAL:
         return this.renderSlide(GoalTrackerSlide, tracker, trackProps);
@@ -233,6 +240,7 @@ export default class TrackerRenderer extends PureComponent {
         onUndo={this.onUndo}
         onStart={this.onStart}
         onStop={this.onStop}
+        onProgress={this.onProgress}
         onTrackerChange={this.onTrackerChange}
         tracker={tracker}
       />

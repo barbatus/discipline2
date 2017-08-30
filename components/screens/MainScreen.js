@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { PureComponent } from 'react';
 
 import { View } from 'react-native';
@@ -67,7 +65,10 @@ export default class MainScreen extends PureComponent {
   render() {
     const { navigator } = this.props;
     const gradient = (
-      <GradientSlider ref="gradient" style={commonStyles.absFilled} />
+      <GradientSlider
+        ref="gradient"
+        style={commonStyles.absFilled}
+      />
     );
     return (
       <Screen
