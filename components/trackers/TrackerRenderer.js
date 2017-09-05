@@ -121,7 +121,7 @@ export default class TrackerRenderer extends PureComponent {
     this.onStart = ::this.onStart;
     this.onStop = ::this.onStop;
     this.onProgress = ::this.onProgress;
-    this.onTrackerChange = ::this.onTrackerChange;
+    this.onTrackerEdit = ::this.onTrackerEdit;
   }
 
   get opacity() {
@@ -187,8 +187,8 @@ export default class TrackerRenderer extends PureComponent {
     caller(this.props.onUndo, tracker);
   }
 
-  onTrackerChange(tracker: Tracker) {
-    caller(this.props.onTrackerChange, tracker);
+  onTrackerEdit(values) {
+    caller(this.props.onTrackerEdit, values);
   }
 
   renderTracker(tracker: Tracker) {
@@ -241,7 +241,7 @@ export default class TrackerRenderer extends PureComponent {
         onStart={this.onStart}
         onStop={this.onStop}
         onProgress={this.onProgress}
-        onTrackerChange={this.onTrackerChange}
+        onTrackerEdit={this.onTrackerEdit}
         tracker={tracker}
       />
     );

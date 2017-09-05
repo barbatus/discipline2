@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { connect } from 'react-redux';
+
+import { submit } from 'redux-form';
+
 import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
@@ -18,32 +22,31 @@ import { caller } from '../../utils/lang';
 
 const TYPES = TrackerType.symbols();
 
-const createNewTracker = () => Trackers.create({});
-
-export default class NewTrackerScreenView extends ScrollScreenView {
+export class NewTrackerScreenView extends ScrollScreenView {
   static contextTypes = {
     navBar: React.PropTypes.object.isRequired,
   };
+
+  tracker = {};
 
   constructor(props) {
     super(props);
 
     this.state = {
-      tracker: createNewTracker(),
+      tracker: null,
       typeId: TYPES[0].valueOf(),
     };
     this.onTypeSelect = ::this.onTypeSelect;
-    this.onTrackerChange = ::this.onTrackerChange;
+    this.onChange = ::this.onChange;
     this.onTypeChosen = ::this.onTypeChosen;
+    this.onNewTracker = ::this.onNewTracker;
   }
 
   onRightMove() {
-    const newTracker = createNewTracker();
     this.setState({
-      tracker: newTracker,
+      tracker: null,
       typeId: TYPES[0].valueOf(),
     });
-
     this.setNewTrackerBtns();
   }
 
@@ -51,10 +54,11 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     const { tracker } = this.state;
     return (
       <NewTrackerSlide
-        ref="left"
+        ref={(el) => this.leftViewRef = el}
         tracker={tracker}
         onTypeSelect={this.onTypeSelect}
-        onTrackerChange={this.onTrackerChange}
+        onChange={this.onChange}
+        onNewTracker={this.onNewTracker}
       />
     );
   }
@@ -63,7 +67,7 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     const { typeId } = this.state;
     return (
       <TrackerTypesSlide
-        ref="right"
+        ref={(el) => this.rightViewRef = el}
         typeId={typeId}
         onTypeChosen={this.onTypeChosen}
       />
@@ -102,12 +106,17 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     }
   }
 
-  onTrackerChange(tracker: Tracker) {
-    this.setState({ tracker });
+  onChange(tracker) {
+    this.tracker = tracker;
+  }
+
+  onNewTracker(tracker) {
+    caller(this.props.onAccept, Trackers.create(tracker));
   }
 
   onAccept() {
-    caller(this.props.onAccept, this.state.tracker);
+    const { dispatch } = this.props;
+    dispatch(submit('newTrackerForm'));
   }
 
   onTypeCancel() {
@@ -136,11 +145,14 @@ export default class NewTrackerScreenView extends ScrollScreenView {
     this.setNewTrackerBtns();
     this.moveLeft();
 
-    let { tracker, typeId } = this.state;
-    tracker = Trackers.create(tracker);
-    tracker.typeId = typeId;
+    const { typeId } = this.state;
+    const tracker = { ...this.tracker, typeId };
     this.setState({
       tracker,
     });
   }
 }
+
+export default connect(
+  null, null, null, { withRef: true },
+)(NewTrackerScreenView);

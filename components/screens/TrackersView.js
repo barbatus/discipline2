@@ -4,6 +4,8 @@ import { StyleSheet, View, Animated, InteractionManager } from 'react-native';
 
 import { connect } from 'react-redux';
 
+import { submit } from 'redux-form';
+
 import moment from 'moment';
 
 import {
@@ -16,6 +18,8 @@ import {
 import Animation from '../animation/Animation';
 
 import TrackerCal from '../trackers/TrackerCal';
+
+import TrackersModel from '../../model/Trackers';
 
 import Trackers from '../trackers/Trackers';
 
@@ -74,7 +78,7 @@ class TrackersView extends PureComponent {
     this.onSwiperScaleMove = ::this.onSwiperScaleMove;
     this.onSwiperMoveDown = ::this.onSwiperMoveDown;
     this.onSwiperMoveDownStart = ::this.onSwiperMoveDownStart;
-    this.onTrackerChange = ::this.onTrackerChange;
+    this.onTrackerEdit = ::this.onTrackerEdit;
     this.onSlideChange = ::this.onSlideChange;
     this.onMonthChanged = ::this.onMonthChanged;
     this.onNextMonth = ::this.onNextMonth;
@@ -105,7 +109,7 @@ class TrackersView extends PureComponent {
           onSwiperMoveDown={this.onSwiperMoveDown}
           onSwiperMoveDownStart={this.onSwiperMoveDownStart}
           onSwiperMoveUpStart={onMoveUp}
-          onTrackerChange={this.onTrackerChange}
+          onTrackerEdit={this.onTrackerEdit}
           onSlideChange={this.onSlideChange}
         />
       </Animated.View>
@@ -136,12 +140,12 @@ class TrackersView extends PureComponent {
 
     this.active = true;
     const { current } = this.state;
-    this.props.onUpdate(this.changedTracker || current);
+    const { dispatch } = this.props;
+    dispatch(submit('trackerForm'));
   }
 
   onSaveCompleted(index) {
     this.active = false;
-    this.changedTracker = null;
     caller(this.props.onSaveCompleted, index);
   }
 
@@ -245,8 +249,12 @@ class TrackersView extends PureComponent {
     this.setEditTrackerBtns();
   }
 
-  onTrackerChange(tracker: Tracker) {
-    this.changedTracker = tracker;
+  onTrackerEdit(tracker) {
+    const { current } = this.state;
+    this.props.onUpdate(TrackersModel.create({
+      ...current,
+      ...tracker,
+    }));
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import isBoolean from 'lodash/isBoolean';
 

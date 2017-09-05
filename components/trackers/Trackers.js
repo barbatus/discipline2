@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, Animated, InteractionManager } from 'react-native';
+import { StyleSheet, Animated } from 'react-native';
 
 import reactMixin from 'react-mixin';
 

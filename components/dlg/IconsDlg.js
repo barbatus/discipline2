@@ -16,10 +16,7 @@ export default class IconsDlg extends CommonModal {
 
   get content() {
     return (
-      <IconsGrid
-        ref="iconsGrid"
-        onIconChosen={this.onIconChosen}
-      />
+      <IconsGrid onIconChosen={this.onIconChosen} />
     );
   }
 

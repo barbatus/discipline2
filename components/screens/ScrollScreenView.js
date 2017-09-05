@@ -30,29 +30,43 @@ export default class ScrollScreenView extends PureComponent {
     throw new Error('leftView is not implemented');
   }
 
+  get leftTrueViewRef() {
+    if (!this.leftViewRef) return null;
+
+    return this.leftViewRef.getWrappedInstance ?
+      this.leftViewRef.getWrappedInstance() : this.leftViewRef;
+  }
+
+  get rightTrueViewRef() {
+    if (!this.rightViewRef) return null;
+
+    return this.rightViewRef.getWrappedInstance ?
+      this.rightViewRef.getWrappedInstance() : this.rightViewRef;
+  }
+
   moveLeft(callback?: Function) {
-    if (this.refs.left.onLeftMove) {
-      this.refs.left.onLeftMove();
+    if (this.leftTrueViewRef.onLeftMove) {
+      this.leftTrueViewRef.onLeftMove();
     }
-    if (this.refs.right.onLeftMove) {
-      this.refs.right.onLeftMove();
+    if (this.rightTrueViewRef.onLeftMove) {
+      this.rightTrueViewRef.onLeftMove();
     }
     this.moveTo(0, callback);
   }
 
   moveRight(callback?: Function) {
-    if (this.refs.left.onRightMove) {
-      this.refs.left.onRightMove();
+    if (this.leftTrueViewRef.onRightMove) {
+      this.leftTrueViewRef.onRightMove();
     }
-    if (this.refs.right.onRightMove) {
-      this.refs.right.onRightMove();
+    if (this.rightTrueViewRef.onRightMove) {
+      this.rightTrueViewRef.onRightMove();
     }
     this.moveTo(1, callback);
   }
 
   moveTo(index: number) {
     const scrollToX = index * screenWidth;
-    this.refs.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
+    this.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
   }
 
   render() {
@@ -60,7 +74,7 @@ export default class ScrollScreenView extends PureComponent {
     return (
       <View style={[commonStyles.flexFilled, style]}>
         <ScrollView
-          ref="scroll"
+          ref={(el) => this.scroll = el}
           style={styles.scroll}
           horizontal
           pagingEnabled

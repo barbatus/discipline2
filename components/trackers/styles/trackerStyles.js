@@ -6,9 +6,9 @@ import { StyleSheet } from 'react-native';
 
 import { slideDef, slideWidth } from './slideStyles';
 
-const BACK_COLOR = '#f5f5f5';
+const BACK_COLOR = '#F5F5F5';
 
-const HINT_COLOR = '#dfdfdf';
+const HINT_COLOR = '#DFDFDF';
 
 const trackerDef = {
   ...slideDef,
@@ -128,21 +128,26 @@ const editDef = {
     ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
   },
-  barContainer: {
-    ...trackerDef.barContainer,
-    alignItems: 'center',
-    flex: 0.25,
-  },
-  iconContainer: {
-    ...trackerDef.iconContainer,
-    alignItems: 'flex-end',
-    flex: 0.4,
-    paddingTop: 15,
+  changeIconContainer: {
+    flex: 0.65,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
   },
   titleContainer: {
     ...trackerDef.titleContainer,
     alignItems: 'center',
     flex: 0.35,
+  },
+  barContainer: {
+    ...trackerDef.barContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 0.4,
+  },
+  iconContainer: {
+    ...trackerDef.iconContainer,
+    alignItems: 'flex-end',
+    flex: 0.6,
   },
   titleInput: {
     flex: 1,
@@ -150,7 +155,7 @@ const editDef = {
     width: slideWidth - 40,
     fontSize: 30,
     textAlign: 'center',
-    color: '#4a4a4a',
+    color: '#4A4A4A',
     fontWeight: '200',
   },
   group: {

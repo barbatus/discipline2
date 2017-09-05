@@ -1,15 +1,5 @@
 import React, { PureComponent } from 'react';
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Animated,
-} from 'react-native';
-
 import { commonStyles, screenWidth } from '../styles/common';
 
 import BaseScroll from './BaseScroll';

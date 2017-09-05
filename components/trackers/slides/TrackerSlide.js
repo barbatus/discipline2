@@ -8,9 +8,9 @@ import Keyboard from '../../../utils/keyboard';
 
 import { commonStyles } from '../../styles/common';
 
-import TrackerView from './basic/TrackerView';
+import TrackerView from './common/TrackerView';
 
-import TrackerEditView from './basic/TrackerEditView';
+import TrackerEditView from './common/TrackerEditView';
 
 import UserIconsStore from '../../../icons/UserIconsStore';
 
@@ -44,7 +44,7 @@ export default class TrackerSlide extends PureComponent {
     const { scale, tracker } = props;
     this.flip = new FlipAnimation();
     this.scale = new ScaleAnimation(scale);
-    this.state = { clonedTracker: null };
+    this.state = { editTracker: null };
     this.onTap = ::this.onTap;
     this.onEdit = ::this.onEdit;
     this.onRemove = ::this.onRemove;
@@ -69,9 +69,8 @@ export default class TrackerSlide extends PureComponent {
   showEdit(callback) {
     const { tracker } = this.props;
     Keyboard.dismiss();
-    this.setState({
-      clonedTracker: tracker.clone(),
-    }, () => this.flip.animateIn(callback));
+    this.setState({ editTracker: tracker },
+      () => this.flip.animateIn(callback));
   }
 
   cancelEdit(callback) {
@@ -102,28 +101,24 @@ export default class TrackerSlide extends PureComponent {
   }
 
   renderBackView() {
-    const { editable, onTrackerChange } = this.props;
-    const { clonedTracker } = this.state;
-    if (editable && clonedTracker) {
-      return (
-        <TrackerEditView
-          ref="editView"
-          style={[absFilled, this.flip.style2]}
-          showType={false}
-          allowDelete
-          tracker={clonedTracker}
-          onRemove={this.onRemove}
-          onTrackerChange={onTrackerChange}
-        />
-      );
-    }
+    const { editable, onTrackerEdit } = this.props;
+    const { editTracker } = this.state;
+    return editable && editTracker ? (
+      <TrackerEditView
+        style={[absFilled, this.flip.style2]}
+        showType={false}
+        allowDelete
+        initialValues={editTracker}
+        onRemove={this.onRemove}
+        onSubmitSuccess={onTrackerEdit}
+      />
+    ) : null;
   }
 
   renderFrontView() {
     const { tracker } = this.props;
     return (
       <TrackerView
-        ref="trackerView"
         style={this.flip.style1}
         tracker={tracker}
         backImg={this.backImg}

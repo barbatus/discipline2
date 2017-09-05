@@ -52,7 +52,6 @@ export default class Screen extends PureComponent {
 
   render() {
     const { content, background } = this.props;
-
     return (
       <View style={styles.container}>
         <View style={styles.background}>

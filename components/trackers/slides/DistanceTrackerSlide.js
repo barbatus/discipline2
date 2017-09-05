@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import {
+  Animated,
   View,
   TouchableHighlight,
   TouchableOpacity,
@@ -31,6 +32,8 @@ import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
+import StartStopBtn from './common/StartStopBtn';
+
 const styles = StyleSheet.create({
   distData: {
     flex: 1,
@@ -43,20 +46,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  button: {
-    width: 70,
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#D9DADB',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  btnText: {
-    fontSize: 15,
-    color: '#9B9B9B',
-    fontWeight: '100',
   },
   label: {
     width: slideWidth,
@@ -93,20 +82,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
-
-const FooterBtnFn = ({ label, responsive, onPress }) => (
-  <TouchableOpacity
-    style={styles.button}
-    disabled={!responsive}
-    onPress={onPress}
-  >
-    <Text style={styles.btnText}>
-      {label}
-    </Text>
-  </TouchableOpacity>
-);
-
-const FooterBtn = pure(FooterBtnFn);
 
 export class DistanceData extends PureComponent {
   render() {
@@ -172,23 +147,16 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   get footerControls() {
+    const { active } = this.state;
     const { tracker, responsive } = this.props;
     return (
       <View style={styles.footerControlsContainer}>
         <View style={styles.startStopBtn}>
-          {
-            tracker.active ?
-              <FooterBtn
-                label="STOP"
-                responsive={responsive}
-                onPress={this.onStopBtn}
-              /> :
-                <FooterBtn
-                  label="START"
-                  responsive={responsive}
-                  onPress={this.onStartBtn}
-                />
-          }
+          <StartStopBtn
+            active={active}
+            responsive={responsive}
+            onPress={active ? this.onStopBtn : this.onStartBtn}
+          />
         </View>
         <View style={styles.seeMap}>
           <Text style={trackerStyles.footerText}>
@@ -219,9 +187,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   onDistStart(error) {
     if (error) return;
 
-    const { tracker } = this.props;
-    this.initDist = tracker.value;
-    this.initTime = tracker.time;
+    this.setState({ active: true });
 
     Vibration.vibrate();
 
@@ -230,6 +196,8 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   onDistStop(track) {
+    this.setState({ active: false });
+
     this.onDistUpdate(track);
     caller(this.props.onStop);
   }

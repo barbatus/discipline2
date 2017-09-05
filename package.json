@@ -41,6 +41,7 @@
     "recompose": "^0.24.0",
     "redux": "3.5.2",
     "redux-actions": "0.11.0",
+    "redux-form": "^7.0.3",
     "redux-thunk": "2.1.0",
     "styled-components": "^2.1.2"
   },

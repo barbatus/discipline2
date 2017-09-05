@@ -30,7 +30,7 @@ const cloneTracker = (trackers, tracker, index?: number) => {
   if (index == null) {
     index = findIndex(trackers, tracker);
   }
-  return trackers.update(index, () => Trackers.clone(tracker));
+  return trackers.update(index, () => tracker.clone());
 };
 
 const insertTracker = (trackers, tracker, index?: number) => {

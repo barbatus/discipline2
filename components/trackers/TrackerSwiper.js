@@ -2,10 +2,7 @@ import React from 'react';
 
 import {
   View,
-  StyleSheet,
   Animated,
-  PanResponder,
-  InteractionManager,
 } from 'react-native';
 
 import RNShakeEvent from 'react-native-shake-event';

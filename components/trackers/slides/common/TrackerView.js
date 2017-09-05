@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   View,
@@ -10,11 +10,9 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import { getIcon } from '../../../../icons/icons';
+import { getIcon, UserIconsStore } from '../../../../icons/icons';
 
 import { trackerDef, trackerStyles } from '../../styles/trackerStyles';
-
-import BaseTrackerView from './BaseTrackerView';
 
 const flex = 1 - trackerDef.headerContainer.flex;
 
@@ -33,13 +31,44 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class TrackerView extends BaseTrackerView {
+export default class TrackerView extends PureComponent {
+  getMainIcon(iconId) {
+    const userIcon = UserIconsStore.get(iconId);
+    if (userIcon) {
+      return userIcon.pngLarge;
+    }
+    return getIcon('oval');
+  }
+
+  renderContent(backImg) {
+    const { bodyControls, footerControls, bodyStyle, footerStyle } = this.props;
+
+    const content = [
+      <View key="body" style={[trackerStyles.bodyContainer, bodyStyle]}>
+        {bodyControls}
+      </View>,
+      <View key="footer" style={[trackerStyles.footerContainer, footerStyle]}>
+        {footerControls}
+      </View>,
+    ];
+
+    return backImg ? (
+      <Image source={backImg} style={styles.backImg}>
+        {content}
+      </Image>
+    ) : (
+      <View style={styles.wrapper}>
+        {content}
+      </View>
+    )
+  }
+
   render() {
     const { tracker, style, backImg, onTap, onEdit } = this.props;
     const { title, iconId } = tracker;
     return (
       <Animated.View style={[trackerStyles.innerView, style]}>
-        <TouchableWithoutFeedback style={{ flex: 1 }} onPress={onTap}>
+        <TouchableWithoutFeedback onPress={onTap}>
           <View style={{ flex: 1 }}>
             <View style={trackerStyles.headerContainer}>
               <View style={trackerStyles.barContainer}>
@@ -67,26 +96,5 @@ export default class TrackerView extends BaseTrackerView {
         </TouchableWithoutFeedback>
       </Animated.View>
     );
-  }
-
-  renderContent(backImg) {
-    const { bodyControls, footerControls, bodyStyle, footerStyle } = this.props;
-
-    const content = [
-      <View key="body" style={[trackerStyles.bodyContainer, bodyStyle]}>
-        {bodyControls}
-      </View>,
-      <View key="footer" style={[trackerStyles.footerContainer, footerStyle]}>
-        {footerControls}
-      </View>,
-    ];
-
-    return backImg ?
-      <Image source={backImg} style={styles.backImg}>
-        {content}
-      </Image> :
-      <View style={styles.wrapper}>
-        {content}
-      </View>;
   }
 }

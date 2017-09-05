@@ -43,21 +43,15 @@ export default class CommonModal extends PureComponent {
     check.assert.like(this.state.modalVisible, true, 'Dlg already shown');
 
     this.onBeforeShown(...args);
-    this.setState(
-      {
-        modalVisible: true,
-      },
-      this.onAfterShown.bind(this, ...args),
+    this.setState({ modalVisible: true },
+      () => this.onAfterShown(...args),
     );
   }
 
   hide() {
     this.onBeforeHidden();
-    this.setState(
-      {
-        modalVisible: false,
-      },
-      ::this.onAfterHidden,
+    this.setState({ modalVisible: false },
+      () => this.onAfterHidden(),
     );
   }
 

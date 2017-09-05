@@ -141,10 +141,8 @@ export default class Month extends PureComponent {
       return;
     }
 
-    this.setState({ tooltipShown: false }, () => {
-      const dateMs = moment(monthMs).date(day).valueOf();
-      caller(this.props.onDateSelect, dateMs);
-    });
+    const dateMs = moment(monthMs).date(day).valueOf();
+    caller(this.props.onDateSelect, dateMs);
   }
 
   renderTooltip() {

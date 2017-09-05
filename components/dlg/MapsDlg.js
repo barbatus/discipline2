@@ -11,9 +11,14 @@ import {
 
 import MapView from 'react-native-maps';
 
+import GeoWatcher from '../../geo/BGGeoLocationWatcher';
+
 import CommonModal from './CommonModal';
 
-import commonStyles from '../styles/common';
+import commonStyles, {
+  screenWidth,
+  screenHeight,
+} from '../styles/common';
 
 const DEFAULT_PADDING = {
   top: 40,
@@ -28,28 +33,42 @@ const styles = StyleSheet.create({
   },
 });
 
+const ASPECT_RATIO = screenWidth / screenHeight;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export default class MapsDlg extends CommonModal {
   constructor(props) {
     super(props);
 
+    const region = new MapView.AnimatedRegion({
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    });
     this.state = {
       path: [],
-      initRegion: {
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: 0,
-        longitudeDelta: 0,
-      },
+      region,
     };
+    GeoWatcher.getPos((pos, error) => {
+      if (error) return;
+      const { latitude, longitude } = pos.coords;
+      region.timing({ latitude, longitude }, 0).start();
+    });
+  }
+
+  componentDidMount() {
+    this.state.region.stopAnimation();
   }
 
   get content() {
-    const { path, initRegion } = this.state;
+    const { path, region } = this.state;
     return (
-      <MapView
+      <MapView.Animated
         style={styles.mapView}
         ref={(el) => this.map = el}
-        //initRegion={initRegion}
+        region={region}
         zoomEnabled
         loadingEnabled
         showsMyLocationButton
@@ -59,20 +78,29 @@ export default class MapsDlg extends CommonModal {
           strokeColor="rgba(255,0,0,0.5)"
           strokeWidth={4}
         />
-      </MapView>
+      </MapView.Animated>
     );
   }
 
   onBeforeShown(path = []) {
-    this.setState({
-      path,
-    });
+    this.setState({ path });
   }
 
   onAfterShown(path = []) {
-    this.map.fitToCoordinates(path, {
-      edgePadding: DEFAULT_PADDING,
-      animated: true,
+    const { region } = this.state;
+
+    if (path.length) {
+      this.map.fitToCoordinates(path, {
+        edgePadding: DEFAULT_PADDING,
+        animated: true,
+      });
+      return;
+    }
+
+    GeoWatcher.getPos((pos, error) => {
+      if (error) return;
+      const { latitude, longitude } = pos.coords;
+      region.timing({ latitude, longitude }, 1000).start();
     });
   }
 }

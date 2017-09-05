@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { Animated, StyleSheet, View, Text, findNodeHandle } from 'react-native';
+import { Animated, StyleSheet, View, findNodeHandle } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -89,50 +89,52 @@ export default class Tooltip extends PureComponent {
     };
   }
 
-  componentDidMount() {
-    const node = findNodeHandle(this.refs.view);
+  updatePos() {
+    const node = findNodeHandle(this.view);
     if (node) {
-      this.setTimeout(
-        () =>
-          NativeMethodsMixin.measure.call(
-            node,
-            (x, y, width, height, pageX, pageY) => {
-              const haflW = width / 2;
-              const rightX = x + width / 2 - screenWidth;
-              const leftX = x - width / 2;
-              let xPos = -haflW;
-              let arrLeft = (width - ARROW_WIDTH) / 2;
-              // If tooltip is out of the screen on the right.
-              if (rightX >= 0) {
-                xPos = -haflW - rightX - 10;
-                arrLeft = arrLeft + rightX + 10;
-              }
+      this.setTimeout(() => NativeMethodsMixin.measure.call(node,
+        (x, y, width, height, pageX, pageY) => {
+          const haflW = width / 2;
+          const rightX = x + width / 2 - screenWidth;
+          const leftX = x - width / 2;
+          let xPos = -haflW;
+          let arrLeft = (width - ARROW_WIDTH) / 2;
+          // If tooltip is out of the screen on the right.
+          if (rightX >= 0) {
+            xPos = -haflW - rightX - 10;
+            arrLeft = arrLeft + rightX + 10;
+          }
 
-              // If tooltip is out of the screen on the left.
-              if (leftX <= 0) {
-                xPos = -haflW + Math.abs(leftX) + 10;
-                arrLeft = arrLeft + leftX - 10;
-              }
+          // If tooltip is out of the screen on the left.
+          if (leftX <= 0) {
+            xPos = -haflW + Math.abs(leftX) + 10;
+            arrLeft = arrLeft + leftX - 10;
+          }
 
-              let yPos = -height - TOP_MARGIN;
-              let arrTop = height;
-              if (navHeight > pageY + yPos) {
-                yPos = Math.abs(33 + TOP_MARGIN);
-                arrTop = -ARROW_HEIHGT;
-              }
+          let yPos = -height - TOP_MARGIN;
+          let arrTop = height;
+          if (navHeight > pageY + yPos) {
+            yPos = Math.abs(33 + TOP_MARGIN);
+            arrTop = -ARROW_HEIHGT;
+          }
 
-              this.moveY.setValue(yPos);
-              this.moveX.setValue(xPos);
-              this.opacity.setValue(1);
-              this.setState({
-                arrTop,
-                arrLeft,
-              });
-            },
-          ),
-        15,
-      );
+          this.moveY.setValue(yPos);
+          this.moveX.setValue(xPos);
+          this.opacity.setValue(1);
+          this.setState({
+            arrTop,
+            arrLeft,
+          });
+        }), 15);
     }
+  }
+
+  componentDidMount() {
+    this.updatePos();
+  }
+
+  componentDidUpdate() {
+    this.updatePos();
   }
 
   render() {
@@ -144,13 +146,12 @@ export default class Tooltip extends PureComponent {
       opacity: this.opacity,
       transform: [{ translateY: this.moveY }, { translateX: this.moveX }],
     };
-    const arrStyle = arrTop > 0 ? [styles.arrDown] : [styles.arrUp];
-    arrStyle.push({ left: arrLeft, top: arrTop });
     return (
-      <Animated.View ref="view" style={[styles.view, animStyle]}>
-        <View>
-          {this.props.children}
-        </View>
+      <Animated.View
+        ref={(el) => this.view = el}
+        style={[styles.view, animStyle]}
+      >
+        <View>{this.props.children}</View>
         <Arrow x={arrLeft} y={arrTop} />
       </Animated.View>
     );

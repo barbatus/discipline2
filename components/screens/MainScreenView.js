@@ -45,8 +45,8 @@ export class MainScreenView extends ScrollScreenView {
   get leftView() {
     return (
       <TrackersView
-        ref="left"
         {...this.props}
+        ref={(el) => this.leftViewRef = el}
         style={commonStyles.absFilled}
         onSlideChange={this.onSlideChange}
         onAddCompleted={this.onAddCompleted}
@@ -61,7 +61,7 @@ export class MainScreenView extends ScrollScreenView {
   get rightView() {
     return (
       <NewTrackerScreenView
-        ref="right"
+        ref={(el) => this.rightViewRef = el}
         onAccept={this.onAcceptNewTracker}
         onCancel={this.cancelNewTracker}
       />
@@ -131,8 +131,6 @@ export class MainScreenView extends ScrollScreenView {
   }
 }
 
-export default connect(null, (dispatch) => {
-  return {
-    onAdd: (tracker, index) => dispatch(addTracker(tracker, index)),
-  };
-})(MainScreenView);
+export default connect(null, (dispatch) => ({
+  onAdd: (tracker, index) => dispatch(addTracker(tracker, index)),
+}))(MainScreenView);
