@@ -29,14 +29,14 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   scrollTo(index, callback, animated) {
-    this.refs.scroll.scrollTo(index, callback, animated);
+    this.scroll.scrollTo(index, callback, animated);
   }
 
   onTap(tracker: Tracker) {
     const index = this.state.trackers.findIndex(
       (nTracker) => nTracker === tracker);
 
-    const scroll = this.refs.scroll.index;
+    const scroll = this.scroll.index;
     if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
     }
@@ -64,7 +64,7 @@ export default class TrackerScroll extends TrackerRenderer {
         style={[style, { opacity: this.opacity }]}
       >
         <Scroll
-          ref="scroll"
+          ref={(el) => (this.scroll = el)}
           style={commonStyles.flexFilled}
           centered
           index={index}

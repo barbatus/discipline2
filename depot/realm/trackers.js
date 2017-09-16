@@ -1,26 +1,25 @@
 /* @flow */
-
 import EventEmitter from 'eventemitter3';
 
 import { omit } from 'lodash';
 
-import ticksDB from './ticks';
-
 import DB from './db';
 
-class TrackersDepot {
-  events: EventEmitter = new EventEmitter();
+class Trackers {
+  event = new EventEmitter();
 
   table: TrackersSchemaType;
 
   constructor() {
     const table = DB.objects('Trackers');
     if (!table.length) {
-      DB.write(() => {
-        DB.create('Trackers', {});
-      });
+      DB.write(() => DB.create('Trackers', {}));
     }
     this.table = table[0];
+  }
+
+  get trackers() {
+    return this.table.trackers;
   }
 
   getAll(): Array<Tracker> {
@@ -30,8 +29,7 @@ class TrackersDepot {
   getOne(trackId: number): Tracker {
     check.assert.number(trackId);
 
-    const trackers = this.trackers.filtered('id = $0', trackId);
-    return trackers[0];
+    return DB.objectForPrimaryKey('Tracker', trackId);
   }
 
   count(): number {
@@ -39,9 +37,14 @@ class TrackersDepot {
     return trackers.length;
   }
 
-  addAt(tracker: Tracker, index: number): Tracker {
+  buildNewTracker(id, data) {
+    return { props: { alerts: false }, ...data, id };
+  }
+
+  addAt(data: Tracker, index: number): Tracker {
+    const trackId = this.table.nextId;
+    const tracker = this.buildNewTracker(trackId, data);
     DB.write(() => {
-      tracker.id = this.table.nextId;
       this.trackers.splice(index, 0, tracker);
       this.table.nextId = tracker.id + 1;
     });
@@ -49,14 +52,15 @@ class TrackersDepot {
     return tracker;
   }
 
-  add(tracker: Tracker): Tracker {
+  add(data: Tracker): Tracker {
+    const trackId = this.table.nextId;
+    const tracker = this.buildNewTracker(trackId, data);
     DB.write(() => {
-      tracker.id = this.table.nextId;
       this.trackers.push(tracker);
       this.table.nextId = tracker.id + 1;
     });
 
-    this.events.emit('added', {
+    this.event.emit('added', {
       trackId: tracker.id,
     });
 
@@ -66,38 +70,30 @@ class TrackersDepot {
   remove(trackId: number): boolean {
     check.assert.number(trackId);
 
-    const tracker = this.trackers.filtered('id = $0', trackId)[0];
-    if (tracker) {
-      DB.write(() => {
-        DB.delete(tracker);
-      });
-    }
+    const tracker = this.getOne(trackId);
 
-    this.events.emit('removed', { trackId });
+    if (!tracker) throw new Error('No tracker found');
 
-    return !!tracker;
+    DB.write(() => DB.delete(tracker));
+    this.event.emit('removed', { trackId });
+    return true;
   }
 
-  update(tracker: Tracker): Tracker {
-    const dbTracker = this.trackers.filtered('id = $0', tracker.id)[0];
+  update(data: Tracker): Tracker {
+    const tracker = this.getOne(data.id);
 
-    if (!dbTracker) return null;
+    if (!tracker) throw new Error('No tracker found');
 
-    DB.write(() => {
-      Object.assign(dbTracker, omit(tracker, 'id'));
-    });
+    DB.write(() =>
+      Object.assign(tracker, omit(data, 'id'))
+    );
 
-    this.events.emit('updated', {
+    this.event.emit('updated', {
       trackId: tracker.id,
     });
 
     return tracker;
   }
-
-  get trackers() {
-    return this.table.trackers;
-  }
 }
 
-const depot = new TrackersDepot();
-export default depot;
+export default new Trackers();

@@ -1,5 +1,3 @@
-import haversine from 'haversine';
-
 import EventEmitter from 'eventemitter3';
 
 import BGGeoLocationWatcher from './BGGeoLocationWatcher';

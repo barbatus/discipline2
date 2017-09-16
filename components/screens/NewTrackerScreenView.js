@@ -2,7 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 
-import { submit } from 'redux-form';
+import { submit, reset } from 'redux-form';
 
 import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 
@@ -40,6 +40,19 @@ export class NewTrackerScreenView extends ScrollScreenView {
     this.onChange = ::this.onChange;
     this.onTypeChosen = ::this.onTypeChosen;
     this.onNewTracker = ::this.onNewTracker;
+    this.onTypeAccept = ::this.onTypeAccept;
+    this.onTypeCancel = ::this.onTypeCancel;
+    this.onAccept = ::this.onAccept;
+  }
+
+  componentWillMount() {
+    const { parent } = this.props;
+    parent.on('onMoveRight', this.onRightMove, this);
+  }
+
+  componentWillUnmount() {
+    const { parent } = this.props;
+    parent.removeListener(this.onRightMove, this);
   }
 
   onRightMove() {
@@ -48,13 +61,14 @@ export class NewTrackerScreenView extends ScrollScreenView {
       typeId: TYPES[0].valueOf(),
     });
     this.setNewTrackerBtns();
+    const { dispatch } = this.props;
+    dispatch(reset('newTrackerForm'));
   }
 
   get leftView() {
     const { tracker } = this.state;
     return (
       <NewTrackerSlide
-        ref={(el) => this.leftViewRef = el}
         tracker={tracker}
         onTypeSelect={this.onTypeSelect}
         onChange={this.onChange}
@@ -67,7 +81,6 @@ export class NewTrackerScreenView extends ScrollScreenView {
     const { typeId } = this.state;
     return (
       <TrackerTypesSlide
-        ref={(el) => this.rightViewRef = el}
         typeId={typeId}
         onTypeChosen={this.onTypeChosen}
       />
@@ -75,11 +88,11 @@ export class NewTrackerScreenView extends ScrollScreenView {
   }
 
   getCancelBtn(onPress: Function) {
-    return <NavCancelButton onPress={this::onPress} />;
+    return <NavCancelButton onPress={onPress} />;
   }
 
   getAcceptBtn(onPress: Function) {
-    return <NavAcceptButton onPress={this::onPress} />;
+    return <NavAcceptButton onPress={onPress} />;
   }
 
   setNewTrackerBtns(callback?: Function) {
@@ -153,6 +166,4 @@ export class NewTrackerScreenView extends ScrollScreenView {
   }
 }
 
-export default connect(
-  null, null, null, { withRef: true },
-)(NewTrackerScreenView);
+export default connect()(NewTrackerScreenView);

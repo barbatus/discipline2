@@ -38,5 +38,4 @@ class AppInfoDepot {
   }
 }
 
-let depot = new AppInfoDepot();
-export default depot;
+export default new AppInfoDepot();

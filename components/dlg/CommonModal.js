@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Modal,
-  Dimensions,
   TouchableOpacity,
   Text,
 } from 'react-native';
@@ -31,9 +30,13 @@ const styles = StyleSheet.create({
 });
 
 export default class CommonModal extends PureComponent {
-  state: any = {
-    modalVisible: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+    };
+    this.hide = ::this.hide;
+  }
 
   get content() {
     return null;
@@ -73,7 +76,7 @@ export default class CommonModal extends PureComponent {
         >
           <View style={commonStyles.flexFilled}>
             <View style={styles.headerContainer}>
-              <TouchableOpacity onPress={::this.hide}>
+              <TouchableOpacity onPress={this.hide}>
                 <Text style={styles.cancelText}>
                   Cancel
                 </Text>

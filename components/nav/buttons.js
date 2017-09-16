@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import { pure } from 'recompose';
 
-import { TouchableOpacity, Text, Image } from 'react-native';
+import { TouchableOpacity, Image } from 'react-native';
 
 import debounce from 'lodash/debounce';
 
@@ -26,7 +26,7 @@ class NavButton extends PureComponent {
   }
 }
 
-const NavLeftButtonFn = props =>
+const NavLeftButtonFn = (props) =>
   <NavButton
     {...props}
     iconStyle={styles.newIcon}
@@ -35,7 +35,7 @@ const NavLeftButtonFn = props =>
 
 const NavLeftButton = pure(NavLeftButtonFn);
 
-const NavRightButtonFn = props =>
+const NavRightButtonFn = (props) =>
   <NavButton
     {...props}
     iconStyle={styles.newIcon}
@@ -44,7 +44,7 @@ const NavRightButtonFn = props =>
 
 const NavRightButton = pure(NavRightButtonFn);
 
-const NavAddButtonFn = props =>
+const NavAddButtonFn = (props) =>
   <NavButton
     {...props}
     icon="new"

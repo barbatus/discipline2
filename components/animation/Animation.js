@@ -1,6 +1,4 @@
-import Easing from 'Easing';
-
-import { Animated, InteractionManager } from 'react-native';
+import { Animated } from 'react-native';
 
 import flatten from 'lodash/flatten';
 
@@ -16,11 +14,15 @@ export class AnimationManager {
   timeout = null;
 
   timing(field, duration, toValue, easing) {
-    const config = { duration, toValue };
+    const config = { duration, toValue, useNativeDriver: true };
     if (easing) {
       config.easing = easing;
     }
     return Animated.timing(field, config);
+  }
+
+  setValue(field, toValue, callback) {
+    this.animate([this.timing(field, 0, toValue)], callback);
   }
 
   animate(animations, callback) {
@@ -38,7 +40,7 @@ export class AnimationManager {
       const allAnim = this.animations.slice();
       this.callback.length = 0;
       this.animations.length = 0;
-      this.animate(allAnim, () => allCb.forEach((cb) => caller(cb)));
+      this.runParallel(allAnim, () => allCb.forEach((cb) => caller(cb)));
     });
   }
 
@@ -55,7 +57,7 @@ export class AnimationManager {
     return { transform };
   }
 
-  animate(animations, callback) {
+  runParallel(animations, callback) {
     this.on = true;
     Animated.parallel(animations).start(() => {
       this.on = false;

@@ -1,6 +1,6 @@
 import React, { PureComponent, PropTypes } from 'react';
 
-import { View, Text, StyleSheet, findNodeHandle } from 'react-native';
+import { View, StyleSheet, findNodeHandle } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -32,25 +32,28 @@ const styles = StyleSheet.create({
   tooltipContent: {
     flex: 1,
     padding: 10,
-    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
 });
 
 const TextRow = styled.View`
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: nowrap;
   padding-bottom: ${({ isLast }) => (isLast ? 0 : 5)}px;
 `;
 
-const TickText = styled.Text`
-  color: #f5f5f5;
-  font-size: 15px;
+const TextCol = styled.View`
+  flex-direction: column;
+  flex-wrap: nowrap;
 `;
 
-const TimeText = styled(TickText)`
-  width: 80px;
+const TimeCol = styled(TextCol)`
+  padding-right: 10px;
+`;
+
+const TickText = styled.Text`
+  color: #F5F5F5;
+  font-size: 15px;
 `;
 
 const PADDING = 15;
@@ -148,14 +151,22 @@ export default class Month extends PureComponent {
   renderTooltip() {
     const { ticks, selDateMs } = this.props;
     const dayIndex = moment(selDateMs).date() - 1;
-    const ticksToRender = ticks[dayIndex].slice(0, 2);
-    const tickList = ticksToRender.map((tick, index) => {
+    const ticksShown = ticks[dayIndex].slice(0, 2);
+    const size = ticksShown.length - 1;
+    const tickTimes = ticksShown.map((tick, index) => {
       const timeStr = moment(tick.dateMs).format('LT');
       return (
-        <TextRow key={index} isLast={index === ticksToRender.length - 1}>
-          <TimeText>
+        <TextRow key={index} isLast={index === size}>
+          <TickText>
             {timeStr}
-          </TimeText>
+          </TickText>
+        </TextRow>
+      );
+    });
+
+    const tickDescs = ticksShown.map((tick, index) => {
+      return (
+        <TextRow key={index} isLast={index === size}>
           <TickText>
             {tick.desc}
           </TickText>
@@ -167,7 +178,12 @@ export default class Month extends PureComponent {
     return (
       <Tooltip x={tooltipPos.x} y={tooltipPos.y}>
         <View style={styles.tooltipContent}>
-          {tickList}
+          <TimeCol>
+            {tickTimes}
+          </TimeCol>
+          <TextCol>
+            {tickDescs}
+          </TextCol>
         </View>
       </Tooltip>
     );
@@ -180,9 +196,9 @@ export default class Month extends PureComponent {
     const offset = startOfMonth.weekday();
     const week = int((offset + day - 1) / 7);
     const dayInd = moment(selDateMs).weekday();
-    const dWidth = (screenWidth - 2 * PADDING - this.dayWidth) / 6;
+    const dWidth = (screenWidth - (2 * PADDING) - this.dayWidth) / 6;
     return {
-      x: PADDING + dWidth * dayInd + this.dayWidth / 2,
+      x: PADDING + (dWidth * dayInd) + (this.dayWidth / 2),
       y: this.dayHeight * week,
     };
   }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PanResponder } from 'react-native';
 
 import { caller } from '../../utils/lang';

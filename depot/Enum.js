@@ -7,9 +7,8 @@ class EnumSymbol {
 
     this.key = key;
 
-    for (let prop in props) {
-      this[prop] = props[prop];
-    }
+    Object.getOwnPropertyNames(props).forEach(
+      (prop) => (this[prop] = props[prop]));
 
     Object.freeze(this);
   }
@@ -24,16 +23,15 @@ class EnumSymbol {
 }
 
 export default class Enum {
-  constructor(enumLiterals) {
-    for (let key in enumLiterals) {
-      this[key] = new EnumSymbol(key, enumLiterals[key]);
-    }
+  constructor(enumLiterals: Object) {
+    Object.getOwnPropertyNames(enumLiterals).forEach(
+      (key) => (this[key] = new EnumSymbol(key, enumLiterals[key])));
 
     Object.freeze(this);
   }
 
   symbols() {
-    return this.keys().map(key => this[key]);
+    return this.keys().map((key) => this[key]);
   }
 
   keys() {
@@ -41,12 +39,11 @@ export default class Enum {
   }
 
   values() {
-    return this.symbols().map(sym => sym.valueOf());
+    return this.symbols().map((sym) => sym.valueOf());
   }
 
   fromValue(value) {
-    let sym = this.symbols().find(sym => sym == value);
-    return sym;
+    return this.symbols().find((sym) => sym == value);
   }
 
   fromKey(key) {

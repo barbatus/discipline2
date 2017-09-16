@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
 
 import {
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   Image,
   Text,
-  TextInput,
   StyleSheet,
   ScrollView,
 } from 'react-native';
@@ -18,8 +16,6 @@ import { first, last } from 'lodash';
 import { getIcon } from '../../../icons/icons';
 
 import { slideStyles, slideDef } from '../styles/slideStyles';
-
-import { commonStyles } from '../../styles/common';
 
 import { TrackerType } from '../../../depot/consts';
 
@@ -140,25 +136,23 @@ export default class TrackerTypesSlide extends PureComponent {
     const lastType = last(TYPES);
     const firstType = first(TYPES);
 
-    const types = TYPES.map((type) => {
-      return (
-        <TouchableWithoutFeedback
-          key={type.valueOf()}
-          onPress={this.onTypeChosen.bind(this, type)}
-        >
-          <TypeView isSelected={selected === type}>
-            <View style={styles.typeIconContainer}>
-              <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
-            </View>
-            <View style={styles.typeTitleContainer}>
-              <Text style={styles.typeTitle}>
-                {type.title}
-              </Text>
-            </View>
-          </TypeView>
-        </TouchableWithoutFeedback>
-      );
-    });
+    const types = TYPES.map((type) => (
+      <TouchableWithoutFeedback
+        key={type.valueOf()}
+        onPress={this.onTypeChosen.bind(this, type)}
+      >
+        <TypeView isSelected={selected === type}>
+          <View style={styles.typeIconContainer}>
+            <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
+          </View>
+          <View style={styles.typeTitleContainer}>
+            <Text style={styles.typeTitle}>
+              {type.title}
+            </Text>
+          </View>
+        </TypeView>
+      </TouchableWithoutFeedback>
+    ));
 
     const borderColor = (selected === lastType || selected === firstType) ?
       styles.selectedBorder : null;

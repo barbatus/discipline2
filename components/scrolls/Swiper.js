@@ -2,10 +2,7 @@ import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
-  Text,
   View,
-  ScrollView,
-  TouchableOpacity,
   Animated,
 } from 'react-native';
 
@@ -50,8 +47,6 @@ const stylesDef = {
 const styles = StyleSheet.create(stylesDef);
 
 export default class Swiper extends PureComponent {
-  index = 0;
-
   static propTypes = {
     slides: React.PropTypes.array.isRequired,
     style: View.propTypes.style,
@@ -62,6 +57,8 @@ export default class Swiper extends PureComponent {
     slides: [],
     scrollEnabled: true,
   };
+
+  index = 0;
 
   constructor(props) {
     super(props);
@@ -77,7 +74,7 @@ export default class Swiper extends PureComponent {
 
     const dots = [];
     const basicDot = [styles.basicDot, this.scaleDot(size)];
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < size; i += 1) {
       const dotStyle = i === index ? [basicDot, styles.activeDot] : basicDot;
       dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
     }
@@ -118,9 +115,9 @@ export default class Swiper extends PureComponent {
     let radius = 7,
       margin = 7;
     if (size >= 18) {
-      let ratio = 18 / size;
-      radius = (7 * ratio) << 0;
-      margin = (7 * ratio) << 0;
+      const ratio = 18 / size;
+      radius = Math.floor((7 * ratio));
+      margin = Math.floor((7 * ratio));
     }
 
     return {
@@ -139,10 +136,10 @@ export default class Swiper extends PureComponent {
     );
   }
 
-  onSlideChange(index, previ) {
+  onSlideChange(index, previ, animated) {
     this.index = index;
     this.setActiveDot(index, previ);
-    caller(this.props.onSlideChange, index, previ);
+    caller(this.props.onSlideChange, index, previ, animated);
   }
 
   render() {
@@ -168,6 +165,7 @@ export default class Swiper extends PureComponent {
           scrollEnabled={scrollEnabled}
           onSlideChange={this.onSlideChange}
           onSlideNoChange={onSlideNoChange}
+          removeClippedSubviews={false}
         />
         {dots}
       </View>

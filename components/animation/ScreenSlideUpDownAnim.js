@@ -33,10 +33,10 @@ export default class ScreenSlideUpDownAnim {
   }
 
   setIn() {
-    this.moveY.setValue(0);
+    Animation.setValue(this.moveY, 0);
   }
 
   setOut() {
-    this.moveY.setValue(1);
+    Animation.setValue(this.moveY, 1);
   }
 }

@@ -20,6 +20,8 @@ const ARROW_HEIHGT = 10;
 
 const TOP_MARGIN = 15;
 
+const PADDING = 10;
+
 const styles = StyleSheet.create({
   view: {
     position: 'absolute',
@@ -95,20 +97,20 @@ export default class Tooltip extends PureComponent {
       this.setTimeout(() => NativeMethodsMixin.measure.call(node,
         (x, y, width, height, pageX, pageY) => {
           const haflW = width / 2;
-          const rightX = x + width / 2 - screenWidth;
-          const leftX = x - width / 2;
+          const rightX = x + width / 2 - screenWidth + PADDING;
+          const leftX = x - width / 2 - PADDING;
           let xPos = -haflW;
           let arrLeft = (width - ARROW_WIDTH) / 2;
           // If tooltip is out of the screen on the right.
           if (rightX >= 0) {
-            xPos = -haflW - rightX - 10;
-            arrLeft = arrLeft + rightX + 10;
+            xPos = -haflW - rightX;
+            arrLeft = arrLeft + rightX;
           }
 
           // If tooltip is out of the screen on the left.
           if (leftX <= 0) {
-            xPos = -haflW + Math.abs(leftX) + 10;
-            arrLeft = arrLeft + leftX - 10;
+            xPos = -haflW + Math.abs(leftX);
+            arrLeft = arrLeft + leftX;
           }
 
           let yPos = -height - TOP_MARGIN;
@@ -133,8 +135,12 @@ export default class Tooltip extends PureComponent {
     this.updatePos();
   }
 
-  componentDidUpdate() {
-    this.updatePos();
+  componentWillReceiveProps({ x, y }) {
+    if (this.props.x !== x || this.props.y !== y) {
+      this.moveY.setValue(0);
+      this.moveX.setValue(0);
+      this.updatePos();
+    }
   }
 
   render() {
@@ -144,7 +150,10 @@ export default class Tooltip extends PureComponent {
       left: x,
       top: y,
       opacity: this.opacity,
-      transform: [{ translateY: this.moveY }, { translateX: this.moveX }],
+      transform: [
+        { translateY: this.moveY },
+        { translateX: this.moveX },
+      ],
     };
     return (
       <Animated.View

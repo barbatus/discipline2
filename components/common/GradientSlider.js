@@ -84,17 +84,17 @@ export default class GradientSlider extends PureComponent {
 
     const left = this.state[this.slides[0]];
     const leftVal = left.move._value;
-    const leftDx = Math.min(leftVal - dx, 0);
+    const leftDx = Math.min(leftVal - dx / 2, 0);
     left.move.setValue(leftDx);
 
     const center = this.state[this.slides[1]];
     const centerVal = center.move._value;
-    const centerDx = centerVal - dx;
+    const centerDx = centerVal - dx / 2;
     center.move.setValue(centerDx);
 
     const right = this.state[this.slides[2]];
     const rightVal = right.move._value;
-    const rightDx = Math.max(rightVal - dx, 0);
+    const rightDx = Math.max(rightVal - dx / 2, 0);
     right.move.setValue(rightDx);
   }
 
@@ -109,9 +109,11 @@ export default class GradientSlider extends PureComponent {
           toValue: 0,
         }),
         Animated.timing(this.state[this.slides[1]].move, {
+          duration: 500,
           toValue: leftOut,
         }),
         Animated.timing(this.state[this.slides[0]].move, {
+          duration: 500,
           toValue: leftOut,
         }),
       ]).start(() => {

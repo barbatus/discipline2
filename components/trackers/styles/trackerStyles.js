@@ -1,7 +1,3 @@
-'use strict';
-
-import React from 'react';
-
 import { StyleSheet } from 'react-native';
 
 import { slideDef, slideWidth } from './slideStyles';
@@ -9,6 +5,8 @@ import { slideDef, slideWidth } from './slideStyles';
 const BACK_COLOR = '#F5F5F5';
 
 const HINT_COLOR = '#DFDFDF';
+
+const ERROR_COLOR = '#FF001F';
 
 const trackerDef = {
   ...slideDef,
@@ -84,8 +82,8 @@ const trackerDef = {
     resizeMode: 'contain',
     backgroundColor: 'white',
     borderRadius: 18,
-    width: 35,
-    height: 35,
+    width: 45,
+    height: 45,
   },
   checkBtn: {
     resizeMode: 'contain',
@@ -98,7 +96,7 @@ const trackerDef = {
     backgroundColor: '#3DCF43',
   },
   footerText: {
-    color: '#c4c4c4',
+    color: '#C4C4C4',
     fontSize: 15,
     textAlign: 'center',
     width: 150,
@@ -106,6 +104,9 @@ const trackerDef = {
   },
   hintText: {
     color: HINT_COLOR,
+  },
+  errorText: {
+    color: ERROR_COLOR,
   },
 };
 
@@ -198,6 +199,14 @@ const editDef = {
 
 const propsStyles = StyleSheet.create({
   ...editDef,
+  deleteText: {
+    ...editDef.colText,
+    color: ERROR_COLOR,
+  },
+  colHintText: {
+    ...editDef.colText,
+    color: '#C4C4C4',
+  },
   colLeftWide: {
     ...editDef.colLeft,
     flex: 0.7,

@@ -2,11 +2,9 @@ import React from 'react';
 
 import {
   View,
-  TouchableHighlight,
   TouchableOpacity,
   Image,
   Text,
-  StyleSheet,
   Vibration,
 } from 'react-native';
 
@@ -38,7 +36,7 @@ export default class GoalTrackerSlide extends TrackerSlide {
   get footerControls() {
     return (
       <Text style={trackerStyles.footerText}>
-        Tap when you've reached the goal
+        Tap when you&#39;ve reached the goal
       </Text>
     );
   }

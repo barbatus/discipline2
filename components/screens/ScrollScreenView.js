@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 
+import EventEmitter from 'eventemitter3';
+
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { commonDef, commonStyles, screenWidth } from '../styles/common';
-
-import { caller } from '../../utils/lang';
+import { commonDef, commonStyles as cs, screenWidth } from '../styles/common';
 
 const styles = StyleSheet.create({
   scroll: {
@@ -22,6 +22,8 @@ export default class ScrollScreenView extends PureComponent {
     navBar: React.PropTypes.object.isRequired,
   };
 
+  emitter = new EventEmitter();
+
   get rightView() {
     throw new Error('rightView is not implemented');
   }
@@ -30,37 +32,13 @@ export default class ScrollScreenView extends PureComponent {
     throw new Error('leftView is not implemented');
   }
 
-  get leftTrueViewRef() {
-    if (!this.leftViewRef) return null;
-
-    return this.leftViewRef.getWrappedInstance ?
-      this.leftViewRef.getWrappedInstance() : this.leftViewRef;
-  }
-
-  get rightTrueViewRef() {
-    if (!this.rightViewRef) return null;
-
-    return this.rightViewRef.getWrappedInstance ?
-      this.rightViewRef.getWrappedInstance() : this.rightViewRef;
-  }
-
   moveLeft(callback?: Function) {
-    if (this.leftTrueViewRef.onLeftMove) {
-      this.leftTrueViewRef.onLeftMove();
-    }
-    if (this.rightTrueViewRef.onLeftMove) {
-      this.rightTrueViewRef.onLeftMove();
-    }
+    this.emitter.emit('onMoveLeft');
     this.moveTo(0, callback);
   }
 
   moveRight(callback?: Function) {
-    if (this.leftTrueViewRef.onRightMove) {
-      this.leftTrueViewRef.onRightMove();
-    }
-    if (this.rightTrueViewRef.onRightMove) {
-      this.rightTrueViewRef.onRightMove();
-    }
+    this.emitter.emit('onMoveRight');
     this.moveTo(1, callback);
   }
 
@@ -72,15 +50,15 @@ export default class ScrollScreenView extends PureComponent {
   render() {
     const { style } = this.props;
     return (
-      <View style={[commonStyles.flexFilled, style]}>
+      <View style={[cs.flexFilled, style]}>
         <ScrollView
-          ref={(el) => this.scroll = el}
+          ref={(el) => (this.scroll = el)}
           style={styles.scroll}
           horizontal
           pagingEnabled
           scrollEnabled={false}
           removeClippedSubviews
-          scrollEventThrottle={1000}
+          scrollEventThrottle={0}
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
           keyboardShouldPersistTaps="always"

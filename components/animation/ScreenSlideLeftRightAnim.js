@@ -17,14 +17,12 @@ export default class ScreenSlideLeftRightAnim {
 
   get style(): Object {
     return {
-      transform: [
-        {
-          translateX: this.moveX.interpolate({
-            inputRange: [-1, 0, 1],
-            outputRange: [-(screenWidth + 1), 0, screenWidth + 1],
-          }),
-        },
-      ],
+      transform: [{
+        translateX: this.moveX.interpolate({
+          inputRange: [-1, 0, 1],
+          outputRange: [-(screenWidth + 1), 0, screenWidth + 1],
+        }),
+      }],
     };
   }
 
@@ -55,7 +53,7 @@ export default class ScreenSlideLeftRightAnim {
   }
 
   setIn() {
-    this.moveX.setValue(this.value + 1);
+    Animation.setValue(this.moveX, this.value + 1);
   }
 
   animateOut(callback) {
@@ -63,6 +61,6 @@ export default class ScreenSlideLeftRightAnim {
   }
 
   setOut() {
-    this.moveX.setValue(this.value - 1);
+    Animation.setValue(this.moveX, this.value - 1);
   }
 }

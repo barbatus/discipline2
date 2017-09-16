@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { View, StyleSheet, Animated, InteractionManager } from 'react-native';
+import { View, Animated } from 'react-native';
 
-import { trackerStyles, propsStyles } from '../styles/trackerStyles';
+import { trackerStyles } from '../styles/trackerStyles';
 
 import Keyboard from '../../../utils/keyboard';
 
@@ -12,11 +12,7 @@ import TrackerView from './common/TrackerView';
 
 import TrackerEditView from './common/TrackerEditView';
 
-import UserIconsStore from '../../../icons/UserIconsStore';
-
 import Tracker from '../../../model/Tracker';
-
-import Animation from '../../animation/Animation';
 
 import FlipAnimation from '../../animation/FlipAnimation';
 
@@ -33,7 +29,6 @@ export default class TrackerSlide extends PureComponent {
   };
 
   static propTypes = {
-    index: React.PropTypes.number,
     editable: React.PropTypes.bool,
     style: View.propTypes.style,
     tracker: React.PropTypes.instanceOf(Tracker),

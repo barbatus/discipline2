@@ -14,14 +14,22 @@ const AppInfoSchema = {
   },
 };
 
+const TrackerPropsSchema = {
+  name: 'TrackerProps',
+  properties: {
+    alerts: { type: 'bool', default: false },
+  },
+};
+
 const TrackerSchema = {
   name: 'Tracker',
   primaryKey: 'id',
   properties: {
     id: 'int',
-    title: 'string',
+    title: { type: 'string', optional: true },
     typeId: 'string',
     iconId: 'string',
+    props: 'TrackerProps',
   },
 };
 
@@ -91,6 +99,7 @@ const DB = new Realm({
     TickSchema,
     TicksSchema,
     DistanceDataSchema,
+    TrackerPropsSchema,
   ],
 });
 export default DB;

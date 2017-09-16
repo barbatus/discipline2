@@ -62,7 +62,7 @@ export default class CounterSlide extends TrackerSlide {
   get footerControls() {
     return (
       <Text style={trackerStyles.footerText}>
-        Tap to count the thing you've done
+        Tap to count the thing you&#39;ve done
       </Text>
     );
   }

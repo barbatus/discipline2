@@ -33,6 +33,8 @@ class Home extends PureComponent {
       isOpen: false,
     };
     this.dayUpdate = new DayUpdateEvent();
+    this.onMenuChange = ::this.onMenuChange;
+    this.onMenu = ::this.onMenu;
   }
 
   componentWillMount() {
@@ -46,18 +48,32 @@ class Home extends PureComponent {
     this.dayUpdate.destroy();
   }
 
+  onMenuChange(isOpen) {
+    this.setState({
+      isOpen,
+    });
+  }
+
+  onMenu() {
+    this.setState({
+      isOpen: true,
+    });
+  }
+
   render() {
     const { store, navigation } = this.props;
+    const { isOpen } = this.state;
     return (
       <Provider store={store}>
         <SideMenu
           disableGestures
           menu={<Menu navigator={navigation} />}
-          isOpen={this.state.isOpen}
+          isOpen={isOpen}
+          onChange={this.onMenuChange}
         >
           <MainScreen
             navigator={navigation}
-            onMenu={() => this.setState({ isOpen: true })}
+            onMenu={this.onMenu}
           />
         </SideMenu>
       </Provider>

@@ -1,20 +1,15 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import {
-  Animated,
   View,
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
   Text,
   StyleSheet,
-  TextInput,
   Vibration,
 } from 'react-native';
 
 import { pure } from 'recompose';
 
-import { trackerDef, trackerStyles } from '../styles/trackerStyles';
+import { trackerStyles } from '../styles/trackerStyles';
 
 import registry, { DlgType } from '../../dlg/registry';
 
@@ -22,9 +17,7 @@ import { formatDistance } from '../../../utils/format';
 
 import { caller } from '../../../utils/lang';
 
-import DistanceTrackers, {
-  DistanceTracker,
-} from '../../../geo/DistanceTrackers';
+import DistanceTrackers, { DistanceTracker } from '../../../geo/DistanceTrackers';
 
 import { slideWidth } from '../styles/slideStyles';
 
@@ -83,31 +76,30 @@ const styles = StyleSheet.create({
   },
 });
 
-export class DistanceData extends PureComponent {
-  render() {
-    const { time, dist } = this.props;
-    const format = formatDistance(dist);
-    return (
-      <View style={styles.distData}>
-        <View style={[styles.label, styles.dist]}>
-          <Text style={styles.labelText}>
-            {format.format}
-          </Text>
-          <Text style={styles.titleText}>
-            {format.unit}
-          </Text>
-        </View>
-        <View style={styles.label}>
-          <TimeLabel
-            style={styles.labelText}
-            width={200}
-            timeMs={time}
-          />
-        </View>
+const DistanceDataFn = ({ time, dist }) => {
+  const format = formatDistance(dist);
+  return (
+    <View style={styles.distData}>
+      <View style={[styles.label, styles.dist]}>
+        <Text style={styles.labelText}>
+          {format.format}
+        </Text>
+        <Text style={styles.titleText}>
+          {format.unit}
+        </Text>
       </View>
-    );
-  }
-}
+      <View style={styles.label}>
+        <TimeLabel
+          style={styles.labelText}
+          width={200}
+          timeMs={time}
+        />
+      </View>
+    </View>
+  );
+};
+
+const DistanceData = pure(DistanceDataFn);
 
 const DIST_INTRVL = 5.0;
 

@@ -22,7 +22,7 @@ class UserIcon {
 
 export default class UserIconsStore {
   static get(iconId): UserIcon {
-    let icon = UserIcons.fromValue(iconId);
+    const icon = UserIcons.fromValue(iconId);
     if (icon) {
       return new UserIcon(icon);
     }

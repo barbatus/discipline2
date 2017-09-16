@@ -1,14 +1,12 @@
 import React, { PureComponent } from 'react';
 
-import { View, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { Animated } from 'react-native';
 
 import moment from 'moment';
 
 import Calendar from '../calendar/Calendar';
 
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
-
-import { slideWidth } from './styles/slideStyles';
 
 import { TrackerType } from '../../depot/consts';
 
@@ -51,7 +49,7 @@ export default class TrackerCal extends PureComponent {
   prepareTicks() {
     const { ticks } = this.props;
     const dates = new Map();
-    ticks.forEach(tick => {
+    ticks.forEach((tick) => {
       const tickDate = moment(tick.dateTimeMs);
       const month = tickDate.month();
       const date = tickDate.date() - 1;
@@ -86,7 +84,7 @@ export default class TrackerCal extends PureComponent {
     return (
       <Animated.View style={calStyle}>
         <Calendar
-          ref={(el) => this.calendar = el}
+          ref={(el) => (this.calendar = el)}
           todayMs={todayMs}
           dateMs={dateMs}
           scrollEnabled

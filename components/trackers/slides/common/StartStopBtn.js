@@ -27,8 +27,6 @@ const styles = StyleSheet.create({
 export default class StartStopBtn extends PureComponent {
   opacity = new Animated.Value(1);
 
-  hInterval = null;
-
   responsive = true;
 
   constructor(props) {
@@ -37,16 +35,9 @@ export default class StartStopBtn extends PureComponent {
       responsive: props.responsive,
     };
     this.onPress = ::this.onPress;
-  }
-
-  componentWillReceiveProps({ active }) {
-    if (this.props.active !== active) {
-      if (active) {
-        this.startOnPress();
-        return;
-      }
-      this.stopOnPress();
-    }
+    const flicker = new Animated.timing(this.opacity,
+      { duration: 800, toValue: 0.4, useNativeDriver: true });
+    this.flickerAnim = Animated.loop(flicker);
   }
 
   componentDidUpdate() {
@@ -61,20 +52,14 @@ export default class StartStopBtn extends PureComponent {
   }
 
   startOnPress() {
-    if (this.hInterval) return;
-
     this.responsive = false;
-    this.opacity.setValue(this.opacity._value / 2);
-    this.hInterval = setInterval(() => {
-      this.opacity.setValue(1.5 - this.opacity._value);
-    }, 500);
+    this.flickerAnim.start();
   }
 
   stopOnPress() {
     this.responsive = true;
+    this.flickerAnim.stop();
     this.opacity.setValue(1);
-    clearInterval(this.hInterval);
-    this.hInterval = null;
   }
 
   render() {
@@ -87,7 +72,7 @@ export default class StartStopBtn extends PureComponent {
       >
         <Animated.View style={{ opacity: this.opacity }}>
           <Text style={styles.btnText}>
-            {active ? 'STOP' : 'START' }
+            {active ? 'STOP' : 'START'}
           </Text>
         </Animated.View>
       </TouchableOpacity>

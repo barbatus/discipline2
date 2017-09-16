@@ -2,11 +2,7 @@ import React, { PureComponent } from 'react';
 
 import {
   View,
-  Image,
-  Text,
-  TextInput,
   StyleSheet,
-  Animated,
 } from 'react-native';
 
 import { trackerStyles } from '../styles/trackerStyles';

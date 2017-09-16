@@ -8,14 +8,6 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import moment from 'moment';
-
-import { screenWidth } from '../styles/common';
-
-import { calWidth } from './styles';
-
-import Tooltip from '../tooltip/Tooltip';
-
 const styles = StyleSheet.create({
   dayButton: {
     alignItems: 'center',
@@ -76,38 +68,6 @@ export default class Day extends PureComponent {
     this.onPress = ::this.onPress;
   }
 
-  render() {
-    const {
-      value,
-      isOutDay,
-      hasTicks,
-      isSelected,
-      isToday,
-      onPress,
-    } = this.props;
-
-    return isOutDay
-      ? <TouchableWithoutFeedback>
-          <View style={styles.dayButton}>
-            <View style={styles.dayCircle}>
-              <Text style={[styles.dayText, styles.outDayText]}>
-                {value}
-              </Text>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      : <TouchableOpacity onPress={this.onPress}>
-          <View style={styles.dayButton}>
-            <View style={this.getDayCircleStyle(isSelected, isToday)}>
-              {hasTicks ? <View style={styles.tickPoint} /> : null}
-              <Text style={this.getDayTextStyle(isSelected, isToday)}>
-                {value}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>;
-  }
-
   onPress() {
     const { value, onPress } = this.props;
     onPress(value);
@@ -127,7 +87,7 @@ export default class Day extends PureComponent {
     return dayCircleStyle;
   }
 
-  getDayTextStyle(isSelected, isToday) {
+  getDayTextStyle(isSelected) {
     const dayTextStyle = [styles.dayText];
 
     if (!isSelected) {
@@ -139,5 +99,38 @@ export default class Day extends PureComponent {
     }
 
     return dayTextStyle;
+  }
+
+  render() {
+    const {
+      value,
+      isOutDay,
+      hasTicks,
+      isSelected,
+      isToday,
+      onPress,
+    } = this.props;
+
+    return isOutDay ?
+      <TouchableWithoutFeedback>
+        <View style={styles.dayButton}>
+          <View style={styles.dayCircle}>
+            <Text style={[styles.dayText, styles.outDayText]}>
+              {value}
+            </Text>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+      :
+      <TouchableOpacity onPress={this.onPress}>
+        <View style={styles.dayButton}>
+          <View style={this.getDayCircleStyle(isSelected, isToday)}>
+            {hasTicks ? <View style={styles.tickPoint} /> : null}
+            <Text style={this.getDayTextStyle(isSelected, isToday)}>
+              {value}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>;
   }
 }

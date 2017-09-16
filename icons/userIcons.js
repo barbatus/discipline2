@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 import { IconSize } from './consts';
 
 import Enum from '../depot/Enum';

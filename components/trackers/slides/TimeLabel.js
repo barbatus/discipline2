@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
+import { pure } from 'recompose';
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
@@ -36,26 +38,25 @@ const styles = StyleSheet.create({
   },
 });
 
-class TimeDigit extends PureComponent {
-  render() {
-    const { style, value, width } = this.props;
-    const align = [{ textAlign: 'center' }];
-    return (
-      <View style={styles.slotStyle}>
-        <Text style={[{ width }, align]}>
-          <Text style={style}>
-            {value[0]}
-          </Text>
+const TimeDigitFn = ({ style, value, width }) => {
+  const align = [{ textAlign: 'center' }];
+  return (
+    <View style={styles.slotStyle}>
+      <Text style={[{ width }, align]}>
+        <Text style={style}>
+          {value[0]}
         </Text>
-        <Text style={[{ width }, align]}>
-          <Text style={style}>
-            {value[1]}
-          </Text>
+      </Text>
+      <Text style={[{ width }, align]}>
+        <Text style={style}>
+          {value[1]}
         </Text>
-      </View>
-    );
-  }
+      </Text>
+    </View>
+  );
 }
+
+const TimeDigit = pure(TimeDigitFn);
 
 export default class TimeLabel extends PureComponent {
   static defaultProps = {

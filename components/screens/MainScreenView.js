@@ -2,12 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 
-import {
-  NavAddButton,
-  NavMenuButton,
-  NavCancelButton,
-  NavAcceptButton,
-} from '../nav/buttons';
+import { NavAddButton, NavMenuButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
 
@@ -28,7 +23,7 @@ export class MainScreenView extends ScrollScreenView {
     navBar: React.PropTypes.object.isRequired,
   };
 
-  index = 0;
+  slideIndex = 0;
 
   active = false;
 
@@ -40,13 +35,15 @@ export class MainScreenView extends ScrollScreenView {
     this.setMainViewBtns = ::this.setMainViewBtns;
     this.onAcceptNewTracker = ::this.onAcceptNewTracker;
     this.cancelNewTracker = ::this.cancelNewTracker;
+    this.onMenuToggle = ::this.onMenuToggle;
+    this.onNewTracker = ::this.onNewTracker;
   }
 
   get leftView() {
     return (
       <TrackersView
+        parent={this.emitter}
         {...this.props}
-        ref={(el) => this.leftViewRef = el}
         style={commonStyles.absFilled}
         onSlideChange={this.onSlideChange}
         onAddCompleted={this.onAddCompleted}
@@ -61,7 +58,7 @@ export class MainScreenView extends ScrollScreenView {
   get rightView() {
     return (
       <NewTrackerScreenView
-        ref={(el) => this.rightViewRef = el}
+        parent={this.emitter}
         onAccept={this.onAcceptNewTracker}
         onCancel={this.cancelNewTracker}
       />
@@ -73,11 +70,11 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   getNewBtn(onPress) {
-    return <NavAddButton onPress={this::onPress} />;
+    return <NavAddButton onPress={onPress} />;
   }
 
   getMenuBtn(onPress) {
-    return <NavMenuButton onPress={this::onPress} />;
+    return <NavMenuButton onPress={onPress} />;
   }
 
   setMainViewBtns(callback?: Function) {
@@ -98,7 +95,7 @@ export class MainScreenView extends ScrollScreenView {
     if (this.active) return;
 
     this.active = true;
-    this.props.onAdd(tracker, this.index + 1);
+    this.props.onAdd(tracker, this.slideIndex + 1);
   }
 
   onAddCompleted() {
@@ -121,9 +118,9 @@ export class MainScreenView extends ScrollScreenView {
 
   // Common
 
-  onSlideChange(index, previ) {
-    this.index = index;
-    caller(this.props.onSlideChange, index, previ);
+  onSlideChange(index, previ, animated) {
+    this.slideIndex = index;
+    caller(this.props.onSlideChange, index, previ, animated);
   }
 
   onMenuToggle() {

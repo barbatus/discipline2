@@ -1,22 +1,16 @@
 import React, { PureComponent, PropTypes } from 'react';
 
 import {
-  Dimensions,
   ScrollView,
-  FlatList,
   Text,
-  TouchableOpacity,
   View,
-  Image,
 } from 'react-native';
 
 import moment from 'moment';
 
-import { getIcon } from '../../icons/icons';
-
 import Month from './Month';
 
-import styles, { calWidth } from './styles';
+import styles from './styles';
 
 import { screenWidth } from '../styles/common';
 
@@ -67,7 +61,7 @@ export default class Calendar extends PureComponent {
   getMonthsToRender(monthMs) {
     const months = [];
     const index = int(this.props.monthToRender / 2);
-    for (let i = -index; i <= index; i++) {
+    for (let i = -index; i <= index; i += 1) {
       months.push(moment(monthMs).add(i, 'month'));
     }
     return months;
@@ -87,7 +81,7 @@ export default class Calendar extends PureComponent {
 
   scrollToItem(itemIndex: number, animated = true) {
     const scrollToX = itemIndex * screenWidth;
-    this.refs.calendar.scrollTo({ y: 0, x: scrollToX, animated });
+    this.calendar.scrollTo({ y: 0, x: scrollToX, animated });
   }
 
   scrollEnded({ nativeEvent }) {
@@ -102,7 +96,7 @@ export default class Calendar extends PureComponent {
   renderHeading() {
     const { weekStart, dayHeadings } = this.props;
     const headings = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 7; i += 1) {
       const j = (i + weekStart) % 7;
       headings.push(
         <Text key={i} style={styles.dayHeading}>
@@ -149,7 +143,7 @@ export default class Calendar extends PureComponent {
       <View style={[styles.calContainer, customStyle.calContainer]}>
         {this.renderHeading(titleFormat)}
         <ScrollView
-          ref="calendar"
+          ref={(el) => (this.calendar = el)}
           horizontal
           pagingEnabled
           style={styles.scrollView}

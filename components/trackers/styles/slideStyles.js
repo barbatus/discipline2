@@ -1,7 +1,3 @@
-'use strict';
-
-import React from 'react';
-
 import { StyleSheet } from 'react-native';
 
 import { screenWidth, screenHeight, navHeight } from '../../styles/common';

@@ -1,8 +1,8 @@
 /* @flow */
 
-import trackers from './realm/trackers';
+import trackersDB from './realm/trackers';
 
-import ticks from './realm/ticks';
+import ticksDB from './realm/ticks';
 
 import appInfo from './realm/appInfo';
 
@@ -15,72 +15,65 @@ const tickSchemas = {
 };
 
 class Depot {
-  trackers: ITrackersDepot = trackers;
-  ticks: ITicksDepot = ticks;
+  trackers = trackersDB;
+
+  ticks = ticksDB;
+
   appInfo = appInfo;
 
-  getTracker(trackId: number): Promise<Tracker> {
+  async getTracker(trackId: number) {
     check.assert.number(trackId);
 
     const tracker = this.trackers.getOne(trackId);
-    if (!tracker) return Promise.reject();
+    if (!tracker) throw new Error('Tracker not found');
 
     const schema = tickSchemas[tracker.typeId];
     if (schema) {
-      const ticks = this._getTicksWithData(schema, trackId, time.getDateMs());
-      return Promise.resolve({
-        ...tracker,
-        ticks,
-      });
+      const ticks = this.getTicksWithData(
+        schema, trackId, time.getDateMs());
+      return { ...tracker, ticks };
     }
 
-    const ticks = this._getTicks(trackId, time.getDateMs());
-    return Promise.resolve({
-      ...tracker,
-      ticks,
+    const ticks = this.getTicksFromTo(trackId, time.getDateMs());
+    return { ...tracker, ticks };
+  }
+
+  async loadTrackers() {
+    const trackers = this.trackers.getAll();
+    return trackers.map((tracker) => {
+      const trackId = tracker.id;
+      const schema = tickSchemas[tracker.typeId];
+      const ticks = schema
+        ? this.getTicksWithData(schema, trackId, time.getDateMs())
+        : this.getTicksFromTo(trackId, time.getDateMs());
+      return {
+        ...tracker,
+        ticks,
+      };
     });
   }
 
-  loadTrackers(): Promise<Array<Tracker>> {
-    const trackers = this.trackers.getAll();
-    return Promise.resolve(
-      trackers.map(tracker => {
-        const trackId = tracker.id;
-        const schema = tickSchemas[tracker.typeId];
-        const ticks = schema
-          ? this._getTicksWithData(schema, trackId, time.getDateMs())
-          : this._getTicks(trackId, time.getDateMs());
-        return {
-          ...tracker,
-          ticks,
-        };
-      }),
-    );
+  async addTracker(tracker: Tracker) {
+    return this.trackers.add(tracker);
   }
 
-  addTracker(tracker: Tracker): Promise<Tracker> {
-    return Promise.resolve(this.trackers.add(tracker));
+  async addTrackerAt(tracker: Tracker, index: number) {
+    return this.trackers.addAt(tracker, index);
   }
 
-  addTrackerAt(tracker: Tracker, index: number): Promise<Tracker> {
-    return Promise.resolve(this.trackers.addAt(tracker, index));
+  async updateTracker(tracker: Tracker) {
+    return this.trackers.update(tracker);
   }
 
-  updateTracker(tracker: Tracker): Promise<boolean> {
-    return Promise.resolve(this.trackers.update(tracker));
-  }
-
-  removeTracker(trackId: number): Promise<boolean> {
+  async removeTracker(trackId: number) {
     this.ticks.removeForTracker(trackId);
-    return Promise.resolve(this.trackers.remove(trackId));
+    return this.trackers.remove(trackId);
   }
 
-  addTick(
-    trackId: number,
-    dateTimeMs: number,
-    value?: number,
-    data?: Object,
-  ): Promise<Tick> {
+  async addTick(
+    trackId: number, dateTimeMs: number,
+    value?: number, data?: Object,
+  ) {
     check.assert.number(trackId);
     check.assert.number(dateTimeMs);
 
@@ -90,29 +83,21 @@ class Depot {
       this.ticks.addData(schema, data);
     }
 
-    const tick = this.ticks.add({
-      trackId: trackId,
-      dateTimeMs: dateTimeMs,
-      value: value,
+    return this.ticks.add({
+      trackId,
+      dateTimeMs,
+      value,
     });
-    return Promise.resolve(tick);
   }
 
-  undoLastTick(trackId: number): Promise<boolean> {
+  async undoLastTick(trackId: number) {
     check.assert.number(trackId);
 
     const tick = this.ticks.getLast(trackId);
-    if (tick) {
-      return Promise.resolve(this.ticks.remove(tick.id));
-    }
-    return Promise.resolve(false);
+    return tick ? this.ticks.remove(tick.id) : false;
   }
 
-  updateLastTick(
-    trackId: number,
-    value?: number,
-    data?: Object,
-  ): Promise<Tick> {
+  async updateLastTick(trackId: number, value?: number, data?: Object) {
     check.assert.number(trackId);
 
     const tick = this.ticks.getLast(trackId);
@@ -123,73 +108,54 @@ class Depot {
       this.ticks.updateData(schema, tick.id, data);
     }
 
-    return Promise.resolve(this.ticks.update(tick.id, value));
+    return this.ticks.update(tick.id, value);
   }
 
-  getTicks(
-    trackId: number,
-    minDateMs: number,
-    maxDateMs?: number,
-  ): Promise<Array<Tick>> {
+  async getTicks(trackId: number, minDateMs: number, maxDateMs?: number) {
     check.assert.number(trackId);
     check.assert.number(minDateMs);
 
     const tracker = this.trackers.getOne(trackId);
     const schema = tickSchemas[tracker.typeId];
-    if (schema) {
-      const ticks = this._getTicksWithData(
-        schema,
-        trackId,
-        minDateMs,
-        maxDateMs,
-      );
-      return Promise.resolve(ticks);
-    }
 
-    const ticks = this._getTicks(trackId, minDateMs, maxDateMs);
-    return Promise.resolve(ticks);
+    return schema
+      ? this.getTicksWithData(schema, trackId, minDateMs, maxDateMs)
+      : this.getTicksFromTo(trackId, minDateMs, maxDateMs);
   }
 
-  loadTestData(): Promise<Array<Tracker>> {
-    this._resetTestData();
+  async loadTestData() {
+    this.resetTestData();
 
-    if (this._hasTestData()) {
+    if (this.hasTestData()) {
       return this.loadTrackers();
     }
 
-    const trackers = this._genTestTrackers();
-    this._setTestTrackers(trackers);
+    const trackers = this.genTestTrackers();
+    this.setTestTrackers(trackers);
 
-    return Promise.resolve(trackers);
+    return trackers;
   }
 
-  _getTicks(
-    trackId: number,
-    minDateMs: number,
-    maxDateMs?: number,
-  ): Array<Tick> {
+  getTicksFromTo(trackId: number, minDateMs: number, maxDateMs?: number) {
     return this.ticks.getForPeriod(trackId, minDateMs, maxDateMs);
   }
 
-  _getTicksWithData(
+  getTicksWithData(
     schema: string,
     trackId: number,
     minDateMs: number,
     maxDateMs?: number,
-  ): Array<Tick> {
+  ) {
     check.assert.string(schema);
 
     const ticks = this.ticks.getForPeriod(trackId, minDateMs, maxDateMs);
-    return ticks.map(tick => {
+    return ticks.map((tick) => {
       const data = this.ticks.getData(schema, tick.id);
-      return {
-        ...tick,
-        data,
-      };
+      return { ...tick, data };
     });
   }
 
-  _genTestTrackers() {
+  genTestTrackers() {
     const trackers = [];
     let tracker = this.trackers.add({
       title: 'Morning Run',
@@ -243,34 +209,33 @@ class Depot {
     return trackers;
   }
 
-  _resetTestData() {
+  resetTestData() {
     const savedVer = this.appInfo.getVer();
     const appVer = DeviceInfo.getVersion();
     if (savedVer !== appVer) {
-      let trackers = this._getTestTrackers();
+      let trackers = this.getTestTrackers();
       if (!trackers.length) {
         trackers = this.trackers.getAll();
       }
-      for (let tracker of trackers) {
+      for (const tracker of trackers) {
         this.trackers.remove(tracker.id);
       }
       this.appInfo.setVer(appVer);
     }
   }
 
-  _hasTestData() {
-    const trackers = this._getTestTrackers();
+  hasTestData() {
+    const trackers = this.getTestTrackers();
     return !!trackers.length;
   }
 
-  _setTestTrackers(trackers) {
+  setTestTrackers(trackers) {
     this.appInfo.setTestTrackers(trackers);
   }
 
-  _getTestTrackers() {
+  getTestTrackers() {
     return this.appInfo.getTestTrackers();
   }
 }
 
-const depot = new Depot();
-export default depot;
+export default new Depot();

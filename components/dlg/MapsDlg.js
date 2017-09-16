@@ -1,13 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Modal,
-  Dimensions,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import MapView from 'react-native-maps';
 
@@ -15,10 +8,7 @@ import GeoWatcher from '../../geo/BGGeoLocationWatcher';
 
 import CommonModal from './CommonModal';
 
-import commonStyles, {
-  screenWidth,
-  screenHeight,
-} from '../styles/common';
+import { screenWidth, screenHeight } from '../styles/common';
 
 const DEFAULT_PADDING = {
   top: 40,
@@ -67,7 +57,7 @@ export default class MapsDlg extends CommonModal {
     return (
       <MapView.Animated
         style={styles.mapView}
-        ref={(el) => this.map = el}
+        ref={(el) => (this.map = el)}
         region={region}
         zoomEnabled
         loadingEnabled
@@ -90,7 +80,7 @@ export default class MapsDlg extends CommonModal {
     const { region } = this.state;
 
     if (path.length) {
-      this.map.fitToCoordinates(path, {
+      this.map.getNode().fitToCoordinates(path, {
         edgePadding: DEFAULT_PADDING,
         animated: true,
       });

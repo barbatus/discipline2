@@ -17,11 +17,12 @@ export default class Tracker {
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
     this.ticks = tracker.ticks || [];
-    this.active = false;
+    this.props = tracker.props;
+    this.active = tracker.active;
   }
 
   clone() {
-    const tracker = Object.assign(Object.create(this), this);
+    const tracker = Object.assign(Object.create(this.__proto__), this);
     tracker.active = this.active;
     return tracker;
   }

@@ -1,23 +1,24 @@
 import React, { PureComponent } from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Text,
-  Animated,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, Animated } from 'react-native';
+
+import NavigationBar from 'react-native-navbar';
 
 import Animation from '../animation/Animation';
 
 import NavTitle from './Title';
 
-import NavigationBar from 'react-native-navbar';
-
 import { screenWidth, navHeight } from '../styles/common';
 
 import { caller } from '../../utils/lang';
+
+const styles = StyleSheet.create({
+  navbar: {
+    height: navHeight,
+    width: screenWidth,
+    backgroundColor: 'transparent',
+  },
+});
 
 export default class NavBar extends PureComponent {
   _active = false;
@@ -117,11 +118,3 @@ export default class NavBar extends PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  navbar: {
-    height: navHeight,
-    width: screenWidth,
-    backgroundColor: 'transparent',
-  },
-});

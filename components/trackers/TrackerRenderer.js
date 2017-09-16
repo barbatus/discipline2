@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { Animated, StyleSheet, InteractionManager } from 'react-native';
+import { Animated, InteractionManager } from 'react-native';
 
 import { extend } from 'lodash';
 

@@ -10,42 +10,53 @@ import {
   Switch,
 } from 'react-native';
 
-import { reduxForm, Form, Field } from 'redux-form';
+import { reduxForm, Field, SubmissionError } from 'redux-form';
 
 import { getIcon } from '../../../../icons/icons';
 
-import { propsStyles } from '../../styles/trackerStyles';
+import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
 
 import { TrackerType } from '../../../../depot/consts';
+
+import ShakeAnimation from '../../../animation/ShakeAnimation';
 
 import TrackerIcon from './TrackerIcon';
 
 import TrackerTitle from './TrackerTitle';
 
 const styles = StyleSheet.create({
-  deleteText: {
-    color: '#FF001F',
-  },
-  trackTypeText: {
-    color: '#C4C4C4',
-  },
   deleteRow: {
     marginTop: 50,
   },
 });
 
 class TrackerTypeSelect extends PureComponent {
+  shakeAnim = new ShakeAnimation();
+
+  error = null;
+
+  componentDidUpdate() {
+    if (this.props.meta.error && 
+        this.props.meta.error !== this.error) {
+      this.shakeAnim.animate();
+    }
+    this.error = this.props.meta.error;
+  }
+
   render() {
-    const { meta: { initial }, onTypeSelect } = this.props;
+    const { meta: { initial, error }, onTypeSelect } = this.props;
     const typeEnum = TrackerType.fromValue(initial);
+    const errorText = error ? trackerStyles.errorText : null;
     return (
       <TouchableOpacity
         style={propsStyles.colRight}
         onPress={onTypeSelect}
       >
-        <Text style={[propsStyles.colText, styles.trackTypeText]}>
-          {typeEnum ? typeEnum.title : 'Select'}
-        </Text>
+        <Animated.View style={this.shakeAnim.style}>
+          <Text style={[propsStyles.colHintText, errorText]}>
+            {typeEnum ? typeEnum.title : 'Select'}
+          </Text>
+        </Animated.View>
         <Image
           source={getIcon('next')}
           style={propsStyles.nextIcon}
@@ -75,7 +86,7 @@ export class TrackerEditView extends PureComponent {
             style={propsStyles.colLeft}
             onPress={this.props.onRemove}
           >
-            <Text style={[propsStyles.text, styles.deleteText]}>
+            <Text style={[propsStyles.deleteText]}>
               Delete
             </Text>
           </TouchableOpacity>
@@ -144,6 +155,17 @@ export default reduxForm({
   form: 'trackerForm',
   enableReinitialize: true,
   onSubmit: (tracker) => {
+    if (!tracker.iconId && !tracker.title) {
+      throw new SubmissionError({
+        title: 'Either title or icon should be defined',
+      });
+    }
+    if (!tracker.typeId) {
+      throw new SubmissionError({
+        typeId: 'Type should be defined',
+      });
+    }
+    tracker.props = { alerts: false };
     return tracker;
   },
 })(TrackerEditView);

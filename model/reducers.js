@@ -27,17 +27,19 @@ const findIndex = (trackers, tracker) => {
 };
 
 const cloneTracker = (trackers, tracker, index?: number) => {
-  if (index == null) {
-    index = findIndex(trackers, tracker);
+  let trIndex = index;
+  if (trIndex == null) {
+    trIndex = findIndex(trackers, tracker);
   }
-  return trackers.update(index, () => tracker.clone());
+  return trackers.update(trIndex, () => Trackers.create(tracker));
 };
 
 const insertTracker = (trackers, tracker, index?: number) => {
-  if (index == null) {
-    index = findIndex(trackers, tracker);
+  let trIndex = index;
+  if (trIndex == null) {
+    trIndex = findIndex(trackers, tracker);
   }
-  return trackers.insert(index, Trackers.create(tracker));
+  return trackers.insert(trIndex, Trackers.create(tracker));
 };
 
 export const trackersReducer = handleActions(
@@ -114,13 +116,11 @@ export const trackersReducer = handleActions(
       trackers: new List(trackers.map(
         (tracker) => Trackers.getOne(tracker.id))),
     }),
-    [UPDATE_CALENDAR]: (state, { dateMs, ticks }) => {
-      return {
-        ...state,
-        dateMs,
-        ticks,
-      };
-    },
+    [UPDATE_CALENDAR]: (state, { dateMs, ticks }) => ({
+      ...state,
+      dateMs,
+      ticks,
+    }),
     [COMPLETE_CHANGE]: (state) => ({
       ...state,
       addIndex: null,

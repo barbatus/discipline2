@@ -1,11 +1,8 @@
 import React from 'react';
 
-import { caller } from '../../../utils/lang';
-
 import {
   View,
   TouchableOpacity,
-  Image,
   Text,
   StyleSheet,
   Vibration,
@@ -13,9 +10,13 @@ import {
 
 import { pure } from 'recompose';
 
+import { caller } from '../../../utils/lang';
+
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
 import { slideWidth } from '../styles/slideStyles';
+
+import StartStopBtn from './common/StartStopBtn';
 
 import TrackerSlide from './TrackerSlide';
 
@@ -101,21 +102,14 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
 
   get footerControls() {
     const { tracker, responsive } = this.props;
+    const { active } = tracker;
     return (
       <View style={styles.footerContainer}>
-        {
-          tracker.active ?
-            <FooterBtn
-              label="STOP"
-              responsive={responsive}
-              onPress={this.onStop}
-            /> :
-              <FooterBtn
-                label="START"
-                responsive={responsive}
-                onPress={this.onTick}
-              />
-        }
+        <StartStopBtn
+          active={active}
+          responsive={responsive}
+          onPress={active ? this.onStop : this.onTick}
+        />
         <FooterBtn
           label="LAP"
           responsive={responsive}

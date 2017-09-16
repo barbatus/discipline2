@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 
-import { StyleSheet, ScrollView, View, Image, Text } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 
-class Menu extends Component {
-  render() {
-    return <ScrollView style={styles.menu} />;
-  }
-}
-
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
+import { screenWidth, screenHeight } from '../styles';
 
 const styles = StyleSheet.create({
   menu: {
     flex: 1,
-    width: window.width,
-    height: window.height,
+    width: screenWidth,
+    height: screenHeight,
     backgroundColor: 'gray',
     padding: 20,
   },
 });
 
-module.exports = Menu;
+export default class Menu extends Component {
+  render() {
+    return <ScrollView style={styles.menu} />;
+  }
+}

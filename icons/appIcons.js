@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 const appIcons = {
   back: require('./files/app/back.png'),
   check: require('./files/app/check.png'),
@@ -20,4 +22,4 @@ const appIcons = {
   distance: require('./files/app/distance.png'),
 };
 
-module.exports = appIcons;
+export default appIcons;

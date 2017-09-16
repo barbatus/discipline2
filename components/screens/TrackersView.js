@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, View, Animated, InteractionManager } from 'react-native';
+import { StyleSheet, Animated, InteractionManager } from 'react-native';
 
 import { connect } from 'react-redux';
 
@@ -85,45 +85,14 @@ class TrackersView extends PureComponent {
     this.onPrevMonth = ::this.onPrevMonth;
   }
 
-  render() {
-    const { style, onMoveUp } = this.props;
-    const { current } = this.state;
-    return (
-      <Animated.View style={[commonStyles.flexFilled, style]}>
-        <TrackerCal
-          ref="calendar"
-          {...this.props}
-          tracker={current}
-          style={[commonStyles.absFilled, { top: 0 }]}
-          onMonthChanged={this.onMonthChanged}
-        />
-        <Trackers
-          ref="trackers"
-          {...this.props}
-          style={commonStyles.flexFilled}
-          onRemove={this.onRemove}
-          onRemoveCompleted={this.onRemoveCompleted}
-          onEdit={this.onEdit}
-          onSaveCompleted={this.onSaveCompleted}
-          onSwiperScaleMove={this.onSwiperScaleMove}
-          onSwiperMoveDown={this.onSwiperMoveDown}
-          onSwiperMoveDownStart={this.onSwiperMoveDownStart}
-          onSwiperMoveUpStart={onMoveUp}
-          onTrackerEdit={this.onTrackerEdit}
-          onSlideChange={this.onSlideChange}
-        />
-      </Animated.View>
-    );
-  }
-
-  onSlideChange(index: number, previ: number) {
+  onSlideChange(index: number, previ: number, animated: boolean) {
     this.setState({
       current: this.props.trackers.get(index),
     });
-    caller(this.props.onSlideChange, index, previ);
+    caller(this.props.onSlideChange, index, previ, animated);
   }
 
-  onRemove(tracker: Tracker) {
+  onRemove(tracker) {
     if (this.active) return;
 
     this.active = true;
@@ -256,6 +225,37 @@ class TrackersView extends PureComponent {
       ...tracker,
     }));
   }
+
+  render() {
+    const { style, onMoveUp } = this.props;
+    const { current } = this.state;
+    return (
+      <Animated.View style={[commonStyles.flexFilled, style]}>
+        <TrackerCal
+          ref="calendar"
+          {...this.props}
+          tracker={current}
+          style={[commonStyles.absFilled, { top: 0 }]}
+          onMonthChanged={this.onMonthChanged}
+        />
+        <Trackers
+          ref="trackers"
+          {...this.props}
+          style={commonStyles.flexFilled}
+          onRemove={this.onRemove}
+          onRemoveCompleted={this.onRemoveCompleted}
+          onEdit={this.onEdit}
+          onSaveCompleted={this.onSaveCompleted}
+          onSwiperScaleMove={this.onSwiperScaleMove}
+          onSwiperMoveDown={this.onSwiperMoveDown}
+          onSwiperMoveDownStart={this.onSwiperMoveDownStart}
+          onSwiperMoveUpStart={onMoveUp}
+          onTrackerEdit={this.onTrackerEdit}
+          onSlideChange={this.onSlideChange}
+        />
+      </Animated.View>
+    );
+  }
 }
 
 export default connect(
@@ -289,6 +289,4 @@ export default connect(
     },
     dispatch,
   }),
-  null,
-  { withRef: true },
 )(TrackersView);

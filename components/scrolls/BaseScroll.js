@@ -4,8 +4,6 @@ import { View, ScrollView } from 'react-native';
 
 import isBoolean from 'lodash/isBoolean';
 
-import { commonStyles, screenWidth } from '../styles/common';
-
 import { caller } from '../../utils/lang';
 
 export default class BaseScroll extends PureComponent {
@@ -90,14 +88,14 @@ export default class BaseScroll extends PureComponent {
     const offsetX = Math.max(index * slideWidth, 0);
     this.onScrollToCb = callback;
     this.isScrolling = true;
-    this.refs.scrollView.scrollTo({
+    this.scrollView.scrollTo({
       x: offsetX,
       y: 0,
       animated: animated !== false,
     });
 
     if (animated === false) {
-      this.endScrolling(offsetX);
+      this.endScrolling(offsetX, false);
     }
   }
 
@@ -130,10 +128,10 @@ export default class BaseScroll extends PureComponent {
 
   onScrollEnd(event) {
     const { x } = event.nativeEvent.contentOffset;
-    this.endScrolling(x);
+    this.endScrolling(x, true);
   }
 
-  endScrolling(offsetX: number) {
+  endScrolling(offsetX: number, animated: boolean) {
     this.isScrolling = false;
     this.updateSlideIndexByOffset(offsetX);
 
@@ -142,7 +140,7 @@ export default class BaseScroll extends PureComponent {
     }
 
     if (this.prevInd !== this.index) {
-      caller(this.props.onSlideChange, this.index, this.prevInd);
+      caller(this.props.onSlideChange, this.index, this.prevInd, animated);
       this.prevInd = this.index;
     }
 
@@ -170,10 +168,17 @@ export default class BaseScroll extends PureComponent {
   }
 
   render() {
-    const { slides, index, slideWidth, pagingEnabled, contentStyle, scrollEnabled } = this.props;
+    const {
+      slides,
+      index,
+      slideWidth,
+      pagingEnabled,
+      contentStyle,
+      scrollEnabled,
+    } = this.props;
     return (
       <ScrollView
-        ref="scrollView"
+        ref={(el) => (this.scrollView = el)}
         {...this.props}
         contentOffset={{ x: index * slideWidth, y: 0 }}
         keyboardShouldPersistTaps="always"
@@ -186,6 +191,7 @@ export default class BaseScroll extends PureComponent {
         onTouchMove={this.onTouchMove}
         onMomentumScrollBegin={this.onScrollBegin}
         onMomentumScrollEnd={this.onScrollEnd}
+        scrollEventThrottle={30}
       >
         {slides}
       </ScrollView>

@@ -56,26 +56,20 @@ export default class FlipAnimation {
   }
 
   animateIn(callback: Function) {
-    this.move2.setValue(0);
+    Animation.setValue(this.move2, 0);
 
     this.animateFlip(1, 0, 1,
       (value) => value > 0.5,
-      () => {
-        this.move1.setValue(1);
-        caller(callback);
-      },
+      () => Animation.setValue(this.move1, 1, callback)
     );
   }
 
   animateOut(callback: Function) {
-    this.move1.setValue(0);
+    Animation.setValue(this.move1, 0);
 
     this.animateFlip(0, 1, 0,
       (value) => value <= 0.5,
-      () => {
-        this.move2.setValue(1);
-        caller(callback);
-      },
+      () => Animation.setValue(this.move2, 1, callback)
     );
   }
 
@@ -85,8 +79,8 @@ export default class FlipAnimation {
     const id = this.rotY.addListener(({ value }) => {
       if (opCondition(value)) {
         this.rotY.removeListener(id);
-        this.opacity1.setValue(op1);
-        this.opacity2.setValue(op2);
+        Animation.setValue(this.opacity1, op1);
+        Animation.setValue(this.opacity2, op2);
       }
     });
 

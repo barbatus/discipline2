@@ -1,10 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { commonStyles, screenWidth } from '../styles/common';
+import { commonStyles as cs, screenWidth } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
-
-import { caller } from '../../utils/lang';
 
 class Scroll extends PureComponent {
   static propTypes = {
@@ -19,11 +17,11 @@ class Scroll extends PureComponent {
   };
 
   get index() {
-    return this.refs.scroll.index;
+    return this.scroll.index;
   }
 
   scrollTo(index, callback, animated) {
-    this.refs.scroll.scrollTo(index, callback, animated);
+    this.scroll.scrollTo(index, callback, animated);
   }
 
   render() {
@@ -36,10 +34,10 @@ class Scroll extends PureComponent {
 
     return (
       <BaseScroll
-        ref="scroll"
+        ref={(el) => (this.scroll = el)}
         {...this.props}
         pagingEnabled={false}
-        contentStyle={[commonStyles.centered, paddingStyle]}
+        contentStyle={[cs.centered, paddingStyle]}
       />
     );
   }

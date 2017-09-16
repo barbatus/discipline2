@@ -9,9 +9,7 @@ import depot from '../depot/depot';
 export default class Trackers {
   static getAll() {
     const trackers = depot.loadTrackers();
-    return trackers.map((trackDoc) => {
-      return this.create(trackDoc);
-    });
+    return trackers.map((trackDoc) => this.create(trackDoc));
   }
 
   static getOne(trackId: number) {

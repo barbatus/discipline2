@@ -19,13 +19,13 @@ export const updateCalendar = (
 
 export const LOAD_TEST_DATA = 'LOAD_INIT';
 
-export const loadTestData = () => (dispatch) =>
-  depot.loadTestData().then((trackers) =>
-    dispatch({
-      type: LOAD_TEST_DATA,
-      trackers,
-    }),
-  );
+export const loadTestData = () => async (dispatch) => {
+  const trackers = await depot.loadTestData();
+  dispatch({
+    type: LOAD_TEST_DATA,
+    trackers,
+  });
+};
 
 export const REMOVE_TRACKER = 'REMOVE_TRACK';
 
@@ -60,18 +60,16 @@ export const updateTracker = (tracker) => (dispatch) =>
 
 export const TICK_TRACKER = 'TICK_TRACKER';
 
-export const tickTracker = (tracker, value, data) => (dispatch) => {
+export const tickTracker = (tracker, value, data) => async (dispatch) => {
   const dateTimeMs = time.getDateTimeMs();
-  depot.addTick(tracker.id, dateTimeMs, value, data).then((tick) =>
-    depot.getTicks(tracker.id, time.getDateMs()).then((ticks) => {
-      tracker.ticks = ticks;
-      return dispatch({
-        type: TICK_TRACKER,
-        tracker,
-        tick,
-      });
-    }),
-  );
+  const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
+  const ticks = await depot.getTicks(tracker.id, time.getDateMs());
+  tracker.ticks = ticks;
+  return dispatch({
+    type: TICK_TRACKER,
+    tracker,
+    tick,
+  });
 };
 
 export const START_TRACKER = 'START_TRACKER';
@@ -96,29 +94,37 @@ export const stopTracker = (tracker) => {
 
 export const UNDO_LAST_TICK = 'UNDO_LAST_TICK';
 
-export const undoLastTick = (tracker) => (dispatch) =>
-  depot.undoLastTick(tracker.id).then(() =>
-    depot.getTicks(tracker.id, time.getDateMs()).then((ticks) => {
-      tracker.ticks = ticks;
-      return dispatch({
-        type: UNDO_LAST_TICK,
-        tracker,
-      });
-    }),
-  );
+export const undoLastTick = (tracker) => async (dispatch) => {
+  await depot.undoLastTick(tracker.id);
+  const ticks = await depot.getTicks(tracker.id, time.getDateMs());
+  tracker.ticks = ticks;
+  return dispatch({
+    type: UNDO_LAST_TICK,
+    tracker,
+  });
+}
 
 export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
-export const updateLastTick = (tracker, value, data) => (dispatch) =>
-  depot.updateLastTick(tracker.id, value, data).then((tick) =>
-    depot.getTicks(tracker.id, time.getDateMs()).then((ticks) => {
-      tracker.ticks = ticks;
-      return dispatch({
-        type: UPDATE_LAST_TICK,
-        tracker,
-      });
-    }),
-  );
+export const updateLastTick = (tracker, value, data) => async (dispatch) => {
+  const tick = await depot.updateLastTick(tracker.id, value, data);
+  const ticks = await depot.getTicks(tracker.id, time.getDateMs());
+  tracker.ticks = ticks;
+  return dispatch({
+    type: UPDATE_LAST_TICK,
+    tracker,
+  });
+
+  // depot.updateLastTick(tracker.id, value, data).then((tick) =>
+  //   depot.getTicks(tracker.id, time.getDateMs()).then((ticks) => {
+  //     tracker.ticks = ticks;
+  //     return dispatch({
+  //       type: UPDATE_LAST_TICK,
+  //       tracker,
+  //     });
+  //   }),
+  // );
+}
 
 export const COMPLETE_CHANGE = 'COMPLETE_CHANGE';
 

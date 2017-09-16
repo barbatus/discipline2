@@ -2,13 +2,11 @@ import React from 'react';
 
 import {
   View,
-  TouchableHighlight,
   TouchableOpacity,
   Image,
   Text,
   TextInput,
   StyleSheet,
-  Vibration,
 } from 'react-native';
 
 import { getIcon } from '../../../icons/icons';
@@ -29,7 +27,7 @@ const WIDGET_WIDTH = slideWidth - 40;
 
 const FONT_SIZE = isPhone5() ? 40 : 50;
 
-const BTN_SIZE = isPhone5() ? 35 : 45;
+const BTN_SIZE = isPhone5() ? 40 : 45;
 
 const INPUT_WIDTH = WIDGET_WIDTH;
 
@@ -89,6 +87,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   constructor(props) {
     super(props);
     this.onPlus = ::this.onPlus;
+    this.onChangeText = ::this.onChangeText;
   }
 
   cancelEdit(callback) {
@@ -126,12 +125,11 @@ export default class SumTrackerSlide extends TrackerSlide {
       <View style={[trackerStyles.controls, styles.controlsContainer]}>
         <View style={styles.inputContainer}>
           <TextInput
-            ref="added"
             editable={responsive}
             placeholder="Enter value"
             placeholderTextColor={trackerDef.hintText.color}
             style={styles.sumInput}
-            onChangeText={(added) => this.onChangeText(added)}
+            onChangeText={this.onChangeText}
             value={this.state.added}
             onSubmitEditing={this.onPlus}
           />
