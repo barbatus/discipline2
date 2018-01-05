@@ -1,4 +1,6 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+
+import PropTypes from 'prop-types';
 
 import {
   ScrollView,
@@ -20,14 +22,14 @@ export default class Calendar extends PureComponent {
   static propTypes = {
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
-    tickDates: PropTypes.array,
-    monthNames: PropTypes.array,
     onDateSelect: PropTypes.func,
     onMonthChanged: PropTypes.func,
     titleFormat: PropTypes.string,
     todayMs: PropTypes.number,
     weekStart: PropTypes.number,
     monthToRender: PropTypes.number,
+    dateMs: PropTypes.number,
+    selDateMs: PropTypes.number,
   };
 
   static defaultProps = {

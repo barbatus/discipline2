@@ -1,12 +1,5 @@
-import React from 'react';
-
-import Dimensions from 'Dimensions';
-const window = Dimensions.get('window');
-
-import UserIconsStore from '../../icons/UserIconsStore';
-
+import React, { PureComponent } from 'react';
 import {
-  TouchableHighlight,
   TouchableOpacity,
   View,
   StyleSheet,
@@ -14,92 +7,13 @@ import {
   Image,
 } from 'react-native';
 
+import Dimensions from 'Dimensions';
+
+import UserIconsStore from '../../icons/UserIconsStore';
+
 import { caller } from '../../utils/lang';
 
-const IconsGrid = React.createClass({
-  getInitialState: function() {
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    });
-    return { ds };
-  },
-
-  _getIcons(): Array<Array<UserIcon>> {
-    const icons = UserIconsStore.getAll();
-
-    let iconRow = [];
-    const iconRows = [];
-    const { count } = this._getColSize();
-    icons.forEach((icon, index) => {
-      iconRow.push(icon);
-      if ((index + 1) % count === 0) {
-        iconRows.push(iconRow);
-        iconRow = [];
-      }
-    });
-
-    if (iconRow.length) {
-      iconRows.push(iconRow);
-    }
-
-    return iconRows;
-  },
-
-  _onIconChosen(icon) {
-    caller(this.props.onIconChosen, icon.id);
-  },
-
-  _getColSize() {
-    let count = 5;
-
-    // For iPhone 5.
-    if (window.width <= 320) {
-      count = 4;
-    }
-
-    const pad = count * 0;
-    const width = ((window.width - pad) / count) >> 0;
-
-    return { width, count };
-  },
-
-  _renderIcon(icon: UserIcon) {
-    const { width } = this._getColSize();
-
-    return (
-      <TouchableOpacity
-        key={icon.id}
-        style={styles.col}
-        onPress={this._onIconChosen.bind(this, icon)}
-      >
-        <Image source={icon.png} style={[styles.icon, { width }]} />
-      </TouchableOpacity>
-    );
-  },
-
-  _renderRow: function(icons) {
-    const items = icons.map(icon => {
-      return this._renderIcon(icon);
-    });
-
-    return (
-      <View style={styles.row}>
-        {items}
-      </View>
-    );
-  },
-
-  render() {
-    const icons = this._getIcons();
-    return (
-      <ListView
-        dataSource={this.state.ds.cloneWithRows(icons)}
-        renderRow={this._renderRow}
-        style={[styles.grid, this.props.style]}
-      />
-    );
-  },
-});
+const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   grid: {
@@ -123,4 +37,89 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IconsGrid;
+export default class IconsGrid extends PureComponent {
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    });
+    this.state = { ds };
+    this.renderRow = this.renderRow.bind(this);
+  }
+
+  onIconChosen(icon) {
+    caller(this.props.onIconChosen, icon.id);
+  }
+
+  getIcons(): Array<Array<UserIcon>> {
+    const icons = UserIconsStore.getAll();
+
+    let iconRow = [];
+    const iconRows = [];
+    const { count } = this.getColSize();
+    icons.forEach((icon, index) => {
+      iconRow.push(icon);
+      if ((index + 1) % count === 0) {
+        iconRows.push(iconRow);
+        iconRow = [];
+      }
+    });
+
+    if (iconRow.length) {
+      iconRows.push(iconRow);
+    }
+
+    return iconRows;
+  }
+
+  getColSize() {
+    let count = 5;
+
+    // For iPhone 5.
+    if (window.width <= 320) {
+      count = 4;
+    }
+
+    const pad = count * 0;
+    const width = Math.floor((window.width - pad) / count);
+
+    return { width, count };
+  }
+
+  renderIcon(icon: UserIcon) {
+    const { width } = this.getColSize();
+
+    return (
+      <TouchableOpacity
+        key={icon.id}
+        style={styles.col}
+        onPress={this.onIconChosen.bind(this, icon)}
+      >
+        <Image source={icon.png} style={[styles.icon, { width }]} />
+      </TouchableOpacity>
+    );
+  }
+
+  renderRow(icons) {
+    const items = icons.map((icon) => {
+      return this.renderIcon(icon);
+    });
+
+    return (
+      <View style={styles.row}>
+        {items}
+      </View>
+    );
+  }
+
+  render() {
+    const icons = this.getIcons();
+    return (
+      <ListView
+        dataSource={this.state.ds.cloneWithRows(icons)}
+        renderRow={this.renderRow}
+        style={[styles.grid, this.props.style]}
+      />
+    );
+  }
+}

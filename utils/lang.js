@@ -14,5 +14,5 @@ export function round(number, precision) {
 }
 
 export function int(number) {
-  return number >> 0;
+  return Math.floor(number);
 }

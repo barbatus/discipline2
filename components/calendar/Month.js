@@ -1,4 +1,6 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+
+import PropTypes from 'prop-types';
 
 import { View, StyleSheet, findNodeHandle } from 'react-native';
 
@@ -86,53 +88,18 @@ export default class Month extends PureComponent {
     });
   }
 
-  render() {
-    const { monthMs, todayMs, selDateMs, ticks } = this.props;
-
+  getTooltipPos(selDateMs) {
+    const { monthMs } = this.props;
+    const day = moment(selDateMs).date();
     const startOfMonth = moment(monthMs).startOf('month');
-    const endOfMonth = moment(monthMs).endOf('month');
-    const startOffset = startOfMonth.weekday();
-    const endOffset = 6 - endOfMonth.weekday();
-
-    const startDay = moment(startOfMonth).subtract(startOffset, 'day');
-    const endDay = moment(endOfMonth).add(endOffset, 'day');
-    const weekRows = [];
-    let days = [];
-    let daysCount = 0;
-    while (startDay.isBefore(endDay)) {
-      const isoWeekday = startDay.isoWeekday();
-      const isOutDay = startDay.month() !== startOfMonth.month();
-      const dayIndex = startDay.date() - 1;
-      days.push(
-        <Day
-          key={startDay.valueOf()}
-          ref={`day${daysCount++}`}
-          onPress={this.selectDate}
-          value={startDay.date()}
-          isToday={startDay.isSame(todayMs, 'day')}
-          isSelected={startDay.isSame(selDateMs, 'day')}
-          hasTicks={!isOutDay ? !!ticks[dayIndex] : false}
-          isOutDay={isOutDay}
-        />,
-      );
-      if (startDay.weekday() === 6) {
-        weekRows.push(
-          <View key={weekRows.length} style={styles.weekRow}>
-            {days}
-          </View>,
-        );
-        days = [];
-      }
-      startDay.add(1, 'day');
-    }
-
-    const { tooltipShown } = this.state;
-    return (
-      <View style={styles.monthContainer}>
-        {tooltipShown ? this.renderTooltip() : null}
-        {weekRows}
-      </View>
-    );
+    const offset = startOfMonth.weekday();
+    const week = int((offset + day - 1) / 7);
+    const dayInd = moment(selDateMs).weekday();
+    const dWidth = (screenWidth - (2 * PADDING) - this.dayWidth) / 6;
+    return {
+      x: PADDING + (dWidth * dayInd) + (this.dayWidth / 2),
+      y: this.dayHeight * week,
+    };
   }
 
   selectDate(day: number) {
@@ -189,17 +156,51 @@ export default class Month extends PureComponent {
     );
   }
 
-  getTooltipPos(selDateMs) {
-    const { monthMs } = this.props;
-    const day = moment(selDateMs).date();
+  render() {
+    const { monthMs, todayMs, selDateMs, ticks } = this.props;
+
     const startOfMonth = moment(monthMs).startOf('month');
-    const offset = startOfMonth.weekday();
-    const week = int((offset + day - 1) / 7);
-    const dayInd = moment(selDateMs).weekday();
-    const dWidth = (screenWidth - (2 * PADDING) - this.dayWidth) / 6;
-    return {
-      x: PADDING + (dWidth * dayInd) + (this.dayWidth / 2),
-      y: this.dayHeight * week,
-    };
+    const endOfMonth = moment(monthMs).endOf('month');
+    const startOffset = startOfMonth.weekday();
+    const endOffset = 6 - endOfMonth.weekday();
+
+    const startDay = moment(startOfMonth).subtract(startOffset, 'day');
+    const endDay = moment(endOfMonth).add(endOffset, 'day');
+    const weekRows = [];
+    let days = [];
+    let daysCount = 0;
+    while (startDay.isBefore(endDay)) {
+      const isOutDay = startDay.month() !== startOfMonth.month();
+      const dayIndex = startDay.date() - 1;
+      days.push(
+        <Day
+          key={startDay.valueOf()}
+          ref={`day${daysCount++}`}
+          onPress={this.selectDate}
+          value={startDay.date()}
+          isToday={startDay.isSame(todayMs, 'day')}
+          isSelected={startDay.isSame(selDateMs, 'day')}
+          hasTicks={!isOutDay ? !!ticks[dayIndex] : false}
+          isOutDay={isOutDay}
+        />,
+      );
+      if (startDay.weekday() === 6) {
+        weekRows.push(
+          <View key={weekRows.length} style={styles.weekRow}>
+            {days}
+          </View>,
+        );
+        days = [];
+      }
+      startDay.add(1, 'day');
+    }
+
+    const { tooltipShown } = this.state;
+    return (
+      <View style={styles.monthContainer}>
+        {tooltipShown ? this.renderTooltip() : null}
+        {weekRows}
+      </View>
+    );
   }
 }

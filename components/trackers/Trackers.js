@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, Animated, InteractionManager } from 'react-native';
+import PropTypes from 'prop-types';
+
+import { StyleSheet, Animated, InteractionManager, View } from 'react-native';
 
 import reactMixin from 'react-mixin';
 
@@ -13,8 +15,6 @@ import TrackerSwiper from './TrackerSwiper';
 import TrackerScroll from './TrackerScroll';
 
 import MoveDownResponderAnim from '../animation/MoveDownResponderAnim';
-
-import { MoveUpScaleResponderAnim } from '../animation/MoveUpScaleResponderAnim';
 
 import { commonStyles } from '../styles/common';
 
@@ -32,6 +32,20 @@ const styles = StyleSheet.create({
 });
 
 export default class Trackers extends PureComponent {
+  static propTypes = {
+    onEdit: PropTypes.func,
+    onRemove: PropTypes.func,
+    onCancel: PropTypes.func,
+    onSwiperMoveDown: PropTypes.func,
+    onSwiperMoveDownStart: PropTypes.func,
+    onSwiperScaleMove: PropTypes.func,
+    onSwiperMoveUpStart: PropTypes.func,
+    onSwiperMoveUpDone: PropTypes.func,
+    onSlideChange: PropTypes.func,
+    trackers: PropTypes.instanceOf(List),
+    style: View.propTypes.style,
+  };
+
   opacity = new Animated.Value(0);
 
   moveDown = new MoveDownResponderAnim(slideHeight);
@@ -39,8 +53,8 @@ export default class Trackers extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      swTrackers: new List(),
-      scTrackers: new List(),
+      swTrackers: [],
+      scTrackers: [],
       swiperEnabled: true,
     };
     this.onCenterSlideTap = ::this.onCenterSlideTap;
@@ -80,13 +94,18 @@ export default class Trackers extends PureComponent {
     }
   }
 
+  onEdit(tracker: Tracker) {
+    this.swiper.showEdit();
+    caller(this.props.onEdit, tracker);
+  }
+
   cancelEdit() {
     this.swiper.cancelEdit();
     caller(this.props.onCancel);
   }
 
   renderTracker(tracker, callback) {
-    this.setState({ swTrackers: new List([tracker]) },
+    this.setState({ swTrackers: [tracker] },
       () => Animated.timing(this.opacity, {
         duration: 500,
         toValue: 1,
@@ -96,22 +115,15 @@ export default class Trackers extends PureComponent {
 
   renderTrackers(trackers, callback) {
     this.setState({
-      swTrackers: trackers,
+      swTrackers: trackers.toArray(),
     });
 
+    // TODO
     this.setTimeout(() => {
-      this.setState(
-        {
-          scTrackers: trackers,
-        },
-        callback,
-      );
+      this.setState({
+        scTrackers: trackers.toArray(),
+      }, callback);
     });
-  }
-
-  onEdit(tracker: Tracker) {
-    this.swiper.showEdit();
-    caller(this.props.onEdit, tracker);
   }
 
   onRemove(tracker: Tracker) {
@@ -181,7 +193,7 @@ export default class Trackers extends PureComponent {
           {...this.props}
           trackers={scTrackers}
           style={styles.bigScroll}
-          scale={1 / 1.6}
+          scale={5 / 8}
           onCenterSlideTap={this.onCenterSlideTap}
         />
         <TrackerScroll

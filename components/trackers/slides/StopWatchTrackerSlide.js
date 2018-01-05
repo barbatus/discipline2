@@ -8,11 +8,13 @@ import {
   Vibration,
 } from 'react-native';
 
+import PropTypes from 'prop-types';
+
 import { pure } from 'recompose';
 
 import { caller } from '../../../utils/lang';
 
-import { trackerDef, trackerStyles } from '../styles/trackerStyles';
+import { trackerStyles } from '../styles/trackerStyles';
 
 import { slideWidth } from '../styles/slideStyles';
 
@@ -64,6 +66,12 @@ const FooterBtnFn = ({ label, responsive, onPress }) => (
     </Text>
   </TouchableOpacity>
 );
+
+FooterBtnFn.propTypes = {
+  label: PropTypes.string.isRequired,
+  responsive: PropTypes.bool,
+  onPress: PropTypes.func.isRequired,
+};
 
 const FooterBtn = pure(FooterBtnFn);
 

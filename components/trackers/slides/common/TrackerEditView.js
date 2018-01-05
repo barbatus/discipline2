@@ -10,6 +10,8 @@ import {
   Switch,
 } from 'react-native';
 
+import PropTypes from 'prop-types';
+
 import { reduxForm, Field, SubmissionError } from 'redux-form';
 
 import { getIcon } from '../../../../icons/icons';
@@ -31,17 +33,24 @@ const styles = StyleSheet.create({
 });
 
 class TrackerTypeSelect extends PureComponent {
-  shakeAnim = new ShakeAnimation();
-
-  error = null;
+  static propTypes = {
+    meta: PropTypes.shape({
+      error: PropTypes.string,
+    }).isRequired,
+    onTypeSelect: PropTypes.func.isRequired,
+  };
 
   componentDidUpdate() {
-    if (this.props.meta.error && 
+    if (this.props.meta.error &&
         this.props.meta.error !== this.error) {
       this.shakeAnim.animate();
     }
     this.error = this.props.meta.error;
   }
+
+  shakeAnim = new ShakeAnimation();
+
+  error = null;
 
   render() {
     const { meta: { initial, error }, onTypeSelect } = this.props;
@@ -67,6 +76,15 @@ class TrackerTypeSelect extends PureComponent {
 }
 
 export class TrackerEditView extends PureComponent {
+  static propTypes = {
+    allowDelete: PropTypes.bool,
+    showType: PropTypes.bool,
+    onRemove: PropTypes.func,
+    onTypeSelect: PropTypes.func,
+    // TODO: check animated styles
+    style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+  };
+
   static defaultProps = {
     showType: true,
   };
@@ -165,7 +183,9 @@ export default reduxForm({
         typeId: 'Type should be defined',
       });
     }
-    tracker.props = { alerts: false };
-    return tracker;
+    return {
+      ...tracker,
+      props: { ...tracker.props, alerts: false },
+    };
   },
 })(TrackerEditView);

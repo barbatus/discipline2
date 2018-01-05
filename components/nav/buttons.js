@@ -54,31 +54,25 @@ const NavAddButtonFn = (props) =>
 
 const NavAddButton = pure(NavAddButtonFn);
 
-class NavBackButton extends PureComponent {
-  render() {
-    return (
-      <NavButton
-        {...this.props}
-        icon="back"
-        iconStyle={styles.backIcon}
-        style={styles.navBarLeftButton}
-      />
-    );
-  }
-}
+const NavBackButtonFn = (props) =>
+  <NavButton
+    {...props}
+    icon="back"
+    iconStyle={styles.backIcon}
+    style={styles.navBarLeftButton}
+  />;
 
-class NavMenuButton extends PureComponent {
-  render() {
-    return (
-      <NavButton
-        {...this.props}
-        icon="menu"
-        iconStyle={styles.menuIcon}
-        style={styles.navBarLeftButton}
-      />
-    );
-  }
-}
+const NavBackButton = pure(NavBackButtonFn);
+
+const NavMenuButtonFn = (props) =>
+  <NavButton
+    {...props}
+    icon="menu"
+    iconStyle={styles.menuIcon}
+    style={styles.navBarLeftButton}
+  />;
+
+const NavMenuButton = pure(NavMenuButtonFn);
 
 class NavCancelButton extends PureComponent {
   render() {

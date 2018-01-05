@@ -28,7 +28,7 @@ const TrackerSchema = {
     id: 'int',
     title: { type: 'string', optional: true },
     typeId: 'string',
-    iconId: 'string',
+    iconId: { type: 'string', optional: true },
     props: 'TrackerProps',
   },
 };

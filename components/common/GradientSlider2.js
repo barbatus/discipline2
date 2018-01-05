@@ -66,8 +66,8 @@ export default class GradientSlider extends PureComponent {
         ]}
       >
         <LinearGradient
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
+          startPoint={{ x: 0.0, y: 0.5 }}
+          endPoint={{ x: 1.0, y: 0.5 }}
           colors={grads}
           style={commonDef.absFilled}
         />

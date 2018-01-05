@@ -66,5 +66,4 @@ export class AnimationManager {
   }
 }
 
-const Animation = new AnimationManager();
-export default Animation;
+export default new AnimationManager();

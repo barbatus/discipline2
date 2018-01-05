@@ -38,6 +38,14 @@ export default class CommonModal extends PureComponent {
     this.hide = ::this.hide;
   }
 
+  onBeforeShown() {}
+
+  onAfterShown() {}
+
+  onBeforeHidden() {}
+
+  onAfterHidden() {}
+
   get content() {
     return null;
   }
@@ -57,14 +65,6 @@ export default class CommonModal extends PureComponent {
       () => this.onAfterHidden(),
     );
   }
-
-  onBeforeShown() {}
-
-  onAfterShown() {}
-
-  onBeforeHidden() {}
-
-  onAfterHidden() {}
 
   render() {
     return (

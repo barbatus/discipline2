@@ -2,11 +2,25 @@ import React, { PureComponent } from 'react';
 
 import { Animated, TextInput } from 'react-native';
 
+import PropTypes from 'prop-types';
+
 import ShakeAnimation from '../../../animation/ShakeAnimation';
 
 import { propsStyles, trackerDef } from '../../styles/trackerStyles';
 
 export default class TrackerTitle extends PureComponent {
+  static propTypes = {
+    input: PropTypes.shape({
+      value: PropTypes.string,
+      onBlur: PropTypes.func,
+      onFocus: PropTypes.func,
+      onChange: PropTypes.func,
+    }).isRequired,
+    meta: PropTypes.shape({
+      error: PropTypes.string,
+    }).isRequired,
+  };
+
   shakeAnim = new ShakeAnimation();
 
   error = null;
@@ -25,13 +39,12 @@ export default class TrackerTitle extends PureComponent {
   }
 
   onChange(value) {
-    const { input } = this.props;
-    input.onChange(value);
+    this.props.input.onChange(value);
   }
 
   render() {
-    const { input, meta: { error } } = this.props;
-    const hintColor = error ?
+    const { meta } = this.props;
+    const hintColor = meta.error ?
       trackerDef.errorText.color : trackerDef.hintText.color;
     return (
       <Animated.View style={this.shakeAnim.style}>
@@ -40,9 +53,9 @@ export default class TrackerTitle extends PureComponent {
           placeholderTextColor={hintColor}
           style={propsStyles.titleInput}
           onChangeText={this.onChange}
-          value={input.value}
-          onBlur={input.onBlur}
-          onFocus={input.onFocus}
+          value={this.props.input.value}
+          onBlur={this.props.input.onBlur}
+          onFocus={this.props.input.onFocus}
         />
       </Animated.View>
     );

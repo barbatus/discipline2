@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import { Animated, InteractionManager } from 'react-native';
 
-import { extend } from 'lodash';
+import PropTypes from 'prop-types';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
 
@@ -15,6 +15,8 @@ import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
 import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 
 import { TrackerType } from '../../depot/consts';
+
+import Tracker from '../../model/Tracker';
 
 import { caller } from '../../utils/lang';
 
@@ -73,26 +75,26 @@ class TrackerWrapper extends PureComponent {
   }
 
   showEdit(...args) {
-    this.refs.tracker.showEdit(...args);
+    this.tracker.showEdit(...args);
   }
 
   cancelEdit(...args) {
-    this.refs.tracker.cancelEdit(...args);
+    this.tracker.cancelEdit(...args);
   }
 
   shake() {
-    this.refs.tracker.shake();
+    this.tracker.shake();
   }
 
   collapse(...args) {
-    this.refs.tracker.collapse(...args);
+    this.tracker.collapse(...args);
   }
 
   render() {
     const { component, progressive, ...rest } = this.props;
     return React.createElement(component, {
       ...rest,
-      ref: 'tracker',
+      ref: (el) => (this.tracker = el),
       onEdit: this.onEdit,
       onRemove: this.onRemove,
       onTap: this.onTap,
@@ -106,7 +108,19 @@ class TrackerWrapper extends PureComponent {
 }
 
 export default class TrackerRenderer extends PureComponent {
-  inOpacity = new Animated.Value(0);
+  static propTypes = {
+    onEdit: PropTypes.func,
+    onRemove: PropTypes.func,
+    onTap: PropTypes.func,
+    onTick: PropTypes.func,
+    onStart: PropTypes.func,
+    onStop: PropTypes.func,
+    onProgress: PropTypes.func,
+    onUndo: PropTypes.func,
+    onTrackerEdit: PropTypes.func,
+    trackers: PropTypes.arrayOf(PropTypes.instanceOf(Tracker)),
+    enabled: PropTypes.bool,
+  };
 
   constructor(props) {
     super(props);
@@ -124,18 +138,6 @@ export default class TrackerRenderer extends PureComponent {
     this.onTrackerEdit = ::this.onTrackerEdit;
   }
 
-  get opacity() {
-    return this.inOpacity;
-  }
-
-  set opacity(value) {
-    this.inOpacity.setValue(value);
-  }
-
-  get shown() {
-    return this.inOpacity._value === 1;
-  }
-
   componentWillReceiveProps(props) {
     if (this.props.trackers !== props.trackers) {
       this.state.trackers = props.trackers;
@@ -143,14 +145,6 @@ export default class TrackerRenderer extends PureComponent {
     if (this.props.enabled !== props.enabled) {
       this.state.enabled = props.enabled;
     }
-  }
-
-  hide(callback) {
-    this.opacity = 0;
-  }
-
-  show(index, callback) {
-    this.opacity = 1;
   }
 
   onEdit(tracker: Tracker) {
@@ -191,6 +185,28 @@ export default class TrackerRenderer extends PureComponent {
     caller(this.props.onTrackerEdit, values);
   }
 
+  hide() {
+    this.opacity = 0;
+  }
+
+  show() {
+    this.opacity = 1;
+  }
+
+  get opacity() {
+    return this.inOpacity;
+  }
+
+  set opacity(value) {
+    this.inOpacity.setValue(value);
+  }
+
+  get shown() {
+    return this.inOpacity._value === 1;
+  }
+
+  inOpacity = new Animated.Value(0);
+
   renderTracker(tracker: Tracker) {
     // Render swiper's tracker slides as progressive
     // (i.e. they can update state progressively)
@@ -223,6 +239,8 @@ export default class TrackerRenderer extends PureComponent {
         return this.renderSlide(StopWatchTrackerSlide, tracker, trackProps);
       case TrackerType.DISTANCE:
         return this.renderSlide(DistanceTrackerSlide, tracker, trackProps);
+      default:
+        throw new Error('Tracker type is not supported');
     }
   }
 

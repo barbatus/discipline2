@@ -8,11 +8,11 @@ import { loadTestData } from './model/actions';
 
 import createStore from './model/createStore';
 
-import CreateApp from './app/App';
+import createApp from './app/App';
 
 const store = createStore();
 
-const App = CreateApp(store);
+const App = createApp(store);
 
 export default App;
 

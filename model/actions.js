@@ -30,7 +30,7 @@ export const loadTestData = () => async (dispatch) => {
 export const REMOVE_TRACKER = 'REMOVE_TRACK';
 
 export const removeTracker = (tracker) => (dispatch) =>
-  depot.removeTracker(tracker.id).then((removed) =>
+  depot.removeTracker(tracker.id).then(() =>
     dispatch({
       type: REMOVE_TRACKER,
       tracker,
@@ -40,6 +40,7 @@ export const removeTracker = (tracker) => (dispatch) =>
 export const ADD_TRACKER = 'ADD_TRACKER';
 
 export const addTracker = (tracker, index) => (dispatch) =>
+  // TODO: dispatch error event on catch
   depot.addTrackerAt(tracker, index).then((tracker) =>
     dispatch({
       type: ADD_TRACKER,

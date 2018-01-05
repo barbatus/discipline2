@@ -164,7 +164,7 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   onPlus() {
     Keyboard.dismiss();
-    const { tracker, onTick } = this.props;
+    const { onTick } = this.props;
     const added = parseFloat(this.state.added);
     if (added) {
       caller(onTick, added);

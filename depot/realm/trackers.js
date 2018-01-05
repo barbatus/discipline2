@@ -1,7 +1,7 @@
 /* @flow */
 import EventEmitter from 'eventemitter3';
 
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 
 import DB from './db';
 
@@ -33,8 +33,7 @@ class Trackers {
   }
 
   count(): number {
-    const trackers = this.getAll();
-    return trackers.length;
+    return this.trackers.length;
   }
 
   buildNewTracker(id, data) {

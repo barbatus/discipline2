@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { View, ScrollView } from 'react-native';
+import PropTypes from 'prop-types';
+
+import { ScrollView } from 'react-native';
 
 import isBoolean from 'lodash/isBoolean';
 
@@ -19,33 +21,16 @@ export default class BaseScroll extends PureComponent {
 
   onScrollToCb = null;
 
-  constructor(props) {
-    super(props);
-
-    const { slideWidth } = this.props;
-    this.prevInd = this.index;
-    this.offsetX = slideWidth * this.index;
-    this.pageX = slideWidth;
-    this.onTouchStart = ::this.onTouchStart;
-    this.onTouchEnd = ::this.onTouchEnd;
-    this.onTouchMove = ::this.onTouchMove;
-    this.onScrollBegin = ::this.onScrollBegin;
-    this.onScrollEnd = ::this.onScrollEnd;
-  }
-
   static propTypes = {
-    slideWidth: React.PropTypes.number.isRequired,
-    slides: React.PropTypes.array.isRequired,
-    horizontal: React.PropTypes.bool,
-    style: View.propTypes.style,
-    pagingEnabled: React.PropTypes.bool,
-    scrollEnabled: React.PropTypes.bool,
-    showsHorizontalScrollIndicator: React.PropTypes.bool,
-    bounces: React.PropTypes.bool,
-    scrollsToTop: React.PropTypes.bool,
-    removeClippedSubviews: React.PropTypes.bool,
-    automaticallyAdjustContentInsets: React.PropTypes.bool,
-    keyboardDismissMode: React.PropTypes.string,
+    slideWidth: PropTypes.number.isRequired,
+    slides: PropTypes.array.isRequired,
+    pagingEnabled: PropTypes.bool,
+    scrollEnabled: PropTypes.bool,
+    bounces: PropTypes.bool,
+    scrollsToTop: PropTypes.bool,
+    removeClippedSubviews: PropTypes.bool,
+    automaticallyAdjustContentInsets: PropTypes.bool,
+    keyboardDismissMode: PropTypes.string,
   };
 
   static defaultProps = {
@@ -62,6 +47,20 @@ export default class BaseScroll extends PureComponent {
     keyboardDismissMode: 'on-drag',
   };
 
+  constructor(props) {
+    super(props);
+
+    const { slideWidth } = this.props;
+    this.prevInd = this.index;
+    this.offsetX = slideWidth * this.index;
+    this.pageX = slideWidth;
+    this.onTouchStart = ::this.onTouchStart;
+    this.onTouchEnd = ::this.onTouchEnd;
+    this.onTouchMove = ::this.onTouchMove;
+    this.onScrollBegin = ::this.onScrollBegin;
+    this.onScrollEnd = ::this.onScrollEnd;
+  }
+
   scrollTo(
     index: number,
     callback?: Function | boolean,
@@ -75,14 +74,16 @@ export default class BaseScroll extends PureComponent {
     }
 
     if (slides.length <= 1) {
-      return caller(callback, false);
+      caller(callback, false);
+      return;
     }
 
     if (this.isScrolling) return;
 
     index = Math.min(index, slides.length - 1);
     if (this.index === index) {
-      return caller(callback, false);
+      caller(callback, false);
+      return;
     }
 
     const offsetX = Math.max(index * slideWidth, 0);
@@ -103,7 +104,7 @@ export default class BaseScroll extends PureComponent {
     this.pageX = event.nativeEvent.pageX;
   }
 
-  onTouchEnd(e) {}
+  onTouchEnd() {}
 
   onTouchMove(event) {
     const { slides, slideWidth, scrollEnabled } = this.props;
@@ -163,7 +164,7 @@ export default class BaseScroll extends PureComponent {
 
     const diff = offsetX - this.offsetX;
     // Sometimes it's not round integer.
-    this.index = Math.round(this.index + diff / slideWidth) >> 0;
+    this.index = Math.round(this.index + (diff / slideWidth));
     this.offsetX = slideWidth * this.index;
   }
 

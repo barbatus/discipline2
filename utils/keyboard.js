@@ -1,4 +1,4 @@
-import { TextInput, DeviceEventEmitter } from 'react-native';
+import { Keyboard as KeyboardRN, TextInput } from 'react-native';
 
 import EventEmitter from 'eventemitter3';
 
@@ -8,7 +8,7 @@ export class Keyboard {
   events: EventEmitter = new EventEmitter();
 
   constructor() {
-    DeviceEventEmitter.addListener(
+    KeyboardRN.addListener(
       'keyboardWillHide',
       this.keyboardWillHide.bind(this),
     );

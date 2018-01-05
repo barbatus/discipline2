@@ -76,7 +76,8 @@ class BGGeoLocationWatcher {
 
     const errorCb = (error) => {
       if (count === 3) {
-        return caller(onError, error);
+        caller(onError, error);
+        return;
       }
       this.start(onSuccess, onError, count + 1);
     };

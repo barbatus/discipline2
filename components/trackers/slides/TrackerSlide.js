@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import PropTypes from 'prop-types';
+
 import { View, Animated } from 'react-native';
 
 import { trackerStyles } from '../styles/trackerStyles';
@@ -29,14 +31,19 @@ export default class TrackerSlide extends PureComponent {
   };
 
   static propTypes = {
-    editable: React.PropTypes.bool,
+    editable: PropTypes.bool,
+    scale: PropTypes.number,
     style: View.propTypes.style,
-    tracker: React.PropTypes.instanceOf(Tracker),
+    tracker: PropTypes.instanceOf(Tracker),
+    onTap: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
+    onTrackerEdit: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { scale, tracker } = props;
+    const { scale } = props;
     this.flip = new FlipAnimation();
     this.scale = new ScaleAnimation(scale);
     this.state = { editTracker: null };
@@ -77,7 +84,7 @@ export default class TrackerSlide extends PureComponent {
     this.scale.animateOut(callback);
   }
 
-  shake(callback) {}
+  shake() {}
 
   onTap() {
     caller(this.props.onTap);

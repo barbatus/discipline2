@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 
 import { NavAddButton, NavMenuButton } from '../nav/buttons';
@@ -20,7 +22,7 @@ import { commonStyles } from '../styles/common';
 
 export class MainScreenView extends ScrollScreenView {
   static contextTypes = {
-    navBar: React.PropTypes.object.isRequired,
+    navBar: PropTypes.object.isRequired,
   };
 
   slideIndex = 0;

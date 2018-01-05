@@ -21,12 +21,6 @@ const styles = StyleSheet.create({
 });
 
 export default class NavBar extends PureComponent {
-  _active = false;
-
-  _opacity = new Animated.Value(1);
-
-  _btnOpacity = new Animated.Value(0);
-
   constructor(props) {
     super(props);
 
@@ -42,16 +36,17 @@ export default class NavBar extends PureComponent {
         rightBtn,
       });
 
-      this._showButtons(() => {
+      this.showButtons(() => {
         caller(callback);
       });
     };
 
     if (!this.state.leftBtn && !this.state.rightBtn) {
-      return showButtons();
+      showButtons();
+      return;
     }
 
-    this._hideButtons(() => {
+    this.hideButtons(() => {
       showButtons();
     });
   }
@@ -59,7 +54,7 @@ export default class NavBar extends PureComponent {
   setOpacity(dx: number) {
     check.assert.number(dx);
 
-    this._opacity.setValue(dx);
+    this.opacity.setValue(dx);
   }
 
   setTitle(title: string, titleStyle: Object) {
@@ -78,22 +73,9 @@ export default class NavBar extends PureComponent {
     );
   }
 
-  _hideButtons(callback: Function) {
-    this._animateOpacity(0, callback);
-  }
-
-  _animateOpacity(value, callback) {
-    const anim = Animation.timing(this._btnOpacity, 500, value);
-    Animation.animate([anim], callback);
-  }
-
-  _showButtons(callback: Function) {
-    this._animateOpacity(1, callback);
-  }
-
-  _getAnimatedBtn(button) {
+  getAnimatedBtn(button) {
     const mode = this.state.disabled ? 'none' : 'auto';
-    const style = [{ opacity: this._btnOpacity }];
+    const style = [{ opacity: this.btnOpacity }];
     return (
       <Animated.View pointerEvents={mode} style={style}>
         {button}
@@ -101,18 +83,36 @@ export default class NavBar extends PureComponent {
     );
   }
 
+  animateOpacity(value, callback) {
+    const anim = Animation.timing(this.btnOpacity, 500, value);
+    Animation.animate([anim], callback);
+  }
+
+  showButtons(callback: Function) {
+    this.animateOpacity(1, callback);
+  }
+
+  hideButtons(callback: Function) {
+    this.animateOpacity(0, callback);
+  }
+
+  active = false;
+
+  opacity = new Animated.Value(1);
+
+  btnOpacity = new Animated.Value(0);
+
   render() {
     const { title, titleStyle, leftBtn, rightBtn } = this.state;
-    const style = [styles.navbar, { opacity: this._opacity }];
+    const style = [styles.navbar, { opacity: this.opacity }];
     return (
       <Animated.View style={style}>
         <NavigationBar
-          ref="navBar"
           tintColor="transparent"
           navigator={navigator}
           title={<NavTitle style={titleStyle} title={title} />}
-          leftButton={this._getAnimatedBtn(leftBtn)}
-          rightButton={this._getAnimatedBtn(rightBtn)}
+          leftButton={this.getAnimatedBtn(leftBtn)}
+          rightButton={this.getAnimatedBtn(rightBtn)}
         />
       </Animated.View>
     );

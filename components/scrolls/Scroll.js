@@ -1,19 +1,14 @@
 import React, { PureComponent } from 'react';
 
+import PropTypes from 'prop-types';
+
 import { commonStyles as cs, screenWidth } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
 class Scroll extends PureComponent {
   static propTypes = {
-    slides: React.PropTypes.array.isRequired,
-    slideWidth: React.PropTypes.number.isRequired,
-    scrollEnabled: React.PropTypes.bool,
-  };
-
-  static defaultProps = {
-    slides: [],
-    scrollEnabled: true,
+    slideWidth: PropTypes.number.isRequired,
   };
 
   get index() {

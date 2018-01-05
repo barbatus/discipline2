@@ -72,6 +72,8 @@ export default class TrackerCal extends PureComponent {
         return 'The target increased';
       case TrackerType.SUM:
         return `$${tick.value} added`;
+      default:
+        throw new Error('Tracker type is not supported');
     }
   }
 

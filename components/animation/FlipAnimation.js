@@ -2,8 +2,6 @@ import Easing from 'Easing';
 
 import { Animated } from 'react-native';
 
-import { caller } from '../../utils/lang';
-
 import Animation from './Animation';
 
 const FLIP_TIME = 500;

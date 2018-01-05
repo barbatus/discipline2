@@ -42,11 +42,11 @@ export default class TrackerSwiper extends TrackerRenderer {
   removeIndex = null;
 
   get current() {
-    return this.state.trackers.get(this.index);
+    return this.state.trackers[this.index];
   }
 
   get index() {
-    return this.refs.swiper.index;
+    return this.swiper.index;
   }
 
   get shown() {
@@ -142,12 +142,12 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   scrollTo(index, callback, animated) {
-    this.refs.swiper.scrollTo(index, callback, animated);
+    this.swiper.scrollTo(index, callback, animated);
   }
 
   // When animating the removal we always scroll to the prev index.
   animateRemove(trackers, index, callback) {
-    const tracker = trackers.get(index);
+    const tracker = trackers[index];
     const trackerId = tracker.id;
     const prevInd = index + (index >= 1 ? -1 : 1);
 
@@ -179,7 +179,7 @@ export default class TrackerSwiper extends TrackerRenderer {
       >
         {this.renderTracker(tracker)}
       </View>
-    )).toArray();
+    ));
 
     const { style, onScroll } = this.props;
     const { enabled } = this.state;
@@ -188,7 +188,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     return (
       <Animated.View style={swiperStyle} {...this.responder.panHandlers}>
         <Swiper
-          ref="swiper"
+          ref={(el) => (this.swiper = el)}
           {...this.props}
           style={commonStyles.flexFilled}
           slides={slides}

@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { StyleSheet, View, Animated } from 'react-native';
+import PropTypes from 'prop-types';
+
+import { StyleSheet, View } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
 
 export default class Screen extends PureComponent {
   static childContextTypes = {
-    navBar: React.PropTypes.object.isRequired,
+    navBar: PropTypes.object.isRequired,
   };
 
   getChildContext() {

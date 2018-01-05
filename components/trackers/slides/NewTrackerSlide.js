@@ -1,9 +1,10 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
-import {
-  View,
-  StyleSheet,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
+
+import { pure } from 'recompose';
+
+import PropTypes from 'prop-types';
 
 import { trackerStyles } from '../styles/trackerStyles';
 
@@ -16,19 +17,20 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class NewTrackerSlide extends PureComponent {
-  render() {
-    const { style, tracker, onNewTracker } = this.props;
-    return (
-      <View style={[trackerStyles.slide, style]}>
-        <TrackerEditView
-          {...this.props}
-          form="newTrackerForm"
-          style={styles.editView}
-          initialValues={tracker}
-          onSubmitSuccess={onNewTracker}
-        />
-      </View>
-    );
-  }
-}
+const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) =>
+  <View style={[trackerStyles.slide, style]}>
+    <TrackerEditView
+      form="newTrackerForm"
+      {...rest}
+      style={styles.editView}
+      initialValues={tracker}
+      onSubmitSuccess={onNewTracker}
+    />
+  </View>;
+
+NewTrackerSlideFn.propTypes = {
+  onTypeSelect: PropTypes.func.isRequired,
+  onNewTracker: PropTypes.func.isRequired,
+};
+
+export default pure(NewTrackerSlideFn);

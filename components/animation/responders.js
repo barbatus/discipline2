@@ -39,7 +39,7 @@ export class MoveUpDownResponder {
       onMoveShouldSetPanResponderCapture: (e: Object, state: Object) => {
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
-        const sin = dx / Math.sqrt(dy * dy + dx * dx);
+        const sin = dx / Math.sqrt((dy * dy) + (dx * dx));
         const captured = sin <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
         isUp = state.vy < 0;
         return captured;
@@ -53,12 +53,12 @@ export class MoveUpDownResponder {
 
         if (!isUp) caller(this.onMoveDown, state.dy);
       },
-      onPanResponderGrant: (e: Object) => {
+      onPanResponderGrant: () => {
         if (isUp) caller(this.onMoveUpStart);
 
         if (!isUp) caller(this.onMoveDownStart);
       },
-      onPanResponderRelease: (e: Object) => {
+      onPanResponderRelease: () => {
         if (isUp) caller(this.onMoveUpDone);
 
         if (!isUp) caller(this.onMoveDownDone);

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 
 import { submit, reset } from 'redux-form';
@@ -24,7 +26,7 @@ const TYPES = TrackerType.symbols();
 
 export class NewTrackerScreenView extends ScrollScreenView {
   static contextTypes = {
-    navBar: React.PropTypes.object.isRequired,
+    navBar: PropTypes.object.isRequired,
   };
 
   tracker = {};

@@ -57,7 +57,7 @@ export default class TrackerScroll extends TrackerRenderer {
         <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
           {this.renderScaledTracker(tracker, scale, responsive)}
         </View>
-      )).toArray();
+      ));
 
     return (
       <Animated.View

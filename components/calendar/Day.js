@@ -1,4 +1,6 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+
+import PropTypes from 'prop-types';
 
 import {
   Text,
@@ -58,7 +60,6 @@ export default class Day extends PureComponent {
     hasTicks: PropTypes.bool,
     isSelected: PropTypes.bool,
     isToday: PropTypes.bool,
-    isWeekend: PropTypes.bool,
     isOutDay: PropTypes.bool,
     onPress: PropTypes.func.isRequired,
   };
@@ -108,7 +109,6 @@ export default class Day extends PureComponent {
       hasTicks,
       isSelected,
       isToday,
-      onPress,
     } = this.props;
 
     return isOutDay ?

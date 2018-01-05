@@ -7,6 +7,8 @@ import {
   Vibration,
 } from 'react-native';
 
+import PropTypes from 'prop-types';
+
 import { pure } from 'recompose';
 
 import { trackerStyles } from '../styles/trackerStyles';
@@ -16,6 +18,8 @@ import registry, { DlgType } from '../../dlg/registry';
 import { formatDistance } from '../../../utils/format';
 
 import { caller } from '../../../utils/lang';
+
+import { DistanceTracker as Tracker } from '../../../model/Tracker';
 
 import DistanceTrackers, { DistanceTracker } from '../../../geo/DistanceTrackers';
 
@@ -99,6 +103,11 @@ const DistanceDataFn = ({ time, dist }) => {
   );
 };
 
+DistanceDataFn.propTypes = {
+  time: PropTypes.number.isRequired,
+  dist: PropTypes.number.isRequired,
+};
+
 const DistanceData = pure(DistanceDataFn);
 
 const DIST_INTRVL = 5.0;
@@ -106,6 +115,11 @@ const DIST_INTRVL = 5.0;
 const TIME_INTRVL = 1000; // ms
 
 export default class DistanceTrackerSlide extends TrackerSlide {
+  static propTypes = {
+    responsive: PropTypes.bool,
+    tracker: PropTypes.instanceOf(Tracker).isRequired,
+  };
+
   distTracker: DistanceTracker = null;
 
   path = [];
@@ -140,7 +154,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
   get footerControls() {
     const { active } = this.state;
-    const { tracker, responsive } = this.props;
+    const { responsive } = this.props;
     return (
       <View style={styles.footerControlsContainer}>
         <View style={styles.startStopBtn}>

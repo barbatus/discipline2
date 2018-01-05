@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
+
+import { pure } from 'recompose';
 
 import { StyleSheet, ScrollView } from 'react-native';
 
@@ -14,8 +16,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Menu extends Component {
-  render() {
-    return <ScrollView style={styles.menu} />;
-  }
-}
+export default pure(() => <ScrollView style={styles.menu} />);

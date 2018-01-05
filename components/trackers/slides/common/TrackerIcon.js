@@ -8,6 +8,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import PropTypes from 'prop-types';
+
 import registry, { DlgType } from '../../../dlg/registry';
 
 import { getIcon, UserIconsStore } from '../../../../icons/icons';
@@ -31,6 +33,12 @@ const styles = StyleSheet.create({
 });
 
 export default class TrackerIcon extends PureComponent {
+  static propTypes = {
+    input: PropTypes.shape({
+      value: PropTypes.string,
+    }),
+  };
+
   constructor(props) {
     super(props);
     this.onIconEdit = ::this.onIconEdit;
@@ -54,7 +62,6 @@ export default class TrackerIcon extends PureComponent {
   }
 
   render() {
-    const { input: { value } } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <View style={[propsStyles.barContainer]}>
@@ -69,7 +76,7 @@ export default class TrackerIcon extends PureComponent {
         </View>
         <View style={propsStyles.iconContainer}>
           <Image
-            source={this.getMainIcon(value)}
+            source={this.getMainIcon(this.props.input.value)}
             style={trackerStyles.mainIcon}
           />
         </View>

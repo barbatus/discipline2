@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import PropTypes from 'prop-types';
+
 import EventEmitter from 'eventemitter3';
 
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -19,7 +21,7 @@ const styles = StyleSheet.create({
 
 export default class ScrollScreenView extends PureComponent {
   static contextTypes = {
-    navBar: React.PropTypes.object.isRequired,
+    navBar: PropTypes.object.isRequired,
   };
 
   emitter = new EventEmitter();

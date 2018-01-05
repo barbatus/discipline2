@@ -8,7 +8,7 @@ const HINT_COLOR = '#DFDFDF';
 
 const ERROR_COLOR = '#FF001F';
 
-const trackerDef = {
+export const trackerDef = {
   ...slideDef,
   innerView: {
     ...slideDef.innerView,
@@ -110,7 +110,7 @@ const trackerDef = {
   },
 };
 
-const trackerStyles = StyleSheet.create(trackerDef);
+export const trackerStyles = StyleSheet.create(trackerDef);
 
 const editDef = {
   innerView: {
@@ -197,7 +197,7 @@ const editDef = {
   },
 };
 
-const propsStyles = StyleSheet.create({
+export const propsStyles = StyleSheet.create({
   ...editDef,
   deleteText: {
     ...editDef.colText,
@@ -217,8 +217,3 @@ const propsStyles = StyleSheet.create({
   },
 });
 
-module.exports = {
-  trackerDef,
-  trackerStyles,
-  propsStyles,
-};

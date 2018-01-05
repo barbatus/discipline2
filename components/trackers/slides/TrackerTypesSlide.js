@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import PropTypes from 'prop-types';
+
 import {
   TouchableWithoutFeedback,
   View,
@@ -108,8 +110,9 @@ const TypeView = styled.View`
 
 export default class TrackerTypesSlide extends PureComponent {
   static propTypes = {
-    typeId: React.PropTypes.string.isRequired,
-    onTypeChosen: React.PropTypes.func,
+    typeId: PropTypes.string.isRequired,
+    onTypeChosen: PropTypes.func,
+    style: View.propTypes.style,
   };
 
   constructor(props) {

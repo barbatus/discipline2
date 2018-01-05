@@ -1,4 +1,8 @@
 {
   "presets": ["react-native"],
-  "plugins": ["transform-function-bind"]
+  "env": {
+    "development": {
+      "plugins": ["transform-react-jsx-source", "transform-function-bind"]
+    }
+  }
 }

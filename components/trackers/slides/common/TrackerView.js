@@ -10,6 +10,10 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import PropTypes from 'prop-types';
+
+import Tracker from '../../../../model/Tracker';
+
 import { getIcon, UserIconsStore } from '../../../../icons/icons';
 
 import { trackerDef, trackerStyles } from '../../styles/trackerStyles';
@@ -32,6 +36,18 @@ const styles = StyleSheet.create({
 });
 
 export default class TrackerView extends PureComponent {
+  static propTypes = {
+    style: PropTypes.object,
+    bodyStyle: PropTypes.object,
+    footerStyle: PropTypes.object,
+    tracker: PropTypes.instanceOf(Tracker),
+    onTap: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    backImg: PropTypes.string,
+    bodyControls: PropTypes.element.isRequired,
+    footerControls: PropTypes.element.isRequired,
+  };
+
   getMainIcon(iconId) {
     const userIcon = UserIconsStore.get(iconId);
     if (userIcon) {
@@ -60,7 +76,7 @@ export default class TrackerView extends PureComponent {
       <View style={styles.wrapper}>
         {content}
       </View>
-    )
+    );
   }
 
   render() {

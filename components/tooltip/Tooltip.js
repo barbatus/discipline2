@@ -12,7 +12,7 @@ import TimerMixin from 'react-timer-mixin';
 
 import { pure } from 'recompose';
 
-import { commonStyles, screenWidth, navHeight } from '../styles/common';
+import { screenWidth, navHeight } from '../styles/common';
 
 const ARROW_WIDTH = 25;
 
@@ -104,13 +104,13 @@ export default class Tooltip extends PureComponent {
           // If tooltip is out of the screen on the right.
           if (rightX >= 0) {
             xPos = -haflW - rightX;
-            arrLeft = arrLeft + rightX;
+            arrLeft += rightX;
           }
 
           // If tooltip is out of the screen on the left.
           if (leftX <= 0) {
             xPos = -haflW + Math.abs(leftX);
-            arrLeft = arrLeft + leftX;
+            arrLeft += leftX;
           }
 
           let yPos = -height - TOP_MARGIN;

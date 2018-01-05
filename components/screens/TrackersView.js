@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import PropTypes from 'prop-types';
+
 import { StyleSheet, Animated, InteractionManager } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
 
 class TrackersView extends PureComponent {
   static contextTypes = {
-    navBar: React.PropTypes.object.isRequired,
+    navBar: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -113,11 +115,6 @@ class TrackersView extends PureComponent {
     dispatch(submit('trackerForm'));
   }
 
-  onSaveCompleted(index) {
-    this.active = false;
-    caller(this.props.onSaveCompleted, index);
-  }
-
   getCancelBtn(onPress) {
     return <NavCancelButton onPress={this::onPress} />;
   }
@@ -146,23 +143,17 @@ class TrackersView extends PureComponent {
 
   onNextMonth() {
     const { dateMs } = this.props;
-    const { current } = this.state;
     const monthMs = time.getNextMonthDateMs(dateMs);
     this.setNavBarMonth(monthMs);
 
-    const startMs = time.subtractMonth(monthMs);
-    const endMs = time.addMonth(monthMs);
     this.refs.calendar.scrollToNextMonth();
   }
 
   onPrevMonth() {
     const { dateMs } = this.props;
-    const { current } = this.state;
     const monthMs = time.getPrevMonthDateMs(dateMs);
     this.setNavBarMonth(monthMs);
 
-    const startMs = time.subtractMonth(monthMs);
-    const endMs = time.addMonth(monthMs);
     this.refs.calendar.scrollToPrevMonth();
   }
 
@@ -204,6 +195,11 @@ class TrackersView extends PureComponent {
     navBar.setTitle(monthName, styles.navTitle);
   }
 
+  onSaveCompleted(index) {
+    this.active = false;
+    caller(this.props.onSaveCompleted, index);
+  }
+
   // Edit tracker events.
 
   cancelEdit() {
@@ -227,7 +223,7 @@ class TrackersView extends PureComponent {
   }
 
   render() {
-    const { style, onMoveUp } = this.props;
+    const { style, onMoveUp, onCancel } = this.props;
     const { current } = this.state;
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
@@ -245,6 +241,7 @@ class TrackersView extends PureComponent {
           onRemove={this.onRemove}
           onRemoveCompleted={this.onRemoveCompleted}
           onEdit={this.onEdit}
+          onCancel={onCancel}
           onSaveCompleted={this.onSaveCompleted}
           onSwiperScaleMove={this.onSwiperScaleMove}
           onSwiperMoveDown={this.onSwiperMoveDown}
@@ -274,7 +271,7 @@ export default connect(
     onProgress: (tracker, value, data) =>
       dispatch(updateLastTick(tracker, value, data)),
     onStop: (tracker) => dispatch(stopTracker(tracker)),
-    onUndo: (tracker, value) => dispatch(undoLastTick(tracker)),
+    onUndo: (tracker) => dispatch(undoLastTick(tracker)),
     onAddCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onAddCompleted, index);

@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import PropTypes from 'prop-types';
+
 import {
   StyleSheet,
   View,
@@ -48,9 +50,9 @@ const styles = StyleSheet.create(stylesDef);
 
 export default class Swiper extends PureComponent {
   static propTypes = {
-    slides: React.PropTypes.array.isRequired,
+    slides: PropTypes.array.isRequired,
     style: View.propTypes.style,
-    scrollEnabled: React.PropTypes.bool,
+    scrollEnabled: PropTypes.bool,
   };
 
   static defaultProps = {

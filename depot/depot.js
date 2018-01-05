@@ -1,5 +1,7 @@
 /* @flow */
 
+import DeviceInfo from 'react-native-device-info';
+
 import trackersDB from './realm/trackers';
 
 import ticksDB from './realm/ticks';
@@ -7,8 +9,6 @@ import ticksDB from './realm/ticks';
 import appInfo from './realm/appInfo';
 
 import { TrackerType } from './consts';
-
-import DeviceInfo from 'react-native-device-info';
 
 const tickSchemas = {
   distance: 'DistData',
