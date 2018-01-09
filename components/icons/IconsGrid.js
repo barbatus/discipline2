@@ -9,9 +9,9 @@ import {
 
 import Dimensions from 'Dimensions';
 
-import UserIconsStore from '../../icons/UserIconsStore';
+import UserIconsStore from 'app/icons/UserIconsStore';
 
-import { caller } from '../../utils/lang';
+import { caller } from 'app/utils/lang';
 
 const window = Dimensions.get('window');
 

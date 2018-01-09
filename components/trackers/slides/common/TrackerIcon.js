@@ -10,9 +10,9 @@ import {
 
 import PropTypes from 'prop-types';
 
-import registry, { DlgType } from '../../../dlg/registry';
+import registry, { DlgType } from 'app/components/dlg/registry';
 
-import { getIcon, UserIconsStore } from '../../../../icons/icons';
+import { getIcon, UserIconsStore } from 'app/icons/icons';
 
 import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
 

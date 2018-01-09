@@ -1,5 +1,5 @@
 {
-  "name": "discipline",
+  "name": "app",
   "main": "node_modules/expo/AppEntry.js",
   "version": "0.7.0",
   "author": "Alex <alex.borodach@gmail.com>",
@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test2": "jest --silent=false",
-    "bundle": "react-native bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle",
+    "bundle": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output iOS/main.jsbundle",
     "lint:staged": "lint-staged",
     "prettify": "prettier --single-quote=true --trailing-comma=all --write **/**/*.js",
     "lint": "npm run lint:js",
@@ -21,6 +21,7 @@
   "dependencies": {
     "assert": "1.3.0",
     "check-types": "5.0.0",
+    "eslint-import-resolver-reactnative": "^1.0.2",
     "eventemitter3": "1.1.1",
     "haversine": "^1.0.1",
     "immutable": "^3.8.1",
@@ -39,8 +40,9 @@
     "react-native-navbar": "^2.1.0",
     "react-native-shake-event": "^3.0.0",
     "react-native-side-menu": "^1.1.3",
+    "react-native-slowlog": "^1.0.2",
     "react-navigation": "^1.0.0-beta.11",
-    "react-redux": "^4.4.5",
+    "react-redux": "^5.0.6",
     "react-timer-mixin": "^0.13.3",
     "realm": "^2.1.1",
     "recompose": "^0.26.0",
@@ -48,6 +50,7 @@
     "redux-actions": "0.11.0",
     "redux-form": "^7.0.3",
     "redux-thunk": "2.1.0",
+    "stream": "^0.0.2",
     "styled-components": "^2.1.2"
   },
   "devDependencies": {
@@ -74,7 +77,9 @@
     "parser": "babel-eslint",
     "extends": [
       "airbnb",
-      "airbnb-flow"
+      "airbnb-flow",
+      "plugin:import/errors",
+      "plugin:import/warnings"
     ],
     "env": {
       "browser": true,
@@ -93,6 +98,9 @@
       "ecmaFeatures": {
         "jsx": true
       }
+    },
+    "settings": {
+      "import/resolver": "reactnative"
     },
     "rules": {
       "arrow-parens": [

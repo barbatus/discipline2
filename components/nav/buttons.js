@@ -6,14 +6,14 @@ import { TouchableOpacity, Image } from 'react-native';
 
 import debounce from 'lodash/debounce';
 
-import { getIcon } from '../../icons/icons';
+import { getIcon } from 'app/icons/icons';
 
 import styles from './styles';
 
-class NavButton extends PureComponent {
+export class NavButton extends PureComponent {
   render() {
     const onPress = this.props.onPress
-      ? debounce(this.props.onPress, 30)
+      ? debounce(this.props.onPress, 16)
       : null;
     return (
       <TouchableOpacity onPress={onPress} style={this.props.style}>
@@ -33,7 +33,7 @@ const NavLeftButtonFn = (props) =>
     style={styles.navBarLeftButton}
   />;
 
-const NavLeftButton = pure(NavLeftButtonFn);
+export const NavLeftButton = pure(NavLeftButtonFn);
 
 const NavRightButtonFn = (props) =>
   <NavButton
@@ -42,7 +42,7 @@ const NavRightButtonFn = (props) =>
     style={styles.navBarRightButton}
   />;
 
-const NavRightButton = pure(NavRightButtonFn);
+export const NavRightButton = pure(NavRightButtonFn);
 
 const NavAddButtonFn = (props) =>
   <NavButton
@@ -52,7 +52,7 @@ const NavAddButtonFn = (props) =>
     style={styles.navBarRightButton}
   />;
 
-const NavAddButton = pure(NavAddButtonFn);
+export const NavAddButton = pure(NavAddButtonFn);
 
 const NavBackButtonFn = (props) =>
   <NavButton
@@ -62,7 +62,7 @@ const NavBackButtonFn = (props) =>
     style={styles.navBarLeftButton}
   />;
 
-const NavBackButton = pure(NavBackButtonFn);
+export const NavBackButton = pure(NavBackButtonFn);
 
 const NavMenuButtonFn = (props) =>
   <NavButton
@@ -72,40 +72,23 @@ const NavMenuButtonFn = (props) =>
     style={styles.navBarLeftButton}
   />;
 
-const NavMenuButton = pure(NavMenuButtonFn);
+export const NavMenuButton = pure(NavMenuButtonFn);
 
-class NavCancelButton extends PureComponent {
-  render() {
-    return (
-      <NavButton
-        {...this.props}
-        icon="cancel"
-        iconStyle={styles.cancelIcon}
-        style={styles.navBarLeftButton}
-      />
-    );
-  }
-}
+const NavCancelButtonFn = (props) =>
+  <NavButton
+    {...props}
+    icon="cancel"
+    iconStyle={styles.cancelIcon}
+    style={styles.navBarLeftButton}
+  />;
 
-class NavAcceptButton extends PureComponent {
-  render() {
-    return (
-      <NavButton
-        {...this.props}
-        icon="accept"
-        style={styles.navBarRightButton}
-      />
-    );
-  }
-}
+export const NavCancelButton = pure(NavCancelButtonFn);
 
-module.exports = {
-  NavButton,
-  NavAddButton,
-  NavBackButton,
-  NavMenuButton,
-  NavCancelButton,
-  NavAcceptButton,
-  NavLeftButton,
-  NavRightButton,
-};
+const NavAcceptButtonFn = (props) =>
+  <NavButton
+    {...props}
+    icon="accept"
+    style={styles.navBarRightButton}
+  />;
+
+export const NavAcceptButton = pure(NavAcceptButtonFn);

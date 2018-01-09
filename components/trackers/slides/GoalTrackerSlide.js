@@ -8,13 +8,13 @@ import {
   Vibration,
 } from 'react-native';
 
-import { getIcon } from '../../../icons/icons';
+import { getIcon } from 'app/icons/icons';
+
+import { caller } from 'app/utils/lang';
 
 import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';
-
-import { caller } from '../../../utils/lang';
 
 export default class GoalTrackerSlide extends TrackerSlide {
   constructor(props) {

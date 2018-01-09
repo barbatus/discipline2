@@ -12,9 +12,9 @@ import {
 
 import PropTypes from 'prop-types';
 
-import Tracker from '../../../../model/Tracker';
+import Tracker from 'app/model/Tracker';
 
-import { getIcon, UserIconsStore } from '../../../../icons/icons';
+import { getIcon, UserIconsStore } from 'app/icons/icons';
 
 import { trackerDef, trackerStyles } from '../../styles/trackerStyles';
 

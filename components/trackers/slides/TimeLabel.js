@@ -4,6 +4,8 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import { pure } from 'recompose';
 
+import time from 'app/time/utils';
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',

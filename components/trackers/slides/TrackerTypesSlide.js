@@ -1,3 +1,5 @@
+import check from 'check-types';
+
 import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
@@ -11,17 +13,19 @@ import {
   ScrollView,
 } from 'react-native';
 
+import ViewPropTypes from 'ViewPropTypes';
+
 import styled from 'styled-components/native';
 
 import { first, last } from 'lodash';
 
-import { getIcon } from '../../../icons/icons';
+import { getIcon } from 'app/icons/icons';
+
+import { TrackerType } from 'app/depot/consts';
+
+import { caller } from 'app/utils/lang';
 
 import { slideStyles, slideDef } from '../styles/slideStyles';
-
-import { TrackerType } from '../../../depot/consts';
-
-import { caller } from '../../../utils/lang';
 
 const clean = (str) => {
   check.assert.string(str);
@@ -45,6 +49,8 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     ...styleDef.centered,
+    paddingLeft: 10,
+    paddingRight: 10,
     flex: 0.65,
     borderBottomColor: 'rgba(185, 185, 185, 0.4)',
     borderBottomWidth: 1,
@@ -112,7 +118,7 @@ export default class TrackerTypesSlide extends PureComponent {
   static propTypes = {
     typeId: PropTypes.string.isRequired,
     onTypeChosen: PropTypes.func,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
   };
 
   constructor(props) {

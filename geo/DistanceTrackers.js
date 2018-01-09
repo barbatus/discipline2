@@ -1,5 +1,7 @@
 import EventEmitter from 'eventemitter3';
 
+import { caller } from 'app/utils/lang';
+
 import BGGeoLocationWatcher from './BGGeoLocationWatcher';
 
 export class DistanceTrackers {
@@ -58,13 +60,14 @@ export class DistanceTracker {
     };
   }
 
-  start() {
+  start(callback) {
     if (this.isStarting || this.active) return;
 
     this.isStarting = true;
     BGGeoLocationWatcher.watchPos(({ coords }, error) => {
       this.isStarting = false;
       this.fireOnStart(error);
+      caller(callback, error);
 
       if (error) return;
 
@@ -73,15 +76,16 @@ export class DistanceTracker {
     });
   }
 
-  stop() {
+  stop(callback) {
     if (!this.active) return;
+
+    clearInterval(this.hInterval);
+    this.hInterval = null;
 
     const reset = () => {
       this.time = 0;
       this.dist = 0;
       this.latLon = {};
-      clearInterval(this.hInterval);
-      this.hInterval = null;
 
       this.unwatch();
       BGGeoLocationWatcher.stopWatch();
@@ -92,6 +96,7 @@ export class DistanceTracker {
         this.updatePosOnStop(pos);
       }
       this.fireOnStop(this.track);
+      caller(callback, this.track, error);
       reset();
     });
   }

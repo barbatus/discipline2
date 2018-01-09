@@ -1,8 +1,8 @@
-import { TrackerType } from '../depot/consts';
+import { TrackerType } from 'app/depot/consts';
 
-import { Tracker as ITracker } from '../depot/interfaces';
+import { Tracker as ITracker } from 'app/depot/interfaces';
 
-import UserIconsStore from '../icons/UserIconsStore';
+import UserIconsStore from 'app/icons/UserIconsStore';
 
 export default class Tracker {
   id: number;
@@ -21,9 +21,8 @@ export default class Tracker {
     this.active = tracker.active;
   }
 
-  clone() {
-    const tracker = Object.assign(Object.create(this.__proto__), this);
-    tracker.active = this.active;
+  clone(data?: Object) {
+    const tracker = Object.assign(Object.create(this.__proto__), this, data);
     return tracker;
   }
 
@@ -64,9 +63,12 @@ export default class Tracker {
 
 export class DistanceTracker extends Tracker {
   get time() {
-    const data = this.ticks.map((tick) => tick.data || {});
-    const times = data.map((item) => item.time || 0);
+    const times = this.ticks.map((tick) => tick.time || 0);
     return times.reduceRight((p, n) => p + n, 0);
+  }
+
+  get paths() {
+    return this.ticks.map((tick) => tick.latlon);
   }
 
   // onAppActive(diffMs, dateChanged) {

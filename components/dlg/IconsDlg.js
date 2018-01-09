@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { caller } from 'app/utils/lang';
+
 import CommonModal from './CommonModal';
 
 import IconsGrid from '../icons/IconsGrid';
-
-import { caller } from '../../utils/lang';
 
 export default class IconsDlg extends CommonModal {
   cb: Function = null;

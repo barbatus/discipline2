@@ -6,25 +6,23 @@ import { StyleSheet, View } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
-const Dimensions = require('Dimensions');
-const window = Dimensions.get('window');
+import { screenWidth, screenHeight, navHeight } from '../styles/common';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
   },
-  background: {
-    position: 'absolute',
-    height: window.height,
-    width: window.width,
-  },
   content: {
-    height: window.height - 64,
-    width: window.width,
+    height: screenHeight - navHeight,
+    width: screenWidth,
   },
 });
 
 export default class Screen extends PureComponent {
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+  };
+
   static childContextTypes = {
     navBar: PropTypes.object.isRequired,
   };
@@ -53,15 +51,12 @@ export default class Screen extends PureComponent {
   }
 
   render() {
-    const { content, background } = this.props;
+    const { children } = this.props;
     return (
       <View style={styles.container}>
-        <View style={styles.background}>
-          {background}
-        </View>
-        <NavBar ref={(el) => this.navBarRef = el} />
+        <NavBar ref={(el) => (this.navBarRef = el)} />
         <View style={styles.content}>
-          {content}
+          {children}
         </View>
       </View>
     );

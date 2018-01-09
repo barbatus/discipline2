@@ -9,19 +9,19 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { getIcon } from '../../../icons/icons';
+import { getIcon } from 'app/icons/icons';
+
+import Keyboard from 'app/utils/keyboard';
+
+import { caller } from 'app/utils/lang';
+
+import { isPhone5 } from 'app/components/styles/common';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
 import { slideWidth } from '../styles/slideStyles';
 
-import { isPhone5 } from '../../styles/common';
-
 import TrackerSlide from './TrackerSlide';
-
-import Keyboard from '../../../utils/keyboard';
-
-import { caller } from '../../../utils/lang';
 
 const WIDGET_WIDTH = slideWidth - 40;
 

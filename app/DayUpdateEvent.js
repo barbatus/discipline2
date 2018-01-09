@@ -4,6 +4,8 @@ import moment from 'moment';
 
 import { AppState } from 'react-native';
 
+import time from 'app/time/utils';
+
 export class Timeout {
   waitMs = 0;
 

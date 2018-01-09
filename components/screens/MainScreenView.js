@@ -44,8 +44,8 @@ export class MainScreenView extends ScrollScreenView {
   get leftView() {
     return (
       <TrackersView
-        parent={this.emitter}
         {...this.props}
+        parent={this.emitter}
         style={commonStyles.absFilled}
         onSlideChange={this.onSlideChange}
         onAddCompleted={this.onAddCompleted}

@@ -1,6 +1,9 @@
 /* @flow */
+import check from 'check-types';
 
 import EventEmitter from 'eventemitter3';
+
+import isArrayLike from 'lodash/isArrayLike';
 
 import DB from './db';
 
@@ -61,19 +64,20 @@ class Ticks {
   }
 
   add(tick: Tick): Tick {
+    let dbTick = { ...tick };
     DB.write(() => {
-      tick.id = this.table.nextId;
-      tick = DB.create('Tick', tick);
-      this.table.nextId = tick.id + 1;
+      dbTick.id = this.table.nextId;
+      dbTick = DB.create('Tick', dbTick);
+      this.table.nextId = dbTick.id + 1;
     });
 
-    const { id, trackId } = tick;
+    const { id, trackId } = dbTick;
     this.event.emit('added', {
       id,
       trackId,
     });
 
-    return tick;
+    return dbTick;
   }
 
   getData(schema: string, tickId: number) {
@@ -81,10 +85,9 @@ class Ticks {
     return data.filtered(`tickId = ${tickId}`)[0];
   }
 
-  addData(schema: string, data: Object) {
+  addData(schema: string, tick: Tick, data: Object) {
     DB.write(() => {
-      data.tickId = this.table.nextId;
-      DB.create(schema, data);
+      DB.create(schema, { tick, ...data });
     });
   }
 
@@ -96,6 +99,7 @@ class Ticks {
     DB.write(() => {
       tick.value = value;
     });
+    return tick;
   }
 
   updateData(schema: string, tickId: number, data: Object) {
@@ -103,19 +107,22 @@ class Ticks {
     check.assert.number(tickId);
 
     const dataObj = DB.objects(schema);
-    const tickData = dataObj.filtered(`tickId = ${tickId}`)[0];
+    const tickData = dataObj.filtered(`tick.id = ${tickId}`)[0];
     DB.write(() => {
-      for (const prop in data) {
+      Object.keys(data).forEach((prop) => {
+        if (isArrayLike(tickData[prop]) && !isArrayLike(data[prop])) {
+          tickData[prop].push(data[prop]);
+          return;
+        }
         tickData[prop] = data[prop];
-      }
+      });
     });
   }
 
   remove(tickId: number): boolean {
     check.assert.number(tickId);
 
-    const tick = DB.objects('Tick')
-      .filtered(`id = ${tickId}`)[0];
+    const tick = DB.objects('Tick').filtered(`id = ${tickId}`)[0];
 
     if (!tick) throw new Error('No tick found');
 

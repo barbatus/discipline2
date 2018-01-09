@@ -4,11 +4,15 @@ import { Animated } from 'react-native';
 
 import moment from 'moment';
 
+import { TrackerType } from 'app/depot/consts';
+
+import { formatDistance } from 'app/utils/format';
+
+import time from 'app/time/utils';
+
 import Calendar from '../calendar/Calendar';
 
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
-
-import { TrackerType } from '../../depot/consts';
 
 export default class TrackerCal extends PureComponent {
   opacity = new Animated.Value(0);
@@ -72,6 +76,11 @@ export default class TrackerCal extends PureComponent {
         return 'The target increased';
       case TrackerType.SUM:
         return `$${tick.value} added`;
+      case TrackerType.DISTANCE: {
+        const distFmt = formatDistance(tick.value);
+        const timeFmt = time.formatTimeMs(tick.time);
+        return `${distFmt.format()}${distFmt.unit} in ${timeFmt.format(false)}`;
+      }
       default:
         throw new Error('Tracker type is not supported');
     }

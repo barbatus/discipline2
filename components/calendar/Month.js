@@ -10,13 +10,13 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 
 import moment from 'moment';
 
+import { caller, int } from 'app/utils/lang';
+
 import Tooltip from '../tooltip/Tooltip';
 
 import { screenWidth } from '../styles/common';
 
 import Day from './Day';
-
-import { caller, int } from '../../utils/lang';
 
 const styles = StyleSheet.create({
   monthContainer: {

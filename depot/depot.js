@@ -1,6 +1,11 @@
 /* @flow */
+import check from 'check-types';
+
+import { Results, List } from 'realm';
 
 import DeviceInfo from 'react-native-device-info';
+
+import time from 'app/time/utils';
 
 import trackersDB from './realm/trackers';
 
@@ -27,25 +32,14 @@ class Depot {
     const tracker = this.trackers.getOne(trackId);
     if (!tracker) throw new Error('Tracker not found');
 
-    const schema = tickSchemas[tracker.typeId];
-    if (schema) {
-      const ticks = this.getTicksWithData(
-        schema, trackId, time.getDateMs());
-      return { ...tracker, ticks };
-    }
-
-    const ticks = this.getTicksFromTo(trackId, time.getDateMs());
+    const ticks = this.getTrackerTicks(tracker, time.getDateMs());
     return { ...tracker, ticks };
   }
 
   async loadTrackers() {
     const trackers = this.trackers.getAll();
     return trackers.map((tracker) => {
-      const trackId = tracker.id;
-      const schema = tickSchemas[tracker.typeId];
-      const ticks = schema
-        ? this.getTicksWithData(schema, trackId, time.getDateMs())
-        : this.getTicksFromTo(trackId, time.getDateMs());
+      const ticks = this.getTrackerTicks(tracker, time.getDateMs());
       return {
         ...tracker,
         ticks,
@@ -77,17 +71,19 @@ class Depot {
     check.assert.number(trackId);
     check.assert.number(dateTimeMs);
 
-    if (data) {
-      const tracker = this.trackers.getOne(trackId);
-      const schema = tickSchemas[tracker.typeId];
-      this.ticks.addData(schema, data);
-    }
-
-    return this.ticks.add({
+    const tracker = this.trackers.getOne(trackId);
+    const tick = this.ticks.add({
       trackId,
       dateTimeMs,
       value,
     });
+
+    if (data) {
+      const schema = tickSchemas[tracker.typeId];
+      this.ticks.addData(schema, tick, data);
+    }
+
+    return this.convertTick(tracker, tick);
   }
 
   async undoLastTick(trackId: number) {
@@ -101,14 +97,12 @@ class Depot {
     check.assert.number(trackId);
 
     const tick = this.ticks.getLast(trackId);
-
+    const tracker = this.trackers.getOne(trackId);
     if (data) {
-      const tracker = this.trackers.getOne(trackId);
       const schema = tickSchemas[tracker.typeId];
       this.ticks.updateData(schema, tick.id, data);
     }
-
-    return this.ticks.update(tick.id, value);
+    return this.convertTick(tracker, this.ticks.update(tick.id, value));
   }
 
   async getTicks(trackId: number, minDateMs: number, maxDateMs?: number) {
@@ -116,11 +110,7 @@ class Depot {
     check.assert.number(minDateMs);
 
     const tracker = this.trackers.getOne(trackId);
-    const schema = tickSchemas[tracker.typeId];
-
-    return schema
-      ? this.getTicksWithData(schema, trackId, minDateMs, maxDateMs)
-      : this.getTicksFromTo(trackId, minDateMs, maxDateMs);
+    return this.getTrackerTicks(tracker, minDateMs, maxDateMs);
   }
 
   async loadTestData() {
@@ -235,6 +225,31 @@ class Depot {
 
   getTestTrackers() {
     return this.appInfo.getTestTrackers();
+  }
+
+  getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
+    const ticks = this.getTicksFromTo(tracker.id, minDateMs, maxDateMs);
+    return ticks.map((tick) => this.convertTick(tracker, tick));
+  }
+
+  convertTick(tracker: Tracker, tick: Tick) {
+    if (tracker.typeId === 'distance') {
+      const dist = this.stripRealm(tick.dist[0]);
+      return { ...tick, ...dist };
+    }
+    return tick;
+  }
+
+  stripRealm(obj: Object) {
+    const result = {};
+    Object.keys(obj).forEach((prop) => {
+      if (obj[prop] instanceof List) {
+        result[prop] = obj[prop].slice();
+        return;
+      }
+      result[prop] = obj[prop];
+    });
+    return result;
   }
 }
 

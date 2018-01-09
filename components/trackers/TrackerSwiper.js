@@ -1,13 +1,12 @@
 import React from 'react';
 
-import {
-  View,
-  Animated,
-} from 'react-native';
+import { View, Animated } from 'react-native';
 
 import RNShakeEvent from 'react-native-shake-event';
 
 import isNumber from 'lodash/isNumber';
+
+import { caller } from 'app/utils/lang';
 
 import Swiper from '../scrolls/Swiper';
 
@@ -25,8 +24,6 @@ import { commonStyles, screenWidth } from '../styles/common';
 import { slideHeight } from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
-
-import { caller } from '../../utils/lang';
 
 export default class TrackerSwiper extends TrackerRenderer {
   upDown = new ScreenSlideUpDownAnim(minScale);
@@ -188,8 +185,8 @@ export default class TrackerSwiper extends TrackerRenderer {
     return (
       <Animated.View style={swiperStyle} {...this.responder.panHandlers}>
         <Swiper
-          ref={(el) => (this.swiper = el)}
           {...this.props}
+          ref={(el) => (this.swiper = el)}
           style={commonStyles.flexFilled}
           slides={slides}
           scrollEnabled={enabled}

@@ -8,6 +8,7 @@ import BaseScroll from './BaseScroll';
 
 class Scroll extends PureComponent {
   static propTypes = {
+    centered: PropTypes.bool,
     slideWidth: PropTypes.number.isRequired,
   };
 

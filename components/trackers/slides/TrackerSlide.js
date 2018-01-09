@@ -4,23 +4,25 @@ import PropTypes from 'prop-types';
 
 import { View, Animated } from 'react-native';
 
+import ViewPropTypes from 'ViewPropTypes';
+
+import FlipAnimation from 'app/components/animation/FlipAnimation';
+
+import ScaleAnimation from 'app/components/animation/ScaleAnimation';
+
+import { caller } from 'app/utils/lang';
+
+import Keyboard from 'app/utils/keyboard';
+
+import Tracker from 'app/model/Tracker';
+
+import { commonStyles } from 'app/components/styles/common';
+
 import { trackerStyles } from '../styles/trackerStyles';
-
-import Keyboard from '../../../utils/keyboard';
-
-import { commonStyles } from '../../styles/common';
 
 import TrackerView from './common/TrackerView';
 
 import TrackerEditView from './common/TrackerEditView';
-
-import Tracker from '../../../model/Tracker';
-
-import FlipAnimation from '../../animation/FlipAnimation';
-
-import ScaleAnimation from '../../animation/ScaleAnimation';
-
-import { caller } from '../../../utils/lang';
 
 const absFilled = commonStyles.absoluteFilled;
 
@@ -33,7 +35,7 @@ export default class TrackerSlide extends PureComponent {
   static propTypes = {
     editable: PropTypes.bool,
     scale: PropTypes.number,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     tracker: PropTypes.instanceOf(Tracker),
     onTap: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
@@ -52,20 +54,20 @@ export default class TrackerSlide extends PureComponent {
     this.onRemove = ::this.onRemove;
   }
 
-  get bodyControls() {
-    throw new Error('Controls is not implemented');
+  onTap() {
+    caller(this.props.onTap);
   }
 
-  get footerControls() {
-    throw new Error('Footer controls is not implemented');
+  onEdit() {
+    if (this.props.editable) {
+      caller(this.props.onEdit);
+    }
   }
 
-  get bodyStyle() {
-    return null;
-  }
-
-  get footerStyle() {
-    return null;
+  onRemove() {
+    if (this.props.editable) {
+      caller(this.props.onRemove);
+    }
   }
 
   showEdit(callback) {
@@ -86,20 +88,20 @@ export default class TrackerSlide extends PureComponent {
 
   shake() {}
 
-  onTap() {
-    caller(this.props.onTap);
+  get bodyControls() {
+    throw new Error('Controls is not implemented');
   }
 
-  onEdit() {
-    if (this.props.editable) {
-      caller(this.props.onEdit);
-    }
+  get footerControls() {
+    throw new Error('Footer controls is not implemented');
   }
 
-  onRemove() {
-    if (this.props.editable) {
-      caller(this.props.onRemove);
-    }
+  get bodyStyle() {
+    return null;
+  }
+
+  get footerStyle() {
+    return null;
   }
 
   renderBackView() {

@@ -2,17 +2,19 @@ import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 
+import ViewPropTypes from 'ViewPropTypes';
+
 import {
   StyleSheet,
   View,
   Animated,
 } from 'react-native';
 
+import { caller } from 'app/utils/lang';
+
 import { commonStyles, screenWidth } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
-
-import { caller } from '../../utils/lang';
 
 const stylesDef = {
   slide: {
@@ -51,7 +53,7 @@ const styles = StyleSheet.create(stylesDef);
 export default class Swiper extends PureComponent {
   static propTypes = {
     slides: PropTypes.array.isRequired,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     scrollEnabled: PropTypes.bool,
   };
 
@@ -114,12 +116,12 @@ export default class Swiper extends PureComponent {
    * propor. to the number of slides.
    */
   scaleDot(size) {
-    let radius = 7,
-      margin = 7;
+    let radius = 7;
+    let margin = 7;
     if (size >= 18) {
       const ratio = 18 / size;
-      radius = Math.floor((7 * ratio));
-      margin = Math.floor((7 * ratio));
+      radius = Math.floor((8 * ratio));
+      margin = Math.floor((8 * ratio));
     }
 
     return {
@@ -159,7 +161,7 @@ export default class Swiper extends PureComponent {
     return (
       <View style={style}>
         <BaseScroll
-          ref={(el) => this.scroll = el}
+          ref={(el) => (this.scroll = el)}
           style={commonStyles.flexFilled}
           slides={slides}
           slideWidth={screenWidth}

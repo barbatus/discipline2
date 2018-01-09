@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {
-  View,
-  Animated,
-} from 'react-native';
+import { View, Animated } from 'react-native';
+
+import { caller } from 'app/utils/lang';
 
 import Scroll from '../scrolls/Scroll';
 
@@ -12,8 +11,6 @@ import { commonStyles, screenWidth } from '../styles/common';
 import { slideHeight } from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
-
-import { caller } from '../../utils/lang';
 
 export default class TrackerScroll extends TrackerRenderer {
   static defaultProps = {

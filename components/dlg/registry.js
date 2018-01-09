@@ -1,3 +1,5 @@
+import check from 'check-types';
+
 export const DlgType = {
   ICONS: 'icons',
   MAPS: 'maps',

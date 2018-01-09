@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import { Animated } from 'react-native';
 
 import Animation from './Animation';

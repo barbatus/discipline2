@@ -10,20 +10,11 @@ import { submit } from 'redux-form';
 
 import moment from 'moment';
 
-import {
-  NavCancelButton,
-  NavAcceptButton,
-  NavLeftButton,
-  NavRightButton,
-} from '../nav/buttons';
+import TrackersModel from 'app/model/Trackers';
 
-import Animation from '../animation/Animation';
+import time from 'app/time/utils';
 
-import TrackerCal from '../trackers/TrackerCal';
-
-import TrackersModel from '../../model/Trackers';
-
-import Trackers from '../trackers/Trackers';
+import { caller } from 'app/utils/lang';
 
 import {
   tickTracker,
@@ -35,11 +26,22 @@ import {
   completeChange,
   startTracker,
   stopTracker,
-} from '../../model/actions';
+} from 'app/model/actions';
+
+import {
+  NavCancelButton,
+  NavAcceptButton,
+  NavLeftButton,
+  NavRightButton,
+} from '../nav/buttons';
+
+import Animation from '../animation/Animation';
+
+import TrackerCal from '../trackers/TrackerCal';
+
+import Trackers from '../trackers/Trackers';
 
 import { commonStyles } from '../styles/common';
-
-import { caller } from '../../utils/lang';
 
 const MONTH_NAMES = [
   'January',
@@ -85,6 +87,8 @@ class TrackersView extends PureComponent {
     this.onMonthChanged = ::this.onMonthChanged;
     this.onNextMonth = ::this.onNextMonth;
     this.onPrevMonth = ::this.onPrevMonth;
+    this.cancelEdit = ::this.cancelEdit;
+    this.saveEdit = ::this.saveEdit;
   }
 
   onSlideChange(index: number, previ: number, animated: boolean) {
@@ -116,11 +120,11 @@ class TrackersView extends PureComponent {
   }
 
   getCancelBtn(onPress) {
-    return <NavCancelButton onPress={this::onPress} />;
+    return <NavCancelButton onPress={onPress} />;
   }
 
   getAcceptBtn(onPress) {
-    return <NavAcceptButton onPress={this::onPress} />;
+    return <NavAcceptButton onPress={onPress} />;
   }
 
   setEditTrackerBtns() {
@@ -146,7 +150,7 @@ class TrackersView extends PureComponent {
     const monthMs = time.getNextMonthDateMs(dateMs);
     this.setNavBarMonth(monthMs);
 
-    this.refs.calendar.scrollToNextMonth();
+    this.calendar.scrollToNextMonth();
   }
 
   onPrevMonth() {
@@ -154,7 +158,7 @@ class TrackersView extends PureComponent {
     const monthMs = time.getPrevMonthDateMs(dateMs);
     this.setNavBarMonth(monthMs);
 
-    this.refs.calendar.scrollToPrevMonth();
+    this.calendar.scrollToPrevMonth();
   }
 
   onSwiperScaleMove(dv: number) {
@@ -163,7 +167,7 @@ class TrackersView extends PureComponent {
   }
 
   onSwiperMoveDown(dv: number) {
-    this.refs.calendar.setShown(dv);
+    this.calendar.setShown(dv);
   }
 
   onSwiperMoveDownStart() {
@@ -205,7 +209,7 @@ class TrackersView extends PureComponent {
   cancelEdit() {
     if (Animation.on) return;
 
-    this.refs.trackers.cancelEdit();
+    this.trackers.cancelEdit();
   }
 
   onEdit() {
@@ -228,14 +232,14 @@ class TrackersView extends PureComponent {
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
-          ref="calendar"
+          ref={(el) => (this.calendar = el)}
           {...this.props}
           tracker={current}
           style={[commonStyles.absFilled, { top: 0 }]}
           onMonthChanged={this.onMonthChanged}
         />
         <Trackers
-          ref="trackers"
+          ref={(el) => (this.trackers = el)}
           {...this.props}
           style={commonStyles.flexFilled}
           onRemove={this.onRemove}
@@ -267,7 +271,8 @@ export default connect(
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),
     onTick: (tracker, value, data) =>
       dispatch(tickTracker(tracker, value, data)),
-    onStart: (tracker) => dispatch(startTracker(tracker)),
+    onStart: (tracker, value, data) =>
+      dispatch(startTracker(tracker, value, data)),
     onProgress: (tracker, value, data) =>
       dispatch(updateLastTick(tracker, value, data)),
     onStop: (tracker) => dispatch(stopTracker(tracker)),

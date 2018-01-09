@@ -75,19 +75,30 @@ const TickSchema = {
       type: 'float',
       optional: true,
     },
+    dist: { type: 'linkingObjects', objectType: 'DistData', property: 'tick' },
   },
 };
 
 const DistanceDataSchema = {
   name: 'DistData',
   properties: {
-    tickId: {
-      type: 'int',
-      indexed: true,
-    },
+    tick: 'Tick',
     time: {
       type: 'int',
     },
+    latlon: {
+      type: 'list',
+      objectType: 'LatLon',
+      default: [],
+    },
+  },
+};
+
+const LatLonSchema = {
+  name: 'LatLon',
+  properties: {
+    lat: 'float',
+    lon: 'float',
   },
 };
 
@@ -100,6 +111,7 @@ const DB = new Realm({
     TicksSchema,
     DistanceDataSchema,
     TrackerPropsSchema,
+    LatLonSchema,
   ],
 });
 export default DB;

@@ -1,3 +1,6 @@
+import assert from 'assert';
+import check from 'check-types';
+
 import has from 'lodash/has';
 
 class EnumSymbol {

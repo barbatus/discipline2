@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native';
 
 import isBoolean from 'lodash/isBoolean';
 
-import { caller } from '../../utils/lang';
+import { caller } from 'app/utils/lang';
 
 export default class BaseScroll extends PureComponent {
   index = 0;
@@ -176,11 +176,12 @@ export default class BaseScroll extends PureComponent {
       pagingEnabled,
       contentStyle,
       scrollEnabled,
+      removeClippedSubviews,
     } = this.props;
     return (
       <ScrollView
-        ref={(el) => (this.scrollView = el)}
         {...this.props}
+        ref={(el) => (this.scrollView = el)}
         contentOffset={{ x: index * slideWidth, y: 0 }}
         keyboardShouldPersistTaps="always"
         automaticallyAdjustContentInsets={false}
@@ -193,6 +194,7 @@ export default class BaseScroll extends PureComponent {
         onMomentumScrollBegin={this.onScrollBegin}
         onMomentumScrollEnd={this.onScrollEnd}
         scrollEventThrottle={30}
+        removeClippedSubviews={removeClippedSubviews}
       >
         {slides}
       </ScrollView>

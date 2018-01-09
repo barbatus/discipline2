@@ -21,10 +21,7 @@ const COLORS = [
 ];
 
 export default class GradientSlider extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.move = new Animated.Value(-props.index * screenWidth);
-  }
+  move = new Animated.Value(0);
 
   getGrad(slides) {
     const len = COLORS.length;

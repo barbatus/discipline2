@@ -1,8 +1,16 @@
+import check from 'check-types';
+
 import React, { PureComponent } from 'react';
 
 import { Animated, InteractionManager } from 'react-native';
 
 import PropTypes from 'prop-types';
+
+import { TrackerType } from 'app/depot/consts';
+
+import Tracker from 'app/model/Tracker';
+
+import { caller } from 'app/utils/lang';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
 
@@ -13,12 +21,6 @@ import SumTrackerSlide from './slides/SumTrackerSlide';
 import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
 
 import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
-
-import { TrackerType } from '../../depot/consts';
-
-import Tracker from '../../model/Tracker';
-
-import { caller } from '../../utils/lang';
 
 // TODO: get rid of it once we get rid of refs.
 class TrackerWrapper extends PureComponent {
@@ -163,8 +165,8 @@ export default class TrackerRenderer extends PureComponent {
     caller(this.props.onTick, tracker, value, data);
   }
 
-  onStart(tracker: Tracker) {
-    caller(this.props.onStart, tracker);
+  onStart(tracker: Tracker, value?: number, data?: any) {
+    caller(this.props.onStart, tracker, value, data);
   }
 
   onStop(tracker: Tracker) {

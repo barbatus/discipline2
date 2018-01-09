@@ -6,6 +6,12 @@ import { connect } from 'react-redux';
 
 import { submit, reset } from 'redux-form';
 
+import Trackers from 'app/model/Trackers';
+
+import { TrackerType } from 'app/depot/consts';
+
+import { caller } from 'app/utils/lang';
+
 import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
@@ -15,12 +21,6 @@ import ScrollScreenView from './ScrollScreenView';
 import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
 
 import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
-
-import Trackers from '../../model/Trackers';
-
-import { TrackerType } from '../../depot/consts';
-
-import { caller } from '../../utils/lang';
 
 const TYPES = TrackerType.symbols();
 

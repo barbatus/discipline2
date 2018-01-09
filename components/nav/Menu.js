@@ -2,18 +2,14 @@ import React from 'react';
 
 import { pure } from 'recompose';
 
-import { StyleSheet, ScrollView } from 'react-native';
-
-import { screenWidth, screenHeight } from '../styles';
+import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
   menu: {
     flex: 1,
-    width: screenWidth,
-    height: screenHeight,
-    backgroundColor: 'gray',
+    backgroundColor: 'transparent',
     padding: 20,
   },
 });
 
-export default pure(() => <ScrollView style={styles.menu} />);
+export default pure(() => <View style={styles.menu} />);

@@ -2,8 +2,6 @@
 
 import { AppRegistry } from 'react-native';
 
-import './globals';
-
 import { loadTestData } from './model/actions';
 
 import createStore from './model/createStore';

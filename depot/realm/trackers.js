@@ -1,4 +1,6 @@
 /* @flow */
+import check from 'check-types';
+
 import EventEmitter from 'eventemitter3';
 
 import omit from 'lodash/omit';

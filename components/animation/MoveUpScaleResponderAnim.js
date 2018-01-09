@@ -1,10 +1,12 @@
+import assert from 'assert';
+
 import { Animated } from 'react-native';
+
+import { caller } from 'app/utils/lang';
 
 import Animation from './Animation';
 
 import { MoveUpDownResponder } from './responders';
-
-import { caller } from '../../utils/lang';
 
 export const minScale = 0.1;
 

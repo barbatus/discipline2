@@ -1,8 +1,10 @@
+import check from 'check-types';
+
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import EventEmitter from 'eventemitter3';
 
-import { caller } from '../utils/lang';
+import { caller } from 'app/utils/lang';
 
 BackgroundGeolocation.configure({
   distanceFilter: 5,

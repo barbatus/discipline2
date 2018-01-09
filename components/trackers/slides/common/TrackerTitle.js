@@ -4,7 +4,7 @@ import { Animated, TextInput } from 'react-native';
 
 import PropTypes from 'prop-types';
 
-import ShakeAnimation from '../../../animation/ShakeAnimation';
+import ShakeAnimation from 'app/components/animation/ShakeAnimation';
 
 import { propsStyles, trackerDef } from '../../styles/trackerStyles';
 

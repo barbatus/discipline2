@@ -24,6 +24,11 @@ export default class ScrollScreenView extends PureComponent {
     navBar: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.refHandler = ::this.refHandler;
+  }
+
   emitter = new EventEmitter();
 
   get rightView() {
@@ -49,12 +54,17 @@ export default class ScrollScreenView extends PureComponent {
     this.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
   }
 
+  refHandler(el) {
+    this.scroll = el;
+  }
+
   render() {
     const { style } = this.props;
     return (
       <View style={[cs.flexFilled, style]}>
         <ScrollView
-          ref={(el) => (this.scroll = el)}
+          // TODO: some strange issue when lambda is used
+          ref={this.refHandler}
           style={styles.scroll}
           horizontal
           pagingEnabled

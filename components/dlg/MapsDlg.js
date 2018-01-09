@@ -2,9 +2,11 @@ import React from 'react';
 
 import { StyleSheet } from 'react-native';
 
+import flatten from 'lodash/flatten';
+
 import MapView from 'react-native-maps';
 
-import GeoWatcher from '../../geo/BGGeoLocationWatcher';
+import GeoWatcher from 'app/geo/BGGeoLocationWatcher';
 
 import CommonModal from './CommonModal';
 
@@ -38,7 +40,7 @@ export default class MapsDlg extends CommonModal {
       longitudeDelta: LONGITUDE_DELTA,
     });
     this.state = {
-      path: [],
+      paths: [],
       region,
     };
     GeoWatcher.getPos((pos, error) => {
@@ -53,7 +55,16 @@ export default class MapsDlg extends CommonModal {
   }
 
   get content() {
-    const { path, region } = this.state;
+    const { paths, region } = this.state;
+    const polylines = paths.map((path, index) => (
+      <MapView.Polyline
+        key={index}
+        coordinates={path}
+        strokeColor="rgba(255,0,0,0.5)"
+        strokeWidth={4}
+      />
+    ));
+
     return (
       <MapView.Animated
         style={styles.mapView}
@@ -63,24 +74,21 @@ export default class MapsDlg extends CommonModal {
         loadingEnabled
         showsMyLocationButton
       >
-        <MapView.Polyline
-          coordinates={path}
-          strokeColor="rgba(255,0,0,0.5)"
-          strokeWidth={4}
-        />
+        {polylines}
       </MapView.Animated>
     );
   }
 
-  onBeforeShown(path = []) {
-    this.setState({ path });
+  onBeforeShown(paths = []) {
+    this.setState({ paths });
   }
 
-  onAfterShown(path = []) {
+  onAfterShown(paths = []) {
     const { region } = this.state;
 
-    if (path.length) {
-      this.map.getNode().fitToCoordinates(path, {
+    if (paths.length) {
+      const all = flatten(paths);
+      this.map.getNode().fitToCoordinates(all, {
         edgePadding: DEFAULT_PADDING,
         animated: true,
       });

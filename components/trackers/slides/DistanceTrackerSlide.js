@@ -11,17 +11,19 @@ import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
 
+import slowlog from 'react-native-slowlog';
+
+import registry, { DlgType } from 'app/components/dlg/registry';
+
+import { formatDistance } from 'app/utils/format';
+
+import { caller } from 'app/utils/lang';
+
+import { DistanceTracker as Tracker } from 'app/model/Tracker';
+
+import DistanceTrackers, { DistanceTracker } from 'app/geo/DistanceTrackers';
+
 import { trackerStyles } from '../styles/trackerStyles';
-
-import registry, { DlgType } from '../../dlg/registry';
-
-import { formatDistance } from '../../../utils/format';
-
-import { caller } from '../../../utils/lang';
-
-import { DistanceTracker as Tracker } from '../../../model/Tracker';
-
-import DistanceTrackers, { DistanceTracker } from '../../../geo/DistanceTrackers';
 
 import { slideWidth } from '../styles/slideStyles';
 
@@ -86,7 +88,7 @@ const DistanceDataFn = ({ time, dist }) => {
     <View style={styles.distData}>
       <View style={[styles.label, styles.dist]}>
         <Text style={styles.labelText}>
-          {format.format}
+          {format.format()}
         </Text>
         <Text style={styles.titleText}>
           {format.unit}
@@ -110,6 +112,45 @@ DistanceDataFn.propTypes = {
 
 const DistanceData = pure(DistanceDataFn);
 
+const DistanceFooterFn = ({ active, responsive, onStopBtn, onStartBtn, onShowMap }) =>
+  <View style={styles.footerControlsContainer}>
+    <View style={styles.startStopBtn}>
+      <StartStopBtn
+        active={active}
+        responsive={responsive}
+        onPress={active ? onStopBtn : onStartBtn}
+      />
+    </View>
+    <View style={styles.seeMap}>
+      <Text style={trackerStyles.footerText} onPress={onShowMap}>
+        See&nbsp;
+        <Text style={styles.seeMapLink}>
+          map
+        </Text>
+      </Text>
+    </View>
+  </View>;
+
+const DistanceFooter = pure(DistanceFooterFn);
+
+DistanceFooterFn.propTypes = {
+  active: PropTypes.bool,
+  responsive: PropTypes.bool.isRequired,
+  onStopBtn: PropTypes.func.isRequired,
+  onStartBtn: PropTypes.func.isRequired,
+  onShowMap: PropTypes.func.isRequired,
+};
+
+const DistanceBodyFn = ({ tracker }) =>
+  <View style={trackerStyles.controls}>
+    <DistanceData
+      dist={tracker.value}
+      time={tracker.time}
+    />
+  </View>;
+
+const DistanceBody = pure(DistanceBodyFn);
+
 const DIST_INTRVL = 5.0;
 
 const TIME_INTRVL = 1000; // ms
@@ -126,15 +167,14 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
   constructor(props) {
     super(props);
+    slowlog(this, /.*/);
     const { tracker } = props;
     this.distTracker = DistanceTrackers.get(
       tracker.id,
       DIST_INTRVL,
       TIME_INTRVL,
     );
-    this.distTracker.events.on('onStart', ::this.onDistStart);
     this.distTracker.events.on('onUpdate', ::this.onDistUpdate);
-    this.distTracker.events.on('onStop', ::this.onDistStop);
     this.showMap = ::this.showMap;
     this.onStopBtn = ::this.onStopBtn;
     this.onStartBtn = ::this.onStartBtn;
@@ -143,12 +183,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   get bodyControls() {
     const { tracker } = this.props;
     return (
-      <View style={trackerStyles.controls}>
-        <DistanceData
-          dist={tracker.value}
-          time={tracker.time}
-        />
-      </View>
+      <DistanceBody tracker={tracker} />
     );
   }
 
@@ -156,23 +191,13 @@ export default class DistanceTrackerSlide extends TrackerSlide {
     const { active } = this.state;
     const { responsive } = this.props;
     return (
-      <View style={styles.footerControlsContainer}>
-        <View style={styles.startStopBtn}>
-          <StartStopBtn
-            active={active}
-            responsive={responsive}
-            onPress={active ? this.onStopBtn : this.onStartBtn}
-          />
-        </View>
-        <View style={styles.seeMap}>
-          <Text style={trackerStyles.footerText}>
-            See&nbsp;
-            <Text style={styles.seeMapLink} onPress={this.showMap}>
-              map
-            </Text>
-          </Text>
-        </View>
-      </View>
+      <DistanceFooter
+        active={active}
+        responsive={responsive}
+        onStopBtn={this.onStopBtn}
+        onStartBtn={this.onStartBtn}
+        onShowMap={this.showMap}
+      />
     );
   }
 
@@ -183,11 +208,11 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   onStartBtn() {
-    this.distTracker.start();
+    this.distTracker.start(this.onDistStart);
   }
 
   onStopBtn() {
-    this.distTracker.stop();
+    this.distTracker.stop(this.onDistStop);
   }
 
   onDistStart(error) {
@@ -197,8 +222,7 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
     Vibration.vibrate();
 
-    caller(this.props.onStart);
-    caller(this.props.onTick, 0, { time: 0 });
+    caller(this.props.onStart, 0, { time: 0 });
   }
 
   onDistStop(track) {
@@ -209,12 +233,18 @@ export default class DistanceTrackerSlide extends TrackerSlide {
   }
 
   onDistUpdate({ dist, time, lat, lon }) {
-    caller(this.props.onProgress, dist, { time });
     this.path.push({ latitude: lat, longitude: lon });
+    caller(this.props.onProgress, dist, { time, latlon: { lat, lon } });
   }
 
   showMap() {
     const dlg = registry.get(DlgType.MAPS);
-    dlg.show(this.path.slice(0));
+    const { tracker } = this.props;
+    const paths = tracker.paths.map((path) =>
+      path.map(({ lat, lon }) => ({
+        latitude: lat,
+        longitude: lon,
+      })));
+    dlg.show(paths);
   }
 }

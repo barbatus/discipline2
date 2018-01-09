@@ -1,3 +1,5 @@
+import time from 'app/time/utils';
+
 import depot from '../depot/depot';
 
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
@@ -41,10 +43,10 @@ export const ADD_TRACKER = 'ADD_TRACKER';
 
 export const addTracker = (tracker, index) => (dispatch) =>
   // TODO: dispatch error event on catch
-  depot.addTrackerAt(tracker, index).then((tracker) =>
+  depot.addTrackerAt(tracker, index).then((added) =>
     dispatch({
       type: ADD_TRACKER,
-      tracker,
+      tracker: added,
       index,
     }),
   );
@@ -52,10 +54,10 @@ export const addTracker = (tracker, index) => (dispatch) =>
 export const UPDATE_TRACKER = 'UPDATE_TRACKER';
 
 export const updateTracker = (tracker) => (dispatch) =>
-  depot.updateTracker(tracker).then((tracker) =>
+  depot.updateTracker(tracker).then((updated) =>
     dispatch({
       type: UPDATE_TRACKER,
-      tracker,
+      tracker: updated,
     }),
   );
 
@@ -64,8 +66,6 @@ export const TICK_TRACKER = 'TICK_TRACKER';
 export const tickTracker = (tracker, value, data) => async (dispatch) => {
   const dateTimeMs = time.getDateTimeMs();
   const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
-  const ticks = await depot.getTicks(tracker.id, time.getDateMs());
-  tracker.ticks = ticks;
   return dispatch({
     type: TICK_TRACKER,
     tracker,
@@ -75,57 +75,48 @@ export const tickTracker = (tracker, value, data) => async (dispatch) => {
 
 export const START_TRACKER = 'START_TRACKER';
 
-export const startTracker = (tracker) => {
-  tracker.active = true;
-  return {
+export const startTracker = (tracker, value, data) => async (dispatch) => {
+  const dateTimeMs = time.getDateTimeMs();
+  const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
+  return dispatch({
     type: START_TRACKER,
-    tracker,
-  };
+    tracker: tracker.clone({ active: true }),
+    tick,
+  });
 };
 
 export const STOP_TRACKER = 'STOP_TRACKER';
 
-export const stopTracker = (tracker) => {
-  tracker.active = false;
-  return {
-    type: STOP_TRACKER,
-    tracker,
-  };
-};
+export const stopTracker = (tracker) => async (dispatch) =>
+  new Promise((resolve) => {
+    dispatch({
+      type: STOP_TRACKER,
+      tracker: tracker.clone({ active: false }),
+    });
+    resolve();
+  });
 
 export const UNDO_LAST_TICK = 'UNDO_LAST_TICK';
 
 export const undoLastTick = (tracker) => async (dispatch) => {
   await depot.undoLastTick(tracker.id);
   const ticks = await depot.getTicks(tracker.id, time.getDateMs());
-  tracker.ticks = ticks;
   return dispatch({
     type: UNDO_LAST_TICK,
-    tracker,
+    tracker: tracker.clone({ ticks }),
   });
-}
+};
 
 export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
 export const updateLastTick = (tracker, value, data) => async (dispatch) => {
   const tick = await depot.updateLastTick(tracker.id, value, data);
-  const ticks = await depot.getTicks(tracker.id, time.getDateMs());
-  tracker.ticks = ticks;
   return dispatch({
     type: UPDATE_LAST_TICK,
     tracker,
+    tick,
   });
-
-  // depot.updateLastTick(tracker.id, value, data).then((tick) =>
-  //   depot.getTicks(tracker.id, time.getDateMs()).then((ticks) => {
-  //     tracker.ticks = ticks;
-  //     return dispatch({
-  //       type: UPDATE_LAST_TICK,
-  //       tracker,
-  //     });
-  //   }),
-  // );
-}
+};
 
 export const COMPLETE_CHANGE = 'COMPLETE_CHANGE';
 

@@ -14,13 +14,13 @@ import PropTypes from 'prop-types';
 
 import { reduxForm, Field, SubmissionError } from 'redux-form';
 
-import { getIcon } from '../../../../icons/icons';
+import { getIcon } from 'app/icons/icons';
+
+import { TrackerType } from 'app/depot/consts';
+
+import ShakeAnimation from 'app/components/animation/ShakeAnimation';
 
 import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
-
-import { TrackerType } from '../../../../depot/consts';
-
-import ShakeAnimation from '../../../animation/ShakeAnimation';
 
 import TrackerIcon from './TrackerIcon';
 

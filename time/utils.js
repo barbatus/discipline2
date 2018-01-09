@@ -29,7 +29,7 @@ const time = {
         hh: null,
         mm: '00',
         ss: __(ss),
-        format: () => `00:${f.ss}`,
+        format: (full = true) => full ? `00:${f.ss}s` : `${f.ss}s`,
       };
       return f;
     }
@@ -41,7 +41,7 @@ const time = {
         hh: null,
         mm: __(mm),
         ss: __(ss),
-        format: () => `${f.mm}:${f.ss}`,
+        format: () => `${f.mm}:${f.ss}m`,
       };
       return f;
     }
@@ -50,10 +50,10 @@ const time = {
     const mm = duration.minutes();
     const hh = duration.hours();
     const f = {
-      hh: ss,
+      hh,
       mm,
       ss,
-      format: () => `${f.hh}:${f.mm}:${f.ss}`,
+      format: () => `${f.hh}:${f.mm}:${f.ss}h`,
     };
     return f;
   },
@@ -115,4 +115,4 @@ const time = {
   },
 };
 
-module.exports = time;
+export default time;

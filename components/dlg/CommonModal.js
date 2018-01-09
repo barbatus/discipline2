@@ -1,3 +1,5 @@
+import check from 'check-types';
+
 import React, { PureComponent } from 'react';
 
 import {

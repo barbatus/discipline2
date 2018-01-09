@@ -12,7 +12,9 @@ import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
 
-import { caller } from '../../../utils/lang';
+import { caller } from 'app/utils/lang';
+
+import Timers, { Timer } from 'app/time/Timers';
 
 import { trackerStyles } from '../styles/trackerStyles';
 
@@ -23,8 +25,6 @@ import StartStopBtn from './common/StartStopBtn';
 import TrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
-
-import Timers, { Timer } from '../../../time/Timers';
 
 const styles = StyleSheet.create({
   controls: {
@@ -143,8 +143,8 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     Vibration.vibrate();
 
     this.timer.start(0);
+
     caller(this.props.onStart);
-    caller(this.props.onTick);
   }
 
   onTimer(timeMs: number) {

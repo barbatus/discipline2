@@ -1,8 +1,12 @@
+import check from 'check-types';
+
 import React, { PureComponent } from 'react';
 
 import { StyleSheet, Animated } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
+
+import { caller } from 'app/utils/lang';
 
 import Animation from '../animation/Animation';
 
@@ -10,13 +14,12 @@ import NavTitle from './Title';
 
 import { screenWidth, navHeight } from '../styles/common';
 
-import { caller } from '../../utils/lang';
-
 const styles = StyleSheet.create({
   navbar: {
     height: navHeight,
     width: screenWidth,
     backgroundColor: 'transparent',
+    zIndex: 3,
   },
 });
 
