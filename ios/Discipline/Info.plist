@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Always</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
@@ -37,8 +35,14 @@
         </dict>
       </dict>
     </dict>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>CHANGEME: Location Always And When In Use Usage Description</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Always</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string/>
+    <key>NSMotionUsageDescription</key>
+    <string>CHANGEME: Motion updates increase battery efficiency by intelligently toggling location-services when device is detected to be moving</string>
     <key>UIBackgroundModes</key>
     <array>
       <string>fetch</string>
@@ -58,9 +62,5 @@
     </array>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>CHANGEME: Location Always And When In Use Usage Description</string>
-    <key>NSMotionUsageDescription</key>
-    <string>CHANGEME: Motion updates increase battery efficiency by intelligently toggling location-services when device is detected to be moving</string>
   </dict>
 </plist>

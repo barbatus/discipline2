@@ -104,7 +104,7 @@ export class MainScreen extends PureComponent {
           <GradientSlider
             ref={(el) => (this.gradient = el)}
             style={cs.absFilled}
-            slides={slides}
+            slides={slides || 1}
           />
         </View>
         <SideMenu
@@ -130,6 +130,6 @@ export class MainScreen extends PureComponent {
   }
 }
 
-export default connect((state) => ({
-  slides: state.trackers.trackers.size,
+export default connect(({ trackers }) => ({
+  slides: trackers.trackers.size,
 }))(MainScreen);

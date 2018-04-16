@@ -16,6 +16,7 @@ export class MoveUpScaleResponderAnim {
   scale = new Animated.Value(1);
 
   slideHeight = 0;
+  unsubCb = null;
 
   constructor(slideHeight: number) {
     this.slideHeight = slideHeight;
@@ -38,7 +39,7 @@ export class MoveUpScaleResponderAnim {
     this.scale.addListener(({ value }) =>
       caller(onScale, value <= minScale ? 0 : value)
     );
-    responder.subscribeUp({
+    this.unsubCb = responder.subscribeUp({
       onMove: (dy) => {
         const speed = Math.abs(dy) * 2;
         let scale = (this.slideHeight - speed) / this.slideHeight;
@@ -55,7 +56,14 @@ export class MoveUpScaleResponderAnim {
     });
   }
 
+  unsubscribe() {
+    if (this.unsubCb) {
+      this.unsubCb();
+    }
+  }
+
   dispose() {
+    this.unsubscribe();
     this.scale.removeAllListeners();
   }
 

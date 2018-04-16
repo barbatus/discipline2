@@ -2,7 +2,7 @@ import Easing from 'Easing';
 
 import { Animated } from 'react-native';
 
-import { caller } from '../../utils/lang';
+import { caller } from 'app/utils/lang';
 
 import Animation from './Animation';
 

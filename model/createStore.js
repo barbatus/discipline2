@@ -4,14 +4,17 @@ import thunk from 'redux-thunk';
 
 import { reducer as form } from 'redux-form';
 
+import { List } from 'immutable';
+
 import { trackersReducer } from './reducers';
 
 const middleware = applyMiddleware(thunk);
 
-export default (data = {}) => {
+export default () => {
   const rootReducer = combineReducers({
     trackers: trackersReducer,
     form,
   });
-  return createStore(rootReducer, data, middleware);
+  const state = { trackers: { trackers: List.of() } };
+  return createStore(rootReducer, state, middleware);
 };

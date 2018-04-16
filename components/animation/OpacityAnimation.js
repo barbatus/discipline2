@@ -1,5 +1,3 @@
-import Easing from 'Easing';
-
 import { Animated } from 'react-native';
 
 import Animation from './Animation';
@@ -7,7 +5,7 @@ import Animation from './Animation';
 export default class OpacityAnimation {
   op: Animated.Value;
 
-  constructor(opacity: number = 1) {
+  constructor(opacity = 1) {
     this.op = new Animated.Value(opacity);
   }
 

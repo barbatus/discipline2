@@ -1,21 +1,17 @@
 /* @flow */
 import check from 'check-types';
 
-import EventEmitter from 'eventemitter3';
-
 import omit from 'lodash/omit';
 
-import DB from './db';
+import db from './db';
 
 class Trackers {
-  event = new EventEmitter();
-
   table: TrackersSchemaType;
 
   constructor() {
-    const table = DB.objects('Trackers');
+    const table = db.objects('Trackers');
     if (!table.length) {
-      DB.write(() => DB.create('Trackers', {}));
+      db.write(() => db.create('Trackers', {}));
     }
     this.table = table[0];
   }
@@ -28,71 +24,58 @@ class Trackers {
     return this.trackers.slice();
   }
 
-  getOne(trackId: number): Tracker {
-    check.assert.number(trackId);
+  getOne(trackId: string): Tracker {
+    check.assert.string(trackId);
 
-    return DB.objectForPrimaryKey('Tracker', trackId);
+    return db.objectForPrimaryKey('Tracker', trackId);
   }
 
   count(): number {
     return this.trackers.length;
   }
 
-  buildNewTracker(id, data) {
+  buildNewTracker(id: string, data: Tracker) {
     return { props: { alerts: false }, ...data, id };
   }
 
   addAt(data: Tracker, index: number): Tracker {
-    const trackId = this.table.nextId;
+    const trackId = this.table.nextId.toString();
     const tracker = this.buildNewTracker(trackId, data);
-    DB.write(() => {
+    db.write(() => {
       this.trackers.splice(index, 0, tracker);
-      this.table.nextId = tracker.id + 1;
+      this.table.nextId = this.table.nextId + 1;
     });
 
     return tracker;
   }
 
   add(data: Tracker): Tracker {
-    const trackId = this.table.nextId;
+    const trackId = this.table.nextId.toString();
     const tracker = this.buildNewTracker(trackId, data);
-    DB.write(() => {
+    db.write(() => {
       this.trackers.push(tracker);
-      this.table.nextId = tracker.id + 1;
+      this.table.nextId = this.table.nextId + 1;
     });
-
-    this.event.emit('added', {
-      trackId: tracker.id,
-    });
-
     return tracker;
   }
 
-  remove(trackId: number): boolean {
-    check.assert.number(trackId);
+  remove(trackId: string): boolean {
+    check.assert.string(trackId);
 
     const tracker = this.getOne(trackId);
+    if (!tracker) { return false; }
 
-    if (!tracker) throw new Error('No tracker found');
-
-    DB.write(() => DB.delete(tracker));
-    this.event.emit('removed', { trackId });
+    db.write(() => db.delete(tracker));
     return true;
   }
 
   update(data: Tracker): Tracker {
     const tracker = this.getOne(data.id);
+    if (!tracker) { return null; }
 
-    if (!tracker) throw new Error('No tracker found');
-
-    DB.write(() =>
+    db.write(() =>
       Object.assign(tracker, omit(data, 'id'))
     );
-
-    this.event.emit('updated', {
-      trackId: tracker.id,
-    });
-
     return tracker;
   }
 }

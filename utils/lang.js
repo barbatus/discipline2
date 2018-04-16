@@ -16,3 +16,19 @@ export function round(number, precision) {
 export function int(number) {
   return Math.floor(number);
 }
+
+export function isShallowEqual(v, o) {
+  for (let key in v) {
+    if (v[key] !== o[key]) {
+      return false;
+    }
+  }
+
+  for (let key in o) {
+    if (v[key] !== o[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}

@@ -2,16 +2,17 @@ import assert from 'assert';
 
 import { Animated } from 'react-native';
 
+import { caller } from 'app/utils/lang';
+
 import Animation from './Animation';
 
 import { MoveUpDownResponder } from './responders';
 
-import { caller } from '../../utils/lang';
-
 export default class MoveDownResponderAnim {
   moveY = new Animated.Value(0);
 
-  in: boolean = false;
+  in = false;
+  unsubCb = null;
 
   constructor(slideHeight: number) {
     this.maxDy = 0.5 * slideHeight;
@@ -30,22 +31,33 @@ export default class MoveDownResponderAnim {
     onDone?: Function,
   ) {
     assert.ok(responder);
+    assert.ok(!this.unsubCb);
 
     this.moveY.addListener(({ value }) => {
       caller(onMove, value / this.maxDy);
     });
-    responder.subscribeDown({
-      onMove: dy => {
+    this.unsubCb = responder.subscribeDown({
+      onMove: (dy) => {
         dy = Math.min(Math.abs(dy), this.maxDy);
         this.moveY.setValue(dy);
       },
       onMoveStart: onStart,
       onMoveDone: () => this.animateIn(onDone),
+      onMoveCancel: () => this.animateIn(onDone),
     });
   }
 
+  unsubscribe() {
+    if (this.unsubCb) {
+      this.unsubCb();
+      this.unsubCb = null;
+    }
+  }
+
   dispose() {
+    this.unsubscribe();
     this.moveY.removeAllListeners();
+    this.moveY = null;
   }
 
   animateIn(callback?: Function) {

@@ -23,7 +23,7 @@ export const LOAD_TEST_DATA = 'LOAD_INIT';
 
 export const loadTestData = () => async (dispatch) => {
   const trackers = await depot.loadTestData();
-  dispatch({
+  return dispatch({
     type: LOAD_TEST_DATA,
     trackers,
   });
@@ -127,7 +127,10 @@ export const completeChange = (index) => ({
 
 export const CHANGE_DAY = 'CHANGE_DAY';
 
-export const changeDay = () => ({
-  type: CHANGE_DAY,
-  trackers: depot.loadTrackers(),
-});
+export const changeDay = () => async (dispatch) => {
+  const trackers = await depot.loadTrackers();
+  return dispatch({
+    type: CHANGE_DAY,
+    trackers,
+  });
+};

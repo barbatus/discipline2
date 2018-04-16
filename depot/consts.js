@@ -36,3 +36,13 @@ export const TrackerType = new Enum({
     desc: 'Measure the distance you cover for a particular task or activity per day',
   },
 });
+
+
+export const DepotEvent = {
+  TICK_ADDED: 'tick_added',
+  TICKS_REMOVED: 'ticks_removed',
+  TICK_UPDATED: 'tick_updated',
+  TRACK_REMOVED: 'track_removed',
+  TRACK_ADDED: 'track_added',
+  TRACK_UPDATED: 'track_updated',
+};

@@ -83,7 +83,7 @@ export default class DayUpdateEvent {
   }
 
   setDayTimer() {
-    const left = time.getToDayEndMs();
+    const left = time.getToEndDayMs();
 
     if (this.dayTimer) {
       this.dayTimer.restart(left);
@@ -129,6 +129,6 @@ export default class DayUpdateEvent {
   }
 
   fireCbs() {
-    this.cbs.forEach(cb => cb());
+    this.cbs.forEach((cb) => cb());
   }
 }

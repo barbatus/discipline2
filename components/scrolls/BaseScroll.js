@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 
+import ViewPropTypes from 'ViewPropTypes';
+
 import { ScrollView } from 'react-native';
 
 import isBoolean from 'lodash/isBoolean';
@@ -22,15 +24,21 @@ export default class BaseScroll extends PureComponent {
   onScrollToCb = null;
 
   static propTypes = {
+    index: PropTypes.number,
     slideWidth: PropTypes.number.isRequired,
     slides: PropTypes.array.isRequired,
     pagingEnabled: PropTypes.bool,
     scrollEnabled: PropTypes.bool,
     bounces: PropTypes.bool,
-    scrollsToTop: PropTypes.bool,
+    contentStyle: ViewPropTypes.style,
     removeClippedSubviews: PropTypes.bool,
     automaticallyAdjustContentInsets: PropTypes.bool,
     keyboardDismissMode: PropTypes.string,
+    onSlideNoChange: PropTypes.func,
+    onSlideChange: PropTypes.func,
+    onTouchMove: PropTypes.func,
+    onScrollBeginDrag: PropTypes.func,
+    onScrollEndDrag: PropTypes.func,
   };
 
   static defaultProps = {
@@ -40,7 +48,7 @@ export default class BaseScroll extends PureComponent {
     pagingEnabled: true,
     scrollEnabled: true,
     showsHorizontalScrollIndicator: false,
-    bounces: false,
+    bounces: true,
     scrollsToTop: false,
     removeClippedSubviews: true,
     automaticallyAdjustContentInsets: false,
@@ -55,7 +63,6 @@ export default class BaseScroll extends PureComponent {
     this.offsetX = slideWidth * this.index;
     this.pageX = slideWidth;
     this.onTouchStart = ::this.onTouchStart;
-    this.onTouchEnd = ::this.onTouchEnd;
     this.onTouchMove = ::this.onTouchMove;
     this.onScrollBegin = ::this.onScrollBegin;
     this.onScrollEnd = ::this.onScrollEnd;
@@ -103,8 +110,6 @@ export default class BaseScroll extends PureComponent {
   onTouchStart(event) {
     this.pageX = event.nativeEvent.pageX;
   }
-
-  onTouchEnd() {}
 
   onTouchMove(event) {
     const { slides, slideWidth, scrollEnabled } = this.props;
@@ -177,20 +182,24 @@ export default class BaseScroll extends PureComponent {
       contentStyle,
       scrollEnabled,
       removeClippedSubviews,
+      bounces,
+      onScrollBeginDrag,
+      onScrollEndDrag,
     } = this.props;
     return (
       <ScrollView
         {...this.props}
         ref={(el) => (this.scrollView = el)}
+        bounces={bounces}
         contentOffset={{ x: index * slideWidth, y: 0 }}
         keyboardShouldPersistTaps="always"
         automaticallyAdjustContentInsets={false}
         scrollEnabled={scrollEnabled}
         pagingEnabled={pagingEnabled}
         contentContainerStyle={contentStyle}
-        onTouchStart={this.onTouchStart}
-        onTouchEnd={this.onTouchEnd}
         onTouchMove={this.onTouchMove}
+        onScrollBeginDrag={onScrollBeginDrag}
+        onScrollEndDrag={onScrollEndDrag}
         onMomentumScrollBegin={this.onScrollBegin}
         onMomentumScrollEnd={this.onScrollEnd}
         scrollEventThrottle={30}

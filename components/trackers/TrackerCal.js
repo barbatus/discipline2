@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react';
-
+import React, { Component } from 'react';
 import { Animated } from 'react-native';
 
 import moment from 'moment';
@@ -9,15 +8,17 @@ import { TrackerType } from 'app/depot/consts';
 import { formatDistance } from 'app/utils/format';
 
 import time from 'app/time/utils';
+import { isShallowEqual } from 'app/utils/lang';
 
 import Calendar from '../calendar/Calendar';
 
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
-export default class TrackerCal extends PureComponent {
+export default class TrackerCal extends Component {
   opacity = new Animated.Value(0);
 
   upDown = new ScreenSlideUpDownAnim();
+  isShown: boolean;
 
   constructor(props) {
     super(props);
@@ -25,16 +26,25 @@ export default class TrackerCal extends PureComponent {
       selDateMs: null,
     };
     this.upDown.setOut();
+    this.isShown = false;
     this.onDateSelect = ::this.onDateSelect;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.isShown &&
+           (!isShallowEqual(this.props, nextProps) ||
+            !isShallowEqual(this.state, nextState));
   }
 
   setShown(value: number) {
     this.opacity.setValue(value);
     if (value === 0) {
       this.upDown.setOut();
+      this.isShown = false;
       this.onDateSelect(null);
       return;
     }
+    this.isShown = true;
     this.upDown.setIn();
   }
 

@@ -26,7 +26,7 @@ export default class GradientSlider extends PureComponent {
   getGrad(slides) {
     const len = COLORS.length;
     const int = Math.floor(slides / len);
-    const res = slides % len;
+    const res = Math.max(slides % len, 2);
     return flatten(times(int, () => COLORS))
       .concat(COLORS.slice(0, res));
   }
@@ -63,8 +63,8 @@ export default class GradientSlider extends PureComponent {
         ]}
       >
         <LinearGradient
-          startPoint={{ x: 0.0, y: 0.5 }}
-          endPoint={{ x: 1.0, y: 0.5 }}
+          start={{ x: 0.0, y: 0.5 }}
+          end={{ x: 1.0, y: 0.5 }}
           colors={grads}
           style={commonDef.absFilled}
         />

@@ -1,15 +1,13 @@
-import Easing from 'Easing';
-
 import { Animated } from 'react-native';
 
-import Animation from './Animation';
+import { screenHeight } from 'app/components/styles/common';
 
-import { screenHeight } from '../styles/common';
+import Animation from './Animation';
 
 export default class ScreenSlideUpDownAnim {
   moveY = new Animated.Value(0);
 
-  constructor(scaleFactor: number = 1) {
+  constructor(scaleFactor = 1) {
     this.scaleFactor = scaleFactor;
   }
 

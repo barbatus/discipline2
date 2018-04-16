@@ -151,6 +151,8 @@ export default class Swiper extends PureComponent {
       style,
       slides,
       onTouchMove,
+      onBeginDrag,
+      onEndDrag,
       scrollEnabled,
       onSlideNoChange,
     } = this.props;
@@ -166,6 +168,8 @@ export default class Swiper extends PureComponent {
           slides={slides}
           slideWidth={screenWidth}
           onTouchMove={onTouchMove}
+          onScrollBeginDrag={onBeginDrag}
+          onScrollEndDrag={onEndDrag}
           scrollEnabled={scrollEnabled}
           onSlideChange={this.onSlideChange}
           onSlideNoChange={onSlideNoChange}

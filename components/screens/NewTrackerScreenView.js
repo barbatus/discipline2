@@ -1,25 +1,17 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-
 import { submit, reset } from 'redux-form';
 
 import Trackers from 'app/model/Trackers';
-
 import { TrackerType } from 'app/depot/consts';
-
 import { caller } from 'app/utils/lang';
 
-import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
-
 import Animation from '../animation/Animation';
-
+import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
 import ScrollScreenView from './ScrollScreenView';
-
 import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
-
 import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 const TYPES = TrackerType.symbols();

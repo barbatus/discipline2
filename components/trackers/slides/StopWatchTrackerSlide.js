@@ -22,7 +22,7 @@ import { slideWidth } from '../styles/slideStyles';
 
 import StartStopBtn from './common/StartStopBtn';
 
-import TrackerSlide from './TrackerSlide';
+import ProgressTrackerSlide from './ProgressTrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
@@ -75,7 +75,7 @@ FooterBtnFn.propTypes = {
 
 const FooterBtn = pure(FooterBtnFn);
 
-export default class StopWatchTrackerSlide extends TrackerSlide {
+export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
   timer: Timer = null;
 
   constructor(props) {
@@ -133,27 +133,21 @@ export default class StopWatchTrackerSlide extends TrackerSlide {
     this.timer = null;
   }
 
-  onEdit() {
-    const { tracker } = this.props;
-    if (tracker.active) return;
-    super.onEdit();
-  }
-
   onTick() {
     Vibration.vibrate();
 
     this.timer.start(0);
 
-    caller(this.props.onStart);
+    this.onStart();
   }
 
   onTimer(timeMs: number) {
-    caller(this.props.onProgress, timeMs);
+    this.onProgress(timeMs);
   }
 
   onStop() {
     this.timer.stop();
-    caller(this.props.onStop);
+    super.onStop();
   }
 
   onLap() {

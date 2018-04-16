@@ -65,7 +65,7 @@ const time = {
     return date1.isSame(date2, 'day');
   },
 
-  getToDayEndMs() {
+  getToEndDayMs() {
     const now = moment();
     const end = now.endOf('day');
 

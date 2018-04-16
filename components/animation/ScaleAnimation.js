@@ -1,5 +1,3 @@
-import Easing from 'Easing';
-
 import { Animated } from 'react-native';
 
 import Animation from './Animation';

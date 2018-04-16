@@ -212,7 +212,8 @@ export default class TrackerRenderer extends PureComponent {
   renderTracker(tracker: Tracker) {
     // Render swiper's tracker slides as progressive
     // (i.e. they can update state progressively)
-    return this.renderTrackerInternal(tracker, 1.0, true, true, true);
+    const { enabled } = this.props;
+    return this.renderTrackerInternal(tracker, 1.0, true, enabled, true);
   }
 
   renderScaledTracker(tracker: Tracker, scale: number, responsive: boolean) {

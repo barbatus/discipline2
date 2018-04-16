@@ -61,6 +61,13 @@ const TickText = styled.Text`
 const PADDING = 15;
 
 export default class Month extends PureComponent {
+  static propTypes = {
+    selDateMs: PropTypes.number,
+    monthMs: PropTypes.number.isRequired,
+    todayMs: PropTypes.number.isRequired,
+    onDateSelect: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {

@@ -17,7 +17,7 @@ declare type Tick = {
 };
 
 declare interface IDepot {
-  loadTrackers(): Array<Tracker>,
+  getTrackers(): Array<Tracker>,
 
   getTracker(trackId: number): Tracker,
 
@@ -25,9 +25,9 @@ declare interface IDepot {
 
   addTrackerAt(tracker: Tracker, index: number): Tracker,
 
-  removeTracker(trackId: number): boolean,
+  removeTracker(trackId: number): void,
 
-  updateTracker(tracker: Tracker): boolean,
+  updateTracker(tracker: Tracker): Tracker,
 
   addTick(
     trackId: number,
@@ -38,7 +38,7 @@ declare interface IDepot {
 
   getTicks(trackId: number, minDateMs: number, maxDateMs?: number): Array<Tick>,
 
-  undoLastTick(trackId: number): boolean,
+  undoLastTick(trackId: number): void,
 
   updateLastTick(trackId: number, value?: number, data?: Object): Tick,
 }

@@ -2,7 +2,11 @@ import React, { PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
+import ViewPropTypes from 'ViewPropTypes';
+
 import { pure } from 'recompose';
+
+import PropTypes from 'prop-types';
 
 import time from 'app/time/utils';
 
@@ -56,7 +60,13 @@ const TimeDigitFn = ({ style, value, width }) => {
       </Text>
     </View>
   );
-}
+};
+
+TimeDigitFn.propTypes = {
+  // style: ViewPropTypes.style,
+  width: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
+};
 
 const TimeDigit = pure(TimeDigitFn);
 

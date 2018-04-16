@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 
+import { addTracker } from 'app/model/actions';
+
+import { caller } from 'app/utils/lang';
+
 import { NavAddButton, NavMenuButton } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
@@ -13,10 +17,6 @@ import ScrollScreenView from './ScrollScreenView';
 import TrackersView from './TrackersView';
 
 import NewTrackerScreenView from './NewTrackerScreenView';
-
-import { addTracker } from '../../model/actions';
-
-import { caller } from '../../utils/lang';
 
 import { commonStyles } from '../styles/common';
 

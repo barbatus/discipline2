@@ -2,7 +2,7 @@ import { Animated } from 'react-native';
 
 import flatten from 'lodash/flatten';
 
-import { caller } from '../../utils/lang';
+import { caller } from 'app/utils/lang';
 
 export class AnimationManager {
   on = false;

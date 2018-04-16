@@ -25,7 +25,7 @@ const TrackerSchema = {
   name: 'Tracker',
   primaryKey: 'id',
   properties: {
-    id: 'int',
+    id: 'string',
     title: { type: 'string', optional: true },
     typeId: 'string',
     iconId: { type: 'string', optional: true },
@@ -62,7 +62,7 @@ const TickSchema = {
   name: 'Tick',
   primaryKey: 'id',
   properties: {
-    id: 'int',
+    id: 'string',
     trackId: {
       type: 'int',
       indexed: true,

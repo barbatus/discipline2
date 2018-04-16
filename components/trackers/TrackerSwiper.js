@@ -24,6 +24,7 @@ import { commonStyles, screenWidth } from '../styles/common';
 import { slideHeight } from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
+import { ObjectUnsubscribedError } from 'rxjs';
 
 export default class TrackerSwiper extends TrackerRenderer {
   upDown = new ScreenSlideUpDownAnim(minScale);
@@ -95,14 +96,14 @@ export default class TrackerSwiper extends TrackerRenderer {
       const prevTrackers = this.props.trackers;
       this.setState({ trackers: prevTrackers });
       this.animateRemove(prevTrackers, removeIndex,
-        () => this.setState({ trackers, enabled: true })
+        () => this.setState({ trackers, scrollEnabled: true })
       );
       caller(this.props.onRemoveCompleted, removeIndex);
     }
 
     if (isNumber(addIndex)) {
       this.addIndex = addIndex;
-      this.setState({ trackers, enabled: true });
+      this.setState({ trackers, scrollEnabled: true });
     }
 
     if (isNumber(updateIndex)) {
@@ -116,7 +117,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   showEdit(callback) {
-    this.setState({ enabled: false }, () => {
+    this.setState({ scrollEnabled: false }, () => {
       const trackerId = this.current.id;
       this.refs[trackerId].showEdit(callback);
     });
@@ -133,7 +134,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     caller(callback);
   }
 
-  show(index, callback) {
+  show(callback) {
     this.upDown.setIn();
     this.moveScale.animateIn(callback);
   }
@@ -159,11 +160,12 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   onCancelEdit(callback) {
-    this.setState({ enabled: true }, callback);
+    this.setState({ scrollEnabled: true }, callback);
   }
 
   render() {
-    const { trackers } = this.state;
+    const { trackers, scrollEnabled } = this.state;
+    const { style, onScroll, enabled } = this.props;
 
     const slideStyle = {
       width: screenWidth,
@@ -178,8 +180,6 @@ export default class TrackerSwiper extends TrackerRenderer {
       </View>
     ));
 
-    const { style, onScroll } = this.props;
-    const { enabled } = this.state;
     const transform = Animation.combineStyles(this.moveScale, this.upDown);
     const swiperStyle = [style, transform];
     return (
@@ -189,7 +189,7 @@ export default class TrackerSwiper extends TrackerRenderer {
           ref={(el) => (this.swiper = el)}
           style={commonStyles.flexFilled}
           slides={slides}
-          scrollEnabled={enabled}
+          scrollEnabled={enabled && scrollEnabled}
           onTouchMove={onScroll}
         />
       </Animated.View>

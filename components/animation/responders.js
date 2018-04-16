@@ -1,6 +1,6 @@
 import { PanResponder } from 'react-native';
 
-import { caller } from '../../utils/lang';
+import { caller } from 'app/utils/lang';
 
 const ANGLE_TRESHOLD = Math.sin(10 * (Math.PI / 180));
 
@@ -11,32 +11,46 @@ export class MoveUpDownResponder {
     this.panHandlers = this.createResponder().panHandlers;
   }
 
-  subscribeUp({ onMove, onMoveStart, onMoveDone }) {
+  subscribeUp({ onMove, onMoveStart, onMoveDone, onMoveCancel }) {
     this.onMoveUp = onMove;
     this.onMoveUpStart = onMoveStart;
     this.onMoveUpDone = onMoveDone;
+    this.onMoveCancel = onMoveCancel;
+
+    return () => this.unsubscribeUp();
   }
 
-  subscribeDown({ onMove, onMoveStart, onMoveDone }) {
+  subscribeDown({ onMove, onMoveStart, onMoveDone, onMoveCancel }) {
     this.onMoveDown = onMove;
     this.onMoveDownStart = onMoveStart;
     this.onMoveDownDone = onMoveDone;
+    this.onMoveCancel = onMoveCancel;
+
+    return () => this.unsubscribeDown();
   }
 
-  dispose() {
+  unsubscribeUp() {
     this.onMoveUp = null;
     this.onMoveUpStart = null;
     this.onMoveUpDone = null;
+  }
+
+  unsubscribeDown() {
     this.onMoveDown = null;
     this.onMoveDownStart = null;
     this.onMoveDownDone = null;
+  }
+
+  dispose() {
+    this.unsubscribeUp();
+    this.unsubscribeDown();
   }
 
   createResponder() {
     let isUp = false;
 
     return PanResponder.create({
-      onMoveShouldSetPanResponderCapture: (e: Object, state: Object) => {
+      onMoveShouldSetPanResponder: (e: Object, state: Object) => {
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
         const sin = dx / Math.sqrt((dy * dy) + (dx * dx));
@@ -57,6 +71,9 @@ export class MoveUpDownResponder {
         if (isUp) caller(this.onMoveUpStart);
 
         if (!isUp) caller(this.onMoveDownStart);
+      },
+      onPanResponderTerminate: () => {
+        caller(this.onMoveCancel);
       },
       onPanResponderRelease: () => {
         if (isUp) caller(this.onMoveUpDone);

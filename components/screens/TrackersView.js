@@ -1,19 +1,17 @@
 import React, { PureComponent } from 'react';
-
-import PropTypes from 'prop-types';
-
 import { StyleSheet, Animated, InteractionManager } from 'react-native';
+import PropTypes from 'prop-types';
+import ViewPropTypes from 'ViewPropTypes';
 
 import { connect } from 'react-redux';
-
 import { submit } from 'redux-form';
 
 import moment from 'moment';
 
+import { List } from 'immutable';
+
 import TrackersModel from 'app/model/Trackers';
-
 import time from 'app/time/utils';
-
 import { caller } from 'app/utils/lang';
 
 import {
@@ -67,6 +65,25 @@ class TrackersView extends PureComponent {
     navBar: PropTypes.object.isRequired,
   };
 
+  static propTypes = {
+    trackers: PropTypes.instanceOf(List),
+    dispatch: PropTypes.func.isRequired,
+    onRemoveCompleted: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
+    onCalendarUpdate: PropTypes.func.isRequired,
+    onSaveCompleted: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onSlideChange: PropTypes.func,
+    onMoveUp: PropTypes.func,
+    onCancel: PropTypes.func,
+    dateMs: PropTypes.number,
+    style: ViewPropTypes.style,
+  };
+
+  static defaultProps = {
+    trackers: List.of(),
+  };
+
   constructor(props) {
     super(props);
 
@@ -91,6 +108,17 @@ class TrackersView extends PureComponent {
     this.saveEdit = ::this.saveEdit;
   }
 
+  componentWillReceiveProps({ trackers }) {
+    if (this.props.trackers !== trackers) {
+      const { current } = this.state;
+      if (!current) {
+        this.setState({
+          current: trackers.get(0),
+        });
+      }
+    }
+  }
+
   onSlideChange(index: number, previ: number, animated: boolean) {
     this.setState({
       current: this.props.trackers.get(index),
@@ -108,41 +136,6 @@ class TrackersView extends PureComponent {
   onRemoveCompleted(index: number) {
     this.active = false;
     caller(this.props.onRemoveCompleted, index);
-  }
-
-  saveEdit() {
-    if (Animation.on) return;
-
-    this.active = true;
-    const { current } = this.state;
-    const { dispatch } = this.props;
-    dispatch(submit('trackerForm'));
-  }
-
-  getCancelBtn(onPress) {
-    return <NavCancelButton onPress={onPress} />;
-  }
-
-  getAcceptBtn(onPress) {
-    return <NavAcceptButton onPress={onPress} />;
-  }
-
-  setEditTrackerBtns() {
-    const { navBar } = this.context;
-
-    navBar.setTitle('Edit Tracker');
-    navBar.setButtons(
-      this.getCancelBtn(this.cancelEdit),
-      this.getAcceptBtn(this.saveEdit),
-    );
-  }
-
-  setCalendarBtns() {
-    const { navBar } = this.context;
-    navBar.setButtons(
-      <NavLeftButton icon="back" onPress={this.onPrevMonth} />,
-      <NavRightButton icon="next_" onPress={this.onNextMonth} />,
-    );
   }
 
   onNextMonth() {
@@ -192,29 +185,12 @@ class TrackersView extends PureComponent {
     this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
   }
 
-  setNavBarMonth(monthDateMs) {
-    const date = moment(monthDateMs);
-    const monthName = `${MONTH_NAMES[date.month()]}, ${date.year()}`;
-    const { navBar } = this.context;
-    navBar.setTitle(monthName, styles.navTitle);
-  }
-
   onSaveCompleted(index) {
     this.active = false;
     caller(this.props.onSaveCompleted, index);
   }
 
-  // Edit tracker events.
-
-  cancelEdit() {
-    if (Animation.on) return;
-
-    this.trackers.cancelEdit();
-  }
-
   onEdit() {
-    if (Animation.on) return;
-
     this.setEditTrackerBtns();
   }
 
@@ -224,6 +200,55 @@ class TrackersView extends PureComponent {
       ...current,
       ...tracker,
     }));
+  }
+
+  getCancelBtn(onPress) {
+    return <NavCancelButton onPress={onPress} />;
+  }
+
+  getAcceptBtn(onPress) {
+    return <NavAcceptButton onPress={onPress} />;
+  }
+
+  setEditTrackerBtns() {
+    const { navBar } = this.context;
+
+    navBar.setTitle('Edit Tracker');
+    navBar.setButtons(
+      this.getCancelBtn(this.cancelEdit),
+      this.getAcceptBtn(this.saveEdit),
+    );
+  }
+
+  setCalendarBtns() {
+    const { navBar } = this.context;
+    navBar.setButtons(
+      <NavLeftButton icon="back" onPress={this.onPrevMonth} />,
+      <NavRightButton icon="next_" onPress={this.onNextMonth} />,
+    );
+  }
+
+  setNavBarMonth(monthDateMs) {
+    const date = moment(monthDateMs);
+    const monthName = `${MONTH_NAMES[date.month()]}, ${date.year()}`;
+    const { navBar } = this.context;
+    navBar.setTitle(monthName, styles.navTitle);
+  }
+
+  saveEdit() {
+    if (Animation.on) return;
+
+    this.active = true;
+    const { dispatch } = this.props;
+    dispatch(submit('trackerForm'));
+  }
+
+  // Edit tracker events.
+
+  cancelEdit() {
+    if (Animation.on) return;
+
+    this.trackers.cancelEdit();
   }
 
   render() {
@@ -260,9 +285,9 @@ class TrackersView extends PureComponent {
 }
 
 export default connect(
-  (state) => ({
-    ...state.trackers,
-    ticks: state.trackers.ticks || [],
+  ({ trackers }) => ({
+    ...trackers,
+    ticks: trackers.ticks || [],
   }),
   (dispatch, props) => ({
     onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>

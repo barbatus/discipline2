@@ -27,7 +27,7 @@ import { trackerStyles } from '../styles/trackerStyles';
 
 import { slideWidth } from '../styles/slideStyles';
 
-import TrackerSlide from './TrackerSlide';
+import ProgressTrackerSlide from './TrackerSlide';
 
 import TimeLabel from './TimeLabel';
 
@@ -149,13 +149,17 @@ const DistanceBodyFn = ({ tracker }) =>
     />
   </View>;
 
+DistanceBodyFn.propTypes = {
+  tracker: PropTypes.instanceOf(Tracker).isRequired,
+};
+
 const DistanceBody = pure(DistanceBodyFn);
 
 const DIST_INTRVL = 5.0;
 
 const TIME_INTRVL = 1000; // ms
 
-export default class DistanceTrackerSlide extends TrackerSlide {
+export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   static propTypes = {
     responsive: PropTypes.bool,
     tracker: PropTypes.instanceOf(Tracker).isRequired,
@@ -222,19 +226,19 @@ export default class DistanceTrackerSlide extends TrackerSlide {
 
     Vibration.vibrate();
 
-    caller(this.props.onStart, 0, { time: 0 });
+    this.onStart(0, { time: 0 });
   }
 
   onDistStop(track) {
     this.setState({ active: false });
 
     this.onDistUpdate(track);
-    caller(this.props.onStop);
+    this.onStop();
   }
 
   onDistUpdate({ dist, time, lat, lon }) {
     this.path.push({ latitude: lat, longitude: lon });
-    caller(this.props.onProgress, dist, { time, latlon: { lat, lon } });
+    this.onProgress(dist, { time, latlon: { lat, lon } });
   }
 
   showMap() {
