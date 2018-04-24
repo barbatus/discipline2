@@ -9,13 +9,11 @@ import EventEmitter from 'eventemitter3';
 
 import time from 'app/time/utils';
 
-import trackersDB from './trackers';
-
-import ticksDB from './ticks';
-
-import appInfo from './appInfo';
-
 import { TrackerType, DepotEvent } from '../consts';
+import { DBTracker, DBTick } from '../interfaces';
+import trackersDB from './trackers';
+import ticksDB from './ticks';
+import appInfo from './appInfo';
 
 const tickSchemas = {
   distance: 'DistData',
@@ -51,7 +49,7 @@ export default class Depot {
     });
   }
 
-  async addTracker(tracker: Tracker) {
+  async addTracker(tracker: DBTracker) {
     const newTracker = this.trackers.add(tracker);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
@@ -59,11 +57,11 @@ export default class Depot {
     return newTracker;
   }
 
-  async addTrackerAt(tracker: Tracker, index: number) {
+  async addTrackerAt(tracker: DBTracker, index: number) {
     return this.trackers.addAt(tracker, index);
   }
 
-  async updateTracker(tracker: Tracker) {
+  async updateTracker(tracker: DBTracker) {
     const updTracker = this.trackers.update(tracker);
     if (!updTracker) throw new Error('Tracker no found');
 
@@ -238,12 +236,12 @@ export default class Depot {
     return this.appInfo.getTestTrackers();
   }
 
-  getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
+  getTrackerTicks(tracker: DBTracker, minDateMs: number, maxDateMs?: number) {
     const ticks = this.getTicksFromTo(tracker.id, minDateMs, maxDateMs);
     return ticks.map((tick) => this.convertTick(tracker, tick));
   }
 
-  convertTick(tracker: Tracker, tick: Tick) {
+  convertTick(tracker: DBTracker, tick: DBTick) {
     if (tracker.typeId === TrackerType.DISTANCE.valueOf()) {
       const dist = this.stripRealm(tick.dist[0]);
       return { ...tick, ...dist };

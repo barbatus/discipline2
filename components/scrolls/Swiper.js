@@ -1,14 +1,6 @@
 import React, { PureComponent } from 'react';
-
+import { StyleSheet, View, Animated } from 'react-native';
 import PropTypes from 'prop-types';
-
-import ViewPropTypes from 'ViewPropTypes';
-
-import {
-  StyleSheet,
-  View,
-  Animated,
-} from 'react-native';
 
 import { caller } from 'app/utils/lang';
 
@@ -53,13 +45,24 @@ const styles = StyleSheet.create(stylesDef);
 export default class Swiper extends PureComponent {
   static propTypes = {
     slides: PropTypes.array.isRequired,
-    style: ViewPropTypes.style,
+    style: View.propTypes.style,
     scrollEnabled: PropTypes.bool,
+    onSlideChange: PropTypes.func,
+    onTouchMove: PropTypes.func,
+    onBeginDrag: PropTypes.func,
+    onEndDrag: PropTypes.func,
+    onSlideNoChange: PropTypes.func,
   };
 
   static defaultProps = {
     slides: [],
+    style: null,
     scrollEnabled: true,
+    onSlideChange: null,
+    onTouchMove: null,
+    onBeginDrag: null,
+    onEndDrag: null,
+    onSlideNoChange: null,
   };
 
   index = 0;
@@ -80,7 +83,7 @@ export default class Swiper extends PureComponent {
     const basicDot = [styles.basicDot, this.scaleDot(size)];
     for (let i = 0; i < size; i += 1) {
       const dotStyle = i === index ? [basicDot, styles.activeDot] : basicDot;
-      dots.push(<View ref={'page' + i} key={i} style={dotStyle} />);
+      dots.push(<View ref={`page${i}`} key={i} style={dotStyle} />);
     }
 
     return (
@@ -93,16 +96,16 @@ export default class Swiper extends PureComponent {
   }
 
   setActiveDot(curInd, prevInd) {
-    if (this.refs['page' + prevInd]) {
-      this.refs['page' + prevInd].setNativeProps({
+    if (this.refs[`page${prevInd}`]) {
+      this.refs[`page${prevInd}`].setNativeProps({
         style: {
           backgroundColor: stylesDef.basicDot.backgroundColor,
         },
       });
     }
 
-    if (this.refs['page' + curInd]) {
-      this.refs['page' + curInd].setNativeProps({
+    if (this.refs[`page${curInd}`]) {
+      this.refs[`page${curInd}`].setNativeProps({
         style: {
           backgroundColor: stylesDef.activeDot.backgroundColor,
         },

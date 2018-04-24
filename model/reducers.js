@@ -2,6 +2,8 @@ import { handleActions } from 'redux-actions';
 
 import { List } from 'immutable';
 
+import { DBTick } from 'app/depot/interfaces';
+
 import {
   LOAD_TEST_DATA,
   REMOVE_TRACKER,
@@ -26,7 +28,7 @@ const findIndex = (trackers, tracker) => {
   return trackers.findIndex((nTracker) => equal(nTracker));
 };
 
-const cloneTracker = (trackers, tracker, index?: number, ticks?: Tick[]) => {
+const cloneTracker = (trackers, tracker, index?: number, ticks?: DBTick[]) => {
   let trIndex = index;
   if (trIndex == null) {
     trIndex = findIndex(trackers, tracker);

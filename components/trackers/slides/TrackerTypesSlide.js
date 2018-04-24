@@ -13,16 +13,12 @@ import {
   ScrollView,
 } from 'react-native';
 
-import ViewPropTypes from 'ViewPropTypes';
-
 import styled from 'styled-components/native';
 
 import { first, last } from 'lodash';
 
 import { getIcon } from 'app/icons/icons';
-
 import { TrackerType } from 'app/depot/consts';
-
 import { caller } from 'app/utils/lang';
 
 import { slideStyles, slideDef } from '../styles/slideStyles';
@@ -118,7 +114,12 @@ export default class TrackerTypesSlide extends PureComponent {
   static propTypes = {
     typeId: PropTypes.string.isRequired,
     onTypeChosen: PropTypes.func,
-    style: ViewPropTypes.style,
+    style: View.propTypes.style,
+  };
+
+  static defaultProps = {
+    onTypeChosen: null,
+    style: null,
   };
 
   constructor(props) {

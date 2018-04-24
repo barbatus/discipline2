@@ -1,14 +1,16 @@
 /* @flow */
 
-declare type TrackersSchemaType = {
-  nextId: number,
-  trackers: List<Tracker>,
-};
+import { DBTracker } from '../interfaces';
 
-declare class List<T> extends Array<T> {
-  filtered(query: string, ...args: any[]): Array<T>,
+export interface TrackersSchemaType {
+  nextId: number;
+  trackers: List<DBTracker>;
 }
 
-declare type TickSchemaType = {
-  nextId: number,
-};
+export interface List<T> extends Array<T> {
+  filtered(query: string, ...args: any[]): Array<T>;
+}
+
+export interface TickSchemaType {
+  nextId: number;
+}

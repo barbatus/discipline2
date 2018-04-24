@@ -12,6 +12,10 @@ class Scroll extends PureComponent {
     slideWidth: PropTypes.number.isRequired,
   };
 
+  static defaultProps = {
+    centered: false,
+  };
+
   get index() {
     return this.scroll.index;
   }

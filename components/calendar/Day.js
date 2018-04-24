@@ -64,6 +64,13 @@ export default class Day extends PureComponent {
     onPress: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    hasTicks: false,
+    isSelected: false,
+    isToday: false,
+    isOutDay: false,
+  };
+
   constructor(props) {
     super(props);
     this.onPress = ::this.onPress;

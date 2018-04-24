@@ -4,24 +4,16 @@ import PropTypes from 'prop-types';
 
 import { Animated } from 'react-native';
 
-import ViewPropTypes from 'ViewPropTypes';
-
 import FlipAnimation from 'app/components/animation/FlipAnimation';
-
 import ScaleAnimation from 'app/components/animation/ScaleAnimation';
 
 import { caller } from 'app/utils/lang';
-
 import Keyboard from 'app/utils/keyboard';
-
 import Tracker from 'app/model/Tracker';
-
 import { commonStyles } from 'app/components/styles/common';
 
 import { trackerStyles } from '../styles/trackerStyles';
-
 import TrackerView from './common/TrackerView';
-
 import TrackerEditView from './common/TrackerEditView';
 
 const absFilled = commonStyles.absoluteFilled;
@@ -35,12 +27,16 @@ export default class TrackerSlide extends PureComponent {
   static propTypes = {
     editable: PropTypes.bool,
     scale: PropTypes.number,
-    style: ViewPropTypes.style,
-    tracker: PropTypes.instanceOf(Tracker),
+    style: Animated.View.propTypes.style,
+    tracker: PropTypes.instanceOf(Tracker).isRequired,
     onTap: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
     onTrackerEdit: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    style: null,
   };
 
   constructor(props) {
@@ -52,6 +48,22 @@ export default class TrackerSlide extends PureComponent {
     this.onTap = ::this.onTap;
     this.onEdit = ::this.onEdit;
     this.onRemove = ::this.onRemove;
+  }
+
+  get bodyControls() {
+    throw new Error('Controls is not implemented');
+  }
+
+  get footerControls() {
+    throw new Error('Footer controls is not implemented');
+  }
+
+  get bodyStyle() {
+    return null;
+  }
+
+  get footerStyle() {
+    return null;
   }
 
   onTap() {
@@ -87,22 +99,6 @@ export default class TrackerSlide extends PureComponent {
   }
 
   shake() {}
-
-  get bodyControls() {
-    throw new Error('Controls is not implemented');
-  }
-
-  get footerControls() {
-    throw new Error('Footer controls is not implemented');
-  }
-
-  get bodyStyle() {
-    return null;
-  }
-
-  get footerStyle() {
-    return null;
-  }
 
   renderBackView() {
     const { editable, onTrackerEdit } = this.props;

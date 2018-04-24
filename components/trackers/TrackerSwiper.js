@@ -24,19 +24,14 @@ import { commonStyles, screenWidth } from '../styles/common';
 import { slideHeight } from './styles/slideStyles';
 
 import TrackerRenderer from './TrackerRenderer';
-import { ObjectUnsubscribedError } from 'rxjs';
 
 export default class TrackerSwiper extends TrackerRenderer {
   upDown = new ScreenSlideUpDownAnim(minScale);
-
   moveScale = new MoveUpScaleResponderAnim(slideHeight);
-
   responder = new MoveUpDownResponder();
 
   updateIndex = null;
-
   addIndex = null;
-
   removeIndex = null;
 
   get current() {
@@ -51,10 +46,6 @@ export default class TrackerSwiper extends TrackerRenderer {
     return this.upDown.value === 0;
   }
 
-  componentWillMount() {
-    RNShakeEvent.addEventListener('shake', ::this.shakeCurrent);
-  }
-
   componentWillUnmount() {
     RNShakeEvent.removeEventListener('shake');
     this.moveScale.dispose();
@@ -62,6 +53,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   componentDidMount() {
+    RNShakeEvent.addEventListener('shake', ::this.shakeCurrent);
     const { onScaleMove, onScaleDone, onScaleStart } = this.props;
     this.moveScale.subscribe(
       this.responder,
@@ -72,18 +64,16 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   componentDidUpdate() {
-    const updateIndex = this.updateIndex;
-    if (updateIndex !== null) {
+    if (this.updateIndex !== null) {
       this.updateIndex = null;
       this.cancelEdit();
-      caller(this.props.onSaveCompleted, updateIndex);
+      caller(this.props.onSaveCompleted, this.updateIndex);
     }
 
-    const addIndex = this.addIndex;
-    if (addIndex !== null) {
+    if (this.addIndex !== null) {
       this.addIndex = null;
-      this.scrollTo(addIndex);
-      caller(this.props.onAddCompleted, addIndex);
+      this.scrollTo(this.addIndex);
+      caller(this.props.onAddCompleted, this.addIndex);
     }
   }
 
@@ -165,7 +155,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   render() {
     const { trackers, scrollEnabled } = this.state;
-    const { style, onScroll, enabled } = this.props;
+    const { style, onScroll, enabled, onSwiperMoveUpDone } = this.props;
 
     const slideStyle = {
       width: screenWidth,
@@ -191,6 +181,7 @@ export default class TrackerSwiper extends TrackerRenderer {
           slides={slides}
           scrollEnabled={enabled && scrollEnabled}
           onTouchMove={onScroll}
+          onSwiperMoveUpDone={onSwiperMoveUpDone}
         />
       </Animated.View>
     );

@@ -120,9 +120,23 @@ export default class TrackerRenderer extends PureComponent {
     onProgress: PropTypes.func,
     onUndo: PropTypes.func,
     onTrackerEdit: PropTypes.func,
-    trackers: PropTypes.arrayOf(PropTypes.instanceOf(Tracker)),
-    enabled: PropTypes.bool,
+    trackers: PropTypes.arrayOf(PropTypes.instanceOf(Tracker)).isRequired,
+    enabled: PropTypes.bool.isRequired,
   };
+
+  static defaultProps = {
+    onEdit: null,
+    onRemove: null,
+    onTap: null,
+    onTick: null,
+    onStart: null,
+    onStop: null,
+    onProgress: null,
+    onUndo: null,
+    onTrackerEdit: null,
+  };
+
+  inOpacity = new Animated.Value(0);
 
   constructor(props) {
     super(props);
@@ -138,6 +152,18 @@ export default class TrackerRenderer extends PureComponent {
     this.onStop = ::this.onStop;
     this.onProgress = ::this.onProgress;
     this.onTrackerEdit = ::this.onTrackerEdit;
+  }
+
+  get opacity() {
+    return this.inOpacity;
+  }
+
+  set opacity(value) {
+    this.inOpacity.setValue(value);
+  }
+
+  get shown() {
+    return this.inOpacity._value === 1;
   }
 
   componentWillReceiveProps(props) {
@@ -194,20 +220,6 @@ export default class TrackerRenderer extends PureComponent {
   show() {
     this.opacity = 1;
   }
-
-  get opacity() {
-    return this.inOpacity;
-  }
-
-  set opacity(value) {
-    this.inOpacity.setValue(value);
-  }
-
-  get shown() {
-    return this.inOpacity._value === 1;
-  }
-
-  inOpacity = new Animated.Value(0);
 
   renderTracker(tracker: Tracker) {
     // Render swiper's tracker slides as progressive

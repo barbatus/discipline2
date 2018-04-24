@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   View,
   TouchableOpacity,
@@ -7,23 +6,17 @@ import {
   StyleSheet,
   Vibration,
 } from 'react-native';
-
 import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
 
-import { caller } from 'app/utils/lang';
-
 import Timers, { Timer } from 'app/time/Timers';
 
 import { trackerStyles } from '../styles/trackerStyles';
-
 import { slideWidth } from '../styles/slideStyles';
 
 import StartStopBtn from './common/StartStopBtn';
-
 import ProgressTrackerSlide from './ProgressTrackerSlide';
-
 import TimeLabel from './TimeLabel';
 
 const styles = StyleSheet.create({
@@ -69,7 +62,7 @@ const FooterBtnFn = ({ label, responsive, onPress }) => (
 
 FooterBtnFn.propTypes = {
   label: PropTypes.string.isRequired,
-  responsive: PropTypes.bool,
+  responsive: PropTypes.bool.isRequired,
   onPress: PropTypes.func.isRequired,
 };
 
@@ -110,13 +103,12 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
   get footerControls() {
     const { tracker, responsive } = this.props;
-    const { active } = tracker;
     return (
       <View style={styles.footerContainer}>
         <StartStopBtn
-          active={active}
+          active={tracker.active}
           responsive={responsive}
-          onPress={active ? this.onStop : this.onTick}
+          onPress={tracker.active ? this.onStop : this.onTick}
         />
         <FooterBtn
           label="LAP"

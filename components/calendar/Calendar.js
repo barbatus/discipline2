@@ -1,31 +1,23 @@
 import React, { PureComponent } from 'react';
-
+import { ScrollView, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-
-import {
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
 
 import moment from 'moment';
 
 import { caller, int } from 'app/utils/lang';
-
 import time from 'app/time/utils';
 
-import Month from './Month';
-
-import styles from './styles';
-
 import { screenWidth } from '../styles/common';
+import Month from './Month';
+import styles from './styles';
 
 export default class Calendar extends PureComponent {
   static propTypes = {
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
-    onDateSelect: PropTypes.func,
-    onMonthChanged: PropTypes.func,
+    onDateSelect: PropTypes.func.isRequired,
+    onMonthChanged: PropTypes.func.isRequired,
+    onTooltipClick: PropTypes.func.isRequired,
     titleFormat: PropTypes.string,
     todayMs: PropTypes.number,
     weekStart: PropTypes.number,
@@ -37,12 +29,12 @@ export default class Calendar extends PureComponent {
   static defaultProps = {
     customStyle: {},
     dayHeadings: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
-    tickDates: [],
     titleFormat: 'MMMM YYYY',
     todayMs: moment().valueOf(),
     dateMs: time.getCurMonthDateMs(),
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
+    selDateMs: null,
   };
 
   constructor(props) {
@@ -124,21 +116,24 @@ export default class Calendar extends PureComponent {
       dateMs,
       selDateMs,
       titleFormat,
+      onTooltipClick,
     } = this.props;
 
     const monthsToRender = this.getMonthsToRender(dateMs);
     const monthViews = monthsToRender.map((monthDate) => {
-      const monthTicks = ticks[monthDate.month()] || {};
+      const monthTicks = ticks.get(monthDate.month());
+      const shown = dateMs === monthDate.valueOf();
+      const currSelDateMs = shown ? selDateMs : null;
       return (
         <Month
-          key={monthDate.valueOf()}
+          key={monthDate.month()}
           customStyle={customStyle}
           monthMs={monthDate.valueOf()}
-          shown={dateMs === monthDate.valueOf()}
           todayMs={todayMs}
-          selDateMs={selDateMs}
+          selDateMs={currSelDateMs}
           ticks={monthTicks}
           onDateSelect={this.selectDate}
+          onTooltipClick={onTooltipClick}
         />
       );
     });

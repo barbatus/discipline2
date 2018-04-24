@@ -18,13 +18,13 @@ export function int(number) {
 }
 
 export function isShallowEqual(v, o) {
-  for (let key in v) {
+  for (const key of Object.keys(v)) {
     if (v[key] !== o[key]) {
       return false;
     }
   }
 
-  for (let key in o) {
+  for (const key of Object.keys(o)) {
     if (v[key] !== o[key]) {
       return false;
     }

@@ -1,15 +1,10 @@
 import React from 'react';
-
 import { View, StyleSheet } from 'react-native';
-
-import ViewPropTypes from 'ViewPropTypes';
+import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
 
-import PropTypes from 'prop-types';
-
 import { trackerStyles } from '../styles/trackerStyles';
-
 import TrackerEditView from './common/TrackerEditView';
 
 const styles = StyleSheet.create({
@@ -19,7 +14,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) =>
+const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
   <View style={[trackerStyles.slide, style]}>
     <TrackerEditView
       form="newTrackerForm"
@@ -28,13 +23,19 @@ const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) =>
       initialValues={tracker}
       onSubmitSuccess={onNewTracker}
     />
-  </View>;
+  </View>
+);
 
 NewTrackerSlideFn.propTypes = {
-  style: ViewPropTypes.style,
+  style: View.propTypes.style,
   tracker: PropTypes.instanceOf(Object),
   onTypeSelect: PropTypes.func.isRequired,
   onNewTracker: PropTypes.func.isRequired,
+};
+
+NewTrackerSlideFn.defaultProps = {
+  style: null,
+  tracker: null,
 };
 
 export default pure(NewTrackerSlideFn);

@@ -22,13 +22,17 @@ db.setSchema([
     singular: 'tracker',
     plural: 'trackers',
     relations: {
-      ticks: { hasMany: {
-        type: 'tick',
-        options: { async: true } },
+      ticks: {
+        hasMany: {
+          type: 'tick',
+          options: { async: true },
+        },
       },
-      list: { belongsTo: {
-        type: 'trackerList',
-        options: { async: true } },
+      list: {
+        belongsTo: {
+          type: 'trackerList',
+          options: { async: true },
+        },
       },
     },
   },

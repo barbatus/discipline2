@@ -6,11 +6,8 @@ import { caller } from 'app/utils/lang';
 
 export class AnimationManager {
   on = false;
-
   animations = [];
-
-  callback = [];
-
+  callbacks = [];
   timeout = null;
 
   timing(field, duration, toValue, easing) {
@@ -34,11 +31,11 @@ export class AnimationManager {
     animations.forEach((anim) => {
       this.animations.push(anim);
     });
-    this.callback.push(callback);
+    this.callbacks.push(callback);
     this.timeout = setTimeout(() => {
-      const allCb = this.callback.slice();
+      const allCb = this.callbacks.slice();
       const allAnim = this.animations.slice();
-      this.callback.length = 0;
+      this.callbacks.length = 0;
       this.animations.length = 0;
       this.runParallel(allAnim, () => allCb.forEach((cb) => caller(cb)));
     });

@@ -13,7 +13,6 @@ import {
 import PropTypes from 'prop-types';
 
 import Tracker from 'app/model/Tracker';
-
 import { getIcon, UserIconsStore } from 'app/icons/icons';
 
 import { trackerDef, trackerStyles } from '../../styles/trackerStyles';
@@ -37,15 +36,23 @@ const styles = StyleSheet.create({
 
 export default class TrackerView extends PureComponent {
   static propTypes = {
-    style: PropTypes.object,
-    bodyStyle: PropTypes.object,
-    footerStyle: PropTypes.object,
+    style: Animated.View.propTypes.style,
+    bodyStyle: View.propTypes.style,
+    footerStyle: View.propTypes.style,
     tracker: PropTypes.instanceOf(Tracker),
     onTap: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     backImg: PropTypes.string,
     bodyControls: PropTypes.element.isRequired,
     footerControls: PropTypes.element.isRequired,
+  };
+
+  static defaultProps = {
+    style: null,
+    bodyStyle: null,
+    footerStyle: null,
+    tracker: null,
+    backImg: null,
   };
 
   getMainIcon(iconId) {

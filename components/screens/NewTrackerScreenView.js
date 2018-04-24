@@ -21,7 +21,7 @@ export class NewTrackerScreenView extends ScrollScreenView {
     navBar: PropTypes.object.isRequired,
   };
 
-  tracker = {};
+  tracker = null;
 
   constructor(props) {
     super(props);
@@ -39,7 +39,7 @@ export class NewTrackerScreenView extends ScrollScreenView {
     this.onAccept = ::this.onAccept;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { parent } = this.props;
     parent.on('onMoveRight', this.onRightMove, this);
   }

@@ -3,6 +3,8 @@ import check from 'check-types';
 
 import omit from 'lodash/omit';
 
+import { DBTracker } from '../interfaces';
+import { TrackersSchemaType } from './interfaces';
 import db from './db';
 
 class Trackers {
@@ -20,11 +22,11 @@ class Trackers {
     return this.table.trackers;
   }
 
-  getAll(): Array<Tracker> {
+  getAll(): Array<DBTracker> {
     return this.trackers.slice();
   }
 
-  getOne(trackId: string): Tracker {
+  getOne(trackId: string): DBTracker {
     check.assert.string(trackId);
 
     return db.objectForPrimaryKey('Tracker', trackId);
@@ -34,11 +36,11 @@ class Trackers {
     return this.trackers.length;
   }
 
-  buildNewTracker(id: string, data: Tracker) {
+  buildNewTracker(id: string, data: DBTracker) {
     return { props: { alerts: false }, ...data, id };
   }
 
-  addAt(data: Tracker, index: number): Tracker {
+  addAt(data: DBTracker, index: number): DBTracker {
     const trackId = this.table.nextId.toString();
     const tracker = this.buildNewTracker(trackId, data);
     db.write(() => {
@@ -49,7 +51,7 @@ class Trackers {
     return tracker;
   }
 
-  add(data: Tracker): Tracker {
+  add(data: DBTracker): DBTracker {
     const trackId = this.table.nextId.toString();
     const tracker = this.buildNewTracker(trackId, data);
     db.write(() => {
@@ -69,7 +71,7 @@ class Trackers {
     return true;
   }
 
-  update(data: Tracker): Tracker {
+  update(data: DBTracker): DBTracker {
     const tracker = this.getOne(data.id);
     if (!tracker) { return null; }
 

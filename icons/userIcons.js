@@ -4,8 +4,6 @@ import { IconSize } from './consts';
 
 import Enum from '../depot/Enum';
 
-const sashaIcons = './files/user/sasha';
-
 const icon8Icons = './files/user/icon8';
 
 const UserIcons = new Enum({

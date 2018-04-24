@@ -9,7 +9,6 @@ import Animation from './Animation';
 import { MoveUpDownResponder } from './responders';
 
 export const minScale = 0.1;
-
 export const minMoveScale = 0.5;
 
 export class MoveUpScaleResponderAnim {

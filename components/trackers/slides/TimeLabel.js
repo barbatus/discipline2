@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
-import ViewPropTypes from 'ViewPropTypes';
-
 import { pure } from 'recompose';
 
 import PropTypes from 'prop-types';
@@ -63,15 +61,27 @@ const TimeDigitFn = ({ style, value, width }) => {
 };
 
 TimeDigitFn.propTypes = {
-  // style: ViewPropTypes.style,
+  style: Text.propTypes.style,
   width: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
+};
+
+TimeDigitFn.defaultProps = {
+  style: null,
 };
 
 const TimeDigit = pure(TimeDigitFn);
 
 export default class TimeLabel extends PureComponent {
+  static propTypes = {
+    style: TimeDigitFn.propTypes.style,
+    width: PropTypes.number.isRequired,
+    timeMs: PropTypes.number.isRequired,
+    lapTimeMs: PropTypes.number,
+  };
+
   static defaultProps = {
+    style: null,
     lapTimeMs: 0,
   };
 

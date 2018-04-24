@@ -78,9 +78,7 @@ const Arrow = pure(ArrowFn);
 
 export default class Tooltip extends PureComponent {
   opacity = new Animated.Value(0);
-
   moveY = new Animated.Value(0);
-
   moveX = new Animated.Value(0);
 
   constructor(props) {
@@ -97,8 +95,8 @@ export default class Tooltip extends PureComponent {
       this.setTimeout(() => NativeMethodsMixin.measure.call(node,
         (x, y, width, height, pageX, pageY) => {
           const haflW = width / 2;
-          const rightX = x + width / 2 - screenWidth + PADDING;
-          const leftX = x - width / 2 - PADDING;
+          const rightX = x + haflW - screenWidth + PADDING;
+          const leftX = x - haflW - PADDING;
           let xPos = -haflW;
           let arrLeft = (width - ARROW_WIDTH) / 2;
           // If tooltip is out of the screen on the right.
@@ -139,6 +137,7 @@ export default class Tooltip extends PureComponent {
     if (this.props.x !== x || this.props.y !== y) {
       this.moveY.setValue(0);
       this.moveX.setValue(0);
+      this.opacity.setValue(0);
       this.updatePos();
     }
   }
@@ -157,7 +156,7 @@ export default class Tooltip extends PureComponent {
     };
     return (
       <Animated.View
-        ref={(el) => this.view = el}
+        ref={(el) => (this.view = el)}
         style={[styles.view, animStyle]}
       >
         <View>{this.props.children}</View>

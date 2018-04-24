@@ -24,15 +24,11 @@ export default function CreateApp(store) {
 class Home extends PureComponent {
   constructor(props: any) {
     super(props);
-    this.state = {
-      touchToClose: false,
-      isOpen: false,
-    };
     this.dayUpdate = new DayUpdateEvent();
   }
 
-  componentWillMount() {
-    const store = this.props.store;
+  componentDidMount() {
+    const { store } = this.props;
     this.dayUpdate.on(() => {
       store.dispatch(changeDay());
     });

@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-
 import {
   View,
   TouchableOpacity,
@@ -9,21 +8,16 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-
+import { reduxForm, Field, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 
-import { reduxForm, Field, SubmissionError } from 'redux-form';
-
 import { getIcon } from 'app/icons/icons';
-
 import { TrackerType } from 'app/depot/consts';
 
 import ShakeAnimation from 'app/components/animation/ShakeAnimation';
 
 import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
-
 import TrackerIcon from './TrackerIcon';
-
 import TrackerTitle from './TrackerTitle';
 
 const styles = StyleSheet.create({
@@ -40,6 +34,9 @@ class TrackerTypeSelect extends PureComponent {
     onTypeSelect: PropTypes.func.isRequired,
   };
 
+  shakeAnim = new ShakeAnimation();
+  error = null;
+
   componentDidUpdate() {
     if (this.props.meta.error &&
         this.props.meta.error !== this.error) {
@@ -47,10 +44,6 @@ class TrackerTypeSelect extends PureComponent {
     }
     this.error = this.props.meta.error;
   }
-
-  shakeAnim = new ShakeAnimation();
-
-  error = null;
 
   render() {
     const { meta: { initial, error }, onTypeSelect } = this.props;
@@ -81,12 +74,14 @@ export class TrackerEditView extends PureComponent {
     showType: PropTypes.bool,
     onRemove: PropTypes.func,
     onTypeSelect: PropTypes.func,
-    // TODO: check animated styles
-    style: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+    style: Animated.View.propTypes.style,
   };
 
   static defaultProps = {
+    allowDelete: true,
     showType: true,
+    onTypeSelect: null,
+    style: null,
   };
 
   constructor(props) {

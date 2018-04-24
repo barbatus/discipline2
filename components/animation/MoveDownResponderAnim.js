@@ -5,7 +5,6 @@ import { Animated } from 'react-native';
 import { caller } from 'app/utils/lang';
 
 import Animation from './Animation';
-
 import { MoveUpDownResponder } from './responders';
 
 export default class MoveDownResponderAnim {
@@ -38,8 +37,8 @@ export default class MoveDownResponderAnim {
     });
     this.unsubCb = responder.subscribeDown({
       onMove: (dy) => {
-        dy = Math.min(Math.abs(dy), this.maxDy);
-        this.moveY.setValue(dy);
+        const offset = Math.min(Math.abs(dy), this.maxDy);
+        this.moveY.setValue(offset);
       },
       onMoveStart: onStart,
       onMoveDone: () => this.animateIn(onDone),

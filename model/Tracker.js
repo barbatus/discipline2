@@ -1,24 +1,24 @@
 import { TrackerType } from 'app/depot/consts';
 
-import { Tracker as ITracker } from 'app/depot/interfaces';
+import { DBTracker } from 'app/depot/interfaces';
 
 import UserIconsStore from 'app/icons/UserIconsStore';
 
-export default class Tracker {
+export default class Tracker implements DBTracker {
   id: number;
   title: string;
   iconId: string;
   typeId: string;
   active: boolean;
 
-  constructor(tracker: ITracker) {
+  constructor(tracker: DBTracker) {
     this.id = tracker.id;
     this.title = tracker.title;
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
     this.ticks = tracker.ticks || [];
     this.props = tracker.props;
-    this.active = tracker.active;
+    this.active = !!tracker.active;
   }
 
   clone(data?: Object) {
@@ -51,8 +51,7 @@ export default class Tracker {
   }
 
   get checked() {
-    const count = this.count;
-    return count !== 0;
+    return this.count !== 0;
   }
 
   get value() {

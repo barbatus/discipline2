@@ -1,24 +1,17 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
-
 import { connect } from 'react-redux';
 
 import { addTracker } from 'app/model/actions';
-
 import { caller } from 'app/utils/lang';
 
 import { NavAddButton, NavMenuButton } from '../nav/buttons';
-
+import { commonStyles } from '../styles/common';
 import Animation from '../animation/Animation';
 
 import ScrollScreenView from './ScrollScreenView';
-
 import TrackersView from './TrackersView';
-
 import NewTrackerScreenView from './NewTrackerScreenView';
-
-import { commonStyles } from '../styles/common';
 
 export class MainScreenView extends ScrollScreenView {
   static contextTypes = {
@@ -26,8 +19,7 @@ export class MainScreenView extends ScrollScreenView {
   };
 
   slideIndex = 0;
-
-  active = false;
+  isActive = false;
 
   constructor(props) {
     super(props);
@@ -94,16 +86,16 @@ export class MainScreenView extends ScrollScreenView {
   // New tracker events.
 
   onAcceptNewTracker(tracker) {
-    if (this.active) return;
+    if (this.isActive) return;
 
-    this.active = true;
+    this.isActive = true;
     this.props.onAdd(tracker, this.slideIndex + 1);
   }
 
   onAddCompleted() {
     this.setMainViewBtns();
 
-    this.active = false;
+    this.isActive = false;
     this.moveLeft();
   }
 

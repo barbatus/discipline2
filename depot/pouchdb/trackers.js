@@ -3,22 +3,22 @@
 import assert from 'assert';
 
 import has from 'lodash/has';
-
 import isObject from 'lodash/isObject';
 
+import { DBTracker } from '../interfaces';
 import db from './db';
 
 class Trackers {
-  async getOne(trackId: string): Promise<Tracker> {
+  async getOne(trackId: string): Promise<DBTracker> {
     return db.find('tracker', trackId);
   }
 
-  async getAll(): Promise<Tracker[]> {
+  async getAll(): Promise<DBTracker[]> {
     const list = await db.findOne('trackerList');
     return list ? list.trackers : [];
   }
 
-  async add(data: Tracker, index?: number): Tracker {
+  async add(data: DBTracker, index?: number): DBTracker {
     const tracker = this.buildNewTracker(data);
     const newTracker = await db.save('tracker', tracker);
     const list = await db.findOneRaw('trackerList');
@@ -30,15 +30,15 @@ class Trackers {
     return newTracker;
   }
 
-  async update(data: Tracker): Tracker {
+  async update(data: DBTracker): DBTracker {
     let tracker = await this.getOne(data.id);
     if (!tracker) { return null; }
 
     tracker = { ...tracker, ...data };
-    return await db.save('tracker', tracker);
+    return db.save('tracker', tracker);
   }
 
-  async remove(trackerOrId: string | Tracker): boolean {
+  async remove(trackerOrId: string | DBTracker): boolean {
     if (isObject(trackerOrId)) {
       assert(has(trackerOrId, 'rev'));
     }
@@ -48,15 +48,14 @@ class Trackers {
     if (!tracker) { return false; }
 
     const list = await db.findOneRaw('trackerList');
-    const trackers = list.trackers;
-    const trackInd = trackers.findIndex((id) => id === tracker.id);
-    trackers.splice(trackInd, 1);
-    await db.save('trackerList', { ...list, trackers });
+    const trackInd = list.trackers.findIndex((id) => id === tracker.id);
+    list.trackers.splice(trackInd, 1);
+    await db.save('trackerList', list);
     await db.del('tracker', tracker);
     return true;
   }
 
-  buildNewTracker(data: Tracker) {
+  buildNewTracker(data: DBTracker) {
     return { props: { alerts: false }, ...data };
   }
 }

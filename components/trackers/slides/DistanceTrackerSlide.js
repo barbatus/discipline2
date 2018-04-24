@@ -14,23 +14,15 @@ import { pure } from 'recompose';
 import slowlog from 'react-native-slowlog';
 
 import registry, { DlgType } from 'app/components/dlg/registry';
-
 import { formatDistance } from 'app/utils/format';
-
-import { caller } from 'app/utils/lang';
-
 import { DistanceTracker as Tracker } from 'app/model/Tracker';
-
 import DistanceTrackers, { DistanceTracker } from 'app/geo/DistanceTrackers';
 
 import { trackerStyles } from '../styles/trackerStyles';
-
 import { slideWidth } from '../styles/slideStyles';
 
 import ProgressTrackerSlide from './TrackerSlide';
-
 import TimeLabel from './TimeLabel';
-
 import StartStopBtn from './common/StartStopBtn';
 
 const styles = StyleSheet.create({
@@ -112,7 +104,7 @@ DistanceDataFn.propTypes = {
 
 const DistanceData = pure(DistanceDataFn);
 
-const DistanceFooterFn = ({ active, responsive, onStopBtn, onStartBtn, onShowMap }) =>
+const DistanceFooterFn = ({ active, responsive, onStopBtn, onStartBtn, onShowMap }) => (
   <View style={styles.footerControlsContainer}>
     <View style={styles.startStopBtn}>
       <StartStopBtn
@@ -129,25 +121,27 @@ const DistanceFooterFn = ({ active, responsive, onStopBtn, onStartBtn, onShowMap
         </Text>
       </Text>
     </View>
-  </View>;
+  </View>
+);
 
 const DistanceFooter = pure(DistanceFooterFn);
 
 DistanceFooterFn.propTypes = {
-  active: PropTypes.bool,
+  active: PropTypes.bool.isRequired,
   responsive: PropTypes.bool.isRequired,
   onStopBtn: PropTypes.func.isRequired,
   onStartBtn: PropTypes.func.isRequired,
   onShowMap: PropTypes.func.isRequired,
 };
 
-const DistanceBodyFn = ({ tracker }) =>
+const DistanceBodyFn = ({ tracker }) => (
   <View style={trackerStyles.controls}>
     <DistanceData
       dist={tracker.value}
       time={tracker.time}
     />
-  </View>;
+  </View>
+);
 
 DistanceBodyFn.propTypes = {
   tracker: PropTypes.instanceOf(Tracker).isRequired,
@@ -166,13 +160,13 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   };
 
   distTracker: DistanceTracker = null;
-
   path = [];
 
   constructor(props) {
     super(props);
     slowlog(this, /.*/);
     const { tracker } = props;
+    this.state = { active: false };
     this.distTracker = DistanceTrackers.get(
       tracker.id,
       DIST_INTRVL,

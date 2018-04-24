@@ -1,29 +1,27 @@
 /* @flow */
 
 import check from 'check-types';
-
 import assert from 'assert';
 
 import isObject from 'lodash/isObject';
-
 import has from 'lodash/has';
-
 import omit from 'lodash/omit';
 
 import time from 'app/time/utils';
 
+import { DBTick } from '../interfaces';
 import db, { TRACKER_TICK_DATA_TYPE } from './db';
 
 class Ticks {
-  async getOne(tickId: string): Promise<Tick> {
+  async getOne(tickId: string): Promise<DBTick> {
     return db.find('tick', tickId);
   }
 
-  async getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number):Promise<Array<Tick>> {
+  async getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number): Promise<Array<DBTick>> {
     return db.selectBy('tick', 'tracker', trackId, 'dateTimeMs', minDateMs, maxDateMs);
   }
 
-  async add(tick: Tick, data?: Object): Promise<Tick> {
+  async add(tick: DBTick, data?: Object): Promise<DBTick> {
     const newTick = { ...tick };
     const { tracker } = tick;
     const tickType = TRACKER_TICK_DATA_TYPE[tracker.typeId];
@@ -31,17 +29,17 @@ class Ticks {
       const tickData = await db.save(tickType, data);
       newTick[tickType] = tickData;
     }
-    return await db.save('tick', newTick);
+    return db.save('tick', newTick);
   }
 
-  async getLast(trackId: string): Promise<Tick> {
+  async getLast(trackId: string): Promise<DBTick> {
     check.assert.string(trackId);
 
     const ticks = await this.getForPeriod(trackId, time.getDateMs());
     return ticks[ticks.length - 1];
   }
 
-  async update(tick: Tick, value: number, data?: Object) {
+  async update(tick: DBTick, value: number, data?: Object) {
     const { tracker } = tick;
     const tickType = TRACKER_TICK_DATA_TYPE[tracker.typeId];
     const tickData = tick[tickType];
@@ -60,7 +58,7 @@ class Ticks {
     return db.save('tick', { ...tick, value });
   }
 
-  async remove(tickOrId: string | Tick) {
+  async remove(tickOrId: string | DBTick) {
     if (isObject(tickOrId)) {
       assert(has(tickOrId, 'rev'));
     }
@@ -79,7 +77,7 @@ class Ticks {
     return ids;
   }
 
-  plainTick(tick: Tick) {
+  plainTick(tick: DBTick) {
     const types = Object.values(TRACKER_TICK_DATA_TYPE);
     return types.reduce((accum, type) => {
       if (tick[type]) {

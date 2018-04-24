@@ -24,12 +24,20 @@ export default class ScrollScreenView extends PureComponent {
     navBar: PropTypes.object.isRequired,
   };
 
+  static propTypes = {
+    style: View.propTypes.style,
+  };
+
+  static defaultProps = {
+    style: null,
+  };
+
+  emitter = new EventEmitter();
+
   constructor(props) {
     super(props);
     this.refHandler = ::this.refHandler;
   }
-
-  emitter = new EventEmitter();
 
   get rightView() {
     throw new Error('rightView is not implemented');

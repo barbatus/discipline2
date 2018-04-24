@@ -1,20 +1,19 @@
 import React from 'react';
-
 import { View, Animated } from 'react-native';
 
 import { caller } from 'app/utils/lang';
+import Tracker from 'app/model/Tracker';
 
 import Scroll from '../scrolls/Scroll';
-
 import { commonStyles, screenWidth } from '../styles/common';
 
 import { slideHeight } from './styles/slideStyles';
-
 import TrackerRenderer from './TrackerRenderer';
 
 export default class TrackerScroll extends TrackerRenderer {
   static defaultProps = {
     responsive: true,
+    enabled: true,
     index: 0,
   };
 
@@ -37,7 +36,6 @@ export default class TrackerScroll extends TrackerRenderer {
     if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
     }
-
     this.scrollTo(index, () =>
       caller(this.props.onSlideTap, index));
   }

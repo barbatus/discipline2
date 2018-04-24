@@ -1,11 +1,6 @@
 import React, { PureComponent } from 'react';
-
-import {
-  Animated,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { Animated, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
   button: {
@@ -25,15 +20,18 @@ const styles = StyleSheet.create({
 });
 
 export default class StartStopBtn extends PureComponent {
-  opacity = new Animated.Value(1);
+  static propTypes = {
+    onPress: PropTypes.func.isRequired,
+    active: PropTypes.bool.isRequired,
+    responsive: PropTypes.bool.isRequired,
+  };
 
+  opacity = new Animated.Value(1);
+  // TODO: use flickerAnim to check if responsive
   responsive = true;
 
   constructor(props) {
     super(props);
-    this.state = {
-      responsive: props.responsive,
-    };
     this.onPress = ::this.onPress;
     const flicker = new Animated.timing(this.opacity,
       { duration: 800, toValue: 0.4, useNativeDriver: true });

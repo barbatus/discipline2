@@ -1,27 +1,20 @@
 import React, { PureComponent } from 'react';
-
 import { View, StyleSheet } from 'react-native';
-
 import PropTypes from 'prop-types';
-
 import { connect } from 'react-redux';
-
 import SideMenu from 'react-native-side-menu';
 
 import registry, { DlgType } from 'app/components/dlg/registry';
-
 import IconsDlg from 'app/components/dlg/IconsDlg';
-
 import MapsDlg from 'app/components/dlg/MapsDlg';
+import TicksDlg from 'app/components/dlg/TicksDlg';
 
 import { commonStyles as cs, screenWidth, screenHeight } from 'app/components/styles/common';
 
 import Menu from '../nav/Menu';
-
-import Screen from './Screen';
-
 import GradientSlider from '../common/GradientSlider2';
 
+import Screen from './Screen';
 import MainScreenView from './MainScreenView';
 
 const styles = StyleSheet.create({
@@ -43,8 +36,6 @@ export class MainScreen extends PureComponent {
     console.log('----MainScreenView----');
 
     this.state = {
-      index: 0,
-      active: false,
       isOpen: false,
     };
     this.onMenu = ::this.onMenu;
@@ -57,6 +48,7 @@ export class MainScreen extends PureComponent {
   componentDidMount() {
     registry.register(DlgType.ICONS, this.iconsDlg);
     registry.register(DlgType.MAPS, this.mapsDlg);
+    registry.register(DlgType.TICKS, this.ticksDlg);
   }
 
   onSlideChange(index, previ, animated) {
@@ -125,6 +117,7 @@ export class MainScreen extends PureComponent {
         </SideMenu>
         <IconsDlg ref={(el) => (this.iconsDlg = el)} />
         <MapsDlg ref={(el) => (this.mapsDlg = el)} />
+        <TicksDlg ref={(el) => (this.ticksDlg = el)} />
       </View>
     );
   }

@@ -1,29 +1,20 @@
 import React, { PureComponent } from 'react';
-
+import { View, StyleSheet, Animated, InteractionManager } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { StyleSheet, Animated, InteractionManager } from 'react-native';
-
-import ViewPropTypes from 'ViewPropTypes';
-
 import reactMixin from 'react-mixin';
-
 import TimerMixin from 'react-timer-mixin';
 
 import { List } from 'immutable';
 
 import { caller } from 'app/utils/lang';
+import Tracker from 'app/model/Tracker';
 
 import TrackerSwiper from './TrackerSwiper';
-
 import TrackerScroll from './TrackerScroll';
-
 import MoveDownResponderAnim from '../animation/MoveDownResponderAnim';
-
 import { commonStyles } from '../styles/common';
-
 import { slideHeight } from './styles/slideStyles';
-import { ObjectUnsubscribedError } from 'rxjs';
 
 const styles = StyleSheet.create({
   bigScroll: {
@@ -42,18 +33,34 @@ export default class Trackers extends PureComponent {
     onSwiperMoveDown: PropTypes.func,
     onSwiperMoveDownStart: PropTypes.func,
     onSwiperScaleMove: PropTypes.func,
+    onSwiperScaleDone: PropTypes.func,
     onSwiperMoveUpStart: PropTypes.func,
     onSwiperMoveUpDone: PropTypes.func,
+    onSwiperShown: PropTypes.func,
     onSlideChange: PropTypes.func,
     trackers: PropTypes.instanceOf(List).isRequired,
-    style: ViewPropTypes.style,
+    style: View.propTypes.style,
+  };
+
+  static defaultProps = {
+    onEdit: null,
+    onRemove: null,
+    onCancel: null,
+    onSwiperMoveDown: null,
+    onSwiperMoveDownStart: null,
+    onSwiperScaleMove: null,
+    onSwiperScaleDone: null,
+    onSwiperMoveUpStart: null,
+    onSwiperMoveUpDone: null,
+    onSwiperShown: null,
+    onSlideChange: null,
+    style: null,
   };
 
   opacity = new Animated.Value(0);
-
   moveDown = new MoveDownResponderAnim(slideHeight);
 
-  renderInit = false;
+  rendered = false;
   scaleStart = false;
   searchView = false;
 
@@ -77,26 +84,19 @@ export default class Trackers extends PureComponent {
     this.onSwiperEndDrag = ::this.onSwiperEndDrag;
   }
 
-  componentWillUnmount() {
-    this.moveDown.dispose();
-  }
-
   componentDidMount() {
-    const { trackers } = this.props;
-    if (trackers.size) {
-      this.renderInitial(trackers);
-      this.renderInit = true;
-    }
     this.handleMoveDown();
   }
 
   componentWillReceiveProps({ trackers }) {
-    if (this.props.trackers !== trackers) {
-      if (this.scaleStart) { return; }
+    // Don't rerender when scaling.
+    if (this.scaleStart) { return; }
 
-      if (!this.renderInit) {
+    if (this.props.trackers !== trackers) {
+      if (!this.rendered) {
         this.renderInitial(trackers);
-        this.renderInit = true;
+        this.rendered = true;
+        return;
       }
 
       if (this.searchView) {
@@ -105,6 +105,10 @@ export default class Trackers extends PureComponent {
       }
       this.renderTrackers(trackers);
     }
+  }
+
+  componentWillUnmount() {
+    this.moveDown.dispose();
   }
 
   cancelEdit() {
@@ -122,9 +126,6 @@ export default class Trackers extends PureComponent {
   }
 
   onScaleStart() {
-    // this.bscroll.hide();
-    // this.bscroll.scrollTo(this.swiper.index, false);
-    // this.sscroll.scrollTo(this.swiper.index, false);
     this.scaleStart = true;
   }
 
@@ -141,6 +142,7 @@ export default class Trackers extends PureComponent {
     this.bscroll.show();
     this.sscroll.show();
     this.swiper.hide();
+    caller(this.props.onSwiperScaleDone);
   }
 
   onTap() {
@@ -159,9 +161,11 @@ export default class Trackers extends PureComponent {
     this.bscroll.hide();
     this.sscroll.hide();
     this.swiper.scrollTo(index, () =>
-      this.swiper.show(() =>
-        this.requestAnimationFrame(() =>
-          this.renderTrackers(this.props.trackers))), false);
+      this.swiper.show(() => {
+        InteractionManager.runAfterInteractions(() =>
+          this.renderTrackers(this.props.trackers));
+        caller(this.props.onSwiperShown);
+      }), false);
   }
 
   onSmallSlideTap(index: number) {
@@ -191,7 +195,8 @@ export default class Trackers extends PureComponent {
       onSwiperMoveDown,
       onSwiperMoveDownStart,
     } = this.props;
-    this.moveDown.subscribe(this.swiper.responder, onSwiperMoveDown, onSwiperMoveDownStart,
+    this.moveDown.subscribe(this.swiper.responder,
+      onSwiperMoveDown, onSwiperMoveDownStart,
       () => this.setState({ swiperEnabled: false }));
   }
 
@@ -199,24 +204,26 @@ export default class Trackers extends PureComponent {
     this.moveDown.unsubscribe();
   }
 
-  renderInitial(trackers) {
-    if (!trackers.size) { this.show(); }
-
-    this.renderTracker(trackers.first(), () => {
-      this.renderTrackers(trackers);
-      this.setTimeout(() => this.renderSearchTrackers(trackers));
-    });
-  }
-
-  renderTracker(tracker, callback) {
-    this.setState({ swTrackers: [tracker] }, () => this.show(callback));
-  }
-
   show(callback) {
     Animated.timing(this.opacity, {
       duration: 500,
       toValue: 1,
     }).start(callback);
+  }
+
+  renderInitial(trackers) {
+    if (trackers.size) {
+      this.renderTracker(trackers.first(), () => {
+        this.renderTrackers(trackers);
+        this.setTimeout(() => this.renderSearchTrackers(trackers));
+      });
+    } else {
+      this.show();
+    }
+  }
+
+  renderTracker(tracker, callback) {
+    this.setState({ swTrackers: [tracker] }, () => this.show(callback));
   }
 
   renderTrackers(trackers, callback: Function) {

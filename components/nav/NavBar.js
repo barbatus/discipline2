@@ -1,9 +1,7 @@
 import check from 'check-types';
 
 import React, { PureComponent } from 'react';
-
 import { StyleSheet, Animated } from 'react-native';
-
 import NavigationBar from 'react-native-navbar';
 
 import { caller } from 'app/utils/lang';
@@ -24,6 +22,10 @@ const styles = StyleSheet.create({
 });
 
 export default class NavBar extends PureComponent {
+  active = false;
+  opacity = new Animated.Value(1);
+  btnOpacity = new Animated.Value(0);
+
   constructor(props) {
     super(props);
 
@@ -67,13 +69,8 @@ export default class NavBar extends PureComponent {
     });
   }
 
-  setDisabled(value, callback) {
-    this.setState(
-      {
-        disabled: value,
-      },
-      callback,
-    );
+  setDisabled(disabled, callback) {
+    this.setState({ disabled }, callback);
   }
 
   getAnimatedBtn(button) {
@@ -98,12 +95,6 @@ export default class NavBar extends PureComponent {
   hideButtons(callback: Function) {
     this.animateOpacity(0, callback);
   }
-
-  active = false;
-
-  opacity = new Animated.Value(1);
-
-  btnOpacity = new Animated.Value(0);
 
   render() {
     const { title, titleStyle, leftBtn, rightBtn } = this.state;

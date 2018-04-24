@@ -1,17 +1,14 @@
 /* @flow */
 
 import check from 'check-types';
-
 import EventEmitter from 'eventemitter3';
-
 import DeviceInfo from 'react-native-device-info';
 
 import time from 'app/time/utils';
 
+import { DBTracker } from '../interfaces';
 import trackersDB from './trackers';
-
 import ticksDB from './ticks';
-
 import appDB from './app';
 
 import { TrackerType, DepotEvent } from '../consts';
@@ -19,7 +16,7 @@ import { TrackerType, DepotEvent } from '../consts';
 export default class Depot {
   event = new EventEmitter();
 
-  async addTracker(tracker: Tracker) {
+  async addTracker(tracker: DBTracker) {
     const newTracker = trackersDB.add(tracker);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
@@ -27,7 +24,7 @@ export default class Depot {
     return newTracker;
   }
 
-  async addTrackerAt(tracker: Tracker, index: number) {
+  async addTrackerAt(tracker: DBTracker, index: number) {
     const newTracker = trackersDB.add(tracker, index);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
@@ -56,7 +53,7 @@ export default class Depot {
     return { ...tracker, ticks };
   }
 
-  async updateTracker(tracker: Tracker) {
+  async updateTracker(tracker: DBTracker) {
     const updTracker = await trackersDB.update(tracker);
     if (!updTracker) throw new Error('No tracker found');
 
@@ -123,7 +120,7 @@ export default class Depot {
     return tick;
   }
 
-  async getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
+  async getTrackerTicks(tracker: DBTracker, minDateMs: number, maxDateMs?: number) {
     check.assert.number(minDateMs);
     const ticks = await ticksDB.getForPeriod(tracker.id, minDateMs, maxDateMs);
     return ticks.map((tick) => ticksDB.plainTick(tick));

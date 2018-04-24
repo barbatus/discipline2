@@ -6,10 +6,10 @@ import {
   ListView,
   Image,
 } from 'react-native';
-
 import Dimensions from 'Dimensions';
+import PropTypes from 'prop-types';
 
-import UserIconsStore from 'app/icons/UserIconsStore';
+import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
 import { caller } from 'app/utils/lang';
 
@@ -38,6 +38,15 @@ const styles = StyleSheet.create({
 });
 
 export default class IconsGrid extends PureComponent {
+  static propTypes = {
+    style: ListView.propTypes.style,
+    onIconChosen: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    style: null,
+  };
+
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({
@@ -48,7 +57,7 @@ export default class IconsGrid extends PureComponent {
   }
 
   onIconChosen(icon) {
-    caller(this.props.onIconChosen, icon.id);
+    this.props.onIconChosen(icon.id);
   }
 
   getIcons(): Array<Array<UserIcon>> {
@@ -101,9 +110,7 @@ export default class IconsGrid extends PureComponent {
   }
 
   renderRow(icons) {
-    const items = icons.map((icon) => {
-      return this.renderIcon(icon);
-    });
+    const items = icons.map((icon) => this.renderIcon(icon));
 
     return (
       <View style={styles.row}>

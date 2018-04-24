@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Animated, InteractionManager } from 'react-native';
 import PropTypes from 'prop-types';
-import ViewPropTypes from 'ViewPropTypes';
 
 import { connect } from 'react-redux';
 import { submit } from 'redux-form';
 
 import moment from 'moment';
-
 import { List } from 'immutable';
 
+import registry, { DlgType } from 'app/components/dlg/registry';
 import TrackersModel from 'app/model/Trackers';
 import time from 'app/time/utils';
 import { caller } from 'app/utils/lang';
@@ -34,11 +33,8 @@ import {
 } from '../nav/buttons';
 
 import Animation from '../animation/Animation';
-
 import TrackerCal from '../trackers/TrackerCal';
-
 import Trackers from '../trackers/Trackers';
-
 import { commonStyles } from '../styles/common';
 
 const MONTH_NAMES = [
@@ -76,32 +72,43 @@ class TrackersView extends PureComponent {
     onSlideChange: PropTypes.func,
     onMoveUp: PropTypes.func,
     onCancel: PropTypes.func,
-    dateMs: PropTypes.number,
-    style: ViewPropTypes.style,
+    dateMs: PropTypes.number.isRequired,
+    style: Animated.View.propTypes.style,
   };
 
   static defaultProps = {
     trackers: List.of(),
+    onSlideChange: null,
+    onMoveUp: null,
+    onCancel: null,
+    style: null,
   };
+
+  calcOpacity = new Animated.Value(0);
+  isActive = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
       current: props.trackers.get(0),
+      selDateMs: null,
     };
-    this.changedTracker = null;
-    this.active = false;
     this.onEdit = ::this.onEdit;
     this.onRemove = ::this.onRemove;
     this.onRemoveCompleted = ::this.onRemoveCompleted;
     this.onSaveCompleted = ::this.onSaveCompleted;
     this.onSwiperScaleMove = ::this.onSwiperScaleMove;
+    this.onSwiperScaleDone = ::this.onSwiperScaleDone;
+    this.onSwiperShown = ::this.onSwiperShown;
     this.onSwiperMoveDown = ::this.onSwiperMoveDown;
     this.onSwiperMoveDownStart = ::this.onSwiperMoveDownStart;
+    this.onSwiperMoveUpDone = ::this.onSwiperMoveUpDone;
     this.onTrackerEdit = ::this.onTrackerEdit;
     this.onSlideChange = ::this.onSlideChange;
     this.onMonthChanged = ::this.onMonthChanged;
+    this.onTooltipClick = ::this.onTooltipClick;
+    this.onDateSelect = ::this.onDateSelect;
     this.onNextMonth = ::this.onNextMonth;
     this.onPrevMonth = ::this.onPrevMonth;
     this.cancelEdit = ::this.cancelEdit;
@@ -127,14 +134,14 @@ class TrackersView extends PureComponent {
   }
 
   onRemove(tracker) {
-    if (this.active) return;
+    if (this.isActive) return;
 
-    this.active = true;
+    this.isActive = true;
     this.props.onRemove(tracker);
   }
 
   onRemoveCompleted(index: number) {
-    this.active = false;
+    this.isActive = false;
     caller(this.props.onRemoveCompleted, index);
   }
 
@@ -159,8 +166,19 @@ class TrackersView extends PureComponent {
     navBar.setOpacity(dv);
   }
 
+  onSwiperScaleDone() {
+    const { navBar } = this.context;
+    navBar.setOpacity(0);
+    navBar.setDisabled(true);
+  }
+
+  onSwiperShown() {
+    const { navBar } = this.context;
+    navBar.setDisabled(false);
+  }
+
   onSwiperMoveDown(dv: number) {
-    this.calendar.setShown(dv);
+    this.calcOpacity.setValue(dv);
   }
 
   onSwiperMoveDownStart() {
@@ -176,6 +194,10 @@ class TrackersView extends PureComponent {
     );
   }
 
+  onSwiperMoveUpDone() {
+    this.setState({ selDateMs: null });
+  }
+
   onMonthChanged(monthDateMs) {
     const { current } = this.state;
     this.setNavBarMonth(monthDateMs);
@@ -185,8 +207,18 @@ class TrackersView extends PureComponent {
     this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
   }
 
+  onTooltipClick() {
+    const dlg = registry.get(DlgType.TICKS);
+    const { current } = this.state;
+    dlg.show(this.props.ticks, current.type);
+  }
+
+  onDateSelect(dateMs: number) {
+    this.setState({ selDateMs: dateMs });
+  }
+
   onSaveCompleted(index) {
-    this.active = false;
+    this.isActive = false;
     caller(this.props.onSaveCompleted, index);
   }
 
@@ -238,7 +270,7 @@ class TrackersView extends PureComponent {
   saveEdit() {
     if (Animation.on) return;
 
-    this.active = true;
+    this.isActive = true;
     const { dispatch } = this.props;
     dispatch(submit('trackerForm'));
   }
@@ -253,15 +285,19 @@ class TrackersView extends PureComponent {
 
   render() {
     const { style, onMoveUp, onCancel } = this.props;
-    const { current } = this.state;
+    const { current, selDateMs } = this.state;
+    const calcStyle = [commonStyles.absFilled, { top: 0 }, { opacity: this.calcOpacity }];
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
           ref={(el) => (this.calendar = el)}
           {...this.props}
           tracker={current}
-          style={[commonStyles.absFilled, { top: 0 }]}
+          selDateMs={selDateMs}
+          style={calcStyle}
           onMonthChanged={this.onMonthChanged}
+          onDateSelect={this.onDateSelect}
+          onTooltipClick={this.onTooltipClick}
         />
         <Trackers
           ref={(el) => (this.trackers = el)}
@@ -273,6 +309,9 @@ class TrackersView extends PureComponent {
           onCancel={onCancel}
           onSaveCompleted={this.onSaveCompleted}
           onSwiperScaleMove={this.onSwiperScaleMove}
+          onSwiperScaleDone={this.onSwiperScaleDone}
+          onSwiperMoveUpDone={this.onSwiperMoveUpDone}
+          onSwiperShown={this.onSwiperShown}
           onSwiperMoveDown={this.onSwiperMoveDown}
           onSwiperMoveDownStart={this.onSwiperMoveDownStart}
           onSwiperMoveUpStart={onMoveUp}
@@ -287,7 +326,7 @@ class TrackersView extends PureComponent {
 export default connect(
   ({ trackers }) => ({
     ...trackers,
-    ticks: trackers.ticks || [],
+    ticks: trackers.ticks,
   }),
   (dispatch, props) => ({
     onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>
