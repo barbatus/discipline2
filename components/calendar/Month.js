@@ -59,6 +59,7 @@ const PADDING = 15;
 
 export default class Month extends PureComponent {
   static propTypes = {
+    ticks: PropTypes.instanceOf(Map),
     selDateMs: PropTypes.number,
     monthMs: PropTypes.number.isRequired,
     todayMs: PropTypes.number.isRequired,
@@ -67,6 +68,7 @@ export default class Month extends PureComponent {
   };
 
   static defaultProps = {
+    selDateMs: null,
     ticks: new Map(),
   };
 

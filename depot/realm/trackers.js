@@ -15,7 +15,7 @@ class Trackers {
     if (!table.length) {
       db.write(() => db.create('Trackers', {}));
     }
-    this.table = table[0];
+    [this.table] = table;
   }
 
   get trackers() {

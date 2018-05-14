@@ -40,6 +40,10 @@ export default class CommonModal extends PureComponent {
     this.hide = ::this.hide;
   }
 
+  get content() {
+    return null;
+  }
+
   onBeforeShown() {}
 
   onAfterShown() {}
@@ -47,10 +51,6 @@ export default class CommonModal extends PureComponent {
   onBeforeHidden() {}
 
   onAfterHidden() {}
-
-  get content() {
-    return null;
-  }
 
   show(...args) {
     check.assert.like(this.state.modalVisible, true, 'Dlg already shown');

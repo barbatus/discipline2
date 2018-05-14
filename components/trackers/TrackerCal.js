@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
-import { Animated } from 'react-native';
+import { View, Animated } from 'react-native';
+import PropTypes from 'prop-types';
 
 import { combineTicksMonthly } from 'app/model/utils';
 
 import Calendar from '../calendar/Calendar';
 
 export default class TrackerCal extends Component {
+  static propTypes = {
+    selDateMs: PropTypes.number,
+    style: Animated.View.propTypes.style,
+  };
+
   static defaultProps = {
     ticks: [],
+    selDateMs: null,
+    style: null,
   };
 
   constructor(props) {

@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react';
 
 import { Provider } from 'react-redux';
 
-import { StackNavigator as stack } from 'react-navigation';
+import { StackNavigator as StackNav } from 'react-navigation';
 
 import MainScreen from '../components/screens/MainScreen';
 
@@ -13,7 +13,7 @@ import DayUpdateEvent from './DayUpdateEvent';
 import { changeDay } from '../model/actions';
 
 export default function CreateApp(store) {
-  return stack(
+  return StackNav(
     {
       Home: { screen: (props) => <Home {...props} store={store} /> },
     },

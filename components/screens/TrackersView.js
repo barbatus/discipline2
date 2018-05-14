@@ -126,6 +126,39 @@ class TrackersView extends PureComponent {
     }
   }
 
+  getCancelBtn(onPress) {
+    return <NavCancelButton onPress={onPress} />;
+  }
+
+  getAcceptBtn(onPress) {
+    return <NavAcceptButton onPress={onPress} />;
+  }
+
+  setEditTrackerBtns() {
+    const { navBar } = this.context;
+
+    navBar.setTitle('Edit Tracker');
+    navBar.setButtons(
+      this.getCancelBtn(this.cancelEdit),
+      this.getAcceptBtn(this.saveEdit),
+    );
+  }
+
+  setCalendarBtns() {
+    const { navBar } = this.context;
+    navBar.setButtons(
+      <NavLeftButton icon="back" onPress={this.onPrevMonth} />,
+      <NavRightButton icon="next_" onPress={this.onNextMonth} />,
+    );
+  }
+
+  setNavBarMonth(monthDateMs) {
+    const date = moment(monthDateMs);
+    const monthName = `${MONTH_NAMES[date.month()]}, ${date.year()}`;
+    const { navBar } = this.context;
+    navBar.setTitle(monthName, styles.navTitle);
+  }
+
   onSlideChange(index: number, previ: number, animated: boolean) {
     this.setState({
       current: this.props.trackers.get(index),
@@ -232,39 +265,6 @@ class TrackersView extends PureComponent {
       ...current,
       ...tracker,
     }));
-  }
-
-  getCancelBtn(onPress) {
-    return <NavCancelButton onPress={onPress} />;
-  }
-
-  getAcceptBtn(onPress) {
-    return <NavAcceptButton onPress={onPress} />;
-  }
-
-  setEditTrackerBtns() {
-    const { navBar } = this.context;
-
-    navBar.setTitle('Edit Tracker');
-    navBar.setButtons(
-      this.getCancelBtn(this.cancelEdit),
-      this.getAcceptBtn(this.saveEdit),
-    );
-  }
-
-  setCalendarBtns() {
-    const { navBar } = this.context;
-    navBar.setButtons(
-      <NavLeftButton icon="back" onPress={this.onPrevMonth} />,
-      <NavRightButton icon="next_" onPress={this.onNextMonth} />,
-    );
-  }
-
-  setNavBarMonth(monthDateMs) {
-    const date = moment(monthDateMs);
-    const monthName = `${MONTH_NAMES[date.month()]}, ${date.year()}`;
-    const { navBar } = this.context;
-    navBar.setTitle(monthName, styles.navTitle);
   }
 
   saveEdit() {

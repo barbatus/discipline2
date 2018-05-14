@@ -33,7 +33,7 @@ export default class StartStopBtn extends PureComponent {
   constructor(props) {
     super(props);
     this.onPress = ::this.onPress;
-    const flicker = new Animated.timing(this.opacity,
+    const flicker = Animated.timing(this.opacity,
       { duration: 800, toValue: 0.4, useNativeDriver: true });
     this.flickerAnim = Animated.loop(flicker);
   }

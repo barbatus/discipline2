@@ -111,11 +111,6 @@ export default class Trackers extends PureComponent {
     this.moveDown.dispose();
   }
 
-  cancelEdit() {
-    this.swiper.cancelEdit();
-    caller(this.props.onCancel);
-  }
-
   onEdit(tracker: Tracker) {
     this.swiper.showEdit();
     caller(this.props.onEdit, tracker);
@@ -188,6 +183,11 @@ export default class Trackers extends PureComponent {
 
   onSwiperEndDrag() {
     this.handleMoveDown();
+  }
+
+  cancelEdit() {
+    this.swiper.cancelEdit();
+    caller(this.props.onCancel);
   }
 
   handleMoveDown() {

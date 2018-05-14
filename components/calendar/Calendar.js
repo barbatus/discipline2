@@ -13,6 +13,7 @@ import styles from './styles';
 
 export default class Calendar extends PureComponent {
   static propTypes = {
+    ticks: PropTypes.instanceOf(Map),
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
     onDateSelect: PropTypes.func.isRequired,

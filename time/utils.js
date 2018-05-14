@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import 'moment-duration-format';
 
-import { __ } from '../utils/format';
+import { padZero } from '../utils/format';
 
 const SS_MS = 1000;
 const MM_MS = 60 * SS_MS;
@@ -28,7 +28,7 @@ const time = {
       const f = {
         hh: null,
         mm: '00',
-        ss: __(ss),
+        ss: padZero(ss),
         format: (full = true) => full ? `00:${f.ss}s` : `${f.ss}s`,
       };
       return f;
@@ -39,8 +39,8 @@ const time = {
       const mm = duration.minutes();
       const f = {
         hh: null,
-        mm: __(mm),
-        ss: __(ss),
+        mm: padZero(mm),
+        ss: padZero(ss),
         format: () => `${f.mm}:${f.ss}m`,
       };
       return f;

@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 import PouchDB from 'pouchdb-react-native';
 import SQLite from 'react-native-sqlite-2';
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite';
@@ -141,7 +142,7 @@ const api = {
             mergedValue[resTypes] = valueData;
             return mergedValue;
           }
-          mergedValue[resType] = valueData[0];
+          [mergedValue[resType]] = valueData;
           return mergedValue;
         }
         return value;

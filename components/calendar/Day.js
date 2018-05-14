@@ -76,11 +76,6 @@ export default class Day extends PureComponent {
     this.onPress = ::this.onPress;
   }
 
-  onPress() {
-    const { value, onPress } = this.props;
-    onPress(value);
-  }
-
   getDayCircleStyle(isSelected, isToday) {
     const dayCircleStyle = [styles.dayCircle];
 
@@ -107,6 +102,11 @@ export default class Day extends PureComponent {
     }
 
     return dayTextStyle;
+  }
+
+  onPress() {
+    const { value, onPress } = this.props;
+    onPress(value);
   }
 
   render() {

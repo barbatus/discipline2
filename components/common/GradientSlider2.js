@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
+import { Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import PropTypes from 'prop-types';
 
 import flatten from 'lodash/flatten';
-
 import times from 'lodash/times';
-
-import { Animated } from 'react-native';
-
-import LinearGradient from 'react-native-linear-gradient';
 
 import { commonDef, screenWidth } from '../styles';
 
@@ -21,9 +19,13 @@ const COLORS = [
 ];
 
 export default class GradientSlider extends PureComponent {
+  static propTypes = {
+    slides: PropTypes.number.isRequired,
+  };
+
   move = new Animated.Value(0);
 
-  getGrad(slides) {
+  getGrad(slides: number) {
     const len = COLORS.length;
     const int = Math.floor(slides / len);
     const res = Math.max(slides % len, 2);

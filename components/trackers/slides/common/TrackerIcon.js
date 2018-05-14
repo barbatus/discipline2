@@ -36,12 +36,20 @@ export default class TrackerIcon extends PureComponent {
   static propTypes = {
     input: PropTypes.shape({
       value: PropTypes.string,
-    }),
+    }).isRequired,
   };
 
   constructor(props) {
     super(props);
     this.onIconEdit = ::this.onIconEdit;
+  }
+
+  getMainIcon(iconId) {
+    const userIcon = UserIconsStore.get(iconId);
+    if (userIcon) {
+      return userIcon.pngLarge;
+    }
+    return getIcon('oval');
   }
 
   onIconEdit() {
@@ -51,14 +59,6 @@ export default class TrackerIcon extends PureComponent {
       input.onChange(iconId);
       dlg.hide();
     });
-  }
-
-  getMainIcon(iconId) {
-    const userIcon = UserIconsStore.get(iconId);
-    if (userIcon) {
-      return userIcon.pngLarge;
-    }
-    return getIcon('oval');
   }
 
   render() {

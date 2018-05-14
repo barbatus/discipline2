@@ -11,8 +11,6 @@ import PropTypes from 'prop-types';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
-import { caller } from 'app/utils/lang';
-
 const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -56,10 +54,6 @@ export default class IconsGrid extends PureComponent {
     this.renderRow = this.renderRow.bind(this);
   }
 
-  onIconChosen(icon) {
-    this.props.onIconChosen(icon.id);
-  }
-
   getIcons(): Array<Array<UserIcon>> {
     const icons = UserIconsStore.getAll();
 
@@ -93,6 +87,10 @@ export default class IconsGrid extends PureComponent {
     const width = Math.floor((window.width - pad) / count);
 
     return { width, count };
+  }
+
+  onIconChosen(icon) {
+    this.props.onIconChosen(icon.id);
   }
 
   renderIcon(icon: UserIcon) {

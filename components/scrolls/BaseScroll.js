@@ -1,9 +1,6 @@
 import React, { PureComponent } from 'react';
-
-import PropTypes from 'prop-types';
-
 import { ScrollView, View } from 'react-native';
-
+import PropTypes from 'prop-types';
 import isBoolean from 'lodash/isBoolean';
 
 import { caller } from 'app/utils/lang';
@@ -30,11 +27,9 @@ export default class BaseScroll extends PureComponent {
 
   static defaultProps = {
     index: 0,
-    slides: [],
     pagingEnabled: true,
     scrollEnabled: true,
     bounces: true,
-    scrollsToTop: false,
     removeClippedSubviews: true,
     automaticallyAdjustContentInsets: false,
     keyboardDismissMode: 'on-drag',
@@ -70,6 +65,40 @@ export default class BaseScroll extends PureComponent {
     return Math.round(this.indexInn);
   }
 
+  onTouchStart(event) {
+    this.pageX = event.nativeEvent.pageX;
+  }
+
+  onTouchMove(event) {
+    const { slides, slideWidth, scrollEnabled } = this.props;
+
+    if (!scrollEnabled || slides.length <= 1) return;
+
+    const dx = this.pageX - event.nativeEvent.pageX;
+    this.pageX = event.nativeEvent.pageX;
+
+    if (this.indexInn === 0 && dx <= 0) return;
+    if (this.indexInn === slides.length - 1 && dx >= 0) return;
+
+    // Adjust offset and index after moving.
+    // Offset and index become float.
+    this.offsetX += dx;
+    const index = this.indexInn + (dx / slideWidth);
+    this.indexInn = Math.min(Math.max(index, 0), slides.length - 1);
+
+    caller(this.props.onTouchMove, dx);
+  }
+
+  onScrollEnd(event) {
+    const { x } = event.nativeEvent.contentOffset;
+    this.endScrolling(x, true);
+  }
+
+  onScrollBegin(event) {
+    caller(this.props.onScrollBegin, event);
+  }
+
+  /* eslint-disable no-param-reassign */
   scrollTo(
     index: number,
     callback?: Function | boolean,
@@ -105,35 +134,7 @@ export default class BaseScroll extends PureComponent {
       this.endScrolling(offsetX, false);
     }
   }
-
-  onTouchStart(event) {
-    this.pageX = event.nativeEvent.pageX;
-  }
-
-  onTouchMove(event) {
-    const { slides, slideWidth, scrollEnabled } = this.props;
-
-    if (!scrollEnabled || slides.length <= 1) return;
-
-    const dx = this.pageX - event.nativeEvent.pageX;
-    this.pageX = event.nativeEvent.pageX;
-
-    if (this.indexInn === 0 && dx <= 0) return;
-    if (this.indexInn === slides.length - 1 && dx >= 0) return;
-
-    // Adjust offset and index after moving.
-    // Offset and index become float.
-    this.offsetX += dx;
-    const index = this.indexInn + (dx / slideWidth);
-    this.indexInn = Math.min(Math.max(index, 0), slides.length - 1);
-
-    caller(this.props.onTouchMove, dx);
-  }
-
-  onScrollEnd(event) {
-    const { x } = event.nativeEvent.contentOffset;
-    this.endScrolling(x, true);
-  }
+  /* eslint-enable no-param-reassign */
 
   endScrolling(offsetX: number, animated: boolean) {
     this.updateSlideIndexByOffset(offsetX);
@@ -147,10 +148,6 @@ export default class BaseScroll extends PureComponent {
 
     caller(this.onScrollToCb, true);
     this.onScrollToCb = null;
-  }
-
-  onScrollBegin(event) {
-    caller(this.props.onScrollBegin, event);
   }
 
   // Used to update offset and current slide index

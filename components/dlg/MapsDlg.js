@@ -56,9 +56,9 @@ export default class MapsDlg extends CommonModal {
 
   get content() {
     const { paths, region } = this.state;
-    const polylines = paths.map((path, index) => (
+    const polylines = paths.map((path) => (
       <MapView.Polyline
-        key={index}
+        key={path.join()}
         coordinates={path}
         strokeColor="rgba(255,0,0,0.5)"
         strokeWidth={4}

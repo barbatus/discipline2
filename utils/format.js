@@ -2,7 +2,7 @@ import check from 'check-types';
 
 import { round, int } from './lang';
 
-export const __ = (digits) => digits < 10 ? `0${digits}` : `${digits}`;
+export const padZero = (digits) => digits < 10 ? `0${digits}` : `${digits}`;
 
 export function formatDistance(dist) {
   check.assert.number(dist);
@@ -19,7 +19,7 @@ export function formatDistance(dist) {
   const mm = int(rounded * 100 % 100);
 
   return {
-    format: () => `${km}.${__(mm)}`,
+    format: () => `${km}.${padZero(mm)}`,
     unit: 'km',
   };
 }

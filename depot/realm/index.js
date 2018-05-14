@@ -1,11 +1,11 @@
 /* @flow */
+/* eslint import/no-unresolved: 0 */
+/* eslint import/extensions: 0 */
+
 import check from 'check-types';
-
 import { List } from 'realm';
-
-import DeviceInfo from 'react-native-device-info';
-
 import EventEmitter from 'eventemitter3';
+import DeviceInfo from 'react-native-device-info';
 
 import time from 'app/time/utils';
 

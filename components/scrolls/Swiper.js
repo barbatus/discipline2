@@ -55,7 +55,6 @@ export default class Swiper extends PureComponent {
   };
 
   static defaultProps = {
-    slides: [],
     style: null,
     scrollEnabled: true,
     onSlideChange: null,
@@ -65,52 +64,43 @@ export default class Swiper extends PureComponent {
     onSlideNoChange: null,
   };
 
-  index = 0;
-
   constructor(props) {
     super(props);
     this.onSlideChange = ::this.onSlideChange;
+    this.state = { index: 0 };
+  }
+
+  get index() {
+    return this.state.index;
+  }
+
+  /*
+    setActiveDot(curInd: number, prevInd: number) {
+      if (this.refs[`page${prevInd}`]) {
+        this.refs[`page${prevInd}`].setNativeProps({
+          style: {
+            backgroundColor: stylesDef.basicDot.backgroundColor,
+          },
+        });
+      }
+
+      if (this.refs[`page${curInd}`]) {
+        this.refs[`page${curInd}`].setNativeProps({
+          style: {
+            backgroundColor: stylesDef.activeDot.backgroundColor,
+          },
+        });
+      }
+    }
+  */
+
+  onSlideChange(index, previ, animated) {
+    this.setState({ index });
+    caller(this.props.onSlideChange, index, previ, animated);
   }
 
   scrollTo(index, callback, animated) {
     this.scroll.scrollTo(index, callback, animated);
-  }
-
-  renderDots(index, size) {
-    if (size <= 1) return null;
-
-    const dots = [];
-    const basicDot = [styles.basicDot, this.scaleDot(size)];
-    for (let i = 0; i < size; i += 1) {
-      const dotStyle = i === index ? [basicDot, styles.activeDot] : basicDot;
-      dots.push(<View ref={`page${i}`} key={i} style={dotStyle} />);
-    }
-
-    return (
-      <Animated.View pointerEvents="none" style={styles.dotsContainer}>
-        <View style={styles.dots}>
-          {dots}
-        </View>
-      </Animated.View>
-    );
-  }
-
-  setActiveDot(curInd, prevInd) {
-    if (this.refs[`page${prevInd}`]) {
-      this.refs[`page${prevInd}`].setNativeProps({
-        style: {
-          backgroundColor: stylesDef.basicDot.backgroundColor,
-        },
-      });
-    }
-
-    if (this.refs[`page${curInd}`]) {
-      this.refs[`page${curInd}`].setNativeProps({
-        style: {
-          backgroundColor: stylesDef.activeDot.backgroundColor,
-        },
-      });
-    }
   }
 
   /**
@@ -118,7 +108,7 @@ export default class Swiper extends PureComponent {
    * Basic radius 7px, with scaling
    * propor. to the number of slides.
    */
-  scaleDot(size) {
+  scaleDot(size: number) {
     let radius = 7;
     let margin = 7;
     if (size >= 18) {
@@ -135,18 +125,23 @@ export default class Swiper extends PureComponent {
     };
   }
 
-  renderSlide(slide, key) {
-    return (
-      <View style={styles.slide} key={key}>
-        {slide}
-      </View>
-    );
-  }
+  renderDots(index: number, size: number) {
+    if (size <= 1) return null;
 
-  onSlideChange(index, previ, animated) {
-    this.index = index;
-    this.setActiveDot(index, previ);
-    caller(this.props.onSlideChange, index, previ, animated);
+    const dots = [];
+    const basicDot = [styles.basicDot, this.scaleDot(size)];
+    for (let i = 0; i < size; i += 1) {
+      const dotStyle = i === index ? [basicDot, styles.activeDot] : basicDot;
+      dots.push(<View key={i} style={dotStyle} />);
+    }
+
+    return (
+      <Animated.View pointerEvents="none" style={styles.dotsContainer}>
+        <View style={styles.dots}>
+          {dots}
+        </View>
+      </Animated.View>
+    );
   }
 
   render() {
@@ -159,10 +154,9 @@ export default class Swiper extends PureComponent {
       scrollEnabled,
       onSlideNoChange,
     } = this.props;
+    const { index } = this.state;
 
-    const dots = slides.length >= 2 ?
-      this.renderDots(this.index, slides.length) : null;
-
+    const dots = slides.length >= 2 ? this.renderDots(index, slides.length) : null;
     return (
       <View style={style}>
         <BaseScroll

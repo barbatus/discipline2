@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
-
 import ShakeAnimation from 'app/components/animation/ShakeAnimation';
 
 import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
@@ -82,6 +81,7 @@ export class TrackerEditView extends PureComponent {
     showType: true,
     onTypeSelect: null,
     style: null,
+    onRemove: null,
   };
 
   constructor(props) {

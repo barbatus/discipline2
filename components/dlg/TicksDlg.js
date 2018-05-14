@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, Text } from 'react-native';
 import styled from 'styled-components/native';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
 import { combineTicksDaily } from 'app/model/utils';
@@ -41,6 +42,13 @@ const listItemFn = ({ item }) => {
       <NextImg source={getIcon('next')} />
     </TextRow>
   );
+};
+
+listItemFn.propTypes = {
+  item: PropTypes.shape({
+    dateTimeMs: PropTypes.number,
+    desc: PropTypes.string,
+  }).isRequired,
 };
 
 export default class TicksDlg extends CommonModal {

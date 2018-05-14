@@ -1,16 +1,11 @@
 import React, { PureComponent } from 'react';
-
 import { Animated, StyleSheet, View, findNodeHandle } from 'react-native';
-
-import styled from 'styled-components/native';
-
 import NativeMethodsMixin from 'NativeMethodsMixin';
-
+import styled from 'styled-components/native';
 import reactMixin from 'react-mixin';
-
 import TimerMixin from 'react-timer-mixin';
-
 import { pure } from 'recompose';
+import PropTypes from 'prop-types';
 
 import { screenWidth, navHeight } from '../styles/common';
 
@@ -74,9 +69,20 @@ const ArrowFn = ({ x, y }) => {
   return <ArrowView style={arrStyle} />;
 };
 
+ArrowFn.propTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+};
+
 const Arrow = pure(ArrowFn);
 
 export default class Tooltip extends PureComponent {
+  static propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    children: PropTypes.element.isRequired,
+  };
+
   opacity = new Animated.Value(0);
   moveY = new Animated.Value(0);
   moveX = new Animated.Value(0);
@@ -87,6 +93,19 @@ export default class Tooltip extends PureComponent {
       arrLeft: 0,
       arrTop: 0,
     };
+  }
+
+  componentDidMount() {
+    this.updatePos();
+  }
+
+  componentWillReceiveProps({ x, y }) {
+    if (this.props.x !== x || this.props.y !== y) {
+      this.moveY.setValue(0);
+      this.moveX.setValue(0);
+      this.opacity.setValue(0);
+      this.updatePos();
+    }
   }
 
   updatePos() {
@@ -126,19 +145,6 @@ export default class Tooltip extends PureComponent {
             arrLeft,
           });
         }), 15);
-    }
-  }
-
-  componentDidMount() {
-    this.updatePos();
-  }
-
-  componentWillReceiveProps({ x, y }) {
-    if (this.props.x !== x || this.props.y !== y) {
-      this.moveY.setValue(0);
-      this.moveX.setValue(0);
-      this.opacity.setValue(0);
-      this.updatePos();
     }
   }
 

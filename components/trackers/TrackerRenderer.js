@@ -1,29 +1,44 @@
-import check from 'check-types';
+/* eslint react/no-multi-comp: 0 */
 
 import React, { PureComponent } from 'react';
-
 import { Animated, InteractionManager } from 'react-native';
-
+import check from 'check-types';
 import PropTypes from 'prop-types';
 
 import { TrackerType } from 'app/depot/consts';
-
 import Tracker from 'app/model/Tracker';
-
 import { caller } from 'app/utils/lang';
 
 import GoalTrackerSlide from './slides/GoalTrackerSlide';
-
 import CounterSlide from './slides/CounterSlide';
-
 import SumTrackerSlide from './slides/SumTrackerSlide';
-
 import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
-
 import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 
 // TODO: get rid of it once we get rid of refs.
 class TrackerWrapper extends PureComponent {
+  static propTypes = {
+    onEdit: PropTypes.func,
+    onRemove: PropTypes.func,
+    onTap: PropTypes.func,
+    onTick: PropTypes.func,
+    onStart: PropTypes.func,
+    onStop: PropTypes.func,
+    onProgress: PropTypes.func,
+    onUndo: PropTypes.func,
+  };
+
+  static defaultProps = {
+    onEdit: null,
+    onRemove: null,
+    onTap: null,
+    onTick: null,
+    onStart: null,
+    onStop: null,
+    onProgress: null,
+    onUndo: null,
+  };
+
   constructor(props) {
     super(props);
     this.onEdit = ::this.onEdit;
@@ -154,6 +169,15 @@ export default class TrackerRenderer extends PureComponent {
     this.onTrackerEdit = ::this.onTrackerEdit;
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.trackers !== props.trackers) {
+      this.state.trackers = props.trackers;
+    }
+    if (this.props.enabled !== props.enabled) {
+      this.state.enabled = props.enabled;
+    }
+  }
+
   get opacity() {
     return this.inOpacity;
   }
@@ -164,15 +188,6 @@ export default class TrackerRenderer extends PureComponent {
 
   get shown() {
     return this.inOpacity._value === 1;
-  }
-
-  componentWillReceiveProps(props) {
-    if (this.props.trackers !== props.trackers) {
-      this.state.trackers = props.trackers;
-    }
-    if (this.props.enabled !== props.enabled) {
-      this.state.enabled = props.enabled;
-    }
   }
 
   onEdit(tracker: Tracker) {

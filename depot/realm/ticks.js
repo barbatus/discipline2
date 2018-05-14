@@ -15,7 +15,7 @@ class Ticks {
     if (!table.length) {
       db.write(() => db.create('Ticks', {}));
     }
-    this.table = table[0];
+    [this.table] = table;
   }
 
   getForTracker(trackId: string): Array<DBTick> {
