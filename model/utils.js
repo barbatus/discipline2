@@ -2,10 +2,11 @@ import groupBy from 'lodash/groupBy';
 import moment from 'moment';
 
 import { formatDistance } from 'app/utils/format';
-import { DBTick } from 'app/depot/interfaces';
 import { TrackerType } from 'app/depot/consts';
 
-export function combineTicksMonthly(ticks: DBTick[], type: TrackerType) {
+import { Tick } from './Tracker';
+
+export function combineTicksMonthly(ticks: Tick[], type: TrackerType) {
   const months = groupBy(ticks, (tick) => {
     const tickDate = moment(tick.dateTimeMs);
     return tickDate.month();
@@ -26,7 +27,7 @@ export function combineTicksMonthly(ticks: DBTick[], type: TrackerType) {
   }, new Map());
 }
 
-export function combineTicksDaily(ticks: DBTick[], type: TrackerType) {
+export function combineTicksDaily(ticks: Tick[], type: TrackerType) {
   const mins = groupBy(ticks, (tick) =>
     tick.dateTimeMs - (tick.dateTimeMs % 60000),
   );
@@ -37,7 +38,7 @@ export function combineTicksDaily(ticks: DBTick[], type: TrackerType) {
   });
 }
 
-function printTick(ticks: DBTick[], minMs: number, type: TrackerType) {
+function printTick(ticks: Tick[], minMs: number, type: TrackerType) {
   switch (type) {
     case TrackerType.GOAL:
       return { desc: 'The goal is achieved', value: 1, dateTimeMs: minMs };

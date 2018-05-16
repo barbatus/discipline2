@@ -18,6 +18,9 @@ import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 // TODO: get rid of it once we get rid of refs.
 class TrackerWrapper extends PureComponent {
   static propTypes = {
+    component: PropTypes.func.isRequired,
+    tracker: PropTypes.instanceOf(Tracker).isRequired,
+    progressive: PropTypes.bool.isRequired,
     onEdit: PropTypes.func,
     onRemove: PropTypes.func,
     onTap: PropTypes.func,

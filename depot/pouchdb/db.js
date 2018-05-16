@@ -85,10 +85,6 @@ db.createIndex({
   index: { fields: ['data.tick', '_id'] },
 });
 
-export const TRACKER_TICK_DATA_TYPE = {
-  distance: 'distData',
-};
-
 function fromRawDoc(pouchDoc: Object) {
   const obj = pouchDoc.data;
   obj.id = db.rel.parseDocID(pouchDoc._id).id;

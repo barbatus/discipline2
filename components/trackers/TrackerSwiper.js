@@ -65,15 +65,15 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   componentDidUpdate() {
     if (this.updateIndex !== null) {
-      this.updateIndex = null;
       this.cancelEdit();
       caller(this.props.onSaveCompleted, this.updateIndex);
+      this.updateIndex = null;
     }
 
     if (this.addIndex !== null) {
-      this.addIndex = null;
       this.scrollTo(this.addIndex);
       caller(this.props.onAddCompleted, this.addIndex);
+      this.addIndex = null;
     }
   }
 

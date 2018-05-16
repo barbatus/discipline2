@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint import/no-unresolved: 0 */
 /* eslint import/extensions: 0 */
 

@@ -1,9 +1,8 @@
-/* @flow */
 import check from 'check-types';
 
 import omit from 'lodash/omit';
 
-import { DBTracker } from '../interfaces';
+import { NewTracker, Tracker } from '../interfaces';
 import { TrackersSchemaType } from './interfaces';
 import db from './db';
 
@@ -22,11 +21,11 @@ class Trackers {
     return this.table.trackers;
   }
 
-  getAll(): Array<DBTracker> {
+  getAll(): Array<Tracker> {
     return this.trackers.slice();
   }
 
-  getOne(trackId: string): DBTracker {
+  getOne(trackId: string): Tracker {
     check.assert.string(trackId);
 
     return db.objectForPrimaryKey('Tracker', trackId);
@@ -36,11 +35,11 @@ class Trackers {
     return this.trackers.length;
   }
 
-  buildNewTracker(id: string, data: DBTracker) {
+  buildNewTracker(id: string, data: NewTracker) {
     return { props: { alerts: false }, ...data, id };
   }
 
-  addAt(data: DBTracker, index: number): DBTracker {
+  addAt(data: NewTracker, index: number): Tracker {
     const trackId = this.table.nextId.toString();
     const tracker = this.buildNewTracker(trackId, data);
     db.write(() => {
@@ -51,7 +50,7 @@ class Trackers {
     return tracker;
   }
 
-  add(data: DBTracker): DBTracker {
+  add(data: NewTracker): Tracker {
     const trackId = this.table.nextId.toString();
     const tracker = this.buildNewTracker(trackId, data);
     db.write(() => {
@@ -71,7 +70,7 @@ class Trackers {
     return true;
   }
 
-  update(data: DBTracker): DBTracker {
+  update(data: Tracker): Tracker {
     const tracker = this.getOne(data.id);
     if (!tracker) { return null; }
 

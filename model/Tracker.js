@@ -1,28 +1,47 @@
 import { TrackerType } from 'app/depot/consts';
 
-import { DBTracker } from 'app/depot/interfaces';
+import { Tracker as DBTracker, Tick as DBTick, type TRACKER_ID } from 'app/depot/interfaces';
 
 import UserIconsStore from 'app/icons/UserIconsStore';
 
+export class Tick implements DBTick {
+  id: string;
+  trackerId: string;
+  dateTimeMs: number;
+  value: number;
+  data: ?Object;
+
+  constructor(tick: DBTick) {
+    this.id = tick.id;
+    this.trackerId = tick.trackerId;
+    this.dateTimeMs = tick.dateTimeMs;
+    this.value = tick.value;
+    this.data = tick.data;
+  }
+}
+
+export const mapTicks = (ticks: DBTick[] = []) => ticks.map((tick) => new Tick(tick));
+
 export default class Tracker implements DBTracker {
-  id: number;
+  id: string;
   title: string;
   iconId: string;
-  typeId: string;
+  typeId: TRACKER_ID;
   active: boolean;
+  ticks: DBTick[];
 
   constructor(tracker: DBTracker) {
     this.id = tracker.id;
     this.title = tracker.title;
     this.iconId = tracker.iconId;
     this.typeId = tracker.typeId;
-    this.ticks = tracker.ticks || [];
+    this.ticks = mapTicks(tracker.ticks);
     this.props = tracker.props;
     this.active = !!tracker.active;
   }
 
   clone(data?: Object) {
-    const tracker = Object.assign(Object.create(this.__proto__), this, data);
+    const tracker = Object.assign(Object.getPrototypeOf(this), this, data);
     return tracker;
   }
 

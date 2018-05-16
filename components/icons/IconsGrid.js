@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import PropTypes from 'prop-types';
+import { withHandlers } from 'recompose';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
@@ -35,6 +36,31 @@ const styles = StyleSheet.create({
   },
 });
 
+const IconFn = ({ icon, width, onIconChosen }) => (
+  <TouchableOpacity
+    style={styles.col}
+    onPress={onIconChosen}
+  >
+    <Image source={icon.png} style={[styles.icon, { width }]} />
+  </TouchableOpacity>
+);
+
+IconFn.propTypes = {
+  width: PropTypes.number.isRequired,
+  icon: PropTypes.shape({
+    id: PropTypes.string,
+    png: PropTypes.number,
+  }).isRequired,
+  onIconChosen: PropTypes.func.isRequired,
+};
+
+const Icon = withHandlers({
+  onIconChosen: ({ onIconChosen, icon }) => (event) => {
+    event.preventDefault();
+    onIconChosen(icon.id);
+  },
+})(IconFn);
+
 export default class IconsGrid extends PureComponent {
   static propTypes = {
     style: ListView.propTypes.style,
@@ -54,7 +80,7 @@ export default class IconsGrid extends PureComponent {
     this.renderRow = this.renderRow.bind(this);
   }
 
-  getIcons(): Array<Array<UserIcon>> {
+  getIcons(): Array<UserIcon[]> {
     const icons = UserIconsStore.getAll();
 
     let iconRow = [];
@@ -89,21 +115,17 @@ export default class IconsGrid extends PureComponent {
     return { width, count };
   }
 
-  onIconChosen(icon) {
-    this.props.onIconChosen(icon.id);
-  }
-
   renderIcon(icon: UserIcon) {
+    const { onIconChosen } = this.props;
     const { width } = this.getColSize();
 
     return (
-      <TouchableOpacity
+      <Icon
         key={icon.id}
-        style={styles.col}
-        onPress={this.onIconChosen.bind(this, icon)}
-      >
-        <Image source={icon.png} style={[styles.icon, { width }]} />
-      </TouchableOpacity>
+        icon={icon}
+        width={width}
+        onIconChosen={onIconChosen}
+      />
     );
   }
 

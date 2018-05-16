@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint import/no-unresolved: 0 */
 /* eslint import/extensions: 0 */
 
@@ -10,7 +9,7 @@ import DeviceInfo from 'react-native-device-info';
 import time from 'app/time/utils';
 
 import { TrackerType, DepotEvent } from '../consts';
-import { DBTracker, DBTick } from '../interfaces';
+import { Tracker, Tick } from '../interfaces';
 import trackersDB from './trackers';
 import ticksDB from './ticks';
 import appInfo from './appInfo';
@@ -49,7 +48,7 @@ export default class Depot {
     });
   }
 
-  async addTracker(tracker: DBTracker) {
+  async addTracker(tracker: Tracker) {
     const newTracker = this.trackers.add(tracker);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
@@ -57,11 +56,11 @@ export default class Depot {
     return newTracker;
   }
 
-  async addTrackerAt(tracker: DBTracker, index: number) {
+  async addTrackerAt(tracker: Tracker, index: number) {
     return this.trackers.addAt(tracker, index);
   }
 
-  async updateTracker(tracker: DBTracker) {
+  async updateTracker(tracker: Tracker) {
     const updTracker = this.trackers.update(tracker);
     if (!updTracker) throw new Error('Tracker no found');
 
@@ -216,9 +215,7 @@ export default class Depot {
       if (!trackers.length) {
         trackers = this.trackers.getAll();
       }
-      for (const tracker of trackers) {
-        this.trackers.remove(tracker.id);
-      }
+      trackers.forEach((tracker) => this.trackers.remove(tracker.id));
       this.appInfo.setVer(appVer);
     }
   }
@@ -236,12 +233,12 @@ export default class Depot {
     return this.appInfo.getTestTrackers();
   }
 
-  getTrackerTicks(tracker: DBTracker, minDateMs: number, maxDateMs?: number) {
+  getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
     const ticks = this.getTicksFromTo(tracker.id, minDateMs, maxDateMs);
     return ticks.map((tick) => this.convertTick(tracker, tick));
   }
 
-  convertTick(tracker: DBTracker, tick: DBTick) {
+  convertTick(tracker: Tracker, tick: Tick) {
     if (tracker.typeId === TrackerType.DISTANCE.valueOf()) {
       const dist = this.stripRealm(tick.dist[0]);
       return { ...tick, ...dist };

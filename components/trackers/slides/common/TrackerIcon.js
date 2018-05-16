@@ -56,6 +56,7 @@ export default class TrackerIcon extends PureComponent {
     const dlg = registry.get(DlgType.ICONS);
     const { input } = this.props;
     dlg.show((iconId) => {
+      console.log(iconId);
       input.onChange(iconId);
       dlg.hide();
     });

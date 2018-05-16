@@ -10,6 +10,7 @@ import { List } from 'immutable';
 
 import registry, { DlgType } from 'app/components/dlg/registry';
 import TrackersModel from 'app/model/Trackers';
+import { Tick } from 'app/model/Tracker';
 import time from 'app/time/utils';
 import { caller } from 'app/utils/lang';
 
@@ -62,6 +63,7 @@ class TrackersView extends PureComponent {
   };
 
   static propTypes = {
+    ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
     trackers: PropTypes.instanceOf(List),
     dispatch: PropTypes.func.isRequired,
     onRemoveCompleted: PropTypes.func.isRequired,
@@ -78,6 +80,7 @@ class TrackersView extends PureComponent {
 
   static defaultProps = {
     trackers: List.of(),
+    ticks: null,
     onSlideChange: null,
     onMoveUp: null,
     onCancel: null,
@@ -287,12 +290,13 @@ class TrackersView extends PureComponent {
     const { style, onMoveUp, onCancel } = this.props;
     const { current, selDateMs } = this.state;
     const calcStyle = [commonStyles.absFilled, { top: 0 }, { opacity: this.calcOpacity }];
+
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
           ref={(el) => (this.calendar = el)}
           {...this.props}
-          tracker={current}
+          trackerType={current ? current.type : null}
           selDateMs={selDateMs}
           style={calcStyle}
           onMonthChanged={this.onMonthChanged}

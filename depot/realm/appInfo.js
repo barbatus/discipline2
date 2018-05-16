@@ -1,5 +1,3 @@
-/* @flow */
-
 import DB from './db';
 
 class AppInfoDepot {

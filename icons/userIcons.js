@@ -211,4 +211,4 @@ const UserIcons = new Enum({
   },
 });
 
-module.exports = UserIcons;
+export default UserIcons;

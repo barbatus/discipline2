@@ -1,10 +1,8 @@
-/* @flow */
-
-import { DBTracker } from '../interfaces';
+import { Tracker } from '../interfaces';
 
 export interface TrackersSchemaType {
   nextId: number;
-  trackers: List<DBTracker>;
+  trackers: List<Tracker>;
 }
 
 export interface List<T> extends Array<T> {

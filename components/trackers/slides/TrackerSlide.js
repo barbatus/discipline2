@@ -105,6 +105,7 @@ export default class TrackerSlide extends PureComponent {
     const { editTracker } = this.state;
     return editable && editTracker ? (
       <TrackerEditView
+        form="trackerForm"
         style={[absFilled, this.flip.style2]}
         showType={false}
         allowDelete

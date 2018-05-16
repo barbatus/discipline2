@@ -1,3 +1,5 @@
+/* eslint react/no-multi-comp: 0 */
+
 import React, { PureComponent } from 'react';
 import {
   View,
@@ -8,7 +10,7 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-import { reduxForm, Field, SubmissionError } from 'redux-form';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
@@ -164,10 +166,16 @@ export class TrackerEditView extends PureComponent {
   }
 }
 
+// TODO: some weird issue with onSubmit,
+// which is called with same initial values.
+let onChange = {};
 export default reduxForm({
-  form: 'trackerForm',
   enableReinitialize: true,
-  onSubmit: (tracker) => {
+  onChange: (values) => {
+    onChange = values;
+  },
+  onSubmit: (values) => {
+    const tracker = { ...values, ...onChange };
     if (!tracker.iconId && !tracker.title) {
       throw new SubmissionError({
         title: 'Either title or icon should be defined',

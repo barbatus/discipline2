@@ -1,17 +1,32 @@
 /* @flow */
+/* eslint no-undef: off */
 
-export interface DBTracker {
-  id?: number;
+export type TRACKER_ID = 'distance' | 'goal';
+
+export interface Tracker {
+  id: string;
+  title: string;
+  typeId: TRACKER_ID;
+  iconId: string;
+  ticks?: Array<Tick>;
+}
+
+export interface NewTracker {
   title: string;
   typeId: string;
   iconId: string;
-  ticks?: Array<DBTick>;
 }
 
-export interface DBTick {
-  id?: number;
-  trackerId: number;
+export const TRACKER_TYPE = {
+  distance: 'distData',
+  goal: 'goalData',
+};
+
+export interface Tick {
+  id: string;
+  trackerId: string;
   dateTimeMs: number;
-  value?: number;
-  data?: Object;
+  value: number;
+  data: ?Object;
+  [key: $Values<typeof TRACKER_TYPE>]: Object;
 }

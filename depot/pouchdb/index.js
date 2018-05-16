@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info';
 
 import time from 'app/time/utils';
 
-import { DBTracker } from '../interfaces';
+import { Tracker, NewTracker } from '../interfaces';
 import trackersDB from './trackers';
 import ticksDB from './ticks';
 import appDB from './app';
@@ -16,16 +16,16 @@ import { TrackerType, DepotEvent } from '../consts';
 export default class Depot {
   event = new EventEmitter();
 
-  async addTracker(tracker: DBTracker) {
-    const newTracker = trackersDB.add(tracker);
+  async addTracker(tracker: NewTracker) {
+    const newTracker = await trackersDB.add(tracker);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
     });
     return newTracker;
   }
 
-  async addTrackerAt(tracker: DBTracker, index: number) {
-    const newTracker = trackersDB.add(tracker, index);
+  async addTrackerAt(tracker: NewTracker, index: number) {
+    const newTracker = await trackersDB.add(tracker, index);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
     });
@@ -53,7 +53,7 @@ export default class Depot {
     return { ...tracker, ticks };
   }
 
-  async updateTracker(tracker: DBTracker) {
+  async updateTracker(tracker: Tracker) {
     const updTracker = await trackersDB.update(tracker);
     if (!updTracker) throw new Error('No tracker found');
 
@@ -115,12 +115,13 @@ export default class Depot {
     if (!tick) throw new Error('Last tick not found');
 
     const tracker = await trackersDB.getOne(trackId);
-    tick = await ticksDB.update({ ...tick, tracker }, value, data);
+    const updTick = { ...tick, tracker };
+    tick = await ticksDB.update(updTick, value, data);
     this.event.emit(DepotEvent.TICK_UPDATED, { tickId: tick.id, trackId });
     return tick;
   }
 
-  async getTrackerTicks(tracker: DBTracker, minDateMs: number, maxDateMs?: number) {
+  async getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
     check.assert.number(minDateMs);
     const ticks = await ticksDB.getForPeriod(tracker.id, minDateMs, maxDateMs);
     return ticks.map((tick) => ticksDB.plainTick(tick));
@@ -209,7 +210,7 @@ export default class Depot {
     return appDB.hasTestTrackers();
   }
 
-  setTestTrackers(trackers) {
+  setTestTrackers(trackers: Tracker[]) {
     return appDB.setTestTrackers(trackers);
   }
 

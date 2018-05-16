@@ -1,5 +1,5 @@
 import { TrackerType } from '../depot/consts';
-import { DBTracker } from '../depot/interfaces';
+import { NewTracker } from '../depot/interfaces';
 import depot from '../depot/depot';
 
 import Tracker, { DistanceTracker } from './Tracker';
@@ -15,21 +15,21 @@ export default class Trackers {
     return this.create(trackDoc);
   }
 
-  static add(tracker: DBTracker) {
+  static add(tracker: Tracker) {
     const trackDoc = depot.addTracker(tracker);
     return this.create(trackDoc);
   }
 
-  static addAt(tracker: DBTracker, index) {
+  static addAt(tracker: Tracker, index) {
     const trackDoc = depot.addTrackerAt(tracker, index);
     return this.create(trackDoc);
   }
 
-  static remove(tracker: DBTracker) {
+  static remove(tracker: Tracker) {
     return depot.removeTracker(tracker.id);
   }
 
-  static create(tracker: DBTracker) {
+  static create(tracker: NewTracker) {
     const type = tracker.typeId;
     switch (type) {
       case TrackerType.DISTANCE.valueOf():

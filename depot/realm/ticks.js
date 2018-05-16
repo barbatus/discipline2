@@ -1,9 +1,8 @@
-/* @flow */
 import check from 'check-types';
 
 import isArrayLike from 'lodash/isArrayLike';
 
-import { DBTick } from '../interfaces';
+import { Tick } from '../interfaces';
 import { TickSchemaType } from './interfaces';
 import db from './db';
 
@@ -18,7 +17,7 @@ class Ticks {
     [this.table] = table;
   }
 
-  getForTracker(trackId: string): Array<DBTick> {
+  getForTracker(trackId: string): Array<Tick> {
     check.assert.string(trackId);
 
     const ticks = db.objects('Tick');
@@ -28,7 +27,7 @@ class Ticks {
       .map((tick) => tick);
   }
 
-  getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number): Array<DBTick> {
+  getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number): Array<Tick> {
     check.assert.string(trackId);
     check.assert.number(minDateMs);
 
@@ -43,7 +42,7 @@ class Ticks {
       .map((tick) => tick);
   }
 
-  getLast(trackId: string): DBTick {
+  getLast(trackId: string): Tick {
     check.assert.string(trackId);
 
     const ticks = this.getForTracker(trackId);
@@ -57,7 +56,7 @@ class Ticks {
     return ticks.length;
   }
 
-  add(tick: DBTick): DBTick {
+  add(tick: Tick): Tick {
     let dbTick = { ...tick };
     db.write(() => {
       dbTick.id = this.table.nextId.toString();
@@ -72,7 +71,7 @@ class Ticks {
     return data.filtered(`tickId = ${tickId}`)[0];
   }
 
-  addData(schema: string, tick: DBTick, data: Object) {
+  addData(schema: string, tick: Tick, data: Object) {
     db.write(() => {
       db.create(schema, { tick, ...data });
     });

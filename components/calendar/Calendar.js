@@ -28,6 +28,8 @@ export default class Calendar extends PureComponent {
   };
 
   static defaultProps = {
+    ticks: null,
+    selDateMs: null,
     customStyle: {},
     dayHeadings: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
     titleFormat: 'MMMM YYYY',
@@ -35,7 +37,6 @@ export default class Calendar extends PureComponent {
     dateMs: time.getCurMonthDateMs(),
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
-    selDateMs: null,
   };
 
   constructor(props) {
@@ -122,7 +123,7 @@ export default class Calendar extends PureComponent {
 
     const monthsToRender = this.getMonthsToRender(dateMs);
     const monthViews = monthsToRender.map((monthDate) => {
-      const monthTicks = ticks.get(monthDate.month());
+      const monthTicks = ticks ? ticks.get(monthDate.month()) : null;
       const shown = dateMs === monthDate.valueOf();
       const currSelDateMs = shown ? selDateMs : null;
       return (

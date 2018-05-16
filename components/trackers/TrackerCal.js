@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import { View, Animated } from 'react-native';
+import { Animated } from 'react-native';
 import PropTypes from 'prop-types';
 
+import Tracker, { Tick } from 'app/model/Tracker';
 import { combineTicksMonthly } from 'app/model/utils';
 
 import Calendar from '../calendar/Calendar';
 
 export default class TrackerCal extends Component {
   static propTypes = {
+    trackerType: PropTypes.object,
+    ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
     selDateMs: PropTypes.number,
     style: Animated.View.propTypes.style,
   };
 
   static defaultProps = {
     ticks: [],
+    trackerType: null,
     selDateMs: null,
     style: null,
   };
@@ -28,9 +32,9 @@ export default class TrackerCal extends Component {
 
   componentWillReceiveProps(props) {
     if (this.props.ticks !== props.ticks) {
-      const { tracker } = this.props;
+      const { trackerType } = this.props;
       this.setState({
-        ticksMap: combineTicksMonthly(props.ticks, tracker.type),
+        ticksMap: combineTicksMonthly(props.ticks, trackerType),
         selDateMs: null,
       });
     }

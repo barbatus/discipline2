@@ -5,20 +5,20 @@ import assert from 'assert';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 
-import { DBTracker } from '../interfaces';
+import { Tracker, NewTracker } from '../interfaces';
 import db from './db';
 
 class Trackers {
-  async getOne(trackId: string): Promise<DBTracker> {
+  async getOne(trackId: string): Promise<Tracker> {
     return db.find('tracker', trackId);
   }
 
-  async getAll(): Promise<DBTracker[]> {
+  async getAll(): Promise<Tracker[]> {
     const list = await db.findOne('trackerList');
     return list ? list.trackers : [];
   }
 
-  async add(data: DBTracker, index?: number): DBTracker {
+  async add(data: NewTracker, index?: number): Promise<Tracker> {
     const tracker = this.buildNewTracker(data);
     const newTracker = await db.save('tracker', tracker);
     const list = await db.findOneRaw('trackerList');
@@ -30,21 +30,21 @@ class Trackers {
     return newTracker;
   }
 
-  async update(data: DBTracker): DBTracker {
+  async update(data: Tracker): Promise<Tracker> {
     let tracker = await this.getOne(data.id);
-    if (!tracker) { return null; }
+    if (!tracker) { return tracker; }
 
     tracker = { ...tracker, ...data };
     return db.save('tracker', tracker);
   }
 
-  async remove(trackerOrId: string | DBTracker): boolean {
+  async remove(trackerOrId: string | Tracker): Promise<boolean> {
     if (isObject(trackerOrId)) {
       assert(has(trackerOrId, 'rev'));
     }
 
-    const tracker = isObject(trackerOrId) ?
-      trackerOrId : await this.getOne(trackerOrId);
+    const tracker = typeof trackerOrId === 'string' ?
+      await this.getOne(trackerOrId) : trackerOrId;
     if (!tracker) { return false; }
 
     const list = await db.findOneRaw('trackerList');
@@ -55,7 +55,7 @@ class Trackers {
     return true;
   }
 
-  buildNewTracker(data: DBTracker) {
+  buildNewTracker(data: NewTracker) {
     return { props: { alerts: false }, ...data };
   }
 }

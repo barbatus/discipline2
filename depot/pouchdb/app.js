@@ -2,6 +2,8 @@
 
 import db from './db';
 
+import { Tracker } from '../interfaces';
+
 class App {
   async getVer() {
     const app = await db.findOneRaw('app');
@@ -19,7 +21,7 @@ class App {
     return app.testTrackers;
   }
 
-  async setTestTrackers(testTrackers) {
+  async setTestTrackers(testTrackers: Tracker[]) {
     const app = await db.findOne('app');
     return db.save('app', { ...app, testTrackers });
   }

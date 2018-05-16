@@ -1,6 +1,7 @@
 import time from 'app/time/utils';
 
 import depot from '../depot/depot';
+import { mapTicks } from './Tracker';
 
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
 
@@ -15,7 +16,7 @@ export const updateCalendar = (
       type: UPDATE_CALENDAR,
       dateMs,
       tracker,
-      ticks,
+      ticks: mapTicks(ticks),
     }),
   );
 

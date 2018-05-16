@@ -45,9 +45,11 @@ export default class Enum {
     return this.symbols().map((sym) => sym.valueOf());
   }
 
+  /* eslint-disable eqeqeq */
   fromValue(value) {
     return this.symbols().find((sym) => sym == value);
   }
+  /* eslint-enable eqeqeq */
 
   fromKey(key) {
     return this[key];
