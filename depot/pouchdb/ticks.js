@@ -86,8 +86,9 @@ class Ticks {
   plainTick(tick: Tick) {
     const types = Object.keys(TRACKER_TYPE);
     return types.reduce((accum, type) => {
-      if (tick[type]) {
-        return { ...omit(accum, type), ...tick[type] };
+      const dataType = TRACKER_TYPE[type];
+      if (tick[dataType]) {
+        return { ...omit(accum, dataType), ...tick[dataType] };
       }
       return accum;
     }, tick);

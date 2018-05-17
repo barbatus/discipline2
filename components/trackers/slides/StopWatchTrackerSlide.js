@@ -130,7 +130,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
     this.timer.start(0);
 
-    this.onStart();
+    this.onStart(0);
   }
 
   onTimer(timeMs: number) {

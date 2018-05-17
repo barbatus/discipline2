@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import PropTypes from 'prop-types';
-import { withHandlers } from 'recompose';
+import { compose, pure, withHandlers } from 'recompose';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
@@ -54,12 +54,15 @@ IconFn.propTypes = {
   onIconChosen: PropTypes.func.isRequired,
 };
 
-const Icon = withHandlers({
-  onIconChosen: ({ onIconChosen, icon }) => (event) => {
-    event.preventDefault();
-    onIconChosen(icon.id);
-  },
-})(IconFn);
+const Icon = compose(
+  pure,
+  withHandlers({
+    onIconChosen: ({ onIconChosen, icon }) => (event) => {
+      event.preventDefault();
+      onIconChosen(icon.id);
+    },
+  }),
+)(IconFn);
 
 export default class IconsGrid extends PureComponent {
   static propTypes = {

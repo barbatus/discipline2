@@ -9,11 +9,9 @@ import {
 } from 'react-native';
 
 import { getIcon } from 'app/icons/icons';
-
 import { caller } from 'app/utils/lang';
 
 import { trackerStyles } from '../styles/trackerStyles';
-
 import TrackerSlide from './TrackerSlide';
 
 export default class GoalTrackerSlide extends TrackerSlide {

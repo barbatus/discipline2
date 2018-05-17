@@ -131,14 +131,14 @@ const api = {
         const ids = value[resType] || value[resTypes];
         const valueData = Array.isArray(ids) ?
           ids.map((id) => datas.find((dt) => id === dt.id)) :
-          datas.find((id) => id === ids);
-        if (valueData.length) {
+          datas.find((dt) => ids === dt.id);
+        if (valueData) {
           const mergedValue = { ...value };
           if (Array.isArray(ids)) {
             mergedValue[resTypes] = valueData;
             return mergedValue;
           }
-          [mergedValue[resType]] = valueData;
+          mergedValue[resType] = valueData;
           return mergedValue;
         }
         return value;

@@ -1,9 +1,6 @@
 import check from 'check-types';
-
 import React, { PureComponent } from 'react';
-
 import PropTypes from 'prop-types';
-
 import {
   TouchableWithoutFeedback,
   View,
@@ -12,9 +9,8 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-
 import styled from 'styled-components/native';
-
+import { compose, pure, withHandlers } from 'recompose';
 import { first, last } from 'lodash';
 
 import { getIcon } from 'app/icons/icons';
@@ -110,6 +106,34 @@ const TypeView = styled.View`
     isSelected ? '#E6E6E6' : 'transparent'};
 `;
 
+const SlideTypeFn = ({ type, selected, onTypeChosen }) => (
+  <TouchableWithoutFeedback onPress={onTypeChosen}>
+    <TypeView isSelected={selected}>
+      <View style={styles.typeIconContainer}>
+        <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
+      </View>
+      <View style={styles.typeTitleContainer}>
+        <Text style={styles.typeTitle}>
+          {type.title}
+        </Text>
+      </View>
+    </TypeView>
+  </TouchableWithoutFeedback>
+);
+
+SlideTypeFn.propTypes = {
+  type: PropTypes.object.isRequired,
+  selected: PropTypes.bool.isRequired,
+  onTypeChosen: PropTypes.func.isRequired,
+};
+
+const SlideType = compose(
+  pure,
+  withHandlers({
+    onTypeChosen: ({ type, onTypeChosen }) => () => onTypeChosen(type),
+  }),
+)(SlideTypeFn);
+
 export default class TrackerTypesSlide extends PureComponent {
   static propTypes = {
     typeId: PropTypes.string.isRequired,
@@ -128,6 +152,7 @@ export default class TrackerTypesSlide extends PureComponent {
     this.state = {
       type: TrackerType.fromValue(props.typeId),
     };
+    this.onTypeChosen = ::this.onTypeChosen;
   }
 
   componentWillReceiveProps(props) {
@@ -147,21 +172,12 @@ export default class TrackerTypesSlide extends PureComponent {
     const firstType = first(TYPES);
 
     const types = TYPES.map((type) => (
-      <TouchableWithoutFeedback
+      <SlideType
         key={type.valueOf()}
-        onPress={this.onTypeChosen.bind(this, type)}
-      >
-        <TypeView isSelected={selected === type}>
-          <View style={styles.typeIconContainer}>
-            <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
-          </View>
-          <View style={styles.typeTitleContainer}>
-            <Text style={styles.typeTitle}>
-              {type.title}
-            </Text>
-          </View>
-        </TypeView>
-      </TouchableWithoutFeedback>
+        type={type}
+        selected={selected === type}
+        onTypeChosen={this.onTypeChosen}
+      />
     ));
 
     const borderColor = (selected === lastType || selected === firstType) ?

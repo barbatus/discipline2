@@ -1,12 +1,15 @@
 import React from 'react';
-import { FlatList, Text } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { compose, pure, withHandlers } from 'recompose';
 
 import { getIcon } from 'app/icons/icons';
 import { combineTicksDaily } from 'app/model/utils';
+import { TrackerType } from 'app/depot/consts';
 
+import MapsDlg from './MapsDlg';
 import CommonModal from './CommonModal';
 
 const TextRow = styled.View`
@@ -31,7 +34,7 @@ const NextImg = styled.Image`
   height: 15px;
 `;
 
-const listItemFn = ({ item }) => {
+const ListItemFn = ({ item, onPress, showMore }) => {
   const timeStr = moment(item.dateTimeMs).format('LT');
   return (
     <TextRow>
@@ -39,31 +42,92 @@ const listItemFn = ({ item }) => {
         <TimeText>{timeStr}</TimeText>
         <Text>{item.desc}</Text>;
       </TextCol>
-      <NextImg source={getIcon('next')} />
+      {
+        showMore ?
+          <TouchableOpacity onPress={onPress}>
+            <NextImg source={getIcon('next')} />
+          </TouchableOpacity>
+          : null
+      }
     </TextRow>
   );
 };
 
-listItemFn.propTypes = {
+ListItemFn.propTypes = {
   item: PropTypes.shape({
     dateTimeMs: PropTypes.number,
     desc: PropTypes.string,
   }).isRequired,
+  onPress: PropTypes.func,
+  showMore: PropTypes.bool,
 };
 
+ListItemFn.defaultProps = {
+  onPress: null,
+  showMore: false,
+};
+
+const ListItem = compose(
+  pure,
+  withHandlers({
+    onPress: ({ onPress, item }) => (event) => {
+      event.preventDefault();
+      onPress(item);
+    },
+  }),
+)(ListItemFn);
+
 export default class TicksDlg extends CommonModal {
+  constructor(props) {
+    super(props);
+    this.onItemPress = ::this.onItemPress;
+    this.renderItem = ::this.renderItem;
+  }
+
   get content() {
     const { items } = this.state;
-    return items ?
-      <FlatList
-        data={items}
-        keyExtractor={(item, index) => `${index}`}
-        renderItem={listItemFn}
-      /> : null;
+    return items ? (
+      <View>
+        <FlatList
+          data={items}
+          keyExtractor={(item, index) => index}
+          renderItem={this.renderItem}
+        />
+        <MapsDlg ref={(el) => (this.mapsDlg = el)} />
+      </View>
+    ) : null;
+  }
+
+  showMap(item) {
+    const paths = item.paths.map((path) =>
+      path.map(({ lat, lon }) => ({
+        latitude: lat,
+        longitude: lon,
+      })));
+    this.mapsDlg.show(paths);
   }
 
   onBeforeShown(ticks, trackType) {
     const dailyMap = combineTicksDaily(ticks, trackType);
-    this.setState({ items: Object.values(dailyMap) });
+    this.setState({ trackType, items: Object.values(dailyMap) });
+  }
+
+  onItemPress(item) {
+    const { trackType } = this.state;
+    if (trackType === TrackerType.DISTANCE) {
+      this.showMap(item);
+    }
+  }
+
+  renderItem({ item }) {
+    const { trackType } = this.state;
+    const showMore = trackType === TrackerType.DISTANCE;
+    return (
+      <ListItem
+        item={item}
+        onPress={showMore ? this.onItemPress : null}
+        showMore={showMore}
+      />
+    );
   }
 }

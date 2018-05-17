@@ -271,7 +271,8 @@ class TrackersView extends PureComponent {
   }
 
   saveEdit() {
-    if (Animation.on) return;
+    // Animation.on is animation to be done after onSaveCompleted.
+    if (this.isActive || Animation.on) return;
 
     this.isActive = true;
     const { dispatch } = this.props;
@@ -281,9 +282,11 @@ class TrackersView extends PureComponent {
   // Edit tracker events.
 
   cancelEdit() {
-    if (Animation.on) return;
+    if (this.isActive) return;
 
-    this.trackers.cancelEdit();
+    this.isActive = true;
+    this.trackers.cancelEdit(() =>
+      (this.isActive = false));
   }
 
   render() {
@@ -343,7 +346,8 @@ export default connect(
       dispatch(startTracker(tracker, value, data)),
     onProgress: (tracker, value, data) =>
       dispatch(updateLastTick(tracker, value, data)),
-    onStop: (tracker) => dispatch(stopTracker(tracker)),
+    onStop: (tracker, value, data) =>
+      dispatch(stopTracker(tracker, value, data)),
     onUndo: (tracker) => dispatch(undoLastTick(tracker)),
     onAddCompleted: (index) => {
       dispatch(completeChange(index));

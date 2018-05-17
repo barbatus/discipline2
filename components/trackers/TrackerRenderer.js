@@ -205,19 +205,19 @@ export default class TrackerRenderer extends PureComponent {
     caller(this.props.onTap, tracker);
   }
 
-  onTick(tracker: Tracker, value?: number, data?: any) {
+  onTick(tracker: Tracker, value: number, data: any) {
     caller(this.props.onTick, tracker, value, data);
   }
 
-  onStart(tracker: Tracker, value?: number, data?: any) {
+  onStart(tracker: Tracker, value: number, data: any) {
     caller(this.props.onStart, tracker, value, data);
   }
 
-  onStop(tracker: Tracker) {
-    caller(this.props.onStop, tracker);
+  onStop(tracker: Tracker, value: number, data: any) {
+    caller(this.props.onStop, tracker, value, data);
   }
 
-  onProgress(tracker: Tracker, value?: number, data?: any) {
+  onProgress(tracker: Tracker, value: number, data: any) {
     InteractionManager.runAfterInteractions(() =>
       caller(this.props.onProgress, tracker, value, data)
     );

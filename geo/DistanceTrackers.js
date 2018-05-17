@@ -26,20 +26,13 @@ export default new DistanceTrackers();
 
 export class DistanceTracker {
   hInterval = null;
-
-  time = 0;
-
-  dist = 0;
-
-  latLon = {};
-
+  time: number;
+  dist: number;
+  latLon: { lat: number, lon: number };
+  updTime: number
   isStarting = false;
-
-  engaged = false;
-
   unwatch = null;
-
-  events: EventEmitter = new EventEmitter();
+  events = new EventEmitter();
 
   constructor(distInt = 5, timeInt = 100) {
     this.distInterval = distInt;
@@ -51,10 +44,9 @@ export class DistanceTracker {
     return !!this.hInterval;
   }
 
-  get track() {
+  get posState() {
     return {
       dist: this.dist,
-      time: this.time,
       lat: this.latLon.lat,
       lon: this.latLon.lon,
     };
@@ -66,7 +58,6 @@ export class DistanceTracker {
     this.isStarting = true;
     BGGeoLocationWatcher.watchPos(({ coords }, error) => {
       this.isStarting = false;
-      this.fireOnStart(error);
       caller(callback, error);
 
       if (error) return;
@@ -92,68 +83,59 @@ export class DistanceTracker {
     };
 
     BGGeoLocationWatcher.getPos((pos, error) => {
-      if (!error) {
-        this.updatePosOnStop(pos);
+      if (error) {
+        caller(callback, null, error);
+      } else {
+        const newState = this.setNextPosState(pos);
+        caller(callback, newState ? this.posState : null);
       }
-      this.fireOnStop(this.track);
-      caller(callback, this.track, error);
       reset();
     });
   }
 
   dispose() {
     this.stop();
-    this.events.removeAllListeners('onStart');
-    this.events.removeAllListeners('onUpdate');
-    this.events.removeAllListeners('onStop');
+    this.events.removeAllListeners('onLatLonUpdate');
+    this.events.removeAllListeners('onTimeUpdate');
   }
 
   onPosChange(pos) {
-    this.updatePosOnChange(pos);
-    this.posTime = Date.now();
+    if (this.setNextPosState(pos)) {
+      this.fireLatLonUpdate(this.posState);
+    }
   }
 
-  fireUpdatePos() {
-    this.fireOnUpdate(this.track);
+  fireLatLonUpdate(latLon) {
+    this.events.emit('onLatLonUpdate', latLon);
   }
 
-  fireOnStart(error: Object) {
-    this.events.emit('onStart', error);
-    this.posTime = Date.now();
-  }
-
-  fireOnUpdate(track: Object) {
-    this.events.emit('onUpdate', track);
-  }
-
-  fireOnStop(track: Object) {
-    this.events.emit('onStop', track);
+  fireTimeUpdate() {
+    this.events.emit('onTimeUpdate', this.time);
   }
 
   startTracking({ latitude, longitude, heading }) {
     this.dist = 0;
     this.time = 0;
+    this.updTime = Date.now();
     this.heading = heading;
     this.latLon = { lat: latitude, lon: longitude };
     this.hInterval = setInterval(() => {
       this.time += this.timeInterval;
-      this.fireUpdatePos();
+      this.fireTimeUpdate();
     }, this.timeInterval);
   }
 
-  updatePosOnStop({ coords: { speed, latitude, longitude } }) {
-    const time = Date.now() - this.posTime;
-    const dist = (speed / 1000) * (time / 1000);
-    this.dist += dist;
-    this.latLon = { lat: latitude, lon: longitude };
-  }
-
-  updatePosOnChange({ coords }) {
-    const { speed, latitude, longitude } = coords;
-    const time = Date.now() - this.posTime;
-    const dist = (speed / 1000) * (time / 1000);
-    this.dist += dist;
-    this.latLon = { lat: latitude, lon: longitude };
+  setNextPosState({ coords: { speed, latitude, longitude } }) {
+    if (this.latLon.latitude !== latitude ||
+        this.latLon.longitude !== longitude) {
+      const time = Date.now() - this.updTime;
+      const dist = (speed / 1000) * (time / 1000);
+      this.dist += dist;
+      this.latLon = { lat: latitude, lon: longitude };
+      this.updTime = Date.now();
+      return true;
+    }
+    return false;
   }
 
   onGeoError(error) {

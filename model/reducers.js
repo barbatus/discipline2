@@ -15,6 +15,7 @@ import {
   COMPLETE_CHANGE,
   START_TRACKER,
   STOP_TRACKER,
+  STOP_TRACKER_WITH_TICK_UPDATE,
 } from './actions';
 
 import { Tick } from './Tracker';
@@ -82,7 +83,14 @@ export const trackersReducer = handleActions(
       };
     },
     [STOP_TRACKER]: (state, { tracker }) => {
-      const trackers = cloneTracker(state.trackers, tracker);
+      const trackers = cloneTracker(state.trackers, tracker, null);
+      return {
+        ...state,
+        trackers,
+      };
+    },
+    [STOP_TRACKER_WITH_TICK_UPDATE]: (state, { tracker, tick }) => {
+      const trackers = cloneTracker(state.trackers, tracker, null, [tick]);
       return {
         ...state,
         trackers,

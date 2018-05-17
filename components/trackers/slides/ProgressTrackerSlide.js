@@ -15,11 +15,11 @@ export default class ProgressTrackerSlide extends TrackerSlide {
     super.onEdit();
   }
 
-  onStop() {
-    caller(this.props.onStop);
+  onStop(value?: number, data?: any) {
+    caller(this.props.onStop, value, data);
   }
 
-  onStart(value?: number, data?: any) {
+  onStart(value: number, data?: any) {
     caller(this.props.onStart, value, data);
   }
 

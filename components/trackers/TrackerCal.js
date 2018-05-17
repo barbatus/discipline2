@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Animated } from 'react-native';
 import PropTypes from 'prop-types';
 
-import Tracker, { Tick } from 'app/model/Tracker';
+import { Tick } from 'app/model/Tracker';
 import { combineTicksMonthly } from 'app/model/utils';
 
 import Calendar from '../calendar/Calendar';

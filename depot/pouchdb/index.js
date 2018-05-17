@@ -35,7 +35,7 @@ export default class Depot {
   async getTrackers() {
     const trackers = await trackersDB.getAll();
     const allTicks = await Promise.all(trackers.map((tracker) =>
-      this.getTrackerTicks(tracker, time.getDateMs())
+      this.getTrackerTicks(tracker.id, time.getDateMs())
     ));
     return trackers.map((tracker, index) => ({
       ...tracker,
@@ -49,7 +49,7 @@ export default class Depot {
     const tracker = await trackersDB.getOne(trackId);
     if (!tracker) throw new Error('Tracker not found');
 
-    const ticks = await this.getTrackerTicks(tracker, time.getDateMs());
+    const ticks = await this.getTrackerTicks(tracker.id, time.getDateMs());
     return { ...tracker, ticks };
   }
 
@@ -80,7 +80,7 @@ export default class Depot {
     check.assert.string(trackId);
     check.assert.number(minDateMs);
 
-    return ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
+    return this.getTrackerTicks(trackId, minDateMs, maxDateMs);
   }
 
   async addTick(
@@ -118,12 +118,11 @@ export default class Depot {
     const updTick = { ...tick, tracker };
     tick = await ticksDB.update(updTick, value, data);
     this.event.emit(DepotEvent.TICK_UPDATED, { tickId: tick.id, trackId });
-    return tick;
+    return ticksDB.plainTick(tick);
   }
 
-  async getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
-    check.assert.number(minDateMs);
-    const ticks = await ticksDB.getForPeriod(tracker.id, minDateMs, maxDateMs);
+  async getTrackerTicks(trackId: string, minDateMs: number, maxDateMs?: number) {
+    const ticks = await ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
     return ticks.map((tick) => ticksDB.plainTick(tick));
   }
 

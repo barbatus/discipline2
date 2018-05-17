@@ -52,7 +52,6 @@ const TimeCol = styled(TextCol)`
 const TickText = styled.Text`
   color: #F5F5F5;
   font-size: 15px;
-  line-height: 16px;
 `;
 
 const PADDING = 15;

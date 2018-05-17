@@ -62,6 +62,7 @@ export default class Trackers extends PureComponent {
 
   rendered = false;
   scaleStart = false;
+  editStart = false;
   searchView = false;
 
   constructor(props) {
@@ -112,7 +113,10 @@ export default class Trackers extends PureComponent {
   }
 
   onEdit(tracker: Tracker) {
-    this.swiper.showEdit();
+    if (this.editStart) { return; }
+
+    this.editStart = true;
+    this.swiper.showEdit(() => (this.editStart = false));
     caller(this.props.onEdit, tracker);
   }
 
@@ -185,8 +189,8 @@ export default class Trackers extends PureComponent {
     this.handleMoveDown();
   }
 
-  cancelEdit() {
-    this.swiper.cancelEdit();
+  cancelEdit(callback) {
+    this.swiper.cancelEdit(callback);
     caller(this.props.onCancel);
   }
 

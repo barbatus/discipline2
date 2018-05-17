@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#BD8E83',
     minWidth: 100,
-    minHeight: 40,
     borderRadius: 3,
     shadowColor: 'black',
     shadowOpacity: 0.15,

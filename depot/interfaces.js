@@ -24,9 +24,8 @@ export const TRACKER_TYPE = {
 
 export interface Tick {
   id: string;
-  trackerId: string;
   dateTimeMs: number;
   value: number;
-  data: ?Object;
+  data: any;
   [key: $Values<typeof TRACKER_TYPE>]: Object;
 }

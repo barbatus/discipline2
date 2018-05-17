@@ -1,7 +1,7 @@
 import time from 'app/time/utils';
 
 import depot from '../depot/depot';
-import { mapTicks } from './Tracker';
+import { Tick, mapTicks } from './Tracker';
 
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
 
@@ -70,7 +70,7 @@ export const tickTracker = (tracker, value, data) => async (dispatch) => {
   return dispatch({
     type: TICK_TRACKER,
     tracker,
-    tick,
+    tick: new Tick(tick),
   });
 };
 
@@ -82,20 +82,28 @@ export const startTracker = (tracker, value, data) => async (dispatch) => {
   return dispatch({
     type: START_TRACKER,
     tracker: tracker.clone({ active: true }),
-    tick,
+    tick: new Tick(tick),
   });
 };
 
 export const STOP_TRACKER = 'STOP_TRACKER';
 
-export const stopTracker = (tracker) => async (dispatch) =>
-  new Promise((resolve) => {
-    dispatch({
-      type: STOP_TRACKER,
+export const STOP_TRACKER_WITH_TICK_UPDATE = 'STOP_TRACKER_WITH_TICK_UPDATE';
+
+export const stopTracker = (tracker, value, data) => async (dispatch) => {
+  if (value) {
+    const tick = await depot.updateLastTick(tracker.id, value, data);
+    return dispatch({
+      type: STOP_TRACKER_WITH_TICK_UPDATE,
       tracker: tracker.clone({ active: false }),
+      tick: new Tick(tick),
     });
-    resolve();
+  }
+  return dispatch({
+    type: STOP_TRACKER,
+    tracker: tracker.clone({ active: false }),
   });
+};
 
 export const UNDO_LAST_TICK = 'UNDO_LAST_TICK';
 
@@ -115,7 +123,7 @@ export const updateLastTick = (tracker, value, data) => async (dispatch) => {
   return dispatch({
     type: UPDATE_LAST_TICK,
     tracker,
-    tick,
+    tick: new Tick(tick),
   });
 };
 

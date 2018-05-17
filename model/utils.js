@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import { formatDistance } from 'app/utils/format';
 import { TrackerType } from 'app/depot/consts';
+import timeUtils from 'app/time/utils';
 
 import { Tick } from './Tracker';
 
@@ -31,11 +32,12 @@ export function combineTicksDaily(ticks: Tick[], type: TrackerType) {
   const mins = groupBy(ticks, (tick) =>
     tick.dateTimeMs - (tick.dateTimeMs % 60000),
   );
-  return Object.keys(mins).map((minKey) => {
+  const tickPrints = Object.keys(mins).map((minKey) => {
     const minMs = parseInt(minKey, 10);
     const ticksMinly = mins[minKey];
     return printTick(ticksMinly, minMs, type);
   });
+  return tickPrints.filter((print) => !!print.value);
 }
 
 function printTick(ticks: Tick[], minMs: number, type: TrackerType) {
@@ -43,7 +45,9 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType) {
     case TrackerType.GOAL:
       return { desc: 'The goal is achieved', value: 1, dateTimeMs: minMs };
     case TrackerType.COUNTER: {
-      return { desc: 'Increased by one', value: ticks.length, dateTimeMs: minMs };
+      const value = ticks.length;
+      const times = value > 1 ? 'times' : 'time';
+      return { desc: `Increased ${value} ${times}`, value, dateTimeMs: minMs };
     }
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
@@ -52,12 +56,17 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType) {
     case TrackerType.DISTANCE: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       const time = ticks.reduce((accum, tick) => accum + tick.time, 0);
+      const paths = ticks.reduce((accum, tick) => {
+        accum.push(tick.latlon);
+        return accum;
+      }, []);
       const distFmt = formatDistance(value);
-      const timeFmt = time.formatTimeMs(time);
+      const timeFmt = timeUtils.formatTimeMs(time);
       return {
         desc: `${distFmt.format()}${distFmt.unit} in ${timeFmt.format(false)}`,
         value,
         time,
+        paths,
         dateTimeMs: minMs,
       };
     }

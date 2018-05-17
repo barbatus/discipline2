@@ -21,7 +21,7 @@ import DistanceTrackers, { DistanceTracker } from 'app/geo/DistanceTrackers';
 import { trackerStyles } from '../styles/trackerStyles';
 import { slideWidth } from '../styles/slideStyles';
 
-import ProgressTrackerSlide from './TrackerSlide';
+import ProgressTrackerSlide from './ProgressTrackerSlide';
 import TimeLabel from './TimeLabel';
 import StartStopBtn from './common/StartStopBtn';
 
@@ -159,7 +159,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     tracker: PropTypes.instanceOf(Tracker).isRequired,
   };
 
-  distTracker: DistanceTracker = null;
+  distTracker: DistanceTracker;
   path = [];
 
   constructor(props) {
@@ -172,7 +172,8 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       DIST_INTRVL,
       TIME_INTRVL,
     );
-    this.distTracker.events.on('onUpdate', ::this.onDistUpdate);
+    this.distTracker.events.on('onLatLonUpdate', ::this.onLatLonUpdate);
+    this.distTracker.events.on('onTimeUpdate', ::this.onTimeUpdate);
     this.showMap = ::this.showMap;
     this.onStopBtn = ::this.onStopBtn;
     this.onStartBtn = ::this.onStartBtn;
@@ -220,19 +221,29 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
     Vibration.vibrate();
 
-    this.onStart(0, { time: 0 });
+    this.onStart(0, { time: 0, latlon: [] });
   }
 
-  onDistStop(track) {
+  onDistStop(latLon) {
     this.setState({ active: false });
 
-    this.onDistUpdate(track);
-    this.onStop();
+    if (latLon) {
+      const { dist, lat, lon } = latLon;
+      this.path.push({ latitude: lat, longitude: lon });
+      this.onStop(dist, { latlon: { lat, lon } });
+    } else {
+      this.onStop();
+    }
   }
 
-  onDistUpdate({ dist, time, lat, lon }) {
+  onTimeUpdate(time: number) {
+    const { tracker } = this.props;
+    this.onProgress(tracker.lastValue, { time });
+  }
+
+  onLatLonUpdate({ dist, lat, lon }) {
     this.path.push({ latitude: lat, longitude: lon });
-    this.onProgress(dist, { time, latlon: { lat, lon } });
+    this.onProgress(dist, { latlon: { lat, lon } });
   }
 
   showMap() {

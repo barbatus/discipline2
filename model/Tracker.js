@@ -6,17 +6,17 @@ import UserIconsStore from 'app/icons/UserIconsStore';
 
 export class Tick implements DBTick {
   id: string;
-  trackerId: string;
   dateTimeMs: number;
   value: number;
   data: ?Object;
 
   constructor(tick: DBTick) {
     this.id = tick.id;
-    this.trackerId = tick.trackerId;
     this.dateTimeMs = tick.dateTimeMs;
     this.value = tick.value;
     this.data = tick.data;
+    this.time = tick.time;
+    this.latlon = tick.latlon;
   }
 }
 
@@ -76,6 +76,12 @@ export default class Tracker implements DBTracker {
   get value() {
     const values = this.ticks.map((tick) => tick.value || 0);
     return values.reduceRight((p, n) => p + n, 0);
+  }
+
+  get lastValue() {
+    const len = this.ticks.length;
+    if (!len) return null;
+    return this.ticks[len - 1].value;
   }
 }
 
