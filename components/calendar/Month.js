@@ -84,8 +84,8 @@ export default class Month extends PureComponent {
   componentWillReceiveProps({ selDateMs }) {
     if (this.props.selDateMs !== selDateMs) {
       const { ticks } = this.props;
-      this.state.tooltipShown =
-        selDateMs && !!ticks.get(moment(selDateMs).date() - 1);
+      this.state.tooltipShown = selDateMs ?
+        ticks.get(moment(selDateMs).date() - 1) : false;
     }
   }
 
@@ -127,7 +127,7 @@ export default class Month extends PureComponent {
   renderTooltip() {
     const { ticks, selDateMs, onTooltipClick } = this.props;
     const dayIndex = moment(selDateMs).date() - 1;
-    const ticksShown = ticks.get(dayIndex).slice(0, 2);
+    const ticksShown = ticks.get(dayIndex).slice(0, 3);
     const size = ticksShown.length - 1;
     const tickTimes = ticksShown.map((tick, index) => {
       const timeStr = moment(tick.dateTimeMs).format('LT');
@@ -151,7 +151,7 @@ export default class Month extends PureComponent {
     const tooltipPos = this.getTooltipPos(selDateMs);
     return (
       <Tooltip x={tooltipPos.x} y={tooltipPos.y}>
-        <TouchableOpacity onPress={onTooltipClick}>
+        <TouchableOpacity onPress={() => onTooltipClick(ticks.get(dayIndex))}>
           <View style={styles.tooltipContent}>
             <TimeCol>
               {tickTimes}

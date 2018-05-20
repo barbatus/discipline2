@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
@@ -27,7 +27,7 @@ const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
 );
 
 NewTrackerSlideFn.propTypes = {
-  style: View.propTypes.style,
+  style: ViewPropTypes.style,
   tracker: PropTypes.instanceOf(Object),
   onTypeSelect: PropTypes.func.isRequired,
   onNewTracker: PropTypes.func.isRequired,

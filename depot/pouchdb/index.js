@@ -95,7 +95,7 @@ export default class Depot {
 
     const newTick = await ticksDB.add({ tracker, dateTimeMs, value }, data);
     this.event.emit(DepotEvent.TICK_ADDED, { tickId: newTick.id, trackId: tracker.id });
-    return newTick;
+    return ticksDB.plainTick(newTick);
   }
 
   async undoLastTick(trackId: string) {

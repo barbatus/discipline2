@@ -1,5 +1,11 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, Animated, InteractionManager } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated,
+  InteractionManager,
+  ViewPropTypes,
+} from 'react-native';
 import PropTypes from 'prop-types';
 
 import reactMixin from 'react-mixin';
@@ -39,7 +45,7 @@ export default class Trackers extends PureComponent {
     onSwiperShown: PropTypes.func,
     onSlideChange: PropTypes.func,
     trackers: PropTypes.instanceOf(List).isRequired,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -62,7 +68,6 @@ export default class Trackers extends PureComponent {
 
   rendered = false;
   scaleStart = false;
-  editStart = false;
   searchView = false;
 
   constructor(props) {
@@ -113,10 +118,7 @@ export default class Trackers extends PureComponent {
   }
 
   onEdit(tracker: Tracker) {
-    if (this.editStart) { return; }
-
-    this.editStart = true;
-    this.swiper.showEdit(() => (this.editStart = false));
+    this.swiper.showEdit();
     caller(this.props.onEdit, tracker);
   }
 
@@ -126,6 +128,7 @@ export default class Trackers extends PureComponent {
 
   onScaleStart() {
     this.scaleStart = true;
+    this.renderSearchTrackers(this.props.trackers);
   }
 
   onScaleMove(dv) {
@@ -137,7 +140,6 @@ export default class Trackers extends PureComponent {
   onScaleDone() {
     this.searchView = true;
     this.scaleStart = false;
-    this.renderSearchTrackers(this.props.trackers);
     this.bscroll.show();
     this.sscroll.show();
     this.swiper.hide();
@@ -254,6 +256,7 @@ export default class Trackers extends PureComponent {
     return (
       <Animated.View style={combinedStyle}>
         <TrackerScroll
+          {...this.props}
           ref={(el) => (this.bscroll = el)}
           {...this.props}
           trackers={scTrackers}

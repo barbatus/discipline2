@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { compose, pure, withHandlers } from 'recompose';
 
 import { getIcon } from 'app/icons/icons';
-import { combineTicksDaily } from 'app/model/utils';
 import { TrackerType } from 'app/depot/consts';
 
 import MapsDlg from './MapsDlg';
@@ -85,12 +84,12 @@ export default class TicksDlg extends CommonModal {
   }
 
   get content() {
-    const { items } = this.state;
-    return items ? (
+    const { ticks } = this.state;
+    return ticks ? (
       <View>
         <FlatList
-          data={items}
-          keyExtractor={(item, index) => index}
+          data={ticks}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={this.renderItem}
         />
         <MapsDlg ref={(el) => (this.mapsDlg = el)} />
@@ -108,8 +107,12 @@ export default class TicksDlg extends CommonModal {
   }
 
   onBeforeShown(ticks, trackType) {
-    const dailyMap = combineTicksDaily(ticks, trackType);
-    this.setState({ trackType, items: Object.values(dailyMap) });
+    if (ticks) {
+      this.setState({
+        trackType,
+        ticks: ticks.sort((a, b) => b.dateTimeMs - a.dateTimeMs),
+      });
+    }
   }
 
   onItemPress(item) {

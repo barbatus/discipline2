@@ -43,7 +43,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   get shown() {
-    return this.upDown.value === 0;
+    return this.upDown.in;
   }
 
   componentWillUnmount() {

@@ -8,6 +8,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  ViewPropTypes,
 } from 'react-native';
 import styled from 'styled-components/native';
 import { compose, pure, withHandlers } from 'recompose';
@@ -138,7 +139,7 @@ export default class TrackerTypesSlide extends PureComponent {
   static propTypes = {
     typeId: PropTypes.string.isRequired,
     onTypeChosen: PropTypes.func,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
   };
 
   static defaultProps = {

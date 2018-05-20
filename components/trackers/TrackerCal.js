@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Animated } from 'react-native';
+import { Animated, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Tick } from 'app/model/Tracker';
@@ -12,7 +12,9 @@ export default class TrackerCal extends Component {
     trackerType: PropTypes.object,
     ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
     selDateMs: PropTypes.number,
-    style: Animated.View.propTypes.style,
+    // TODO: if only ViewPropTypes.style left it curses
+    // that opacity is not part of ViewPropTypes.style
+    style: PropTypes.oneOfType(ViewPropTypes.style, PropTypes.object),
   };
 
   static defaultProps = {

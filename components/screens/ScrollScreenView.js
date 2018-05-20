@@ -1,10 +1,8 @@
 import React, { PureComponent } from 'react';
-
 import PropTypes from 'prop-types';
-
 import EventEmitter from 'eventemitter3';
 
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, ViewPropTypes } from 'react-native';
 
 import { commonDef, commonStyles as cs, screenWidth } from '../styles/common';
 
@@ -25,7 +23,7 @@ export default class ScrollScreenView extends PureComponent {
   };
 
   static propTypes = {
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
   };
 
   static defaultProps = {

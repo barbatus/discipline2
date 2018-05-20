@@ -92,7 +92,7 @@ export class DistanceTracker extends Tracker {
   }
 
   get paths() {
-    return this.ticks.map((tick) => tick.latlon);
+    return this.ticks.map((tick) => tick.latlon || []);
   }
 
   // onAppActive(diffMs, dateChanged) {

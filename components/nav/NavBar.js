@@ -4,8 +4,6 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, Animated } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 
-import { caller } from 'app/utils/lang';
-
 import Animation from '../animation/Animation';
 
 import NavTitle from './Title';
@@ -22,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 export default class NavBar extends PureComponent {
-  active = false;
+  isActive = false;
   opacity = new Animated.Value(1);
   btnOpacity = new Animated.Value(0);
 
@@ -35,15 +33,17 @@ export default class NavBar extends PureComponent {
   }
 
   setButtons(leftBtn, rightBtn, callback) {
+    if (this.isActive) return;
+
+    this.isActive = true;
     const showButtons = () => {
       this.setState({
         leftBtn,
         rightBtn,
       });
 
-      this.showButtons(() => {
-        caller(callback);
-      });
+      this.showButtons(callback);
+      this.isActive = false;
     };
 
     if (!this.state.leftBtn && !this.state.rightBtn) {

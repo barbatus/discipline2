@@ -5,6 +5,8 @@ import {
   Text,
   StyleSheet,
   Vibration,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -15,11 +17,11 @@ import slowlog from 'react-native-slowlog';
 
 import registry, { DlgType } from 'app/components/dlg/registry';
 import { formatDistance } from 'app/utils/format';
+import UserIconsStore from 'app/icons/UserIconsStore';
 import { DistanceTracker as Tracker } from 'app/model/Tracker';
 import DistanceTrackers, { DistanceTracker } from 'app/geo/DistanceTrackers';
 
 import { trackerStyles } from '../styles/trackerStyles';
-import { slideWidth } from '../styles/slideStyles';
 
 import ProgressTrackerSlide from './ProgressTrackerSlide';
 import TimeLabel from './TimeLabel';
@@ -35,11 +37,10 @@ const styles = StyleSheet.create({
   footerControlsContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   label: {
-    width: slideWidth,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
   dist: {
     marginBottom: 20,
     alignItems: 'flex-end',
+    paddingLeft: 10,
   },
   labelText: {
     fontSize: 50,
@@ -55,19 +57,19 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 15,
-    paddingBottom: 10,
-    paddingLeft: 5,
     color: '#9B9B9B',
-    textAlign: 'center',
     fontWeight: '200',
-  },
-  startStopBtn: {
-    flex: 0.5,
-    justifyContent: 'center',
+    width: 10,
   },
   seeMap: {
-    flex: 0.5,
-    justifyContent: 'center',
+    position: 'absolute',
+    right: -50,
+    top: 5,
+  },
+  mapIcon: {
+    resizeMode: 'contain',
+    height: 30,
+    width: 30,
   },
   seeMapLink: {
     textDecorationLine: 'underline',
@@ -79,12 +81,14 @@ const DistanceDataFn = ({ time, dist }) => {
   return (
     <View style={styles.distData}>
       <View style={[styles.label, styles.dist]}>
-        <Text style={styles.labelText}>
-          {format.format()}
-        </Text>
-        <Text style={styles.titleText}>
-          {format.unit}
-        </Text>
+        <View>
+          <Text style={styles.labelText}>
+            {format.format()}
+            <Text style={styles.titleText}>
+              {format.unit}
+            </Text>
+          </Text>
+        </View>
       </View>
       <View style={styles.label}>
         <TimeLabel
@@ -104,23 +108,26 @@ DistanceDataFn.propTypes = {
 
 const DistanceData = pure(DistanceDataFn);
 
-const DistanceFooterFn = ({ active, responsive, onStopBtn, onStartBtn, onShowMap }) => (
+const DistanceFooterFn = ({ active, responsive, showMap, onStopBtn, onStartBtn, onShowMap }) => (
   <View style={styles.footerControlsContainer}>
-    <View style={styles.startStopBtn}>
-      <StartStopBtn
-        active={active}
-        responsive={responsive}
-        onPress={active ? onStopBtn : onStartBtn}
-      />
-    </View>
-    <View style={styles.seeMap}>
-      <Text style={trackerStyles.footerText} onPress={onShowMap}>
-        See&nbsp;
-        <Text style={styles.seeMapLink}>
-          map
-        </Text>
-      </Text>
-    </View>
+    <StartStopBtn
+      active={active}
+      responsive={responsive}
+      onPress={active ? onStopBtn : onStartBtn}
+    />
+    {
+      showMap ?
+        <TouchableOpacity
+          style={styles.seeMap}
+          onPress={onShowMap}
+        >
+          <Image
+            source={UserIconsStore.get('info').png}
+            style={styles.mapIcon}
+          />
+        </TouchableOpacity>
+        : null
+    }
   </View>
 );
 
@@ -177,6 +184,8 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     this.showMap = ::this.showMap;
     this.onStopBtn = ::this.onStopBtn;
     this.onStartBtn = ::this.onStartBtn;
+    this.onDistStart = ::this.onDistStart;
+    this.onDistStop = ::this.onDistStop;
   }
 
   get bodyControls() {
@@ -187,12 +196,12 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   get footerControls() {
-    const { active } = this.state;
-    const { responsive } = this.props;
+    const { tracker, responsive } = this.props;
     return (
       <DistanceFooter
-        active={active}
+        active={tracker.active}
         responsive={responsive}
+        showMap={tracker.value}
         onStopBtn={this.onStopBtn}
         onStartBtn={this.onStartBtn}
         onShowMap={this.showMap}
@@ -217,7 +226,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   onDistStart(error) {
     if (error) return;
 
-    this.setState({ active: true });
+    //this.setState({ active: true });
 
     Vibration.vibrate();
 
@@ -225,7 +234,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   onDistStop(latLon) {
-    this.setState({ active: false });
+    //this.setState({ active: false });
 
     if (latLon) {
       const { dist, lat, lon } = latLon;

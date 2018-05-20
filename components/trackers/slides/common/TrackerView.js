@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Animated,
   TouchableWithoutFeedback,
+  ViewPropTypes,
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -36,9 +37,9 @@ const styles = StyleSheet.create({
 
 export default class TrackerView extends PureComponent {
   static propTypes = {
-    style: Animated.View.propTypes.style,
-    bodyStyle: View.propTypes.style,
-    footerStyle: View.propTypes.style,
+    style: PropTypes.oneOfType(ViewPropTypes.style, PropTypes.object),
+    bodyStyle: ViewPropTypes.style,
+    footerStyle: ViewPropTypes.style,
     tracker: PropTypes.instanceOf(Tracker),
     onTap: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,

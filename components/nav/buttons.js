@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
@@ -12,7 +12,7 @@ import styles from './styles';
 
 export class NavButton extends PureComponent {
   static propTypes = {
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     iconStyle: Image.propTypes.style,
     icon: PropTypes.string.isRequired,
     onPress: PropTypes.func,

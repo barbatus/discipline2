@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
+import { StyleSheet, View, Animated, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { caller } from 'app/utils/lang';
@@ -45,7 +45,7 @@ const styles = StyleSheet.create(stylesDef);
 export default class Swiper extends PureComponent {
   static propTypes = {
     slides: PropTypes.array.isRequired,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     scrollEnabled: PropTypes.bool,
     onSlideChange: PropTypes.func,
     onTouchMove: PropTypes.func,

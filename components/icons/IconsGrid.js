@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ListView,
   Image,
+  ViewPropTypes,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import PropTypes from 'prop-types';
@@ -66,7 +67,7 @@ const Icon = compose(
 
 export default class IconsGrid extends PureComponent {
   static propTypes = {
-    style: ListView.propTypes.style,
+    style: ViewPropTypes.style,
     onIconChosen: PropTypes.func.isRequired,
   }
 

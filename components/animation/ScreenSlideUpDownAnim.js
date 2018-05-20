@@ -6,6 +6,7 @@ import Animation from './Animation';
 
 export default class ScreenSlideUpDownAnim {
   moveY = new Animated.Value(0);
+  inn = true;
 
   constructor(scaleFactor = 1) {
     this.scaleFactor = scaleFactor;
@@ -24,15 +25,15 @@ export default class ScreenSlideUpDownAnim {
     };
   }
 
-  get value() {
-    return this.moveY._value;
+  get in() {
+    return this.inn;
   }
 
   setIn() {
-    Animation.setValue(this.moveY, 0);
+    Animation.setValue(this.moveY, 0, () => (this.inn = true));
   }
 
   setOut() {
-    Animation.setValue(this.moveY, 1);
+    Animation.setValue(this.moveY, 1, () => (this.inn = false));
   }
 }

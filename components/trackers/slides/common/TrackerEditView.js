@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Animated,
   Switch,
+  ViewPropTypes,
 } from 'react-native';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
@@ -75,7 +76,7 @@ export class TrackerEditView extends PureComponent {
     showType: PropTypes.bool,
     onRemove: PropTypes.func,
     onTypeSelect: PropTypes.func,
-    style: Animated.View.propTypes.style,
+    style: ViewPropTypes.style,
   };
 
   static defaultProps = {

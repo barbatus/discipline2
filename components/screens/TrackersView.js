@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Animated, InteractionManager } from 'react-native';
+import { StyleSheet, Animated, InteractionManager, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
@@ -33,7 +33,6 @@ import {
   NavRightButton,
 } from '../nav/buttons';
 
-import Animation from '../animation/Animation';
 import TrackerCal from '../trackers/TrackerCal';
 import Trackers from '../trackers/Trackers';
 import { commonStyles } from '../styles/common';
@@ -75,7 +74,7 @@ class TrackersView extends PureComponent {
     onMoveUp: PropTypes.func,
     onCancel: PropTypes.func,
     dateMs: PropTypes.number.isRequired,
-    style: Animated.View.propTypes.style,
+    style: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -118,7 +117,7 @@ class TrackersView extends PureComponent {
     this.saveEdit = ::this.saveEdit;
   }
 
-  componentWillReceiveProps({ trackers }) {
+  componentWillReceiveProps({ trackers, dateMs }) {
     if (this.props.trackers !== trackers) {
       const { current } = this.state;
       if (!current) {
@@ -126,6 +125,12 @@ class TrackersView extends PureComponent {
           current: trackers.get(0),
         });
       }
+    }
+
+    if (this.props.dateMs !== dateMs) {
+      this.setState({
+        selDateMs: null,
+      });
     }
   }
 
@@ -243,10 +248,10 @@ class TrackersView extends PureComponent {
     this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
   }
 
-  onTooltipClick() {
+  onTooltipClick(ticks) {
     const dlg = registry.get(DlgType.TICKS);
     const { current } = this.state;
-    dlg.show(this.props.ticks, current.type);
+    dlg.show(ticks, current.type);
   }
 
   onDateSelect(dateMs: number) {
@@ -271,8 +276,7 @@ class TrackersView extends PureComponent {
   }
 
   saveEdit() {
-    // Animation.on is animation to be done after onSaveCompleted.
-    if (this.isActive || Animation.on) return;
+    if (this.isActive) return;
 
     this.isActive = true;
     const { dispatch } = this.props;
@@ -282,11 +286,7 @@ class TrackersView extends PureComponent {
   // Edit tracker events.
 
   cancelEdit() {
-    if (this.isActive) return;
-
-    this.isActive = true;
-    this.trackers.cancelEdit(() =>
-      (this.isActive = false));
+    this.trackers.cancelEdit();
   }
 
   render() {

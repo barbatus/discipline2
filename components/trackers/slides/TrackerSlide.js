@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Animated } from 'react-native';
+import { Animated, ViewPropTypes } from 'react-native';
 
 import FlipAnimation from 'app/components/animation/FlipAnimation';
 import ScaleAnimation from 'app/components/animation/ScaleAnimation';
@@ -27,7 +27,7 @@ export default class TrackerSlide extends PureComponent {
   static propTypes = {
     editable: PropTypes.bool,
     scale: PropTypes.number,
-    style: Animated.View.propTypes.style,
+    style: ViewPropTypes.style,
     tracker: PropTypes.instanceOf(Tracker).isRequired,
     onTap: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,

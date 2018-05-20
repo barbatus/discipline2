@@ -1,12 +1,14 @@
 import Easing from 'Easing';
-
 import { Animated } from 'react-native';
+
+import { caller } from 'app/utils/lang';
 
 import Animation from './Animation';
 
 const FLIP_TIME = 500;
 
 export default class FlipAnimation {
+  isActive = false;
   rotY = new Animated.Value(0);
   move1 = new Animated.Value(0);
   move2 = new Animated.Value(1);
@@ -54,21 +56,34 @@ export default class FlipAnimation {
   }
 
   animateIn(callback: Function) {
+    if (this.isActive) return;
+    this.isActive = true;
+
     Animation.setValue(this.move2, 0);
 
     this.animateFlip(1, 0, 1,
       (value) => value > 0.5,
-      () => Animation.setValue(this.move1, 1, callback)
+      () => Animation.setValue(this.move1, 1, this.setDone(callback)),
     );
   }
 
   animateOut(callback: Function) {
+    if (this.isActive) return;
+    this.isActive = true;
+
     Animation.setValue(this.move1, 0);
 
     this.animateFlip(0, 1, 0,
       (value) => value <= 0.5,
-      () => Animation.setValue(this.move2, 1, callback)
+      () => Animation.setValue(this.move2, 1, this.setDone(callback)),
     );
+  }
+
+  setDone(callback) {
+    return () => {
+      this.isActive = false;
+      caller(callback);
+    };
   }
 
   animateFlip(stopVal, op1, op2, opCondition, callback) {

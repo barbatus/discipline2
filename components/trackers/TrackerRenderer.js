@@ -20,7 +20,6 @@ class TrackerWrapper extends PureComponent {
   static propTypes = {
     component: PropTypes.func.isRequired,
     tracker: PropTypes.instanceOf(Tracker).isRequired,
-    progressive: PropTypes.bool.isRequired,
     onEdit: PropTypes.func,
     onRemove: PropTypes.func,
     onTap: PropTypes.func,
@@ -111,10 +110,11 @@ class TrackerWrapper extends PureComponent {
   }
 
   render() {
-    const { component, progressive, ...rest } = this.props;
+    const { component, responsive, ...rest } = this.props;
     return React.createElement(component, {
       ...rest,
       ref: (el) => (this.tracker = el),
+      responsive,
       onEdit: this.onEdit,
       onRemove: this.onRemove,
       onTap: this.onTap,
@@ -122,7 +122,7 @@ class TrackerWrapper extends PureComponent {
       onUndo: this.onUndo,
       onStart: this.onStart,
       onStop: this.onStop,
-      onProgress: progressive ? this.onProgress : null,
+      onProgress: responsive ? this.onProgress : null,
     });
   }
 }
@@ -217,7 +217,9 @@ export default class TrackerRenderer extends PureComponent {
     caller(this.props.onStop, tracker, value, data);
   }
 
-  onProgress(tracker: Tracker, value: number, data: any) {
+  onProgress(scale, tracker: Tracker, value: number, data: any) {
+    if (!this.shown) return;
+
     InteractionManager.runAfterInteractions(() =>
       caller(this.props.onProgress, tracker, value, data)
     );
@@ -240,17 +242,15 @@ export default class TrackerRenderer extends PureComponent {
   }
 
   renderTracker(tracker: Tracker) {
-    // Render swiper's tracker slides as progressive
-    // (i.e. they can update state progressively)
     const { enabled } = this.props;
-    return this.renderTrackerInternal(tracker, 1.0, true, enabled, true);
+    return this.renderTrackerInternal(tracker, 1.0, true, enabled);
   }
 
   renderScaledTracker(tracker: Tracker, scale: number, responsive: boolean) {
     check.assert.number(scale);
     check.assert.boolean(responsive);
 
-    return this.renderTrackerInternal(tracker, scale, responsive, false, false);
+    return this.renderTrackerInternal(tracker, scale, responsive, false);
   }
 
   renderTrackerInternal(
@@ -258,9 +258,8 @@ export default class TrackerRenderer extends PureComponent {
     scale: number,
     responsive: boolean,
     editable: boolean,
-    progressive: boolean,
   ) {
-    const trackProps = { responsive, editable, scale, progressive };
+    const trackProps = { responsive, editable, scale };
     switch (tracker.type) {
       case TrackerType.GOAL:
         return this.renderSlide(GoalTrackerSlide, tracker, trackProps);
@@ -291,7 +290,7 @@ export default class TrackerRenderer extends PureComponent {
         onUndo={this.onUndo}
         onStart={this.onStart}
         onStop={this.onStop}
-        onProgress={this.onProgress}
+        onProgress={this.onProgress.bind(this, props.scale)}
         onTrackerEdit={this.onTrackerEdit}
         tracker={tracker}
       />

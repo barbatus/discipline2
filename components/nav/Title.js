@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import styles from './styles';
 
 export default class NavTitle extends PureComponent {
   static propTypes = {
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     title: PropTypes.string,
   };
 

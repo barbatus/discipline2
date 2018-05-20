@@ -124,15 +124,13 @@ export default class Calendar extends PureComponent {
     const monthsToRender = this.getMonthsToRender(dateMs);
     const monthViews = monthsToRender.map((monthDate) => {
       const monthTicks = ticks ? ticks.get(monthDate.month()) : null;
-      const shown = dateMs === monthDate.valueOf();
-      const currSelDateMs = shown ? selDateMs : null;
       return (
         <Month
           key={monthDate.month()}
           customStyle={customStyle}
           monthMs={monthDate.valueOf()}
           todayMs={todayMs}
-          selDateMs={currSelDateMs}
+          selDateMs={selDateMs}
           ticks={monthTicks}
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}
