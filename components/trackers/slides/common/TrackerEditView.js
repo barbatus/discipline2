@@ -76,7 +76,7 @@ export class TrackerEditView extends PureComponent {
     showType: PropTypes.bool,
     onRemove: PropTypes.func,
     onTypeSelect: PropTypes.func,
-    style: ViewPropTypes.style,
+    style: PropTypes.oneOfType(ViewPropTypes.style, PropTypes.object),
   };
 
   static defaultProps = {

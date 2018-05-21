@@ -27,6 +27,9 @@ import ProgressTrackerSlide from './ProgressTrackerSlide';
 import TimeLabel from './TimeLabel';
 import StartStopBtn from './common/StartStopBtn';
 
+const MAP_ICON_SIZE = 40;
+const MAP_BUTTON_SIZE = 30;
+
 const styles = StyleSheet.create({
   distData: {
     flex: 1,
@@ -63,16 +66,21 @@ const styles = StyleSheet.create({
   },
   seeMap: {
     position: 'absolute',
-    right: -50,
+    right: -60,
     top: 5,
+    borderRadius: MAP_BUTTON_SIZE,
+    borderWidth: 2,
+    borderColor: '#D9DADB',
+    height: MAP_BUTTON_SIZE,
+    width: MAP_BUTTON_SIZE,
+    overflow: 'hidden',
   },
   mapIcon: {
     resizeMode: 'contain',
-    height: 30,
-    width: 30,
-  },
-  seeMapLink: {
-    textDecorationLine: 'underline',
+    height: MAP_ICON_SIZE,
+    width: MAP_ICON_SIZE,
+    top: -6,
+    left: -6,
   },
 });
 
@@ -122,7 +130,7 @@ const DistanceFooterFn = ({ active, responsive, showMap, onStopBtn, onStartBtn, 
           onPress={onShowMap}
         >
           <Image
-            source={UserIconsStore.get('info').png}
+            source={UserIconsStore.get('map').png}
             style={styles.mapIcon}
           />
         </TouchableOpacity>
@@ -226,16 +234,12 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   onDistStart(error) {
     if (error) return;
 
-    //this.setState({ active: true });
-
     Vibration.vibrate();
 
     this.onStart(0, { time: 0, latlon: [] });
   }
 
   onDistStop(latLon) {
-    //this.setState({ active: false });
-
     if (latLon) {
       const { dist, lat, lon } = latLon;
       this.path.push({ latitude: lat, longitude: lon });
