@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { screenWidth } from '../styles/common';
+import { SCREEN_WIDTH } from '../styles/common';
 
 const styles = StyleSheet.create({
   calContainer: {
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     width: 23,
   },
   calHeading: {
-    width: screenWidth,
+    width: SCREEN_WIDTH,
     paddingLeft: 15,
     paddingRight: 15,
     alignItems: 'center',

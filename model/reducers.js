@@ -16,6 +16,7 @@ import {
   START_TRACKER,
   STOP_TRACKER,
   STOP_TRACKER_WITH_TICK_UPDATE,
+  UPDATE_APP_PROPS,
 } from './actions';
 
 import { Tick } from './Tracker';
@@ -52,8 +53,13 @@ const insertTracker = (trackers, tracker, index?: number) => {
 
 export const trackersReducer = handleActions(
   {
-    [LOAD_TEST_DATA]: (state, { trackers }) => ({
+    [UPDATE_APP_PROPS]: (state, { app }) => ({
       ...state,
+      app,
+    }),
+    [LOAD_TEST_DATA]: (state, { trackers, app }) => ({
+      ...state,
+      app,
       trackers: new List(trackers.map(
         (tracker) => Trackers.create(tracker))),
     }),

@@ -19,6 +19,7 @@ import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
 class TrackerWrapper extends PureComponent {
   static propTypes = {
     component: PropTypes.func.isRequired,
+    responsive: PropTypes.bool.isRequired,
     tracker: PropTypes.instanceOf(Tracker).isRequired,
     onEdit: PropTypes.func,
     onRemove: PropTypes.func,
@@ -140,6 +141,7 @@ export default class TrackerRenderer extends PureComponent {
     onTrackerEdit: PropTypes.func,
     trackers: PropTypes.arrayOf(PropTypes.instanceOf(Tracker)).isRequired,
     enabled: PropTypes.bool.isRequired,
+    responsive: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -152,6 +154,7 @@ export default class TrackerRenderer extends PureComponent {
     onProgress: null,
     onUndo: null,
     onTrackerEdit: null,
+    responsive: true,
   };
 
   inOpacity = new Animated.Value(0);
@@ -217,7 +220,7 @@ export default class TrackerRenderer extends PureComponent {
     caller(this.props.onStop, tracker, value, data);
   }
 
-  onProgress(scale, tracker: Tracker, value: number, data: any) {
+  onProgress(tracker: Tracker, value: number, data: any) {
     if (!this.shown) return;
 
     InteractionManager.runAfterInteractions(() =>
@@ -290,7 +293,7 @@ export default class TrackerRenderer extends PureComponent {
         onUndo={this.onUndo}
         onStart={this.onStart}
         onStop={this.onStop}
-        onProgress={this.onProgress.bind(this, props.scale)}
+        onProgress={this.onProgress}
         onTrackerEdit={this.onTrackerEdit}
         tracker={tracker}
       />

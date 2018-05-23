@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info';
 
 import time from 'app/time/utils';
 
-import { Tracker, NewTracker } from '../interfaces';
+import { Tracker, NewTracker, type AppProps } from '../interfaces';
 import trackersDB from './trackers';
 import ticksDB from './ticks';
 import appDB from './app';
@@ -16,8 +16,24 @@ import { TrackerType, DepotEvent } from '../consts';
 export default class Depot {
   event = new EventEmitter();
 
+  async initApp() {
+    const app = await appDB.get();
+    if (!app) {
+      const appVer = DeviceInfo.getVersion();
+      return appDB.create(appVer, { alerts: false });
+    }
+    const trackers = await this.loadTrackers(app.trackers);
+    return { ...app, trackers };
+  }
+
+  async updateAppProps(props: AppProps) {
+    const app = await appDB.getRaw();
+    const newProps = { ...app.props, ...props };
+    return appDB.update({ ...app, props: newProps });
+  }
+
   async addTracker(tracker: NewTracker) {
-    const newTracker = await trackersDB.add(tracker);
+    const newTracker = await appDB.addTracker(tracker);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
     });
@@ -25,20 +41,18 @@ export default class Depot {
   }
 
   async addTrackerAt(tracker: NewTracker, index: number) {
-    const newTracker = await trackersDB.add(tracker, index);
+    const newTracker = await appDB.addTracker(tracker, index);
     this.event.emit(DepotEvent.TRACK_ADDED, {
       trackId: newTracker.id,
     });
     return newTracker;
   }
 
-  async getTrackers() {
-    const trackers = await trackersDB.getAll();
+  async loadTrackers(trackers: Tracker[]): Promise<Tracker[]> {
     const allTicks = await Promise.all(trackers.map((tracker) =>
       this.getTrackerTicks(tracker.id, time.getDateMs())
     ));
-    return trackers.map((tracker, index) => ({
-      ...tracker,
+    return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
     }));
   }
@@ -181,28 +195,27 @@ export default class Depot {
   }
 
   async resetTestData() {
-    const savedVer = await appDB.getVer();
+    const app = await appDB.getRaw();
     const appVer = DeviceInfo.getVersion();
-    if (savedVer !== appVer) {
-      const trackers = await trackersDB.getAll();
-      const promises = trackers.map((tracker) =>
-        trackersDB.remove(tracker));
+    if (app.ver !== appVer) {
+      const promises = app.trackers.map((tracker) =>
+        appDB.removeTracker(tracker));
       await Promise.all(promises);
       await appDB.setVer(appVer);
+      return true;
     }
+    return false;
   }
 
-  async loadTestData() {
-    await this.resetTestData();
+  async loadTestApp() {
+    const app = await this.initApp();
 
-    if (await this.hasTestData()) {
-      return this.getTrackers();
-    }
+    if (!await this.resetTestData()) { return app; }
 
     const trackers = await this.genTestTrackers();
     await appDB.setTestTrackers(trackers);
 
-    return trackers;
+    return appDB.get();
   }
 
   hasTestData() {

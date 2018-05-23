@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { commonStyles as cs, screenWidth } from '../styles/common';
+import { commonStyles as cs, SCREEN_WIDTH } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
@@ -26,7 +26,7 @@ class Scroll extends PureComponent {
 
   render() {
     const { centered, slideWidth } = this.props;
-    const padding = centered ? (screenWidth - slideWidth) / 2 : 0;
+    const padding = centered ? (SCREEN_WIDTH - slideWidth) / 2 : 0;
     const paddingStyle = {
       paddingLeft: padding,
       paddingRight: padding,

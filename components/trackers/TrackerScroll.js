@@ -5,7 +5,7 @@ import { caller } from 'app/utils/lang';
 import Tracker from 'app/model/Tracker';
 
 import Scroll from '../scrolls/Scroll';
-import { commonStyles, screenWidth } from '../styles/common';
+import { commonStyles, SCREEN_WIDTH } from '../styles/common';
 
 import { slideHeight } from './styles/slideStyles';
 import TrackerRenderer from './TrackerRenderer';
@@ -44,7 +44,7 @@ export default class TrackerScroll extends TrackerRenderer {
     const { style, index, responsive, scale } = this.props;
 
     const slideStyle = {
-      width: screenWidth * scale,
+      width: SCREEN_WIDTH * scale,
       height: slideHeight * scale,
     };
     const slides = this.state.trackers
@@ -63,7 +63,7 @@ export default class TrackerScroll extends TrackerRenderer {
           style={commonStyles.flexFilled}
           centered
           index={index}
-          slideWidth={screenWidth * scale}
+          slideWidth={SCREEN_WIDTH * scale}
           slides={slides}
         />
       </Animated.View>

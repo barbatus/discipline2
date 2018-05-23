@@ -10,7 +10,7 @@ import GeoWatcher from 'app/geo/BGGeoLocationWatcher';
 
 import CommonModal from './CommonModal';
 
-import { screenWidth, screenHeight } from '../styles/common';
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../styles/common';
 
 const DEFAULT_PADDING = {
   top: 40,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ASPECT_RATIO = screenWidth / screenHeight;
+const ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 

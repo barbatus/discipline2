@@ -1,6 +1,6 @@
 import { Animated } from 'react-native';
 
-import { screenHeight } from 'app/components/styles/common';
+import { SCREEN_HEIGHT } from 'app/components/styles/common';
 
 import Animation from './Animation';
 
@@ -18,7 +18,7 @@ export default class ScreenSlideUpDownAnim {
         {
           translateY: this.moveY.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, screenHeight / this.scaleFactor],
+            outputRange: [0, SCREEN_HEIGHT / this.scaleFactor],
           }),
         },
       ],

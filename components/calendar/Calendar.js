@@ -7,7 +7,7 @@ import moment from 'moment';
 import { caller, int } from 'app/utils/lang';
 import time from 'app/time/utils';
 
-import { screenWidth } from '../styles/common';
+import { SCREEN_WIDTH } from '../styles/common';
 import Month from './Month';
 import styles from './styles';
 
@@ -78,14 +78,14 @@ export default class Calendar extends PureComponent {
   }
 
   scrollToItem(itemIndex: number, animated = true) {
-    const scrollToX = itemIndex * screenWidth;
+    const scrollToX = itemIndex * SCREEN_WIDTH;
     this.calendar.scrollTo({ y: 0, x: scrollToX, animated });
   }
 
   scrollEnded({ nativeEvent }) {
     const { dateMs } = this.props;
     const position = nativeEvent.contentOffset.x;
-    const currentPage = position / screenWidth;
+    const currentPage = position / SCREEN_WIDTH;
     const index = int(this.props.monthToRender / 2);
     const newMonth = moment(dateMs).add(currentPage - index, 'month');
     caller(this.props.onMonthChanged, newMonth.valueOf());

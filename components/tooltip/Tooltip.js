@@ -7,7 +7,7 @@ import TimerMixin from 'react-timer-mixin';
 import { pure } from 'recompose';
 import PropTypes from 'prop-types';
 
-import { screenWidth, navHeight } from '../styles/common';
+import { SCREEN_WIDTH, NAV_HEIHGT } from '../styles/common';
 
 const ARROW_WIDTH = 25;
 
@@ -113,7 +113,7 @@ export default class Tooltip extends PureComponent {
       this.setTimeout(() => NativeMethodsMixin.measure.call(node,
         (x, y, width, height, pageX, pageY) => {
           const haflW = width / 2;
-          const rightX = x + haflW - screenWidth + PADDING;
+          const rightX = x + haflW - SCREEN_WIDTH + PADDING;
           const leftX = x - haflW - PADDING;
           let xPos = -haflW;
           let arrLeft = (width - ARROW_WIDTH) / 2;
@@ -131,7 +131,7 @@ export default class Tooltip extends PureComponent {
 
           let yPos = -height - TOP_MARGIN;
           let arrTop = height;
-          if (navHeight > pageY + yPos) {
+          if (NAV_HEIHGT > pageY + yPos) {
             yPos = Math.abs(33 + TOP_MARGIN);
             arrTop = -ARROW_HEIHGT;
           }

@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 
 import { caller } from 'app/utils/lang';
 
-import { commonStyles, screenWidth } from '../styles/common';
+import { commonStyles, SCREEN_WIDTH } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
 const stylesDef = {
   slide: {
     flex: 1,
-    width: screenWidth,
+    width: SCREEN_WIDTH,
     alignItems: 'center',
   },
   dots: {
@@ -163,7 +163,7 @@ export default class Swiper extends PureComponent {
           ref={(el) => (this.scroll = el)}
           style={commonStyles.flexFilled}
           slides={slides}
-          slideWidth={screenWidth}
+          slideWidth={SCREEN_WIDTH}
           onTouchMove={onTouchMove}
           onScrollBeginDrag={onBeginDrag}
           onScrollEndDrag={onEndDrag}

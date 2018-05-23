@@ -17,6 +17,7 @@ db.setSchema([
     plural: 'apps',
     relations: {
       testTrackers: { hasMany: 'tracker' },
+      trackers: { hasMany: 'tracker' },
     },
   },
   {
@@ -29,21 +30,21 @@ db.setSchema([
           options: { async: true },
         },
       },
-      list: {
+      app: {
         belongsTo: {
-          type: 'trackerList',
+          type: 'app',
           options: { async: true },
         },
       },
     },
   },
-  {
-    singular: 'trackerList',
-    plural: 'trackerLists',
-    relations: {
-      trackers: { hasMany: 'tracker' },
-    },
-  },
+  // {
+  //   singular: 'trackerList',
+  //   plural: 'trackerLists',
+  //   relations: {
+  //     trackers: { hasMany: 'tracker' },
+  //   },
+  // },
   {
     singular: 'tick',
     plural: 'ticks',

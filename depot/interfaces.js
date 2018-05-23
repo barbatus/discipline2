@@ -3,6 +3,13 @@
 
 export type TRACKER_ID = 'distance' | 'goal';
 
+export type AppProps = { alerts: boolean; };
+
+export interface App {
+  ver: string;
+  props: AppProps;
+}
+
 export interface Tracker {
   id: string;
   title: string;

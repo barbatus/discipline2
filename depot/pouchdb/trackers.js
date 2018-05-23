@@ -13,21 +13,10 @@ class Trackers {
     return db.find('tracker', trackId);
   }
 
-  async getAll(): Promise<Tracker[]> {
-    const list = await db.findOne('trackerList');
-    return list ? list.trackers : [];
-  }
-
-  async add(data: NewTracker, index?: number): Promise<Tracker> {
-    const tracker = this.buildNewTracker(data);
-    const newTracker = await db.save('tracker', tracker);
-    const list = await db.findOneRaw('trackerList');
-    const idObj = { id: newTracker.id };
-    const trackers = list ? list.trackers : [];
-    const at = index !== undefined ? index : trackers.length;
-    trackers.splice(at, 0, idObj);
-    await db.save('trackerList', { ...list, trackers });
-    return newTracker;
+  async add(data: NewTracker): Promise<Tracker> {
+    const newTracker = this.buildNewTracker(data);
+    const tracker = await db.save('tracker', newTracker);
+    return tracker;
   }
 
   async update(data: Tracker): Promise<Tracker> {
@@ -38,21 +27,17 @@ class Trackers {
     return db.save('tracker', tracker);
   }
 
-  async remove(trackerOrId: string | Tracker): Promise<boolean> {
+  async remove(trackerOrId: string | Tracker): Promise<?string> {
     if (isObject(trackerOrId)) {
       assert(has(trackerOrId, 'rev'));
     }
 
     const tracker = typeof trackerOrId === 'string' ?
       await this.getOne(trackerOrId) : trackerOrId;
-    if (!tracker) { return false; }
+    if (!tracker) { return null; }
 
-    const list = await db.findOneRaw('trackerList');
-    const trackInd = list.trackers.findIndex((id) => id === tracker.id);
-    list.trackers.splice(trackInd, 1);
-    await db.save('trackerList', list);
     await db.del('tracker', tracker);
-    return true;
+    return tracker.id;
   }
 
   buildNewTracker(data: NewTracker) {

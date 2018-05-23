@@ -1,10 +1,13 @@
 import { StyleSheet } from 'react-native';
 
-import { screenWidth, screenHeight, navHeight } from '../../styles/common';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, NAV_HEIHGT } from '../../styles/common';
 
-export const slideWidth = screenWidth - 40;
+export const SLIDE_WIDTH_OFFSET = 40;
+export const SLIDE_BOTTOM_OFFSET = 35;
 
-export const slideHeight = screenHeight - navHeight - 35;
+export const slideWidth = SCREEN_WIDTH - SLIDE_WIDTH_OFFSET;
+
+export const slideHeight = SCREEN_HEIGHT - NAV_HEIHGT - SLIDE_BOTTOM_OFFSET;
 
 export const slideDef = {
   slide: {

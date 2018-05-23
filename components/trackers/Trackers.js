@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import {
-  View,
   StyleSheet,
   Animated,
   InteractionManager,
@@ -92,6 +91,10 @@ export default class Trackers extends PureComponent {
 
   componentDidMount() {
     this.handleMoveDown();
+
+    const { trackers } = this.props;
+    this.renderInitial(trackers);
+    this.rendered = true;
   }
 
   componentWillReceiveProps({ trackers }) {
@@ -99,12 +102,6 @@ export default class Trackers extends PureComponent {
     if (this.scaleStart) { return; }
 
     if (this.props.trackers !== trackers) {
-      if (!this.rendered) {
-        this.renderInitial(trackers);
-        this.rendered = true;
-        return;
-      }
-
       if (this.searchView) {
         this.renderSearchTrackers(trackers);
         return;

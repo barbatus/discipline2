@@ -3,6 +3,16 @@ import time from 'app/time/utils';
 import depot from '../depot/depot';
 import { Tick, mapTicks } from './Tracker';
 
+export const UPDATE_APP_PROPS = 'UPDATE_APP_PROPS';
+
+export const updateAppProps = (props) => (dispatch) =>
+  depot.updateAppProps(props).then((app) =>
+    dispatch({
+      type: UPDATE_APP_PROPS,
+      app,
+    }),
+  );
+
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
 
 export const updateCalendar = (
@@ -22,11 +32,12 @@ export const updateCalendar = (
 
 export const LOAD_TEST_DATA = 'LOAD_INIT';
 
-export const loadTestData = () => async (dispatch) => {
-  const trackers = await depot.loadTestData();
+export const loadTestApp = () => async (dispatch) => {
+  const app = await depot.loadTestApp();
   return dispatch({
     type: LOAD_TEST_DATA,
-    trackers,
+    trackers: app.trackers,
+    app,
   });
 };
 

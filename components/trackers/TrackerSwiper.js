@@ -19,7 +19,7 @@ import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 
 import { MoveUpDownResponder } from '../animation/responders';
 
-import { commonStyles, screenWidth } from '../styles/common';
+import { commonStyles, SCREEN_WIDTH } from '../styles/common';
 
 import { slideHeight } from './styles/slideStyles';
 
@@ -158,7 +158,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     const { style, onScroll, enabled, onSwiperMoveUpDone } = this.props;
 
     const slideStyle = {
-      width: screenWidth,
+      width: SCREEN_WIDTH,
       height: slideHeight,
     };
     const slides = trackers.map((tracker) => (

@@ -6,15 +6,15 @@ import { StyleSheet, View } from 'react-native';
 
 import NavBar from '../nav/NavBar';
 
-import { screenWidth, screenHeight, navHeight } from '../styles/common';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, NAV_HEIHGT } from '../styles/common';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
   },
   content: {
-    height: screenHeight - navHeight,
-    width: screenWidth,
+    height: SCREEN_HEIGHT - NAV_HEIHGT,
+    width: SCREEN_WIDTH,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, TouchableOpacity, Image, ViewPropTypes } from 'react-native';
+import { TouchableOpacity, Image, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';

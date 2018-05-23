@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import flatten from 'lodash/flatten';
 import times from 'lodash/times';
 
-import { commonDef, screenWidth } from '../styles';
+import { commonDef, SCREEN_WIDTH } from '../styles';
 
 const COLORS = [
   '#60C2E3',
@@ -37,14 +37,14 @@ export default class GradientSlider extends PureComponent {
 
   finishSlide(index, previ, animated) {
     if (!animated) {
-      this.move.setValue(-index * screenWidth);
+      this.move.setValue(-index * SCREEN_WIDTH);
       return;
     }
 
     const diff = Math.max(Math.abs(index - previ), 1);
     Animated.timing(this.move, {
       duration: diff * 350,
-      toValue: -index * screenWidth,
+      toValue: -index * SCREEN_WIDTH,
       useNativeDriver: true,
     }).start();
   }
@@ -53,7 +53,7 @@ export default class GradientSlider extends PureComponent {
 
   render() {
     const { slides } = this.props;
-    const width = slides * screenWidth;
+    const width = slides * SCREEN_WIDTH;
     const grads = this.getGrad(slides);
     return (
       <Animated.View

@@ -4,12 +4,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SideMenu from 'react-native-side-menu';
 
+import { updateAppProps } from 'app/model/actions';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import IconsDlg from 'app/components/dlg/IconsDlg';
 import MapsDlg from 'app/components/dlg/MapsDlg';
 import TicksDlg from 'app/components/dlg/TicksDlg';
 
-import { commonStyles as cs, screenWidth, screenHeight } from 'app/components/styles/common';
+import {
+  commonStyles as cs,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+} from 'app/components/styles/common';
 
 import Menu from '../nav/Menu';
 import GradientSlider from '../common/GradientSlider2';
@@ -20,8 +25,8 @@ import MainScreenView from './MainScreenView';
 const styles = StyleSheet.create({
   background: {
     position: 'absolute',
-    height: screenHeight,
-    width: screenWidth,
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
   },
 });
 
@@ -29,6 +34,12 @@ export class MainScreen extends PureComponent {
   static propTypes = {
     slides: PropTypes.number.isRequired,
     navigator: PropTypes.object.isRequired,
+    onUpdateAlerts: PropTypes.func.isRequired,
+    app: PropTypes.object,
+  };
+
+  static defaultProps = {
+    app: null,
   };
 
   constructor(props) {
@@ -37,9 +48,12 @@ export class MainScreen extends PureComponent {
 
     this.state = {
       isOpen: false,
+      menuOpacity: 0,
     };
     this.onMenu = ::this.onMenu;
     this.onMenuChange = ::this.onMenuChange;
+    this.onMenuSliding = ::this.onMenuSliding;
+    this.onAlertChange = ::this.onAlertChange;
     this.onScroll = ::this.onScroll;
     this.onSlideChange = ::this.onSlideChange;
     this.onSlideNoChange = ::this.onSlideNoChange;
@@ -69,6 +83,16 @@ export class MainScreen extends PureComponent {
     });
   }
 
+  onMenuSliding(menuOpacity: number) {
+    this.setState({
+      menuOpacity,
+    });
+  }
+
+  onAlertChange(alerts: boolean) {
+    this.props.onUpdateAlerts(alerts);
+  }
+
   onMenu() {
     this.setState({
       isOpen: true,
@@ -87,23 +111,39 @@ export class MainScreen extends PureComponent {
     );
   }
 
+  renderMenu() {
+    const { app } = this.props;
+    const { menuOpacity } = this.state;
+    const menuStyle = { opacity: menuOpacity };
+    return (
+      <Menu
+        style={menuStyle}
+        props={app.props}
+        onAlertChange={this.onAlertChange}
+      />
+    );
+  }
+
   render() {
-    const { slides, navigator } = this.props;
+    const { app, slides, navigator } = this.props;
     const { isOpen } = this.state;
+    if (!app) return null;
+
     return (
       <View style={cs.flexFilled}>
         <View style={styles.background}>
           <GradientSlider
             ref={(el) => (this.gradient = el)}
             style={cs.absFilled}
-            slides={slides || 1}
+            slides={slides}
           />
         </View>
         <SideMenu
           disableGestures
-          menu={<Menu navigator={navigator} />}
+          menu={this.renderMenu()}
           isOpen={isOpen}
           onChange={this.onMenuChange}
+          onSliding={this.onMenuSliding}
         >
           <Screen navigator={navigator}>
             <MainScreenView
@@ -123,6 +163,9 @@ export class MainScreen extends PureComponent {
   }
 }
 
-export default connect(({ trackers }) => ({
-  slides: trackers.trackers.size,
+export default connect(({ trackers: { trackers, app } }) => ({
+  slides: trackers ? trackers.size : 1,
+  app,
+}), (dispatch) => ({
+  onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
 }))(MainScreen);

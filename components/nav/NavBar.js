@@ -8,12 +8,12 @@ import Animation from '../animation/Animation';
 
 import NavTitle from './Title';
 
-import { screenWidth, navHeight } from '../styles/common';
+import { SCREEN_WIDTH, NAV_HEIHGT } from '../styles/common';
 
 const styles = StyleSheet.create({
   navbar: {
-    height: navHeight,
-    width: screenWidth,
+    height: NAV_HEIHGT,
+    width: SCREEN_WIDTH,
     backgroundColor: 'transparent',
     zIndex: 3,
   },

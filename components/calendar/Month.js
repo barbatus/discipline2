@@ -9,13 +9,13 @@ import moment from 'moment';
 import { caller, int } from 'app/utils/lang';
 
 import Tooltip from '../tooltip/Tooltip';
-import { screenWidth } from '../styles/common';
+import { SCREEN_WIDTH } from '../styles/common';
 import Day from './Day';
 
 const styles = StyleSheet.create({
   monthContainer: {
     position: 'relative',
-    width: screenWidth,
+    width: SCREEN_WIDTH,
     paddingLeft: 15,
     paddingRight: 15,
   },
@@ -104,7 +104,7 @@ export default class Month extends PureComponent {
     const offset = startOfMonth.weekday();
     const week = int((offset + day - 1) / 7);
     const dayInd = moment(selDateMs).weekday();
-    const dWidth = (screenWidth - (2 * PADDING) - this.dayWidth) / 6;
+    const dWidth = (SCREEN_WIDTH - (2 * PADDING) - this.dayWidth) / 6;
     return {
       x: PADDING + (dWidth * dayInd) + (this.dayWidth / 2),
       y: this.dayHeight * week,

@@ -144,6 +144,7 @@ const DistanceFooter = pure(DistanceFooterFn);
 DistanceFooterFn.propTypes = {
   active: PropTypes.bool.isRequired,
   responsive: PropTypes.bool.isRequired,
+  showMap: PropTypes.bool.isRequired,
   onStopBtn: PropTypes.func.isRequired,
   onStartBtn: PropTypes.func.isRequired,
   onShowMap: PropTypes.func.isRequired,
@@ -209,7 +210,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       <DistanceFooter
         active={tracker.active}
         responsive={responsive}
-        showMap={tracker.value}
+        showMap={!!tracker.value}
         onStopBtn={this.onStopBtn}
         onStartBtn={this.onStartBtn}
         onShowMap={this.showMap}
