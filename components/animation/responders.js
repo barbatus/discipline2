@@ -15,7 +15,7 @@ export class MoveUpDownResponder {
     this.onMoveUp = onMove;
     this.onMoveUpStart = onMoveStart;
     this.onMoveUpDone = onMoveDone;
-    this.onMoveCancel = onMoveCancel;
+    this.onMoveUpCancel = onMoveCancel;
 
     return () => this.unsubscribeUp();
   }
@@ -24,7 +24,7 @@ export class MoveUpDownResponder {
     this.onMoveDown = onMove;
     this.onMoveDownStart = onMoveStart;
     this.onMoveDownDone = onMoveDone;
-    this.onMoveCancel = onMoveCancel;
+    this.onMoveDownCancel = onMoveCancel;
 
     return () => this.unsubscribeDown();
   }
@@ -33,12 +33,14 @@ export class MoveUpDownResponder {
     this.onMoveUp = null;
     this.onMoveUpStart = null;
     this.onMoveUpDone = null;
+    this.onMoveUpCancel = null;
   }
 
   unsubscribeDown() {
     this.onMoveDown = null;
     this.onMoveDownStart = null;
     this.onMoveDownDone = null;
+    this.onMoveDownCancel = null;
   }
 
   dispose() {
@@ -48,37 +50,32 @@ export class MoveUpDownResponder {
 
   createResponder() {
     let isUp = false;
+    let isDown = false;
 
     return PanResponder.create({
       onMoveShouldSetPanResponder: (e: Object, state: Object) => {
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
         const sin = dx / Math.sqrt((dy * dy) + (dx * dx));
-        const captured = sin <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
-        isUp = state.vy < 0;
-        return captured;
+        isUp = state.dy < 0;
+        isDown = state.dy > 0;
+        return sin <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
       },
       onPanResponderMove: (e: Object, state: Object) => {
-        if (isUp && state.vy > 0) return;
-
-        if (!isUp && state.vy < 0) return;
-
         if (isUp) caller(this.onMoveUp, state.dy);
-
-        if (!isUp) caller(this.onMoveDown, state.dy);
+        if (isDown) caller(this.onMoveDown, state.dy);
       },
       onPanResponderGrant: () => {
         if (isUp) caller(this.onMoveUpStart);
-
-        if (!isUp) caller(this.onMoveDownStart);
+        if (isDown) caller(this.onMoveDownStart);
       },
       onPanResponderTerminate: () => {
-        caller(this.onMoveCancel);
+        if (isUp) caller(this.onMoveUpCancel);
+        if (isDown) caller(this.onMoveDownCancel);
       },
       onPanResponderRelease: () => {
         if (isUp) caller(this.onMoveUpDone);
-
-        if (!isUp) caller(this.onMoveDownDone);
+        if (isDown) caller(this.onMoveDownDone);
       },
     });
   }

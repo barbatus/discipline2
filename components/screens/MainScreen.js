@@ -35,6 +35,7 @@ export class MainScreen extends PureComponent {
     slides: PropTypes.number.isRequired,
     navigator: PropTypes.object.isRequired,
     onUpdateAlerts: PropTypes.func.isRequired,
+    onUpdateImperial: PropTypes.func.isRequired,
     app: PropTypes.object,
   };
 
@@ -57,9 +58,10 @@ export class MainScreen extends PureComponent {
     this.onScroll = ::this.onScroll;
     this.onSlideChange = ::this.onSlideChange;
     this.onSlideNoChange = ::this.onSlideNoChange;
+    this.onMeasureChange = ::this.onMeasureChange;
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     registry.register(DlgType.ICONS, this.iconsDlg);
     registry.register(DlgType.MAPS, this.mapsDlg);
     registry.register(DlgType.TICKS, this.ticksDlg);
@@ -87,6 +89,10 @@ export class MainScreen extends PureComponent {
     this.setState({
       menuOpacity,
     });
+  }
+
+  onMeasureChange(imperial: boolean) {
+    this.props.onUpdateImperial(imperial);
   }
 
   onAlertChange(alerts: boolean) {
@@ -120,6 +126,7 @@ export class MainScreen extends PureComponent {
         style={menuStyle}
         props={app.props}
         onAlertChange={this.onAlertChange}
+        onMeasureChange={this.onMeasureChange}
       />
     );
   }
@@ -127,7 +134,7 @@ export class MainScreen extends PureComponent {
   render() {
     const { app, slides, navigator } = this.props;
     const { isOpen } = this.state;
-    if (!app) return null;
+    if (!app) { return null; }
 
     return (
       <View style={cs.flexFilled}>
@@ -146,13 +153,7 @@ export class MainScreen extends PureComponent {
           onSliding={this.onMenuSliding}
         >
           <Screen navigator={navigator}>
-            <MainScreenView
-              {...this.props}
-              onMenu={this.onMenu}
-              onScroll={this.onScroll}
-              onSlideChange={this.onSlideChange}
-              onSlideNoChange={this.onSlideNoChange}
-            />
+            { this.renderContent() }
           </Screen>
         </SideMenu>
         <IconsDlg ref={(el) => (this.iconsDlg = el)} />
@@ -168,4 +169,5 @@ export default connect(({ trackers: { trackers, app } }) => ({
   app,
 }), (dispatch) => ({
   onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
+  onUpdateImperial: (imperial) => dispatch(updateAppProps({ metric: !imperial })),
 }))(MainScreen);

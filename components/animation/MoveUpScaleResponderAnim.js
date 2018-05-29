@@ -32,6 +32,7 @@ export class MoveUpScaleResponderAnim {
     onScale?: Function,
     onStart?: Function,
     onDone?: Function,
+    onCancel?: Function,
   ) {
     assert.ok(responder);
 
@@ -47,23 +48,23 @@ export class MoveUpScaleResponderAnim {
       },
       onMoveStart: onStart,
       onMoveDone: () => {
-        if (this.scale._value < 1) {
-          const toMin = Animation.timing(this.scale, 200, minScale);
-          Animation.animate([toMin], onDone);
-        }
+        const toMin = Animation.timing(this.scale, 200, minScale);
+        Animation.animate([toMin], onDone);
       },
+      onMoveCancel: () => this.animateOut(onCancel),
     });
   }
 
   unsubscribe() {
     if (this.unsubCb) {
       this.unsubCb();
+      this.unsubCb = null;
+      this.scale.removeAllListeners();
     }
   }
 
   dispose() {
     this.unsubscribe();
-    this.scale.removeAllListeners();
   }
 
   animateIn(callback?: Function) {

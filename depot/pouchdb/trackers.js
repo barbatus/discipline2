@@ -41,7 +41,7 @@ class Trackers {
   }
 
   buildNewTracker(data: NewTracker) {
-    return { props: { alerts: false }, ...data };
+    return { active: false, props: { alerts: false }, ...data };
   }
 }
 

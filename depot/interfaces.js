@@ -15,6 +15,7 @@ export interface Tracker {
   title: string;
   typeId: TRACKER_ID;
   iconId: string;
+  active: false;
   ticks?: Array<Tick>;
 }
 

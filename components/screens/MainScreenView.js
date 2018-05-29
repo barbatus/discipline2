@@ -31,6 +31,7 @@ export class MainScreenView extends ScrollScreenView {
     this.cancelNewTracker = ::this.cancelNewTracker;
     this.onMenuToggle = ::this.onMenuToggle;
     this.onNewTracker = ::this.onNewTracker;
+    this.onMoveDownCancel = ::this.onMoveDownCancel;
   }
 
   get leftView() {
@@ -45,6 +46,7 @@ export class MainScreenView extends ScrollScreenView {
         onSaveCompleted={this.setMainViewBtns}
         onCancel={this.setMainViewBtns}
         onMoveUp={this.setMainViewBtns}
+        onMoveDownCancel={this.onMoveDownCancel}
       />
     );
   }
@@ -71,7 +73,7 @@ export class MainScreenView extends ScrollScreenView {
     return <NavMenuButton onPress={onPress} />;
   }
 
-  setMainViewBtns(callback?: Function) {
+  setMainViewBtns(callback?: Function, animated = true) {
     const { navBar } = this.context;
     if (navBar) {
       navBar.setTitle('Trackers');
@@ -79,6 +81,7 @@ export class MainScreenView extends ScrollScreenView {
         this.getMenuBtn(this.onMenuToggle),
         this.getNewBtn(this.onNewTracker),
         callback,
+        animated,
       );
     }
   }
@@ -119,6 +122,10 @@ export class MainScreenView extends ScrollScreenView {
 
   onMenuToggle() {
     caller(this.props.onMenu);
+  }
+
+  onMoveDownCancel() {
+    this.setMainViewBtns(null, false);
   }
 }
 

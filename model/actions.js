@@ -89,10 +89,11 @@ export const START_TRACKER = 'START_TRACKER';
 
 export const startTracker = (tracker, value, data) => async (dispatch) => {
   const dateTimeMs = time.getDateTimeMs();
+  const updTracker = await depot.updateTracker(tracker.clone({ active: true }));
   const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
   return dispatch({
     type: START_TRACKER,
-    tracker: tracker.clone({ active: true }),
+    tracker: updTracker,
     tick: new Tick(tick),
   });
 };
@@ -102,17 +103,18 @@ export const STOP_TRACKER = 'STOP_TRACKER';
 export const STOP_TRACKER_WITH_TICK_UPDATE = 'STOP_TRACKER_WITH_TICK_UPDATE';
 
 export const stopTracker = (tracker, value, data) => async (dispatch) => {
+  const updTracker = await depot.updateTracker(tracker.clone({ active: false }));
   if (value) {
     const tick = await depot.updateLastTick(tracker.id, value, data);
     return dispatch({
       type: STOP_TRACKER_WITH_TICK_UPDATE,
-      tracker: tracker.clone({ active: false }),
+      tracker: updTracker,
       tick: new Tick(tick),
     });
   }
   return dispatch({
     type: STOP_TRACKER,
-    tracker: tracker.clone({ active: false }),
+    tracker: updTracker,
   });
 };
 

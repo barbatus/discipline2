@@ -17,6 +17,7 @@ export class Tick implements DBTick {
     this.data = tick.data;
     this.time = tick.time;
     this.latlon = tick.latlon;
+    this.active = this.active;
   }
 }
 
@@ -37,7 +38,7 @@ export default class Tracker implements DBTracker {
     this.typeId = tracker.typeId;
     this.ticks = mapTicks(tracker.ticks);
     this.props = tracker.props;
-    this.active = !!tracker.active;
+    this.active = tracker.active;
   }
 
   clone(data?: Object) {

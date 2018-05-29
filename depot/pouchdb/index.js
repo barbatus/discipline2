@@ -20,7 +20,7 @@ export default class Depot {
     const app = await appDB.get();
     if (!app) {
       const appVer = DeviceInfo.getVersion();
-      return appDB.create(appVer, { alerts: false });
+      return appDB.create(appVer, { alerts: false, metric: true });
     }
     const trackers = await this.loadTrackers(app.trackers);
     return { ...app, trackers };
@@ -80,7 +80,7 @@ export default class Depot {
   async removeTracker(trackId: string) {
     check.assert.string(trackId);
 
-    const removed = trackersDB.remove(trackId);
+    const removed = appDB.removeTracker(trackId);
     if (!removed) throw new Error('Tracker no found');
 
     this.event.emit(DepotEvent.TRACK_REMOVED, { trackId });
@@ -209,8 +209,9 @@ export default class Depot {
 
   async loadTestApp() {
     const app = await this.initApp();
+    await this.resetTestData();
 
-    if (!await this.resetTestData()) { return app; }
+    if (await this.hasTestData()) { return app; }
 
     const trackers = await this.genTestTrackers();
     await appDB.setTestTrackers(trackers);

@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const DistanceDataFn = ({ time, dist }) => {
-  const format = formatDistance(dist);
+const DistanceDataFn = ({ time, dist, metric }) => {
+  const format = formatDistance(dist, metric);
   return (
     <View style={styles.distData}>
       <View style={[styles.label, styles.dist]}>
@@ -112,6 +112,7 @@ const DistanceDataFn = ({ time, dist }) => {
 DistanceDataFn.propTypes = {
   time: PropTypes.number.isRequired,
   dist: PropTypes.number.isRequired,
+  metric: PropTypes.bool.isRequired,
 };
 
 const DistanceData = pure(DistanceDataFn);
@@ -150,17 +151,19 @@ DistanceFooterFn.propTypes = {
   onShowMap: PropTypes.func.isRequired,
 };
 
-const DistanceBodyFn = ({ tracker }) => (
+const DistanceBodyFn = ({ tracker, metric }) => (
   <View style={trackerStyles.controls}>
     <DistanceData
       dist={tracker.value}
       time={tracker.time}
+      metric={metric}
     />
   </View>
 );
 
 DistanceBodyFn.propTypes = {
   tracker: PropTypes.instanceOf(Tracker).isRequired,
+  metric: PropTypes.bool.isRequired,
 };
 
 const DistanceBody = pure(DistanceBodyFn);
@@ -173,6 +176,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   static propTypes = {
     responsive: PropTypes.bool,
     tracker: PropTypes.instanceOf(Tracker).isRequired,
+    metric: PropTypes.bool.isRequired,
   };
 
   distTracker: DistanceTracker;
@@ -198,9 +202,9 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   get bodyControls() {
-    const { tracker } = this.props;
+    const { tracker, metric } = this.props;
     return (
-      <DistanceBody tracker={tracker} />
+      <DistanceBody tracker={tracker} metric={metric} />
     );
   }
 

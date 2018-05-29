@@ -28,6 +28,7 @@ export default class MoveDownResponderAnim {
     onMove?: Function,
     onStart?: Function,
     onDone?: Function,
+    onCancel?: Function,
   ) {
     assert.ok(responder);
     assert.ok(!this.unsubCb);
@@ -42,7 +43,7 @@ export default class MoveDownResponderAnim {
       },
       onMoveStart: onStart,
       onMoveDone: () => this.animateIn(onDone),
-      onMoveCancel: () => this.animateIn(onDone),
+      onMoveCancel: () => this.animateOut(onCancel),
     });
   }
 
@@ -50,13 +51,12 @@ export default class MoveDownResponderAnim {
     if (this.unsubCb) {
       this.unsubCb();
       this.unsubCb = null;
+      this.moveY.removeAllListeners();
     }
   }
 
   dispose() {
     this.unsubscribe();
-    this.moveY.removeAllListeners();
-    this.moveY = null;
   }
 
   animateIn(callback?: Function) {

@@ -32,18 +32,24 @@ export default class NavBar extends PureComponent {
     };
   }
 
-  setButtons(leftBtn, rightBtn, callback) {
+  setButtons(leftBtn, rightBtn, callback, animated = true) {
+    if (!animated) {
+      this.btnOpacity.setValue(1);
+      this.setState({ leftBtn, rightBtn });
+      this.isActive = false;
+      return;
+    }
+
     if (this.isActive) return;
 
     this.isActive = true;
     const showButtons = () => {
-      this.setState({
-        leftBtn,
-        rightBtn,
-      });
+      if (this.isActive) {
+        this.setState({ leftBtn, rightBtn });
 
-      this.showButtons(callback);
-      this.isActive = false;
+        this.showButtons(callback);
+        this.isActive = false;
+      }
     };
 
     if (!this.state.leftBtn && !this.state.rightBtn) {

@@ -38,13 +38,6 @@ db.setSchema([
       },
     },
   },
-  // {
-  //   singular: 'trackerList',
-  //   plural: 'trackerLists',
-  //   relations: {
-  //     trackers: { hasMany: 'tracker' },
-  //   },
-  // },
   {
     singular: 'tick',
     plural: 'ticks',

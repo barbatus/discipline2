@@ -244,16 +244,16 @@ export default class TrackerRenderer extends PureComponent {
     this.opacity = 1;
   }
 
-  renderTracker(tracker: Tracker) {
+  renderTracker(tracker: Tracker, metric: boolean) {
     const { enabled } = this.props;
-    return this.renderTrackerInternal(tracker, 1.0, true, enabled);
+    return this.renderTrackerInternal(tracker, 1.0, true, enabled, metric);
   }
 
-  renderScaledTracker(tracker: Tracker, scale: number, responsive: boolean) {
+  renderScaledTracker(tracker: Tracker, scale: number, responsive: boolean, metric: boolean) {
     check.assert.number(scale);
     check.assert.boolean(responsive);
 
-    return this.renderTrackerInternal(tracker, scale, responsive, false);
+    return this.renderTrackerInternal(tracker, scale, responsive, false, metric);
   }
 
   renderTrackerInternal(
@@ -261,6 +261,7 @@ export default class TrackerRenderer extends PureComponent {
     scale: number,
     responsive: boolean,
     editable: boolean,
+    metric: boolean,
   ) {
     const trackProps = { responsive, editable, scale };
     switch (tracker.type) {
@@ -273,7 +274,7 @@ export default class TrackerRenderer extends PureComponent {
       case TrackerType.STOPWATCH:
         return this.renderSlide(StopWatchTrackerSlide, tracker, trackProps);
       case TrackerType.DISTANCE:
-        return this.renderSlide(DistanceTrackerSlide, tracker, trackProps);
+        return this.renderSlide(DistanceTrackerSlide, tracker, { ...trackProps, metric });
       default:
         throw new Error('Tracker type is not supported');
     }

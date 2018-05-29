@@ -1,3 +1,5 @@
+/* eslint react/no-unused-state: 0 */
+
 import React, { PureComponent } from 'react';
 import {
   StyleSheet,
@@ -37,6 +39,7 @@ export default class Trackers extends PureComponent {
     onCancel: PropTypes.func,
     onSwiperMoveDown: PropTypes.func,
     onSwiperMoveDownStart: PropTypes.func,
+    onSwiperMoveDownCancel: PropTypes.func,
     onSwiperScaleMove: PropTypes.func,
     onSwiperScaleDone: PropTypes.func,
     onSwiperMoveUpStart: PropTypes.func,
@@ -45,6 +48,7 @@ export default class Trackers extends PureComponent {
     onSlideChange: PropTypes.func,
     trackers: PropTypes.instanceOf(List).isRequired,
     style: ViewPropTypes.style,
+    metric: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -53,6 +57,7 @@ export default class Trackers extends PureComponent {
     onCancel: null,
     onSwiperMoveDown: null,
     onSwiperMoveDownStart: null,
+    onSwiperMoveDownCancel: null,
     onSwiperScaleMove: null,
     onSwiperScaleDone: null,
     onSwiperMoveUpStart: null,
@@ -65,16 +70,15 @@ export default class Trackers extends PureComponent {
   opacity = new Animated.Value(0);
   moveDown = new MoveDownResponderAnim(slideHeight);
 
-  rendered = false;
-  scaleStart = false;
-  searchView = false;
-
   constructor(props) {
     super(props);
     this.state = {
       swTrackers: [],
       scTrackers: [],
       swiperEnabled: true,
+      scaleStart: false,
+      searchView: false,
+      trackers: props.trackers,
     };
     this.onCenterSlideTap = ::this.onCenterSlideTap;
     this.onSmallSlideTap = ::this.onSmallSlideTap;
@@ -85,29 +89,25 @@ export default class Trackers extends PureComponent {
     this.onRemove = ::this.onRemove;
     this.onEdit = ::this.onEdit;
     this.onSlideChange = ::this.onSlideChange;
-    this.onSwiperBeginDrag = ::this.onSwiperBeginDrag;
-    this.onSwiperEndDrag = ::this.onSwiperEndDrag;
   }
 
   componentDidMount() {
     this.handleMoveDown();
 
-    const { trackers } = this.props;
+    const { trackers } = this.state;
     this.renderInitial(trackers);
-    this.rendered = true;
   }
 
-  componentWillReceiveProps({ trackers }) {
+  static getDerivedStateFromProps({ trackers }, state) {
     // Don't rerender when scaling.
-    if (this.scaleStart) { return; }
+    if (state.scaleStart) { return null; }
 
-    if (this.props.trackers !== trackers) {
-      if (this.searchView) {
-        this.renderSearchTrackers(trackers);
-        return;
-      }
-      this.renderTrackers(trackers);
+    if (trackers !== state.trackers) {
+      const arr = trackers.toArray();
+      return state.searchView ?
+        { trackers, scTrackers: arr } : { trackers, swTrackers: arr };
     }
+    return null;
   }
 
   componentWillUnmount() {
@@ -124,7 +124,7 @@ export default class Trackers extends PureComponent {
   }
 
   onScaleStart() {
-    this.scaleStart = true;
+    this.setState({ scaleStart: true });
     this.renderSearchTrackers(this.props.trackers);
   }
 
@@ -135,12 +135,18 @@ export default class Trackers extends PureComponent {
   }
 
   onScaleDone() {
-    this.searchView = true;
-    this.scaleStart = false;
+    this.setState({ scaleStart: false, searchView: true });
     this.bscroll.show();
     this.sscroll.show();
     this.swiper.hide();
     caller(this.props.onSwiperScaleDone);
+  }
+
+  onScaleCancel() {
+    this.setState({ scaleStart: false, searchView: false });
+    this.bscroll.hide();
+    this.sscroll.hide();
+    this.swiper.show();
   }
 
   onTap() {
@@ -154,14 +160,13 @@ export default class Trackers extends PureComponent {
   }
 
   onCenterSlideTap(index: number) {
-    this.searchView = false;
+    this.setState({ searchView: false });
     // Scroll, show, update w/o flicking.
     this.bscroll.hide();
     this.sscroll.hide();
     this.swiper.scrollTo(index, () =>
       this.swiper.show(() => {
-        InteractionManager.runAfterInteractions(() =>
-          this.renderTrackers(this.props.trackers));
+        this.renderTrackers(this.props.trackers);
         caller(this.props.onSwiperShown);
       }), false);
   }
@@ -180,14 +185,6 @@ export default class Trackers extends PureComponent {
     caller(this.props.onSlideChange, index, previ, animated);
   }
 
-  onSwiperBeginDrag() {
-    this.unhandleMoveDown();
-  }
-
-  onSwiperEndDrag() {
-    this.handleMoveDown();
-  }
-
   cancelEdit(callback) {
     this.swiper.cancelEdit(callback);
     caller(this.props.onCancel);
@@ -197,10 +194,14 @@ export default class Trackers extends PureComponent {
     const {
       onSwiperMoveDown,
       onSwiperMoveDownStart,
+      onSwiperMoveDownCancel,
     } = this.props;
     this.moveDown.subscribe(this.swiper.responder,
-      onSwiperMoveDown, onSwiperMoveDownStart,
-      () => this.setState({ swiperEnabled: false }));
+      onSwiperMoveDown,
+      onSwiperMoveDownStart,
+      () => this.setState({ swiperEnabled: false }),
+      onSwiperMoveDownCancel,
+    );
   }
 
   unhandleMoveDown() {
@@ -218,7 +219,8 @@ export default class Trackers extends PureComponent {
     if (trackers.size) {
       this.renderTracker(trackers.first(), () => {
         this.renderTrackers(trackers);
-        this.setTimeout(() => this.renderSearchTrackers(trackers));
+        InteractionManager.runAfterInteractions(
+          () => this.renderSearchTrackers(trackers));
       });
     } else {
       this.show();
@@ -255,13 +257,13 @@ export default class Trackers extends PureComponent {
         <TrackerScroll
           {...this.props}
           ref={(el) => (this.bscroll = el)}
-          {...this.props}
           trackers={scTrackers}
           style={styles.bigScroll}
           scale={5 / 8}
           onCenterSlideTap={this.onCenterSlideTap}
         />
         <TrackerScroll
+          {...this.props}
           ref={(el) => (this.sscroll = el)}
           trackers={scTrackers}
           style={styles.smallScroll}
@@ -282,8 +284,6 @@ export default class Trackers extends PureComponent {
           onRemove={this.onRemove}
           onEdit={this.onEdit}
           onSlideChange={this.onSlideChange}
-          onBeginDrag={this.onSwiperBeginDrag}
-          onEndDrag={this.onSwiperEndDrag}
         />
       </Animated.View>
     );

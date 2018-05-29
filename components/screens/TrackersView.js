@@ -63,7 +63,7 @@ class TrackersView extends PureComponent {
 
   static propTypes = {
     ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
-    trackers: PropTypes.instanceOf(List),
+    trackers: PropTypes.instanceOf(List).isRequired,
     dispatch: PropTypes.func.isRequired,
     onRemoveCompleted: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
@@ -72,16 +72,18 @@ class TrackersView extends PureComponent {
     onUpdate: PropTypes.func.isRequired,
     onSlideChange: PropTypes.func,
     onMoveUp: PropTypes.func,
+    onMoveDownCancel: PropTypes.func,
     onCancel: PropTypes.func,
     dateMs: PropTypes.number.isRequired,
     style: ViewPropTypes.style,
+    app: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    trackers: List.of(),
     ticks: null,
     onSlideChange: null,
     onMoveUp: null,
+    onMoveDownCancel: null,
     onCancel: null,
     style: null,
   };
@@ -290,7 +292,7 @@ class TrackersView extends PureComponent {
   }
 
   render() {
-    const { style, onMoveUp, onCancel } = this.props;
+    const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
     const { current, selDateMs } = this.state;
     const calcStyle = [commonStyles.absFilled, { top: 0 }, { opacity: this.calcOpacity }];
 
@@ -310,6 +312,7 @@ class TrackersView extends PureComponent {
           ref={(el) => (this.trackers = el)}
           {...this.props}
           style={commonStyles.flexFilled}
+          metric={app.props.metric}
           onRemove={this.onRemove}
           onRemoveCompleted={this.onRemoveCompleted}
           onEdit={this.onEdit}
@@ -317,11 +320,12 @@ class TrackersView extends PureComponent {
           onSaveCompleted={this.onSaveCompleted}
           onSwiperScaleMove={this.onSwiperScaleMove}
           onSwiperScaleDone={this.onSwiperScaleDone}
-          onSwiperMoveUpDone={this.onSwiperMoveUpDone}
           onSwiperShown={this.onSwiperShown}
           onSwiperMoveDown={this.onSwiperMoveDown}
           onSwiperMoveDownStart={this.onSwiperMoveDownStart}
+          onSwiperMoveDownCancel={onMoveDownCancel}
           onSwiperMoveUpStart={onMoveUp}
+          onSwiperMoveUpDone={this.onSwiperMoveUpDone}
           onTrackerEdit={this.onTrackerEdit}
           onSlideChange={this.onSlideChange}
         />
