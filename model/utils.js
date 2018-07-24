@@ -70,6 +70,11 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType) {
         dateTimeMs: minMs,
       };
     }
+    case TrackerType.STOPWATCH: {
+      const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
+      const timeFmt = timeUtils.formatTimeMs(value);
+      return { desc: `${timeFmt.format()} spent`, value, dateTimeMs: minMs };
+    }
     default:
       throw new Error('Tracker type is not supported');
   }

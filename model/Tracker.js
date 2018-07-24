@@ -1,6 +1,12 @@
 import { TrackerType } from 'app/depot/consts';
 
-import { Tracker as DBTracker, Tick as DBTick, type TRACKER_ID } from 'app/depot/interfaces';
+import {
+  Tracker as DBTracker,
+  Tick as DBTick,
+  type TRACKER_ID,
+  NewTracker,
+} from 'app/depot/interfaces';
+import { DEFAULT_TRACKER_PROPS } from 'app/depot/consts';
 
 import UserIconsStore from 'app/icons/UserIconsStore';
 
@@ -31,6 +37,18 @@ export default class Tracker implements DBTracker {
   active: boolean;
   ticks: DBTick[];
 
+  static get properties() {
+    return DEFAULT_TRACKER_PROPS;
+  }
+
+  static defaultValues(data: NewTracker) {
+    return {
+      active: false,
+      props: { alerts: false },
+      ...data,
+    };
+  }
+
   constructor(tracker: DBTracker) {
     this.id = tracker.id;
     this.title = tracker.title;
@@ -41,10 +59,10 @@ export default class Tracker implements DBTracker {
     this.active = tracker.active;
   }
 
-  clone(data?: Object) {
-    const tracker = Object.assign(Object.getPrototypeOf(this), this, data);
-    return tracker;
-  }
+  // clone(data?: Object) {
+  //   const tracker = Object.assign(Object.getPrototypeOf(this), this, data);
+  //   return tracker;
+  // }
 
   get type() {
     return TrackerType.fromValue(this.typeId);
@@ -87,6 +105,28 @@ export default class Tracker implements DBTracker {
 }
 
 export class DistanceTracker extends Tracker {
+  speed: number;
+
+  static get properties() {
+    return [
+      ...Tracker.properties,
+      { propId: 'showSpeed', name: 'Show Speed' },
+    ];
+  }
+
+  static defaultValues(data?: Subtype<NewTracker>) {
+    return {
+      active: false,
+      props: { alerts: false, showSpeed: false },
+      ...data,
+    };
+  }
+
+  constructor(tracker: DBTracker) {
+    super(tracker);
+    this.speed = 0;
+  }
+
   get time() {
     const times = this.ticks.map((tick) => tick.time || 0);
     return times.reduceRight((p, n) => p + n, 0);

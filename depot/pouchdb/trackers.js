@@ -14,8 +14,7 @@ class Trackers {
   }
 
   async add(data: NewTracker): Promise<Tracker> {
-    const newTracker = this.buildNewTracker(data);
-    const tracker = await db.save('tracker', newTracker);
+    const tracker = await db.save('tracker', data);
     return tracker;
   }
 
@@ -38,10 +37,6 @@ class Trackers {
 
     await db.del('tracker', tracker);
     return tracker.id;
-  }
-
-  buildNewTracker(data: NewTracker) {
-    return { active: false, props: { alerts: false }, ...data };
   }
 }
 

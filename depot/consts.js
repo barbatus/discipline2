@@ -46,3 +46,8 @@ export const DepotEvent = {
   TRACK_ADDED: 'track_added',
   TRACK_UPDATED: 'track_updated',
 };
+
+
+export const DEFAULT_TRACKER_PROPS = [
+  { propId: 'alerts', name: 'Send Notifications' },
+];

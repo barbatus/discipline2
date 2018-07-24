@@ -3,7 +3,7 @@ import check from 'check-types';
 
 import has from 'lodash/has';
 
-class EnumSymbol {
+export class EnumSymbol {
   constructor(key: String, props: Object) {
     check.assert.string(key);
     assert(has(props, 'value'));

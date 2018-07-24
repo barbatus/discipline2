@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import { pure } from 'recompose';
 
+import Tracker from 'app/model/Tracker';
+
 import { trackerStyles } from '../styles/trackerStyles';
 import TrackerEditView from './common/TrackerEditView';
 
@@ -20,6 +22,7 @@ const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
       form="newTrackerForm"
       {...rest}
       style={styles.editView}
+      props={Tracker.properties}
       initialValues={tracker}
       onSubmitSuccess={onNewTracker}
     />

@@ -35,7 +35,7 @@ export class MainScreen extends PureComponent {
     slides: PropTypes.number.isRequired,
     navigator: PropTypes.object.isRequired,
     onUpdateAlerts: PropTypes.func.isRequired,
-    onUpdateImperial: PropTypes.func.isRequired,
+    onUpdateMetric: PropTypes.func.isRequired,
     app: PropTypes.object,
   };
 
@@ -91,8 +91,8 @@ export class MainScreen extends PureComponent {
     });
   }
 
-  onMeasureChange(imperial: boolean) {
-    this.props.onUpdateImperial(imperial);
+  onMeasureChange(metric: boolean) {
+    this.props.onUpdateMetric(metric);
   }
 
   onAlertChange(alerts: boolean) {
@@ -165,9 +165,9 @@ export class MainScreen extends PureComponent {
 }
 
 export default connect(({ trackers: { trackers, app } }) => ({
-  slides: trackers ? trackers.size : 1,
+  slides: Math.max(trackers.size, 1),
   app,
 }), (dispatch) => ({
   onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
-  onUpdateImperial: (imperial) => dispatch(updateAppProps({ metric: !imperial })),
+  onUpdateMetric: (metric) => dispatch(updateAppProps({ metric })),
 }))(MainScreen);

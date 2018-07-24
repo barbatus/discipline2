@@ -7,11 +7,20 @@ import BGGeoLocationWatcher from './BGGeoLocationWatcher';
 export class DistanceTrackers {
   trackers = {};
 
-  get(id: number, distInt: number, timeInt: number) {
+  async get(id: number, distInt?: number, timeInt?: number) {
     if (!this.trackers[id]) {
-      this.trackers[id] = new DistanceTracker(distInt, timeInt);
+      return new Promise((resolve, reject) => {
+        BGGeoLocationWatcher.getOrCreate((geoWatcher, error) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          this.trackers[id] = new DistanceTracker(geoWatcher, distInt, timeInt);
+          resolve(this.trackers[id]);
+        });
+      });
     }
-    return this.trackers[id];
+    return Promise.resolve(this.trackers[id]);
   }
 
   dispose(id: number) {
@@ -34,7 +43,8 @@ export class DistanceTracker {
   unwatch = null;
   events = new EventEmitter();
 
-  constructor(distInt = 5, timeInt = 100) {
+  constructor(geoWatcher, distInt = 5, timeInt = 100) {
+    this.geoWatcher = geoWatcher;
     this.distInterval = distInt;
     this.timeInterval = timeInt;
     this.onPosChange = ::this.onPosChange;
@@ -44,26 +54,23 @@ export class DistanceTracker {
     return !!this.hInterval;
   }
 
-  get posState() {
-    return {
-      dist: this.dist,
-      lat: this.latLon.lat,
-      lon: this.latLon.lon,
-    };
-  }
-
-  start(callback) {
-    if (this.isStarting || this.active) return;
+  async start() {
+    if (this.isStarting || this.active) return Promise.resolve();
 
     this.isStarting = true;
-    BGGeoLocationWatcher.watchPos(({ coords }, error) => {
-      this.isStarting = false;
-      caller(callback, error);
+    return new Promise((resolve, reject) => {
+      this.geoWatcher.watchPos((pos, error) => {
+        this.isStarting = false;
 
-      if (error) return;
-
-      this.startTracking(coords);
-      this.unwatch = BGGeoLocationWatcher.on('position', this.onPosChange);
+        if (error) {
+          reject(error);
+          return;
+        }
+    
+        this.startTracking(pos.coords);
+        this.unwatch = this.geoWatcher.on('position', this.onPosChange);
+        resolve();
+      });
     });
   }
 
@@ -77,18 +84,11 @@ export class DistanceTracker {
       this.time = 0;
       this.dist = 0;
       this.latLon = {};
-
-      this.unwatch();
-      BGGeoLocationWatcher.stopWatch();
     };
 
-    BGGeoLocationWatcher.getPos((pos, error) => {
-      if (error) {
-        caller(callback, null, error);
-      } else {
-        const newState = this.setNextPosState(pos);
-        caller(callback, newState ? this.posState : null);
-      }
+    this.unwatch();
+    this.geoWatcher.stopWatch(() => {
+      caller(callback);
       reset();
     });
   }
@@ -97,11 +97,13 @@ export class DistanceTracker {
     this.stop();
     this.events.removeAllListeners('onLatLonUpdate');
     this.events.removeAllListeners('onTimeUpdate');
+    this.geoWatcher = null;
   }
 
   onPosChange(pos) {
-    if (this.setNextPosState(pos)) {
-      this.fireLatLonUpdate(this.posState);
+    let state;
+    if ((state = this.setNextPosState(pos))) {
+      this.fireLatLonUpdate(state);
     }
   }
 
@@ -133,9 +135,14 @@ export class DistanceTracker {
       this.dist += dist;
       this.latLon = { lat: latitude, lon: longitude };
       this.updTime = Date.now();
-      return true;
+      return {
+        speed: speed * 3600 / 1000, // km / h
+        dist: this.dist,
+        lat: this.latLon.lat,
+        lon: this.latLon.lon,
+      };
     }
-    return false;
+    return null;
   }
 
   onGeoError(error) {

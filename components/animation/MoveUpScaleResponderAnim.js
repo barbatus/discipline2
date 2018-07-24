@@ -16,6 +16,8 @@ export class MoveUpScaleResponderAnim {
 
   slideHeight = 0;
   unsubCb = null;
+  animIn = null;
+  animOut = null;
 
   constructor(slideHeight: number) {
     this.slideHeight = slideHeight;
@@ -68,12 +70,22 @@ export class MoveUpScaleResponderAnim {
   }
 
   animateIn(callback?: Function) {
-    const inn = Animation.timing(this.scale, 500, 1);
-    Animation.animate([inn], callback);
+    if (this.animIn) { return; }
+
+    this.animIn = Animation.timing(this.scale, 500, 1);
+    Animation.animate([this.animIn], () => {
+      this.animIn = null;
+      caller(callback);
+    });
   }
 
   animateOut(callback?: Function) {
-    const out = Animation.timing(this.scale, 500, 0);
-    Animation.animate([out], callback);
+    if (this.animOut) { return; }
+
+    this.animOut = Animation.timing(this.scale, 500, 0);
+    Animation.animate([this.animOut], () => {
+      this.animOut = null;
+      caller(callback);
+    });
   }
 }

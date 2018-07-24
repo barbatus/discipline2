@@ -79,7 +79,6 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
       lapTimeMs: 0,
     };
     this.timer = Timers.get(tracker.id, 1000);
-    this.timer.events.on('onTimer', ::this.onTimer);
     this.onLap = ::this.onLap;
     this.onTick = ::this.onTick;
     this.onStop = ::this.onStop;
@@ -127,9 +126,10 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
   onTick() {
     Vibration.vibrate();
-
+    
     this.timer.start(0);
 
+    this.timer.events.on('onTimer', ::this.onTimer);
     this.onStart(0);
   }
 
@@ -139,6 +139,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
   onStop() {
     this.timer.stop();
+    this.timer.events.removeAllListeners('onTimer');
     super.onStop();
   }
 

@@ -1,6 +1,6 @@
-import { isFunction } from 'lodash';
+import isFunction from 'lodash/isFunction';
 
-export function caller(cb, ...args: any[]) {
+export function caller(cb, ...args: *[]) {
   if (isFunction(cb)) {
     cb(...args);
   }

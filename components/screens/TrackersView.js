@@ -348,8 +348,8 @@ export default connect(
       dispatch(tickTracker(tracker, value, data)),
     onStart: (tracker, value, data) =>
       dispatch(startTracker(tracker, value, data)),
-    onProgress: (tracker, value, data) =>
-      dispatch(updateLastTick(tracker, value, data)),
+    onProgress: (tracker, value, data, progress) =>
+      dispatch(updateLastTick(tracker, value, data, progress)),
     onStop: (tracker, value, data) =>
       dispatch(stopTracker(tracker, value, data)),
     onUndo: (tracker) => dispatch(undoLastTick(tracker)),

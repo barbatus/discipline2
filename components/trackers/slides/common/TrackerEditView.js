@@ -1,5 +1,3 @@
-/* eslint react/no-multi-comp: 0 */
-
 import React, { PureComponent } from 'react';
 import {
   View,
@@ -11,6 +9,7 @@ import {
   Switch,
   ViewPropTypes,
 } from 'react-native';
+import { pure } from 'recompose';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 
@@ -19,61 +18,48 @@ import { TrackerType } from 'app/depot/consts';
 import ShakeAnimation from 'app/components/animation/ShakeAnimation';
 
 import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
+
 import TrackerIcon from './TrackerIcon';
 import TrackerTitle from './TrackerTitle';
+import TrackerTypeSelect from './TrackerTypeSelect'; 
 
 const styles = StyleSheet.create({
-  deleteRow: {
-    marginTop: 50,
+  mainGroup: {
+    marginBottom: 50,
   },
 });
 
-class TrackerTypeSelect extends PureComponent {
-  static propTypes = {
-    meta: PropTypes.shape({
-      error: PropTypes.string,
-    }).isRequired,
-    onTypeSelect: PropTypes.func.isRequired,
-  };
+const BooleanPropFn = ({ input }) => (
+  <Switch
+    onValueChange={(value) => input.onChange(value)}
+    value={!!input.value}
+  />
+);
 
-  shakeAnim = new ShakeAnimation();
-  error = null;
+const BooleanProp = pure(BooleanPropFn);
 
-  componentDidUpdate() {
-    if (this.props.meta.error &&
-        this.props.meta.error !== this.error) {
-      this.shakeAnim.animate();
-    }
-    this.error = this.props.meta.error;
-  }
+const TrackerPropFn = ({ prop }) => (
+  <View style={propsStyles.row}>
+    <View style={propsStyles.colLeftWide}>
+      <Text style={propsStyles.colText}>
+        { prop.name }
+      </Text>
+    </View>
+    <View style={propsStyles.colRight}>
+      <Field
+        name={`props.${prop.propId}`}
+        component={BooleanProp}
+      />
+    </View>
+  </View>
+);
 
-  render() {
-    const { meta: { initial, error }, onTypeSelect } = this.props;
-    const typeEnum = TrackerType.fromValue(initial);
-    const errorText = error ? trackerStyles.errorText : null;
-    return (
-      <TouchableOpacity
-        style={propsStyles.colRight}
-        onPress={onTypeSelect}
-      >
-        <Animated.View style={this.shakeAnim.style}>
-          <Text style={[propsStyles.colHintText, errorText]}>
-            {typeEnum ? typeEnum.title : 'Select'}
-          </Text>
-        </Animated.View>
-        <Image
-          source={getIcon('next')}
-          style={propsStyles.nextIcon}
-        />
-      </TouchableOpacity>
-    );
-  }
-}
+const TrackerProp = pure(TrackerPropFn);
 
 export class TrackerEditView extends PureComponent {
   static propTypes = {
     allowDelete: PropTypes.bool,
-    showType: PropTypes.bool,
+    allowType: PropTypes.bool,
     onRemove: PropTypes.func,
     onTypeSelect: PropTypes.func,
     style: PropTypes.oneOfType(ViewPropTypes.style, PropTypes.object),
@@ -87,25 +73,50 @@ export class TrackerEditView extends PureComponent {
     onRemove: null,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      sendNotif: false,
-    };
-  }
-
-  renderDeleteRow() {
+  renderDeleteGroup() {
     return this.props.allowDelete ? (
-      <View style={[propsStyles.group, styles.deleteRow]}>
-        <View style={[propsStyles.row]}>
+      <View style={propsStyles.group}>
+        <View style={propsStyles.row}>
           <TouchableOpacity
             style={propsStyles.colLeft}
             onPress={this.props.onRemove}
           >
-            <Text style={[propsStyles.deleteText]}>
+            <Text style={propsStyles.deleteText}>
               Delete
             </Text>
           </TouchableOpacity>
+        </View>
+      </View>
+    ) : null;
+  }
+
+  renderPropsGroup() {
+    const { props } = this.props;
+    return (
+      <View style={[propsStyles.group, styles.mainGroup]}>
+        {
+          props.map((prop) => (
+            <TrackerProp key={prop.propId} prop={prop} />
+          ))
+        }
+      </View>
+    );
+  }
+
+  renderTypeGroup() {
+    return this.props.allowType ? (
+      <View style={propsStyles.group}>
+        <View style={propsStyles.row}>
+          <View style={propsStyles.colLeft}>
+            <Text style={propsStyles.colText}>
+              Tracker Type
+            </Text>
+          </View>
+          <Field
+            name="typeId"
+            onTypeSelect={this.props.onTypeSelect}
+            component={TrackerTypeSelect}
+          />
         </View>
       </View>
     ) : null;
@@ -129,38 +140,9 @@ export class TrackerEditView extends PureComponent {
           </View>
         </View>
         <View style={propsStyles.bodyContainer}>
-          {
-            this.props.showType ? (
-              <View style={propsStyles.row}>
-                <View style={propsStyles.colLeft}>
-                  <Text style={propsStyles.colText}>
-                    Tracker Type
-                  </Text>
-                </View>
-                <Field
-                  name="typeId"
-                  onTypeSelect={this.props.onTypeSelect}
-                  component={TrackerTypeSelect}
-                />
-              </View>
-            ) : null
-          }
-          <View style={propsStyles.group}>
-            <View style={propsStyles.row}>
-              <View style={propsStyles.colLeftWide}>
-                <Text style={propsStyles.colText}>
-                  Send Notifications
-                </Text>
-              </View>
-              <View style={propsStyles.colRight}>
-                <Switch
-                  onValueChange={(value) => this.setState({ sendNotif: value })}
-                  value={this.state.sendNotif}
-                />
-              </View>
-            </View>
-          </View>
-          {this.renderDeleteRow()}
+          {this.renderTypeGroup()}
+          {this.renderPropsGroup()}
+          {this.renderDeleteGroup()}
         </View>
       </Animated.View>
     );
@@ -189,7 +171,10 @@ export default reduxForm({
     }
     return {
       ...tracker,
-      props: { ...tracker.props, alerts: false },
+      props: {
+        ...tracker.props,
+        ...values.props,
+      },
     };
   },
 })(TrackerEditView);

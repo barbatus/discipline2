@@ -35,13 +35,9 @@ class Trackers {
     return this.trackers.length;
   }
 
-  buildNewTracker(id: string, data: NewTracker) {
-    return { props: { alerts: false }, ...data, id };
-  }
-
   addAt(data: NewTracker, index: number): Tracker {
     const trackId = this.table.nextId.toString();
-    const tracker = this.buildNewTracker(trackId, data);
+    const tracker = { ...data, id: trackId };
     db.write(() => {
       this.trackers.splice(index, 0, tracker);
       this.table.nextId = this.table.nextId + 1;
@@ -52,7 +48,7 @@ class Trackers {
 
   add(data: NewTracker): Tracker {
     const trackId = this.table.nextId.toString();
-    const tracker = this.buildNewTracker(trackId, data);
+    const tracker = { ...data, id: trackId };
     db.write(() => {
       this.trackers.push(tracker);
       this.table.nextId = this.table.nextId + 1;

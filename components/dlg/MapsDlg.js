@@ -43,15 +43,6 @@ export default class MapsDlg extends CommonModal {
       paths: [],
       region,
     };
-    GeoWatcher.getPos((pos, error) => {
-      if (error) return;
-      const { latitude, longitude } = pos.coords;
-      region.timing({ latitude, longitude }, 0).start();
-    });
-  }
-
-  componentDidMount() {
-    this.state.region.stopAnimation();
   }
 
   get content() {
@@ -79,26 +70,31 @@ export default class MapsDlg extends CommonModal {
     );
   }
 
-  onBeforeShown(paths = []) {
-    this.setState({ paths });
-  }
-
-  onAfterShown(paths = []) {
-    const { region } = this.state;
-
-    if (paths.length) {
-      const all = flatten(paths);
-      this.map.getNode().fitToCoordinates(all, {
-        edgePadding: DEFAULT_PADDING,
-        animated: true,
-      });
-      return;
-    }
-
-    GeoWatcher.getPos((pos, error) => {
+  async setLocation() {
+    const geo = await GeoWatcher.getOrCreate();
+    geo.getPos((pos, error) => {
       if (error) return;
       const { latitude, longitude } = pos.coords;
       region.timing({ latitude, longitude }, 1000).start();
+    });
+  }
+
+  async onBeforeShown(paths = []) {
+    this.setState({ paths });
+  }
+
+  async onAfterShown(paths = []) {
+    const { region } = this.state;
+
+    const all = flatten(paths);
+    const len = all.length;
+    const latitude = all.reduce((accum, p) => accum + p.latitude, 0) / len;
+    const longitude = all.reduce((accum, p) => accum + p.longitude, 0) / len;
+    region.timing({ latitude, longitude }, 1000).start();
+
+    this.map.getNode().fitToCoordinates(all, {
+      edgePadding: DEFAULT_PADDING,
+      animated: true,
     });
   }
 }

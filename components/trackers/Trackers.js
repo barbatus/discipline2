@@ -142,13 +142,6 @@ export default class Trackers extends PureComponent {
     caller(this.props.onSwiperScaleDone);
   }
 
-  onScaleCancel() {
-    this.setState({ scaleStart: false, searchView: false });
-    this.bscroll.hide();
-    this.sscroll.hide();
-    this.swiper.show();
-  }
-
   onTap() {
     if (this.moveDown.in) {
       caller(this.props.onSwiperMoveUpStart);
@@ -278,6 +271,7 @@ export default class Trackers extends PureComponent {
           trackers={swTrackers}
           style={commonStyles.absFilled}
           onScaleStart={this.onScaleStart}
+          onScaleCancel={this.onScaleDone}
           onScaleMove={this.onScaleMove}
           onScaleDone={this.onScaleDone}
           onTap={this.onTap}

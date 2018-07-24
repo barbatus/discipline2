@@ -10,6 +10,10 @@ export interface App {
   props: AppProps;
 }
 
+export type PropType = {
+  [string]: *;
+};
+
 export interface Tracker {
   id: string;
   title: string;
@@ -17,12 +21,14 @@ export interface Tracker {
   iconId: string;
   active: false;
   ticks?: Array<Tick>;
+  props: Array<PropType>;
 }
 
 export interface NewTracker {
   title: string;
   typeId: string;
   iconId: string;
+  props: Array<PropType>;
 }
 
 export const TRACKER_TYPE = {

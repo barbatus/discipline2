@@ -66,6 +66,10 @@ export default class TrackerSlide extends PureComponent {
     return null;
   }
 
+  get trackerProps() {
+    return Tracker.properties;
+  }
+
   onTap() {
     caller(this.props.onTap);
   }
@@ -102,12 +106,15 @@ export default class TrackerSlide extends PureComponent {
 
   renderBackView() {
     const { editable, onTrackerEdit } = this.props;
+    if (!editable) return null;
+
     const { editTracker } = this.state;
-    return editable && editTracker ? (
+    return editTracker ? (
       <TrackerEditView
         form="trackerForm"
         style={[absFilled, this.flip.style2]}
-        showType={false}
+        props={this.trackerProps}
+        allowType={false}
         allowDelete
         initialValues={editTracker}
         onRemove={this.onRemove}

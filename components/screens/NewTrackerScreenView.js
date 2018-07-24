@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { submit, reset } from 'redux-form';
 
+import Tracker from 'app/model/Tracker';
 import Trackers from 'app/model/Trackers';
 import { TrackerType } from 'app/depot/consts';
 import { caller } from 'app/utils/lang';
@@ -27,7 +28,7 @@ export class NewTrackerScreenView extends ScrollScreenView {
     super(props);
 
     this.state = {
-      tracker: null,
+      tracker: Tracker.defaultValues(),
       typeId: TYPES[0].valueOf(),
     };
     this.onTypeSelect = ::this.onTypeSelect;
@@ -51,7 +52,7 @@ export class NewTrackerScreenView extends ScrollScreenView {
 
   onRightMove() {
     this.setState({
-      tracker: null,
+      tracker: Tracker.defaultValues(),
       typeId: TYPES[0].valueOf(),
     });
     this.setNewTrackerBtns();

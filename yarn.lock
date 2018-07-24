@@ -1676,9 +1676,9 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
 
-cocoa-lumberjack@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/cocoa-lumberjack/-/cocoa-lumberjack-3.0.3.tgz#6178b9f31bd156bece7a1549c9d4e1b298542812"
+cocoa-lumberjack@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/cocoa-lumberjack/-/cocoa-lumberjack-3.0.5.tgz#0b29683272ad426974a2c71c86d4de9a81029e6d"
 
 code-point-at@^1.0.0:
   version "1.1.0"
@@ -5557,20 +5557,23 @@ react-mixin@^2.0.2:
     object-assign "^2.0.0"
     smart-mixin "^1.2.0"
 
-react-native-background-fetch@~2.2.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.2.1.tgz#58eca4da671de857eef1446107ed5d29a0bca989"
+react-native-background-fetch@~2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.4.3.tgz#4621cca2a8f9e96edbf0556afcd04873bd698f37"
   dependencies:
     fast-plist "^0.1.2"
     plist "^2.0.1"
     xcode "^0.9.1"
 
-react-native-background-geolocation@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-2.10.1.tgz#3e3c15de61026cae8521882edd0cd0f02d6492ef"
+react-native-background-geolocation@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-2.12.2.tgz#2f6a267d26376a6864e7b2568472771401eeeee5"
   dependencies:
-    cocoa-lumberjack "^3.0.3"
-    react-native-background-fetch "~2.2.0"
+    cocoa-lumberjack "^3.0.5"
+    fast-plist "^0.1.2"
+    plist "^2.0.1"
+    react-native-background-fetch "~2.4.3"
+    xcode "^0.9.1"
 
 react-native-device-info@^0.13.0:
   version "0.13.0"

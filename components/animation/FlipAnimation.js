@@ -8,7 +8,7 @@ import Animation from './Animation';
 const FLIP_TIME = 500;
 
 export default class FlipAnimation {
-  isActive = false;
+  animInOut = null;
   rotY = new Animated.Value(0);
   move1 = new Animated.Value(0);
   move2 = new Animated.Value(1);
@@ -56,24 +56,22 @@ export default class FlipAnimation {
   }
 
   animateIn(callback: Function) {
-    if (this.isActive) return;
-    this.isActive = true;
+    if (this.animInOut) return;
 
     Animation.setValue(this.move2, 0);
 
-    this.animateFlip(1, 0, 1,
+    this.animInOut = this.animateFlip(1, 0, 1,
       (value) => value > 0.5,
       () => Animation.setValue(this.move1, 1, this.setDone(callback)),
     );
   }
 
   animateOut(callback: Function) {
-    if (this.isActive) return;
-    this.isActive = true;
+    if (this.animInOut) return;
 
     Animation.setValue(this.move1, 0);
 
-    this.animateFlip(0, 1, 0,
+    this.animInOut = this.animateFlip(0, 1, 0,
       (value) => value <= 0.5,
       () => Animation.setValue(this.move2, 1, this.setDone(callback)),
     );
@@ -81,7 +79,7 @@ export default class FlipAnimation {
 
   setDone(callback) {
     return () => {
-      this.isActive = false;
+      this.animInOut = null;
       caller(callback);
     };
   }
@@ -104,5 +102,6 @@ export default class FlipAnimation {
       Easing.inOut(Easing.sin),
     );
     Animation.animate([flip], callback);
+    return flip;
   }
 }

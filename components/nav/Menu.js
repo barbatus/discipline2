@@ -53,11 +53,11 @@ export default class Menu extends PureComponent {
       <View style={[styles.menu, style]}>
         <View style={styles.prop}>
           <Text style={styles.label}>
-            Imperial Metric
+            Metric System
           </Text>
           <Switch
             onValueChange={onMeasureChange}
-            value={!props.metric}
+            value={props.metric}
           />
         </View>
         <View style={[styles.prop, styles.lastProp]}>

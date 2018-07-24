@@ -1,5 +1,5 @@
 import { TrackerType } from '../depot/consts';
-import { NewTracker } from '../depot/interfaces';
+import { Tracker as DBTracker } from '../depot/interfaces';
 import depot from '../depot/depot';
 
 import Tracker, { DistanceTracker } from './Tracker';
@@ -29,7 +29,7 @@ export default class Trackers {
     return depot.removeTracker(tracker.id);
   }
 
-  static create(tracker: NewTracker) {
+  static create(tracker: DBTracker) {
     const type = tracker.typeId;
     switch (type) {
       case TrackerType.DISTANCE.valueOf():
@@ -39,7 +39,68 @@ export default class Trackers {
     }
   }
 
-  static clone(tracker: Tracker) {
-    return tracker.clone();
+  static clone(tracker: Tracker, data?: any) {
+    return Object.assign(Trackers.create(tracker), data);
+  }
+
+  static genTestTrackers() {
+    const trackers = [];
+    trackers.push(
+      Tracker.defaultValues({
+        title: 'Morning Run',
+        typeId: TrackerType.COUNTER.valueOf(),
+        iconId: 'trainers',
+      }),
+    );
+
+    trackers.push(
+      Tracker.defaultValues({
+        title: 'Cup of Coffee',
+        typeId: TrackerType.GOAL.valueOf(),
+        iconId: 'coffee',
+      }),
+    );
+
+    trackers.push(
+      Tracker.defaultValues({
+        title: 'Spent on Food',
+        typeId: TrackerType.GOAL.valueOf(),
+        iconId: 'pizza',
+      }),
+    );
+
+    trackers.push(
+      Tracker.defaultValues({
+        title: 'Books read',
+        typeId: TrackerType.COUNTER.valueOf(),
+        iconId: 'book_shelf',
+      }),
+    );
+
+    trackers.push(
+      Tracker.defaultValues({
+        title: 'Spent on Lunch',
+        typeId: TrackerType.SUM.valueOf(),
+        iconId: 'pizza',
+      }),
+    );
+
+    trackers.push(
+      Tracker.defaultValues({
+        title: 'Reading time',
+        typeId: TrackerType.STOPWATCH.valueOf(),
+        iconId: 'reading',
+      })
+    );
+
+    trackers.push(
+      DistanceTracker.defaultValues({
+        title: 'Morning Run',
+        typeId: TrackerType.DISTANCE.valueOf(),
+        iconId: 'trainers',
+      }),
+    );
+
+    return trackers;
   }
 }

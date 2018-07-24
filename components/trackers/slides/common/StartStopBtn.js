@@ -24,39 +24,41 @@ export default class StartStopBtn extends PureComponent {
     onPress: PropTypes.func.isRequired,
     active: PropTypes.bool.isRequired,
     responsive: PropTypes.bool.isRequired,
+    enabled: PropTypes.bool,
   };
 
   opacity = new Animated.Value(1);
-  // TODO: use flickerAnim to check if responsive
   responsive = true;
 
   constructor(props) {
     super(props);
     this.onPress = ::this.onPress;
-    const flicker = Animated.timing(this.opacity,
-      { duration: 800, toValue: 0.4, useNativeDriver: true });
-    this.flickerAnim = Animated.loop(flicker);
   }
 
-  componentDidUpdate() {
-    this.stopOnPress();
+  componentWillReceiveProps({ enabled, active }) {
+    if (active !== this.props.active) {
+      this.enable();
+      return;
+    }
+    if (enabled !== this.props.enabled) {
+      enabled ? this.enable() : this.disable();
+    }
   }
 
-  onPress() {
+  onPress(id) {
     if (!this.responsive) return;
 
-    this.startOnPress();
+    this.disable();
     this.props.onPress();
   }
 
-  startOnPress() {
+  disable() {
     this.responsive = false;
-    this.flickerAnim.start();
+    this.opacity.setValue(0.4);
   }
 
-  stopOnPress() {
+  enable() {
     this.responsive = true;
-    this.flickerAnim.stop();
     this.opacity.setValue(1);
   }
 

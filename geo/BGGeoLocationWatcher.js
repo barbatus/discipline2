@@ -6,24 +6,75 @@ import EventEmitter from 'eventemitter3';
 
 import { caller } from 'app/utils/lang';
 
-BackgroundGeolocation.configure({
-  distanceFilter: 5,
-  stopOnTerminate: false,
-  autoSync: false,
-  stationaryRadius: 0,
-  disableElasticity: true,
-});
+import Enum from '../depot/Enum';
+
+function configureBackgroundGeolocation(callback) {
+  BackgroundGeolocation.ready({
+    desiredAccuracy: 0,
+    distanceFilter: 5,
+    stopOnTerminate: false,
+    autoSync: false,
+    stationaryRadius: 0,
+    disableElasticity: true,
+  }, callback);
+}
+
+const LOCATION_TIMEOUT = 5;
 
 const BG_POS_OPT = {
   persist: false,
   desiredAccuracy: 0,
-  timeout: 5000,
+  interval: 500,
+  timeout: LOCATION_TIMEOUT, // sec
 };
 
-class BGGeoLocationWatcher {
+export const BG_ERROR_CODE = {
+  LOCATION_UNKNOWN: 0,
+  LOCATION_PERMISSION_DENIED: 2,
+  LOCATION_TIMEOUT: 408,
+};
+
+export const BGError = new Enum({
+  LOCATION_PERMISSION_DENIED: {
+    value: BG_ERROR_CODE.LOCATION_PERMISSION_DENIED,
+    message: 'Location Service is not allowed',
+  },
+  LOCATION_UNKNOWN: {
+    value: BG_ERROR_CODE.LOCATION_UNKNOWN,
+    message: 'Location unknown',
+  },
+  LOCATION_TIMEOUT: {
+    value: BG_ERROR_CODE.LOCATION_TIMEOUT,
+    message: 'Can\'t determine phone location. Make sure that GPS is available.',
+  },
+});
+
+export default class BGGeoLocationWatcher {
   emitter = new EventEmitter();
 
   watching = false;
+
+  singleton: BGGeoLocationWatcher = null;
+
+  static getOrCreate(callback) {
+    if (!this.singleton) {
+      configureBackgroundGeolocation((state) => {
+        const authStatus = state.lastLocationAuthorizationStatus;
+        BackgroundGeolocation.stop();
+        BackgroundGeolocation.start(() => {
+          if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
+              BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
+              callback(null, BGError.LOCATION_PERMISSION_DENIED);
+          } else {
+            this.singleton = new BGGeoLocationWatcher();
+            callback(this.singleton);
+          }
+        }, (error) => callback(null, error));
+      });
+    } else {
+      return callback(this.singleton);
+    }
+  }
 
   on(event, cb, context) {
     check.assert.function(cb);
@@ -38,53 +89,53 @@ class BGGeoLocationWatcher {
     this.emitter.removeListener(event, cb, context);
   }
 
-  watchPos(onStart) {
-    if (this.watching) onStart();
+  watchPos(onStart: Function) {
+    if (this.watching) {
+      caller(onStart);
+      return;
+    }
 
-    BackgroundGeolocation.changePace(true);
-    BackgroundGeolocation.watchPosition(
-      (pos) => {
+    BackgroundGeolocation.changePace(true, () => {
+      const watchPosition = () => BackgroundGeolocation.watchPosition(
+        (pos) => this.emitter.emit('position', pos),
+        (errorCode) => caller(onStart, null, this.handleError(errorCode)),
+        BG_POS_OPT,
+      );
+
+      BackgroundGeolocation.getCurrentPosition(
+        (pos) => {
+          this.watching = true;
+          watchPosition();
+          caller(onStart, pos, null);
+        },
+        (error) => this.handleError(errorCode),
+        { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
+      );
+      setTimeout(() => {
         if (!this.watching) {
-          onStart(pos, null);
+          caller(onStart, null, BGError.LOCATION_TIMEOUT);
         }
-        this.watching = true;
-        this.emitter.emit('position', pos);
-      },
-      (errorCode) => onStart(null, errorCode),
-      BG_POS_OPT,
-    );
+      }, 1.5 * LOCATION_TIMEOUT * 1000);
+    }, (errorCode) => caller(onStart, null, this.handleError(errorCode)));
   }
 
-  stopWatch() {
+  stopWatch(onStop: Function) {
     if (this.listenerCount('position') === 0) {
       this.watching = false;
       BackgroundGeolocation.changePace(false);
       BackgroundGeolocation.stopWatchPosition();
     }
+    caller(onStop);
   }
 
   getPos(onPos: Function) {
     check.assert.function(onPos);
 
     BackgroundGeolocation.getCurrentPosition(
-      BG_POS_OPT,
       (pos) => onPos(pos, null),
       (error) => onPos(null, error),
+      BG_POS_OPT,
     );
-  }
-
-  start(onSuccess: Function, onError: Function, count = 0) {
-    const successCb = (pos) => caller(onSuccess, pos);
-
-    const errorCb = (error) => {
-      if (count === 3) {
-        caller(onError, error);
-        return;
-      }
-      this.start(onSuccess, onError, count + 1);
-    };
-
-    BackgroundGeolocation.getCurrentPosition(BG_POS_OPT, successCb, errorCb);
   }
 
   subscribe(event: string) {
@@ -96,77 +147,8 @@ class BGGeoLocationWatcher {
   listenerCount(event) {
     return this.emitter.listeners(event).length;
   }
-}
 
-export default new BGGeoLocationWatcher();
-
-const NAV_POS_OPT = {
-  enableHighAccuracy: true,
-  timeout: 20000,
-  maximumAge: 1000,
-};
-
-class NavGeoLocationWatcherKls {
-  watchId = null;
-
-  emitter = new EventEmitter();
-
-  on(event: string, cb: Function, context: any): Function {
-    check.assert.function(cb);
-
-    this.emitter.on(event, cb, context);
-    return () => this.emitter.removeListener(event, cb, context);
-  }
-
-  off(event: string, cb: Function, context: any) {
-    check.assert.function(cb);
-
-    this.emitter.removeListener(event, cb, context);
-  }
-
-  watchPos(onStart: Function) {
-    check.assert.function(onStart);
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        this.startWatch();
-        caller(onStart, pos, null);
-      },
-      (error) => {
-        caller(onStart, null, error);
-      },
-      NAV_POS_OPT,
-    );
-  }
-
-  stopWatch() {
-    if (this.listenerCount('position') === 0) {
-      navigator.geolocation.clearWatch(this.watchId);
-    }
-  }
-
-  getPos(onPos: Function) {
-    check.assert.function(onPos);
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => caller(onPos, pos, null),
-      (error) => caller(onPos, null, error),
-      NAV_POS_OPT,
-    );
-  }
-
-  startWatch() {
-    if (this.watchId) return;
-
-    this.watchId = navigator.geolocation.watchPosition(
-      (pos) => this.emitter.emit('position', pos),
-      null, NAV_POS_OPT,
-    );
-  }
-
-  listenerCount(event) {
-    return this.emitter.listeners(event).length;
+  handleError(errorCode: number) {
+    return BGError.fromValue(errorCode) || errorCode;
   }
 }
-
-export const NavGeoLocationWatcher = new NavGeoLocationWatcherKls();

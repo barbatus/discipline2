@@ -2,6 +2,7 @@ import time from 'app/time/utils';
 
 import depot from '../depot/depot';
 import { Tick, mapTicks } from './Tracker';
+import Trackers from './Trackers';
 
 export const UPDATE_APP_PROPS = 'UPDATE_APP_PROPS';
 
@@ -33,7 +34,8 @@ export const updateCalendar = (
 export const LOAD_TEST_DATA = 'LOAD_INIT';
 
 export const loadTestApp = () => async (dispatch) => {
-  const app = await depot.loadTestApp();
+  const trackers = Trackers.genTestTrackers();
+  const app = await depot.loadTestApp(trackers);
   return dispatch({
     type: LOAD_TEST_DATA,
     trackers: app.trackers,
@@ -89,7 +91,8 @@ export const START_TRACKER = 'START_TRACKER';
 
 export const startTracker = (tracker, value, data) => async (dispatch) => {
   const dateTimeMs = time.getDateTimeMs();
-  const updTracker = await depot.updateTracker(tracker.clone({ active: true }));
+  const startedTracker = Trackers.clone(tracker, { active: true });
+  const updTracker = await depot.updateTracker(startedTracker);
   const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
   return dispatch({
     type: START_TRACKER,
@@ -103,7 +106,8 @@ export const STOP_TRACKER = 'STOP_TRACKER';
 export const STOP_TRACKER_WITH_TICK_UPDATE = 'STOP_TRACKER_WITH_TICK_UPDATE';
 
 export const stopTracker = (tracker, value, data) => async (dispatch) => {
-  const updTracker = await depot.updateTracker(tracker.clone({ active: false }));
+  const stoppedTracker = Trackers.clone(tracker, { active: false });
+  const updTracker = await depot.updateTracker(stoppedTracker);
   if (value) {
     const tick = await depot.updateLastTick(tracker.id, value, data);
     return dispatch({
@@ -125,17 +129,18 @@ export const undoLastTick = (tracker) => async (dispatch) => {
   const ticks = await depot.getTicks(tracker.id, time.getDateMs());
   return dispatch({
     type: UNDO_LAST_TICK,
-    tracker: tracker.clone({ ticks }),
+    tracker: Trackers.clone(tracker, { ticks }),
   });
 };
 
 export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
-export const updateLastTick = (tracker, value, data) => async (dispatch) => {
+export const updateLastTick = (tracker, value, data, progress) => async (dispatch) => {
   const tick = await depot.updateLastTick(tracker.id, value, data);
   return dispatch({
     type: UPDATE_LAST_TICK,
     tracker,
+    progress,
     tick: new Tick(tick),
   });
 };

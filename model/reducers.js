@@ -40,7 +40,24 @@ const cloneTracker = (trackers, tracker, index?: number, ticks?: Tick[]) => {
       !ticks.find((tck2) => tck1.id === tck2.id));
     trTicks = tcks.concat(ticks);
   }
-  return trackers.update(trIndex, () => Trackers.create({ ...tracker, ticks: trTicks }));
+  return trackers.update(trIndex, () => Trackers.clone(
+    trackers.get(trIndex),
+    { ...tracker, ticks: trTicks }),
+  );
+};
+
+const cloneTicks = (trackers, tracker, progress, ticks: Tick[]) => {
+  const trIndex = findIndex(trackers, tracker);
+  let trTicks = tracker.ticks;
+  if (ticks) {
+    const tcks = tracker.ticks.filter((tck1) =>
+      !ticks.find((tck2) => tck1.id === tck2.id));
+    trTicks = tcks.concat(ticks);
+  }
+  return trackers.update(trIndex, () => Trackers.clone(trackers.get(trIndex), {
+    ...progress,
+    ticks: trTicks,
+  }));
 };
 
 const insertTracker = (trackers, tracker, index?: number) => {
@@ -112,7 +129,7 @@ export const trackersReducer = handleActions(
       };
     },
     [TICK_TRACKER]: (state, { tracker, tick }) => {
-      const trackers = cloneTracker(state.trackers, tracker, null, [tick]);
+      const trackers = cloneTicks(state.trackers, tracker, null, [tick]);
       return {
         ...state,
         trackers,
@@ -125,8 +142,8 @@ export const trackersReducer = handleActions(
         trackers,
       };
     },
-    [UPDATE_LAST_TICK]: (state, { tracker, tick }) => {
-      const trackers = cloneTracker(state.trackers, tracker, null, [tick]);
+    [UPDATE_LAST_TICK]: (state, { tracker, progress, tick }) => {
+      const trackers = cloneTicks(state.trackers, tracker, progress, [tick]);
       return {
         ...state,
         trackers,

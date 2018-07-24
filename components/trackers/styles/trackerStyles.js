@@ -160,7 +160,7 @@ const editDef = {
     fontWeight: '200',
   },
   group: {
-    marginTop: 20,
+    marginBottom: 20,
   },
   row: {
     flexDirection: 'row',
@@ -173,6 +173,7 @@ const editDef = {
     borderColor: 'rgba(0, 0, 0, 0.1)',
     borderLeftWidth: 0,
     borderRightWidth: 0,
+    marginBottom: 10,
   },
   colLeft: {
     flex: 0.5,

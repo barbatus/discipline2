@@ -54,6 +54,7 @@ export default class Depot {
     ));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
+      active: false,
     }));
   }
 
@@ -65,6 +66,15 @@ export default class Depot {
 
     const ticks = await this.getTrackerTicks(tracker.id, time.getDateMs());
     return { ...tracker, ticks };
+  }
+
+  async getRawTracker(trackId: string) {
+    check.assert.string(trackId);
+
+    const tracker = await trackersDB.getOne(trackId);
+    if (!tracker) throw new Error('Tracker not found');
+
+    return tracker;
   }
 
   async updateTracker(tracker: Tracker) {
@@ -146,6 +156,7 @@ export default class Depot {
       title: 'Morning Run',
       typeId: TrackerType.COUNTER.valueOf(),
       iconId: 'trainers',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -153,6 +164,7 @@ export default class Depot {
       title: 'Cup of Coffee',
       typeId: TrackerType.GOAL.valueOf(),
       iconId: 'coffee',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -160,6 +172,7 @@ export default class Depot {
       title: 'Spent on Food',
       typeId: TrackerType.GOAL.valueOf(),
       iconId: 'pizza',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -167,6 +180,7 @@ export default class Depot {
       title: 'Books read',
       typeId: TrackerType.COUNTER.valueOf(),
       iconId: 'book_shelf',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -174,6 +188,7 @@ export default class Depot {
       title: 'Spent on Lunch',
       typeId: TrackerType.SUM.valueOf(),
       iconId: 'pizza',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -181,6 +196,7 @@ export default class Depot {
       title: 'Reading time',
       typeId: TrackerType.STOPWATCH.valueOf(),
       iconId: 'reading',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -188,6 +204,7 @@ export default class Depot {
       title: 'Morning Run',
       typeId: TrackerType.DISTANCE.valueOf(),
       iconId: 'trainers',
+      props: [{ alerts: false }],
     });
     trackers.push(tracker);
 
@@ -207,13 +224,17 @@ export default class Depot {
     return false;
   }
 
-  async loadTestApp() {
+  async loadTestApp(testTrackers: NewTracker[]) {
     const app = await this.initApp();
     await this.resetTestData();
 
     if (await this.hasTestData()) { return app; }
 
-    const trackers = await this.genTestTrackers();
+    // TODO: check out why Promise.all not working
+    const trackers = [];
+    for (const tracker of testTrackers) {
+      trackers.push(await this.addTracker(tracker));
+    }
     await appDB.setTestTrackers(trackers);
 
     return appDB.get();

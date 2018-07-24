@@ -23,10 +23,10 @@ export default class ProgressTrackerSlide extends TrackerSlide {
     caller(this.props.onStart, value, data);
   }
 
-  onProgress(value: number, data?: any) {
+  onProgress(value: number, data?: any, progress?: any) {
     const { tracker } = this.props;
     if (tracker.active) {
-      caller(this.props.onProgress, value, data);
+      caller(this.props.onProgress, value, data, progress);
     }
   }
 }
