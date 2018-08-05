@@ -39,7 +39,7 @@ const ListItemFn = ({ item, onPress, showMore }) => {
     <TextRow>
       <TextCol>
         <TimeText>{timeStr}</TimeText>
-        <Text>{item.desc}</Text>;
+        <Text>{item.desc}</Text>
       </TextCol>
       {
         showMore ?

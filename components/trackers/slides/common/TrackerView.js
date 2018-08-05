@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 export default class TrackerView extends PureComponent {
   static propTypes = {
-    style: PropTypes.oneOfType(ViewPropTypes.style, PropTypes.object),
+    style: PropTypes.object,
     bodyStyle: ViewPropTypes.style,
     footerStyle: ViewPropTypes.style,
     tracker: PropTypes.instanceOf(Tracker),

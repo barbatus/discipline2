@@ -2,7 +2,7 @@
 
 import { AppRegistry } from 'react-native';
 
-import { loadTestApp } from './model/actions';
+import { loadApp } from './model/actions';
 
 import createStore from './model/createStore';
 
@@ -16,4 +16,4 @@ export default App;
 
 AppRegistry.registerComponent('Discipline', () => App);
 
-store.dispatch(loadTestApp());
+store.dispatch(loadApp());

@@ -1,9 +1,16 @@
 {
-  "presets": ["react-native", "flow"],
-  "plugins": ["transform-function-bind"],
+  "presets": [
+    "react-native",
+    "@babel/preset-flow"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-function-bind"
+  ],
   "env": {
     "development": {
-      "plugins": ["transform-react-jsx-source"]
+      "plugins": [
+        "@babel/plugin-transform-react-jsx-source"
+      ]
     }
   }
 }

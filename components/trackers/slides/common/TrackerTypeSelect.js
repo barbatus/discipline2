@@ -1,11 +1,18 @@
 import React, { PureComponent } from 'react';
 import {
+  Animated,
   View,
   TouchableOpacity,
   Image,
   Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
+
+import { getIcon } from 'app/icons/icons';
+import { TrackerType } from 'app/depot/consts';
+import ShakeAnimation from 'app/components/animation/ShakeAnimation';
+
+import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
 
 export default class TrackerTypeSelect extends PureComponent {
   static propTypes = {

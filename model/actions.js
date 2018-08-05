@@ -31,14 +31,23 @@ export const updateCalendar = (
     }),
   );
 
-export const LOAD_TEST_DATA = 'LOAD_INIT';
+export const LOAD_APP = 'APP/LOAD';
+
+export const loadApp = () => async (dispatch) => {
+  const app = await depot.loadApp();
+  return dispatch({
+    type: LOAD_APP,
+    app,
+  });
+};
+
+export const LOAD_TEST_APP = 'APP/LOAD/TEST';
 
 export const loadTestApp = () => async (dispatch) => {
   const trackers = Trackers.genTestTrackers();
   const app = await depot.loadTestApp(trackers);
   return dispatch({
-    type: LOAD_TEST_DATA,
-    trackers: app.trackers,
+    type: LOAD_TEST_APP,
     app,
   });
 };

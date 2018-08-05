@@ -26,6 +26,10 @@ export default class Depot {
     return { ...app, trackers };
   }
 
+  async loadApp() {
+    return this.initApp();
+  }
+
   async updateAppProps(props: AppProps) {
     const app = await appDB.getRaw();
     const newProps = { ...app.props, ...props };
@@ -148,67 +152,6 @@ export default class Depot {
   async getTrackerTicks(trackId: string, minDateMs: number, maxDateMs?: number) {
     const ticks = await ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
     return ticks.map((tick) => ticksDB.plainTick(tick));
-  }
-
-  async genTestTrackers() {
-    const trackers = [];
-    let tracker = await this.addTracker({
-      title: 'Morning Run',
-      typeId: TrackerType.COUNTER.valueOf(),
-      iconId: 'trainers',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    tracker = await this.addTracker({
-      title: 'Cup of Coffee',
-      typeId: TrackerType.GOAL.valueOf(),
-      iconId: 'coffee',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    tracker = await this.addTracker({
-      title: 'Spent on Food',
-      typeId: TrackerType.GOAL.valueOf(),
-      iconId: 'pizza',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    tracker = await this.addTracker({
-      title: 'Books read',
-      typeId: TrackerType.COUNTER.valueOf(),
-      iconId: 'book_shelf',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    tracker = await this.addTracker({
-      title: 'Spent on Lunch',
-      typeId: TrackerType.SUM.valueOf(),
-      iconId: 'pizza',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    tracker = await this.addTracker({
-      title: 'Reading time',
-      typeId: TrackerType.STOPWATCH.valueOf(),
-      iconId: 'reading',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    tracker = await this.addTracker({
-      title: 'Morning Run',
-      typeId: TrackerType.DISTANCE.valueOf(),
-      iconId: 'trainers',
-      props: [{ alerts: false }],
-    });
-    trackers.push(tracker);
-
-    return trackers;
   }
 
   async resetTestData() {

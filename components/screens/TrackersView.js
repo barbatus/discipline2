@@ -294,7 +294,7 @@ class TrackersView extends PureComponent {
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
     const { current, selDateMs } = this.state;
-    const calcStyle = [commonStyles.absFilled, { top: 0 }, { opacity: this.calcOpacity }];
+    const calcStyle = { ...commonStyles.absFilled, top: 0, opacity: this.calcOpacity };
 
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>

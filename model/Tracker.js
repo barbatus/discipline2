@@ -59,11 +59,6 @@ export default class Tracker implements DBTracker {
     this.active = tracker.active;
   }
 
-  // clone(data?: Object) {
-  //   const tracker = Object.assign(Object.getPrototypeOf(this), this, data);
-  //   return tracker;
-  // }
-
   get type() {
     return TrackerType.fromValue(this.typeId);
   }

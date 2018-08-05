@@ -14,7 +14,7 @@ export default class TrackerCal extends Component {
     selDateMs: PropTypes.number,
     // TODO: if only ViewPropTypes.style left it curses
     // that opacity is not part of ViewPropTypes.style
-    style: PropTypes.oneOfType(ViewPropTypes.style, PropTypes.object),
+    style: PropTypes.object,
   };
 
   static defaultProps = {

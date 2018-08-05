@@ -1,9 +1,11 @@
-import { handleActions } from 'redux-actions';
-
+import { combineActions, handleActions } from 'redux-actions';
 import { List } from 'immutable';
 
+import time from 'app/time/utils';
+
 import {
-  LOAD_TEST_DATA,
+  LOAD_APP,
+  LOAD_TEST_APP,
   REMOVE_TRACKER,
   ADD_TRACKER,
   UPDATE_TRACKER,
@@ -74,7 +76,7 @@ export const trackersReducer = handleActions(
       ...state,
       app,
     }),
-    [LOAD_TEST_DATA]: (state, { trackers, app }) => ({
+    [combineActions(LOAD_APP, LOAD_TEST_APP)]: (state, { app: { trackers, ...app } }) => ({
       ...state,
       app,
       trackers: new List(trackers.map(
@@ -166,5 +168,5 @@ export const trackersReducer = handleActions(
       updateIndex: null,
     }),
   },
-  {},
+  { dateMs: time.getDateMs(), trackers: List() },
 );

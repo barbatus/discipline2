@@ -21,7 +21,8 @@ const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
     <TrackerEditView
       form="newTrackerForm"
       {...rest}
-      style={styles.editView}
+      allowType
+      style={[styles.editView]}
       props={Tracker.properties}
       initialValues={tracker}
       onSubmitSuccess={onNewTracker}

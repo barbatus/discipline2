@@ -2,7 +2,7 @@ import React from 'react';
 
 import { View, Animated } from 'react-native';
 
-import RNShakeEvent from 'react-native-shake-event';
+import RNShake from 'react-native-shake';
 
 import isNumber from 'lodash/isNumber';
 
@@ -46,13 +46,13 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   componentWillUnmount() {
-    RNShakeEvent.removeEventListener('shake');
+    RNShake.removeEventListener('shake');
     this.moveScale.dispose();
     this.responder.dispose();
   }
 
   componentDidMount() {
-    RNShakeEvent.addEventListener('shake', ::this.shakeCurrent);
+    RNShake.addEventListener('shake', ::this.shakeCurrent);
     this.handleMoveUp();
   }
 

@@ -15,8 +15,7 @@ export class Keyboard {
   }
 
   dismiss() {
-    TextInputState.blurTextInput(
-      TextInputState.currentlyFocusedField());
+    KeyboardRN.dismiss();
   }
 
   shown() {
