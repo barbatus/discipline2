@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Animated, ViewPropTypes } from 'react-native';
+import { Animated } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Tick } from 'app/model/Tracker';

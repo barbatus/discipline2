@@ -1,0 +1,4 @@
+git_url "git@github.com:barbatus/fastlane-match-ios-certs.git"
+type "development"
+app_identifier ["com.vivo.apps.discipline"]
+username "alex.borodach@gmail.com"

@@ -126,7 +126,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
   onTick() {
     Vibration.vibrate();
-    
+
     this.timer.start(0);
 
     this.timer.events.on('onTimer', ::this.onTimer);

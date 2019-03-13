@@ -20,7 +20,7 @@ import registry, { DlgType } from 'app/components/dlg/registry';
 import { formatDistance, formatSpeed } from 'app/utils/format';
 import UserIconsStore from 'app/icons/UserIconsStore';
 import { DistanceTracker as Tracker } from 'app/model/Tracker';
-import DistanceTrackers, { DistanceTracker } from 'app/geo/DistanceTrackers';
+import DistanceTrackers from 'app/geo/DistanceTrackers';
 import { BGError } from 'app/geo/BGGeoLocationWatcher';
 
 import { trackerStyles } from '../styles/trackerStyles';
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DistanceDataFn = ({ time, dist, metric, speed }) => {
+const DistanceDataFn = ({ time, dist, metric }) => {
   const distFormat = formatDistance(dist, metric);
   return (
     <View style={styles.distData}>
@@ -290,14 +290,14 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   async getDistTracker(trackerId: string) {
-    return await DistanceTrackers.get(
+    return DistanceTrackers.get(
       trackerId,
       DIST_INTRVL,
       TIME_INTRVL,
     );
   }
 
-  async onStartBtn(id) {
+  async onStartBtn() {
     try {
       const { tracker } = this.props;
       this.setState({ btnEnabled: false });
@@ -306,7 +306,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       distTracker.events.on('onTimeUpdate', this.onTimeUpdate);
       await distTracker.start();
       this.onDistStart();
-    } catch(error) {
+    } catch (error) {
       if (error !== BGError.LOCATION_PERMISSION_DENIED) {
         Alert.alert('Distance Tracking', error.message);
       }

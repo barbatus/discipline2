@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { addTracker } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
 
+import CopilotStep from '../copilot/CopilotStep';
+import coSteps from '../copilot/steps';
 import { NavAddButton, NavMenuButton } from '../nav/buttons';
 import { commonStyles } from '../styles/common';
 import Animation from '../animation/Animation';
@@ -66,7 +68,11 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   getNewBtn(onPress) {
-    return <NavAddButton onPress={onPress} />;
+    return (
+      <CopilotStep step={coSteps.CREATE_FIRST}>
+        <NavAddButton onPress={onPress} />
+      </CopilotStep>
+    );
   }
 
   getMenuBtn(onPress) {

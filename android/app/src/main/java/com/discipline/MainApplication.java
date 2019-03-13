@@ -3,19 +3,19 @@ package com.discipline;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.horcrux.svg.SvgPackage;
 import com.clipsub.RNShake.RNShakeEventPackage;
 import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
 import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
 import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -82,19 +82,19 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNBackgroundFetchPackage(),
+            new SvgPackage(),
             new RNShakeEventPackage(),
             new RNSqlite2Package(),
             new RNShakeEventPackage(),
             new MapsPackage(),
             new LinearGradientPackage(),
             new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
             new RNSqlite2Package(),
             new RNShakeEventPackage(),
             new MapsPackage(),
             new LinearGradientPackage(),
             new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
             new RNSqlite2Package(),
             new RNShakeEventPackage(),
             new MapsPackage(),

@@ -72,6 +72,7 @@ export default class MapsDlg extends CommonModal {
 
   async setLocation() {
     const geo = await GeoWatcher.getOrCreate();
+    const { region } = this.state;
     geo.getPos((pos, error) => {
       if (error) return;
       const { latitude, longitude } = pos.coords;

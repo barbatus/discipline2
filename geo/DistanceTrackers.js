@@ -66,7 +66,7 @@ export class DistanceTracker {
           reject(error);
           return;
         }
-    
+
         this.startTracking(pos.coords);
         this.unwatch = this.geoWatcher.on('position', this.onPosChange);
         resolve();
@@ -102,6 +102,7 @@ export class DistanceTracker {
 
   onPosChange(pos) {
     let state;
+    // eslint-disable-next-line no-cond-assign
     if ((state = this.setNextPosState(pos))) {
       this.fireLatLonUpdate(state);
     }

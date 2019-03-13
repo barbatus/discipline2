@@ -36,7 +36,7 @@ export default class NavGeoLocationWatcherKls {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         this.watchId = navigator.geolocation.watchPosition(
-          (pos) => this.emitter.emit('position', pos),
+          (watchPos) => this.emitter.emit('position', watchPos),
           null, NAV_POS_OPT,
         );
         caller(onStart, pos, null);

@@ -137,19 +137,19 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-background-fetch')
+    compile project(':react-native-svg')
     compile project(':react-native-shake')
     compile project(':react-native-sqlite-2')
     compile project(':react-native-shake-event')
     compile project(':react-native-maps')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-device-info')
-    compile project(':react-native-background-geolocation')
     compile project(':react-native-sqlite-2')
     compile project(':react-native-shake-event')
     compile project(':react-native-maps')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-device-info')
-    compile project(':react-native-background-geolocation')
     compile project(':react-native-sqlite-2')
     compile project(':react-native-shake-event')
     compile project(':react-native-maps')

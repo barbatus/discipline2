@@ -1,12 +1,11 @@
-import { TrackerType } from 'app/depot/consts';
-
 import {
   Tracker as DBTracker,
   Tick as DBTick,
   type TRACKER_ID,
   NewTracker,
+  type PropType,
 } from 'app/depot/interfaces';
-import { DEFAULT_TRACKER_PROPS } from 'app/depot/consts';
+import { TrackerType, DEFAULT_TRACKER_PROPS } from 'app/depot/consts';
 
 import UserIconsStore from 'app/icons/UserIconsStore';
 
@@ -36,6 +35,7 @@ export default class Tracker implements DBTracker {
   typeId: TRACKER_ID;
   active: boolean;
   ticks: DBTick[];
+  props: Array<PropType>;
 
   static get properties() {
     return DEFAULT_TRACKER_PROPS;
@@ -63,7 +63,7 @@ export default class Tracker implements DBTracker {
     return TrackerType.fromValue(this.typeId);
   }
 
-  set type(type) {
+  set type(type: any) {
     this.typeId = type.valueOf();
   }
 
@@ -71,7 +71,7 @@ export default class Tracker implements DBTracker {
     return UserIconsStore.get(this.iconId);
   }
 
-  set icon(icon) {
+  set icon(icon: any) {
     this.iconId = icon.id;
   }
 
@@ -109,7 +109,7 @@ export class DistanceTracker extends Tracker {
     ];
   }
 
-  static defaultValues(data?: Subtype<NewTracker>) {
+  static defaultValues(data?: $Subtype<NewTracker>) {
     return {
       active: false,
       props: { alerts: false, showSpeed: false },

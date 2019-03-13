@@ -19,7 +19,7 @@ export interface Tracker {
   title: string;
   typeId: TRACKER_ID;
   iconId: string;
-  active: false;
+  active: boolean;
   ticks?: Array<Tick>;
   props: Array<PropType>;
 }

@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
 });
 
 const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
+  // TODO: consider removing outer View
   <View style={[trackerStyles.slide, style]}>
     <TrackerEditView
       form="newTrackerForm"

@@ -25,6 +25,11 @@ export default class GradientSlider extends PureComponent {
 
   move = new Animated.Value(0);
 
+  get slides() {
+    const { slides } = this.props;
+    return Math.max(slides, 2);
+  }
+
   getGrad(slides: number) {
     const len = COLORS.length;
     const int = Math.floor(slides / len);
@@ -52,9 +57,8 @@ export default class GradientSlider extends PureComponent {
   finishNoSlide() {}
 
   render() {
-    const { slides } = this.props;
-    const width = slides * SCREEN_WIDTH;
-    const grads = this.getGrad(slides);
+    const width = this.slides * SCREEN_WIDTH;
+    const grads = this.getGrad(this.slides);
     return (
       <Animated.View
         style={[

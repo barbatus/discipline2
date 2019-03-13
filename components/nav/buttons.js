@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
 import { TouchableOpacity, Image, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
-
 import { pure } from 'recompose';
-
 import debounce from 'lodash/debounce';
 
 import { getIcon } from 'app/icons/icons';
@@ -28,9 +26,11 @@ export class NavButton extends PureComponent {
     const onPress = this.props.onPress
       ? debounce(this.props.onPress, 16)
       : null;
+    const { copilot } = this.props;
     return (
       <TouchableOpacity onPress={onPress} style={this.props.style}>
         <Image
+          {...copilot}
           source={getIcon(this.props.icon)}
           style={[styles.navBarIcon, this.props.iconStyle]}
         />

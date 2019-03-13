@@ -25,16 +25,10 @@ const styles = StyleSheet.create({
     marginVertical: 9,
   },
   navBarLeftButton: {
-    paddingLeft: 20,
-    paddingRight: 10,
-    paddingBottom: 10,
-    marginTop: 0,
+    marginLeft: 20,
   },
   navBarRightButton: {
-    paddingRight: 20,
-    paddingLeft: 10,
-    paddingBottom: 10,
-    marginTop: 0,
+    marginRight: 20,
   },
   navBarButtonText: {
     color: '#1A7CF9',

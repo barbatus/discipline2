@@ -57,23 +57,21 @@ export default class BGGeoLocationWatcher {
   singleton: BGGeoLocationWatcher = null;
 
   static getOrCreate(callback) {
-    if (!this.singleton) {
-      configureBackgroundGeolocation((state) => {
-        const authStatus = state.lastLocationAuthorizationStatus;
-        BackgroundGeolocation.stop();
-        BackgroundGeolocation.start(() => {
-          if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
-              BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
-              callback(null, BGError.LOCATION_PERMISSION_DENIED);
-          } else {
-            this.singleton = new BGGeoLocationWatcher();
-            callback(this.singleton);
-          }
-        }, (error) => callback(null, error));
-      });
-    } else {
-      return callback(this.singleton);
-    }
+    if (this.singleton) callback(this.singleton);
+
+    configureBackgroundGeolocation((state) => {
+      const authStatus = state.lastLocationAuthorizationStatus;
+      BackgroundGeolocation.stop();
+      BackgroundGeolocation.start(() => {
+        if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
+            BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
+          callback(null, BGError.LOCATION_PERMISSION_DENIED);
+        } else {
+          this.singleton = new BGGeoLocationWatcher();
+          callback(this.singleton);
+        }
+      }, (error) => callback(null, error));
+    });
   }
 
   on(event, cb, context) {
@@ -108,7 +106,7 @@ export default class BGGeoLocationWatcher {
           watchPosition();
           caller(onStart, pos, null);
         },
-        (error) => this.handleError(errorCode),
+        (errorCode) => this.handleError(errorCode),
         { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
       );
       setTimeout(() => {

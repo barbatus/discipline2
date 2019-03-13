@@ -59,7 +59,6 @@ const PADDING = 15;
 export default class Month extends PureComponent {
   static propTypes = {
     ticks: PropTypes.instanceOf(Map),
-    selDateMs: PropTypes.number,
     monthMs: PropTypes.number.isRequired,
     todayMs: PropTypes.number.isRequired,
     onDateSelect: PropTypes.func.isRequired,
@@ -67,13 +66,13 @@ export default class Month extends PureComponent {
   };
 
   static defaultProps = {
-    selDateMs: null,
     ticks: new Map(),
   };
 
   constructor(props) {
     super(props);
     this.state = {
+      selDateMs: null,
       tooltipShown: false,
     };
     this.dayWidth = 0;
@@ -81,20 +80,23 @@ export default class Month extends PureComponent {
     this.selectDate = ::this.selectDate;
   }
 
-  componentWillReceiveProps({ selDateMs }) {
-    if (this.props.selDateMs !== selDateMs) {
-      const { ticks } = this.props;
-      this.state.tooltipShown = selDateMs ?
-        ticks.get(moment(selDateMs).date() - 1) : false;
+  static getDerivedStateFromProps({ selDateMs, ticks }, prevState) {
+    if (selDateMs !== prevState.selDateMs) {
+      const tooltipShown = selDateMs ?
+        ticks.has(moment(selDateMs).date() - 1) : false;
+      return { selDateMs, tooltipShown };
     }
+    return null;
   }
 
   componentDidUpdate() {
-    const dayNode = findNodeHandle(this.dayRef);
-    NativeMethodsMixin.measure.call(dayNode, (dx, dy, width, height) => {
-      this.dayWidth = width;
-      this.dayHeight = height;
-    });
+    if (!this.dayWidth) {
+      const dayNode = findNodeHandle(this.dayRef);
+      NativeMethodsMixin.measure.call(dayNode, (dx, dy, width, height) => {
+        this.dayWidth = width;
+        this.dayHeight = height;
+      });
+    }
   }
 
   getTooltipPos(selDateMs) {
@@ -112,20 +114,15 @@ export default class Month extends PureComponent {
   }
 
   selectDate(day: number) {
-    const { monthMs, selDateMs } = this.props;
-    const selDay = selDateMs ? moment(selDateMs).date() : null;
-    if (selDay === day) {
-      const { tooltipShown } = this.state;
-      this.setState({ tooltipShown: !tooltipShown });
-      return;
-    }
-
+    const { monthMs } = this.props;
     const dateMs = moment(monthMs).date(day).valueOf();
     caller(this.props.onDateSelect, dateMs);
   }
 
   renderTooltip() {
-    const { ticks, selDateMs, onTooltipClick } = this.props;
+    const { ticks, onTooltipClick } = this.props;
+    const { selDateMs } = this.state;
+
     const dayIndex = moment(selDateMs).date() - 1;
     const ticksShown = ticks.get(dayIndex).slice(0, 3);
     const size = ticksShown.length - 1;
@@ -166,7 +163,8 @@ export default class Month extends PureComponent {
   }
 
   render() {
-    const { monthMs, todayMs, selDateMs, ticks } = this.props;
+    const { monthMs, todayMs, ticks } = this.props;
+    const { selDateMs } = this.state;
 
     const startOfMonth = moment(monthMs).startOf('month');
     const endOfMonth = moment(monthMs).endOf('month');
@@ -194,10 +192,7 @@ export default class Month extends PureComponent {
       );
       if (startDay.weekday() === 6) {
         weekRows.push(
-          <View
-            key={weekRows.length}
-            style={styles.weekRow}
-          >
+          <View key={weekRows.length} style={styles.weekRow}>
             {days}
           </View>,
         );

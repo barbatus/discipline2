@@ -1,0 +1,3 @@
+app_identifier "com.vivo.apps.discipline" # The bundle identifier of your app
+apple_id "alex.borodach@gmail.com" # Your Apple email address
+team_id "3K7RPFADM5"  # Developer Portal Team ID

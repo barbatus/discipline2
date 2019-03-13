@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
   Animated,
-  View,
   TouchableOpacity,
   Image,
   Text,

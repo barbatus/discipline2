@@ -11,7 +11,7 @@ import trackersDB from './trackers';
 import ticksDB from './ticks';
 import appDB from './app';
 
-import { TrackerType, DepotEvent } from '../consts';
+import { DepotEvent } from '../consts';
 
 export default class Depot {
   event = new EventEmitter();
@@ -174,10 +174,9 @@ export default class Depot {
     if (await this.hasTestData()) { return app; }
 
     // TODO: check out why Promise.all not working
-    const trackers = [];
-    for (const tracker of testTrackers) {
-      trackers.push(await this.addTracker(tracker));
-    }
+    const trackers = await Promise.all(
+      testTrackers.map((tracker) => this.addTracker(tracker)),
+    );
     await appDB.setTestTrackers(trackers);
 
     return appDB.get();

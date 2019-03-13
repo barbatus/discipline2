@@ -2,26 +2,20 @@ import React, { PureComponent } from 'react';
 import {
   View,
   TouchableOpacity,
-  Image,
   Text,
   StyleSheet,
   Animated,
   Switch,
-  ViewPropTypes,
 } from 'react-native';
 import { pure } from 'recompose';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 
-import { getIcon } from 'app/icons/icons';
-import { TrackerType } from 'app/depot/consts';
-import ShakeAnimation from 'app/components/animation/ShakeAnimation';
-
-import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
+import { propsStyles } from '../../styles/trackerStyles';
 
 import TrackerIcon from './TrackerIcon';
 import TrackerTitle from './TrackerTitle';
-import TrackerTypeSelect from './TrackerTypeSelect'; 
+import TrackerTypeSelect from './TrackerTypeSelect';
 
 const styles = StyleSheet.create({
   mainGroup: {
@@ -35,6 +29,12 @@ const BooleanPropFn = ({ input }) => (
     value={!!input.value}
   />
 );
+
+BooleanPropFn.propTypes = {
+  input: PropTypes.shape({
+    value: PropTypes.bool,
+  }).isRequired,
+};
 
 const BooleanProp = pure(BooleanPropFn);
 
@@ -54,6 +54,13 @@ const TrackerPropFn = ({ prop }) => (
   </View>
 );
 
+TrackerPropFn.propTypes = {
+  prop: PropTypes.shape({
+    name: PropTypes.string,
+    propId: PropTypes.string,
+  }).isRequired,
+};
+
 const TrackerProp = pure(TrackerPropFn);
 
 export class TrackerEditView extends PureComponent {
@@ -62,12 +69,20 @@ export class TrackerEditView extends PureComponent {
     allowType: PropTypes.bool,
     onRemove: PropTypes.func,
     onTypeSelect: PropTypes.func,
+    props: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        propId: PropTypes.string,
+      }),
+    ),
     style: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
     allowDelete: true,
+    allowType: false,
     showType: true,
+    props: [],
     onTypeSelect: null,
     style: null,
     onRemove: null,

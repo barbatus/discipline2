@@ -46,13 +46,13 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   componentWillUnmount() {
-    RNShake.removeEventListener('shake');
+    RNShake.removeEventListener('ShakeEvent');
     this.moveScale.dispose();
     this.responder.dispose();
   }
 
   componentDidMount() {
-    RNShake.addEventListener('shake', ::this.shakeCurrent);
+    RNShake.addEventListener('ShakeEvent', ::this.shakeCurrent);
     this.handleMoveUp();
   }
 

@@ -27,6 +27,10 @@ export default class StartStopBtn extends PureComponent {
     enabled: PropTypes.bool,
   };
 
+  static defaultProps = {
+    enabled: true,
+  };
+
   opacity = new Animated.Value(1);
   responsive = true;
 
@@ -41,11 +45,12 @@ export default class StartStopBtn extends PureComponent {
       return;
     }
     if (enabled !== this.props.enabled) {
-      enabled ? this.enable() : this.disable();
+      /* eslint-disable-next-line */
+      (enabled ? this.enable() : this.disable());
     }
   }
 
-  onPress(id) {
+  onPress() {
     if (!this.responsive) return;
 
     this.disable();

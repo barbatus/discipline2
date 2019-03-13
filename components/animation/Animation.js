@@ -56,7 +56,7 @@ export class AnimationManager {
 
   runParallel(animations, callback) {
     this.on = true;
-    Animated.parallel(animations, { stopTogether: false  }).start(() => {
+    Animated.parallel(animations, { stopTogether: false }).start(() => {
       this.on = false;
       caller(callback);
     });

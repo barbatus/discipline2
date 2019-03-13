@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SideMenu from 'react-native-side-menu';
+import { copilot } from '@okgrow/react-native-copilot';
 
 import { updateAppProps } from 'app/model/actions';
 import registry, { DlgType } from 'app/components/dlg/registry';
@@ -68,6 +69,7 @@ export class MainScreen extends PureComponent {
   }
 
   onSlideChange(index, previ, animated) {
+    this.props.start();
     this.gradient.finishSlide(index, previ, animated);
   }
 
@@ -164,10 +166,16 @@ export class MainScreen extends PureComponent {
   }
 }
 
+const ScreenWithCopilot = copilot({
+  overlay: 'svg',
+  animated: true,
+  stepNumberComponent: () => null,
+})(MainScreen);
+
 export default connect(({ trackers: { trackers, app } }) => ({
-  slides: Math.max(trackers.size, 1),
+  slides: trackers.size,
   app,
 }), (dispatch) => ({
   onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
   onUpdateMetric: (metric) => dispatch(updateAppProps({ metric })),
-}))(MainScreen);
+}))(ScreenWithCopilot);
