@@ -2,7 +2,7 @@ import Enum from 'app/depot/Enum';
 
 const Steps = new Enum({
   CREATE_FIRST: {
-    value: 'first',
+    value: 'CREATE_FIRST',
     order: 1,
     title: 'Create Your First Tracker!',
   },

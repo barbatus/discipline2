@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Animated } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Tick } from 'app/model/Tracker';
 import { combineTicksMonthly } from 'app/model/utils';
+import { caller } from 'app/utils/lang';
 
 import Calendar from '../calendar/Calendar';
 
-export default class TrackerCal extends Component {
+export default class TrackerCal extends PureComponent {
   static propTypes = {
     trackerType: PropTypes.object,
     ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
-    selDateMs: PropTypes.number,
     // TODO: if only ViewPropTypes.style left it curses
     // that opacity is not part of ViewPropTypes.style
     style: PropTypes.object,
@@ -20,7 +20,6 @@ export default class TrackerCal extends Component {
   static defaultProps = {
     ticks: [],
     trackerType: null,
-    selDateMs: null,
     style: null,
   };
 
@@ -28,7 +27,6 @@ export default class TrackerCal extends Component {
     super(props);
     this.state = {
       ticksMap: new Map(),
-      selDateMs: null,
     };
   }
 
@@ -37,17 +35,8 @@ export default class TrackerCal extends Component {
       const { trackerType } = this.props;
       this.setState({
         ticksMap: combineTicksMonthly(props.ticks, trackerType),
-        selDateMs: null,
       });
     }
-    if (this.props.selDateMs !== props.selDateMs) {
-      this.setState({ selDateMs: props.selDateMs });
-    }
-  }
-
-  shouldComponentUpdate(props, state) {
-    return this.props.ticks !== props.ticks ||
-           this.state.selDateMs !== state.selDateMs;
   }
 
   scrollToPrevMonth() {
@@ -60,7 +49,7 @@ export default class TrackerCal extends Component {
 
   render() {
     const { style } = this.props;
-    const { selDateMs, ticksMap } = this.state;
+    const { ticksMap } = this.state;
 
     return (
       <Animated.View style={style}>
@@ -69,11 +58,11 @@ export default class TrackerCal extends Component {
           ref={(el) => (this.calendar = el)}
           scrollEnabled
           showControls
-          selDateMs={selDateMs}
           ticks={ticksMap}
           titleFormat="MMMM YYYY"
           prevButtonText="Prev"
           nextButtonText="Next"
+          onDateSelect={this.props.onDateSelect}
         />
       </Animated.View>
     );

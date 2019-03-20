@@ -46,7 +46,6 @@ export class MainScreen extends PureComponent {
 
   constructor(props) {
     super(props);
-    console.log('----MainScreenView----');
 
     this.state = {
       isOpen: false,
@@ -69,7 +68,7 @@ export class MainScreen extends PureComponent {
   }
 
   onSlideChange(index, previ, animated) {
-    this.props.start();
+    //this.props.start();
     this.gradient.finishSlide(index, previ, animated);
   }
 

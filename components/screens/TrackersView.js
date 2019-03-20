@@ -96,7 +96,6 @@ class TrackersView extends PureComponent {
 
     this.state = {
       current: props.trackers.get(0),
-      selDateMs: null,
     };
     this.onEdit = ::this.onEdit;
     this.onRemove = ::this.onRemove;
@@ -107,12 +106,10 @@ class TrackersView extends PureComponent {
     this.onSwiperShown = ::this.onSwiperShown;
     this.onSwiperMoveDown = ::this.onSwiperMoveDown;
     this.onSwiperMoveDownStart = ::this.onSwiperMoveDownStart;
-    this.onSwiperMoveUpDone = ::this.onSwiperMoveUpDone;
     this.onTrackerEdit = ::this.onTrackerEdit;
     this.onSlideChange = ::this.onSlideChange;
     this.onMonthChanged = ::this.onMonthChanged;
     this.onTooltipClick = ::this.onTooltipClick;
-    this.onDateSelect = ::this.onDateSelect;
     this.onNextMonth = ::this.onNextMonth;
     this.onPrevMonth = ::this.onPrevMonth;
     this.cancelEdit = ::this.cancelEdit;
@@ -127,12 +124,6 @@ class TrackersView extends PureComponent {
           current: trackers.get(0),
         });
       }
-    }
-
-    if (this.props.dateMs !== dateMs) {
-      this.setState({
-        selDateMs: null,
-      });
     }
   }
 
@@ -237,10 +228,6 @@ class TrackersView extends PureComponent {
     );
   }
 
-  onSwiperMoveUpDone() {
-    this.setState({ selDateMs: null });
-  }
-
   onMonthChanged(monthDateMs) {
     const { current } = this.state;
     this.setNavBarMonth(monthDateMs);
@@ -254,10 +241,6 @@ class TrackersView extends PureComponent {
     const dlg = registry.get(DlgType.TICKS);
     const { current } = this.state;
     dlg.show(ticks, current.type);
-  }
-
-  onDateSelect(dateMs: number) {
-    this.setState({ selDateMs: dateMs });
   }
 
   onSaveCompleted(index) {
@@ -293,7 +276,7 @@ class TrackersView extends PureComponent {
 
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
-    const { current, selDateMs } = this.state;
+    const { current } = this.state;
     const calcStyle = { ...commonStyles.absFilled, top: 0, opacity: this.calcOpacity };
 
     return (
@@ -302,10 +285,8 @@ class TrackersView extends PureComponent {
           ref={(el) => (this.calendar = el)}
           {...this.props}
           trackerType={current ? current.type : null}
-          selDateMs={selDateMs}
           style={calcStyle}
           onMonthChanged={this.onMonthChanged}
-          onDateSelect={this.onDateSelect}
           onTooltipClick={this.onTooltipClick}
         />
         <Trackers
@@ -325,7 +306,6 @@ class TrackersView extends PureComponent {
           onSwiperMoveDownStart={this.onSwiperMoveDownStart}
           onSwiperMoveDownCancel={onMoveDownCancel}
           onSwiperMoveUpStart={onMoveUp}
-          onSwiperMoveUpDone={this.onSwiperMoveUpDone}
           onTrackerEdit={this.onTrackerEdit}
           onSlideChange={this.onSlideChange}
         />

@@ -80,11 +80,9 @@ export default class Month extends PureComponent {
     this.selectDate = ::this.selectDate;
   }
 
-  static getDerivedStateFromProps({ selDateMs, ticks }, prevState) {
-    if (selDateMs !== prevState.selDateMs) {
-      const tooltipShown = selDateMs ?
-        ticks.has(moment(selDateMs).date() - 1) : false;
-      return { selDateMs, tooltipShown };
+  static getDerivedStateFromProps({ index }, prevState) {
+    if (index !== prevState.index) {
+      return { index, tooltipShown: false };
     }
     return null;
   }
@@ -114,9 +112,12 @@ export default class Month extends PureComponent {
   }
 
   selectDate(day: number) {
-    const { monthMs } = this.props;
-    const dateMs = moment(monthMs).date(day).valueOf();
-    caller(this.props.onDateSelect, dateMs);
+    const { monthMs, ticks } = this.props;
+    const selDateMs = moment(monthMs).date(day).valueOf();
+    const tooltipShown = selDateMs ?
+      ticks.has(moment(selDateMs).date() - 1) : false;
+    this.setState({ selDateMs, tooltipShown });
+    caller(this.props.onDateSelect, selDateMs);
   }
 
   renderTooltip() {
@@ -192,7 +193,7 @@ export default class Month extends PureComponent {
       );
       if (startDay.weekday() === 6) {
         weekRows.push(
-          <View key={weekRows.length} style={styles.weekRow}>
+          <View key={startDay.valueOf()} style={styles.weekRow}>
             {days}
           </View>,
         );

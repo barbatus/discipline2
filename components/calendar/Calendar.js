@@ -16,7 +16,7 @@ export default class Calendar extends PureComponent {
     ticks: PropTypes.instanceOf(Map),
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
-    onDateSelect: PropTypes.func.isRequired,
+    onDateSelect: PropTypes.func,
     onMonthChanged: PropTypes.func.isRequired,
     onTooltipClick: PropTypes.func.isRequired,
     titleFormat: PropTypes.string,
@@ -24,12 +24,10 @@ export default class Calendar extends PureComponent {
     weekStart: PropTypes.number,
     monthToRender: PropTypes.number,
     dateMs: PropTypes.number,
-    selDateMs: PropTypes.number,
   };
 
   static defaultProps = {
     ticks: null,
-    selDateMs: null,
     customStyle: {},
     dayHeadings: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
     titleFormat: 'MMMM YYYY',
@@ -41,7 +39,7 @@ export default class Calendar extends PureComponent {
 
   constructor(props) {
     super(props);
-
+    this.state = {};
     this.selectDate = ::this.selectDate;
     this.scrollEnded = ::this.scrollEnded;
   }
@@ -116,21 +114,20 @@ export default class Calendar extends PureComponent {
       ticks,
       todayMs,
       dateMs,
-      selDateMs,
       titleFormat,
       onTooltipClick,
     } = this.props;
 
     const monthsToRender = this.getMonthsToRender(dateMs);
-    const monthViews = monthsToRender.map((monthDate) => {
+    const monthViews = monthsToRender.map((monthDate, index) => {
       const monthTicks = ticks ? ticks.get(monthDate.month()) : null;
       return (
         <Month
           key={monthDate.month()}
+          index={index}
           customStyle={customStyle}
           monthMs={monthDate.valueOf()}
           todayMs={todayMs}
-          selDateMs={selDateMs}
           ticks={monthTicks}
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}
