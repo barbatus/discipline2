@@ -42,11 +42,11 @@ const ListItemFn = ({ item, onPress, showMore }) => {
         <Text>{item.desc}</Text>
       </TextCol>
       {
-        showMore ?
+        showMore ? (
           <TouchableOpacity onPress={onPress}>
             <NextImg source={getIcon('next')} />
           </TouchableOpacity>
-          : null
+        ) : null
       }
     </TextRow>
   );

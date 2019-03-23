@@ -19,6 +19,7 @@ import {
   STOP_TRACKER,
   STOP_TRACKER_WITH_TICK_UPDATE,
   UPDATE_APP_PROPS,
+  UPDATE_COPILOT,
 } from './actions';
 
 import { Tick } from './Tracker';
@@ -72,7 +73,7 @@ const insertTracker = (trackers, tracker, index?: number) => {
 
 export const trackersReducer = handleActions(
   {
-    [UPDATE_APP_PROPS]: (state, { app }) => ({
+    [combineActions(UPDATE_APP_PROPS, UPDATE_COPILOT)]: (state, { app }) => ({
       ...state,
       app,
     }),

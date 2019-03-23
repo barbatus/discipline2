@@ -1,7 +1,7 @@
 import {
   Tracker as DBTracker,
   Tick as DBTick,
-  type TRACKER_ID,
+  type TrackerId,
   NewTracker,
   type PropType,
 } from 'app/depot/interfaces';
@@ -11,8 +11,11 @@ import UserIconsStore from 'app/icons/UserIconsStore';
 
 export class Tick implements DBTick {
   id: string;
+
   dateTimeMs: number;
+
   value: number;
+
   data: ?Object;
 
   constructor(tick: DBTick) {
@@ -26,15 +29,22 @@ export class Tick implements DBTick {
   }
 }
 
+// Generics map<> not working w/o flow
 export const mapTicks = (ticks: DBTick[] = []) => ticks.map((tick) => new Tick(tick));
 
 export default class Tracker implements DBTracker {
   id: string;
+
   title: string;
+
   iconId: string;
-  typeId: TRACKER_ID;
+
+  typeId: TrackerId;
+
   active: boolean;
+
   ticks: DBTick[];
+
   props: Array<PropType>;
 
   static get properties() {

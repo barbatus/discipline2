@@ -22,6 +22,7 @@ export default class TrackerTypeSelect extends PureComponent {
   };
 
   shakeAnim = new ShakeAnimation();
+
   error = null;
 
   componentDidUpdate() {

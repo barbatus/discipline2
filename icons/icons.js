@@ -12,3 +12,7 @@ export function getIcon(iconId) {
 }
 
 export { default as UserIconsStore } from './UserIconsStore';
+
+export function getTrackerIcon(trackerId: string) {
+  return AppIconsStore.get(trackerId.toLowerCase());
+}

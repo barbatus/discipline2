@@ -21,7 +21,9 @@ const styles = StyleSheet.create({
 
 export default class NavBar extends PureComponent {
   isActive = false;
+
   opacity = new Animated.Value(1);
+
   btnOpacity = new Animated.Value(0);
 
   constructor(props) {

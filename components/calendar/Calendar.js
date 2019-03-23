@@ -35,6 +35,7 @@ export default class Calendar extends PureComponent {
     dateMs: time.getCurMonthDateMs(),
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
+    onDateSelect: null,
   };
 
   constructor(props) {

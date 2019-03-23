@@ -106,11 +106,11 @@ export default class TimeLabel extends PureComponent {
         </View>
         <View style={styles.textContainer}>
           {
-            lapTimeMs ?
+            lapTimeMs ? (
               <Text style={lapStyle}>
                 {timeLap.format()}
               </Text>
-              : null
+            ) : null
           }
         </View>
       </View>

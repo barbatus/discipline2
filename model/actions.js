@@ -14,6 +14,20 @@ export const updateAppProps = (props) => (dispatch) =>
     }),
   );
 
+export const UPDATE_COPILOT = 'UPDATE_COPILOT';
+
+export const updateCopilot = (screen, step) => async (dispatch) => {
+  const app = await depot.loadApp();
+  const copilot = app.props.copilot;
+  const updated = { ...copilot, [screen]: step };
+  depot.updateAppProps({ copilot: updated }).then((app) =>
+    dispatch({
+      type: UPDATE_COPILOT,
+      app,
+    }),
+  );
+};
+
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
 
 export const updateCalendar = (

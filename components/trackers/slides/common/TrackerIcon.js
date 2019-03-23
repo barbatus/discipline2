@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-
 import {
   View,
   TouchableOpacity,
@@ -7,12 +6,14 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
-
 import PropTypes from 'prop-types';
-
-import registry, { DlgType } from 'app/components/dlg/registry';
+import { walkthroughable } from '@okgrow/react-native-copilot';
 
 import { getIcon, UserIconsStore } from 'app/icons/icons';
+
+import registry, { DlgType } from 'app/components/dlg/registry';
+import CopilotStepEnum from 'app/components/copilot/steps';
+import CopilotStep from 'app/components/copilot/CopilotStep';
 
 import { trackerStyles, propsStyles } from '../../styles/trackerStyles';
 
@@ -31,6 +32,8 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
 });
+
+const CopilotButton = walkthroughable(TouchableOpacity);
 
 export default class TrackerIcon extends PureComponent {
   static propTypes = {
@@ -65,14 +68,16 @@ export default class TrackerIcon extends PureComponent {
     return (
       <View style={{ flex: 1 }}>
         <View style={[propsStyles.barContainer]}>
-          <TouchableOpacity
-            style={styles.changeIconBox}
-            onPress={this.onIconEdit}
-          >
-            <Text style={styles.changeIconText}>
-              Change Icon
-            </Text>
-          </TouchableOpacity>
+          <CopilotStep step={CopilotStepEnum.ADD_ICON}>
+            <CopilotButton
+              style={styles.changeIconBox}
+              onPress={this.onIconEdit}
+            >
+              <Text style={styles.changeIconText}>
+                  Change Icon
+              </Text>
+            </CopilotButton>
+          </CopilotStep>
         </View>
         <View style={propsStyles.iconContainer}>
           <Image

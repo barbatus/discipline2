@@ -258,4 +258,3 @@ export default class Depot {
     return result;
   }
 }
-

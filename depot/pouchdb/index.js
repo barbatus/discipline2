@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info';
 
 import time from 'app/time/utils';
 
-import { Tracker, NewTracker, type AppProps } from '../interfaces';
+import { type PlainTick, Tracker, NewTracker, type AppProps } from '../interfaces';
 import trackersDB from './trackers';
 import ticksDB from './ticks';
 import appDB from './app';
@@ -20,7 +20,7 @@ export default class Depot {
     const app = await appDB.get();
     if (!app) {
       const appVer = DeviceInfo.getVersion();
-      return appDB.create(appVer, { alerts: false, metric: true });
+      return appDB.create(appVer, { alerts: false, metric: true, copilot: {} });
     }
     const trackers = await this.loadTrackers(app.trackers);
     return { ...app, trackers };
@@ -151,7 +151,7 @@ export default class Depot {
 
   async getTrackerTicks(trackId: string, minDateMs: number, maxDateMs?: number) {
     const ticks = await ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
-    return ticks.map((tick) => ticksDB.plainTick(tick));
+    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick));
   }
 
   async resetTestData() {

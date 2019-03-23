@@ -1,9 +1,18 @@
 /* @flow */
 /* eslint no-undef: off */
 
-export type TRACKER_ID = 'distance' | 'goal';
+import {
+  TrackerToPropType,
+  type CopilotScreenId,
+  type CopilotStepId,
+  type TrackerId,
+} from './consts';
 
-export type AppProps = { alerts: boolean; };
+export type Copilot = {
+  [key: CopilotScreenId]: CopilotStepId;
+};
+
+export type AppProps = { alerts: boolean; copilot: Copilot };
 
 export interface App {
   ver: string;
@@ -17,7 +26,7 @@ export type PropType = {
 export interface Tracker {
   id: string;
   title: string;
-  typeId: TRACKER_ID;
+  typeId: TrackerId;
   iconId: string;
   active: boolean;
   ticks?: Array<Tick>;
@@ -31,15 +40,12 @@ export interface NewTracker {
   props: Array<PropType>;
 }
 
-export const TRACKER_TYPE = {
-  distance: 'distData',
-  goal: 'goalData',
-};
+export type PlainTick = Tick & PropType;
 
 export interface Tick {
   id: string;
   dateTimeMs: number;
   value: number;
   data: any;
-  [key: $Values<typeof TRACKER_TYPE>]: Object;
+  [key: $Values<typeof TrackerToPropType>]: Object;
 }

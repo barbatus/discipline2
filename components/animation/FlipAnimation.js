@@ -9,10 +9,15 @@ const FLIP_TIME = 500;
 
 export default class FlipAnimation {
   animInOut = null;
+
   rotY = new Animated.Value(0);
+
   move1 = new Animated.Value(0);
+
   move2 = new Animated.Value(1);
+
   opacity1 = new Animated.Value(1);
+
   opacity2 = new Animated.Value(0);
 
   get style1() {

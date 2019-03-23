@@ -6,8 +6,11 @@ import { caller } from 'app/utils/lang';
 
 export class AnimationManager {
   on = false;
+
   animations = [];
+
   callbacks = [];
+
   timeout = null;
 
   timing(field, duration, toValue, easing) {

@@ -43,9 +43,13 @@ export default class BaseScroll extends PureComponent {
   };
 
   indexInn = 0;
+
   prevInd = 0;
+
   offsetX = 0;
+
   pageX = 0;
+
   onScrollToCb = null;
 
   constructor(props) {

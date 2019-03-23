@@ -70,9 +70,7 @@ class Trackers {
     const tracker = this.getOne(data.id);
     if (!tracker) { return null; }
 
-    db.write(() =>
-      Object.assign(tracker, omit(data, 'id'))
-    );
+    db.write(() => Object.assign(tracker, omit(data, 'id')));
     return tracker;
   }
 }

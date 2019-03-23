@@ -19,6 +19,7 @@ import {
 
 import Menu from '../nav/Menu';
 import GradientSlider from '../common/GradientSlider2';
+import CopilotTooltip from '../copilot/Tooltip';
 
 import Screen from './Screen';
 import MainScreenView from './MainScreenView';
@@ -68,7 +69,6 @@ export class MainScreen extends PureComponent {
   }
 
   onSlideChange(index, previ, animated) {
-    //this.props.start();
     this.gradient.finishSlide(index, previ, animated);
   }
 
@@ -92,18 +92,18 @@ export class MainScreen extends PureComponent {
     });
   }
 
+  onMenu() {
+    this.setState({
+      isOpen: true,
+    });
+  }
+
   onMeasureChange(metric: boolean) {
     this.props.onUpdateMetric(metric);
   }
 
   onAlertChange(alerts: boolean) {
     this.props.onUpdateAlerts(alerts);
-  }
-
-  onMenu() {
-    this.setState({
-      isOpen: true,
-    });
   }
 
   renderContent() {
@@ -169,6 +169,7 @@ const ScreenWithCopilot = copilot({
   overlay: 'svg',
   animated: true,
   stepNumberComponent: () => null,
+  tooltipComponent: CopilotTooltip,
 })(MainScreen);
 
 export default connect(({ trackers: { trackers, app } }) => ({

@@ -4,6 +4,8 @@ import EventEmitter from 'eventemitter3';
 
 import { ScrollView, StyleSheet, View, ViewPropTypes } from 'react-native';
 
+import { caller } from 'app/utils/lang';
+
 import { commonDef, commonStyles as cs, SCREEN_WIDTH } from '../styles/common';
 
 const styles = StyleSheet.create({
@@ -55,9 +57,10 @@ export default class ScrollScreenView extends PureComponent {
     this.moveTo(1, callback);
   }
 
-  moveTo(index: number) {
+  moveTo(index: number, callback?: Function) {
     const scrollToX = index * SCREEN_WIDTH;
     this.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
+    caller(callback);
   }
 
   refHandler(el) {

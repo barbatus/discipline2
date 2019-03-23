@@ -1,36 +1,27 @@
-import React from 'react';
-
-import { View, Animated } from 'react-native';
-
-import RNShake from 'react-native-shake';
-
-import isNumber from 'lodash/isNumber';
-
 import { caller } from 'app/utils/lang';
-
-import Swiper from '../scrolls/Swiper';
-
+import isNumber from 'lodash/isNumber';
+import React from 'react';
+import { Animated, View } from 'react-native';
+import RNShake from 'react-native-shake';
 import Animation from '../animation/Animation';
-
-import { minScale, MoveUpScaleResponderAnim }
-  from '../animation/MoveUpScaleResponderAnim';
-
-import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
-
+import { minScale, MoveUpScaleResponderAnim } from '../animation/MoveUpScaleResponderAnim';
 import { MoveUpDownResponder } from '../animation/responders';
-
+import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
+import Swiper from '../scrolls/Swiper';
 import { commonStyles, SCREEN_WIDTH } from '../styles/common';
-
 import { slideHeight } from './styles/slideStyles';
-
 import TrackerRenderer from './TrackerRenderer';
+
 
 export default class TrackerSwiper extends TrackerRenderer {
   upDown = new ScreenSlideUpDownAnim(minScale);
+
   moveScale = new MoveUpScaleResponderAnim(slideHeight);
+
   responder = new MoveUpDownResponder();
 
   updateIndex = null;
+
   addIndex = null;
 
   get current() {
@@ -123,8 +114,10 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   shakeCurrent() {
-    const trackerId = this.current.id;
-    this.refs[trackerId].shake();
+    if (this.current) {
+      const trackerId = this.current.id;
+      this.refs[trackerId].shake();
+    }
   }
 
   showEdit(callback) {

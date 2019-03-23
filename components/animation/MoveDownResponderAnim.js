@@ -11,6 +11,7 @@ export default class MoveDownResponderAnim {
   moveY = new Animated.Value(0);
 
   in = false;
+
   unsubCb = null;
 
   constructor(slideHeight: number) {

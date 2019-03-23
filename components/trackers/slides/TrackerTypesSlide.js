@@ -14,7 +14,7 @@ import styled from 'styled-components/native';
 import { compose, pure, withHandlers } from 'recompose';
 import { first, last } from 'lodash';
 
-import { getIcon } from 'app/icons/icons';
+import { getTrackerIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
 import { caller } from 'app/utils/lang';
 
@@ -101,17 +101,15 @@ const TypeView = styled.View`
   shadow-radius: 0;
   shadow-offset: 0px -1px;
   border-top-width: 4px;
-  border-top-color: ${({ isSelected }) =>
-    isSelected ? '#1A7CF9' : 'transparent'};
-  background-color: ${({ isSelected }) =>
-    isSelected ? '#E6E6E6' : 'transparent'};
+  border-top-color: ${({ isSelected }) => isSelected ? '#1A7CF9' : 'transparent'};
+  background-color: ${({ isSelected }) => isSelected ? '#E6E6E6' : 'transparent'};
 `;
 
 const SlideTypeFn = ({ type, selected, onTypeChosen }) => (
   <TouchableWithoutFeedback onPress={onTypeChosen}>
     <TypeView isSelected={selected}>
       <View style={styles.typeIconContainer}>
-        <Image source={getIcon(type.valueOf())} style={styles.typeIcon} />
+        <Image source={getTrackerIcon(type.valueOf())} style={styles.typeIcon} />
       </View>
       <View style={styles.typeTitleContainer}>
         <Text style={styles.typeTitle}>

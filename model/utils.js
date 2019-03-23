@@ -29,8 +29,7 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType) {
 }
 
 export function combineTicksDaily(ticks: Tick[], type: TrackerType) {
-  const mins = groupBy(ticks, (tick) =>
-    tick.dateTimeMs - (tick.dateTimeMs % 60000),
+  const mins = groupBy(ticks, (tick) => tick.dateTimeMs - (tick.dateTimeMs % 60000),
   );
   const tickPrints = Object.keys(mins).map((minKey) => {
     const minMs = parseInt(minKey, 10);

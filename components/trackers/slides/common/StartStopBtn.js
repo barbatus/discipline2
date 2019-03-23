@@ -32,6 +32,7 @@ export default class StartStopBtn extends PureComponent {
   };
 
   opacity = new Animated.Value(1);
+
   responsive = true;
 
   constructor(props) {

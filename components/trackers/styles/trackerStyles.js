@@ -217,4 +217,3 @@ export const propsStyles = StyleSheet.create({
     borderBottomWidth: 0,
   },
 });
-

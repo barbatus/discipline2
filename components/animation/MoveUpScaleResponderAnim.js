@@ -15,8 +15,11 @@ export class MoveUpScaleResponderAnim {
   scale = new Animated.Value(1);
 
   slideHeight = 0;
+
   unsubCb = null;
+
   animIn = null;
+
   animOut = null;
 
   constructor(slideHeight: number) {

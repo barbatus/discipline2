@@ -83,7 +83,9 @@ export default class Tooltip extends PureComponent {
   };
 
   opacity = new Animated.Value(0);
+
   moveY = new Animated.Value(0);
+
   moveX = new Animated.Value(0);
 
   constructor(props) {

@@ -35,12 +35,19 @@ export default new DistanceTrackers();
 
 export class DistanceTracker {
   hInterval = null;
+
   time: number;
+
   dist: number;
+
   latLon: { lat: number, lon: number };
+
   updTime: number
+
   isStarting = false;
+
   unwatch = null;
+
   events = new EventEmitter();
 
   constructor(geoWatcher, distInt = 5, timeInt = 100) {

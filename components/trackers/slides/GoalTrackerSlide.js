@@ -41,9 +41,8 @@ export default class GoalTrackerSlide extends TrackerSlide {
 
   get checkStyle() {
     const { tracker } = this.props;
-    return tracker.checked
-      ? [trackerStyles.checkBtn, trackerStyles.filledBtn]
-      : trackerStyles.checkBtn;
+    return tracker.checked ?
+      [trackerStyles.checkBtn, trackerStyles.filledBtn] : trackerStyles.checkBtn;
   }
 
   onTick() {

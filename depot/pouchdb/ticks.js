@@ -9,7 +9,8 @@ import omit from 'lodash/omit';
 
 import time from 'app/time/utils';
 
-import { Tick, Tracker, TRACKER_TYPE } from '../interfaces';
+import { TrackerToPropType } from '../consts';
+import { type PlainTick, Tick, Tracker } from '../interfaces';
 import db from './db';
 
 type PouchTick = { ...Tick, tracker: Tracker };
@@ -30,8 +31,8 @@ class Ticks {
     const newTick = Object.assign({}, tick);
     const { tracker } = tick;
     if (data) {
-      const tickData = await db.save(TRACKER_TYPE[tracker.typeId], data);
-      newTick[TRACKER_TYPE[tracker.typeId]] = tickData;
+      const tickData = await db.save(TrackerToPropType[tracker.typeId], data);
+      newTick[TrackerToPropType[tracker.typeId]] = tickData;
     }
     return db.save('tick', newTick);
   }
@@ -45,7 +46,7 @@ class Ticks {
 
   async update(tick: PouchTick, value: number, data?: Object) {
     const { tracker } = tick;
-    const tickData = tick[TRACKER_TYPE[tracker.typeId]];
+    const tickData = tick[TrackerToPropType[tracker.typeId]];
 
     if (tickData && data) {
       const newData = data;
@@ -57,7 +58,7 @@ class Ticks {
           tickData[prop] = newData[prop];
         }
       });
-      await db.save(TRACKER_TYPE[tracker.typeId], tickData);
+      await db.save(TrackerToPropType[tracker.typeId], tickData);
     }
 
     return db.save('tick', { ...tick, value });
@@ -83,10 +84,10 @@ class Ticks {
     return ids;
   }
 
-  plainTick(tick: Tick) {
-    const types = Object.keys(TRACKER_TYPE);
+  plainTick(tick: Tick): PlainTick {
+    const types = Object.keys(TrackerToPropType);
     return types.reduce((accum, type) => {
-      const dataType = TRACKER_TYPE[type];
+      const dataType = TrackerToPropType[type];
       if (tick[dataType]) {
         return { ...omit(accum, dataType), ...tick[dataType] };
       }

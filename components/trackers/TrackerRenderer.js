@@ -221,9 +221,9 @@ export default class TrackerRenderer extends PureComponent {
   }
 
   onProgress(tracker: Tracker, value: number, data: any, progress: any) {
-    InteractionManager.runAfterInteractions(() =>
-      caller(this.props.onProgress, tracker, value, data, progress),
-    );
+    InteractionManager.runAfterInteractions(() => (
+      caller(this.props.onProgress, tracker, value, data, progress)
+    ));
   }
 
   onUndo(tracker: Tracker) {

@@ -68,6 +68,7 @@ export default class Trackers extends PureComponent {
   };
 
   opacity = new Animated.Value(0);
+
   moveDown = new MoveDownResponderAnim(slideHeight);
 
   constructor(props) {

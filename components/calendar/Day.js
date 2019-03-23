@@ -118,7 +118,7 @@ export default class Day extends PureComponent {
       isToday,
     } = this.props;
 
-    return isOutDay ?
+    return isOutDay ? (
       <TouchableWithoutFeedback>
         <View style={styles.dayButton}>
           <View style={styles.dayCircle}>
@@ -128,7 +128,7 @@ export default class Day extends PureComponent {
           </View>
         </View>
       </TouchableWithoutFeedback>
-      :
+    ) : (
       <TouchableOpacity onPress={this.onPress}>
         <View style={styles.dayButton}>
           <View style={this.getDayCircleStyle(isSelected, isToday)}>
@@ -138,6 +138,7 @@ export default class Day extends PureComponent {
             </Text>
           </View>
         </View>
-      </TouchableOpacity>;
+      </TouchableOpacity>
+    );
   }
 }

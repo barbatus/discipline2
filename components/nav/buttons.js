@@ -23,9 +23,7 @@ export class NavButton extends PureComponent {
   };
 
   render() {
-    const onPress = this.props.onPress
-      ? debounce(this.props.onPress, 16)
-      : null;
+    const onPress = this.props.onPress ? debounce(this.props.onPress, 16) : null;
     const { copilot } = this.props;
     return (
       <TouchableOpacity onPress={onPress} style={this.props.style}>

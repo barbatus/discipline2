@@ -6,6 +6,7 @@ import Animation from './Animation';
 
 export default class ScreenSlideUpDownAnim {
   moveY = new Animated.Value(0);
+
   inn = true;
 
   constructor(scaleFactor = 1) {

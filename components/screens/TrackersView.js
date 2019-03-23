@@ -89,6 +89,7 @@ class TrackersView extends PureComponent {
   };
 
   calcOpacity = new Animated.Value(0);
+
   isActive = false;
 
   constructor(props) {
@@ -97,7 +98,8 @@ class TrackersView extends PureComponent {
     this.state = {
       current: props.trackers.get(0),
     };
-    this.onEdit = ::this.onEdit;
+    this.onStartEdit = ::this.onStartEdit;
+    this.onTrackerEdit = ::this.onTrackerEdit;
     this.onRemove = ::this.onRemove;
     this.onRemoveCompleted = ::this.onRemoveCompleted;
     this.onSaveCompleted = ::this.onSaveCompleted;
@@ -106,7 +108,6 @@ class TrackersView extends PureComponent {
     this.onSwiperShown = ::this.onSwiperShown;
     this.onSwiperMoveDown = ::this.onSwiperMoveDown;
     this.onSwiperMoveDownStart = ::this.onSwiperMoveDownStart;
-    this.onTrackerEdit = ::this.onTrackerEdit;
     this.onSlideChange = ::this.onSlideChange;
     this.onMonthChanged = ::this.onMonthChanged;
     this.onTooltipClick = ::this.onTooltipClick;
@@ -116,7 +117,7 @@ class TrackersView extends PureComponent {
     this.saveEdit = ::this.saveEdit;
   }
 
-  componentWillReceiveProps({ trackers, dateMs }) {
+  componentWillReceiveProps({ trackers }) {
     if (this.props.trackers !== trackers) {
       const { current } = this.state;
       if (!current) {
@@ -223,8 +224,7 @@ class TrackersView extends PureComponent {
 
     const startDateMs = time.subtractMonth(monthDateMs);
     const endDateMs = time.addMonth(monthDateMs);
-    InteractionManager.runAfterInteractions(() =>
-      this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs)
+    InteractionManager.runAfterInteractions(() => this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs)
     );
   }
 
@@ -248,7 +248,7 @@ class TrackersView extends PureComponent {
     caller(this.props.onSaveCompleted, index);
   }
 
-  onEdit() {
+  onStartEdit() {
     this.setEditTrackerBtns();
   }
 
@@ -296,7 +296,7 @@ class TrackersView extends PureComponent {
           metric={app.props.metric}
           onRemove={this.onRemove}
           onRemoveCompleted={this.onRemoveCompleted}
-          onEdit={this.onEdit}
+          onEdit={this.onStartEdit}
           onCancel={onCancel}
           onSaveCompleted={this.onSaveCompleted}
           onSwiperScaleMove={this.onSwiperScaleMove}
@@ -320,18 +320,13 @@ export default connect(
     ticks: trackers.ticks,
   }),
   (dispatch, props) => ({
-    onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) =>
-      dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
+    onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) => dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
     onRemove: (tracker) => dispatch(removeTracker(tracker)),
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),
-    onTick: (tracker, value, data) =>
-      dispatch(tickTracker(tracker, value, data)),
-    onStart: (tracker, value, data) =>
-      dispatch(startTracker(tracker, value, data)),
-    onProgress: (tracker, value, data, progress) =>
-      dispatch(updateLastTick(tracker, value, data, progress)),
-    onStop: (tracker, value, data) =>
-      dispatch(stopTracker(tracker, value, data)),
+    onTick: (tracker, value, data) => dispatch(tickTracker(tracker, value, data)),
+    onStart: (tracker, value, data) => dispatch(startTracker(tracker, value, data)),
+    onProgress: (tracker, value, data, progress) => dispatch(updateLastTick(tracker, value, data, progress)),
+    onStop: (tracker, value, data) => dispatch(stopTracker(tracker, value, data)),
     onUndo: (tracker) => dispatch(undoLastTick(tracker)),
     onAddCompleted: (index) => {
       dispatch(completeChange(index));

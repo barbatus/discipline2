@@ -156,7 +156,7 @@ const DistanceFooterFn = ({
       onPress={active ? onStopBtn : onStartBtn}
     />
     {
-      showMap ?
+      showMap ? (
         <TouchableOpacity
           style={styles.seeMap}
           onPress={onShowMap}
@@ -166,7 +166,7 @@ const DistanceFooterFn = ({
             style={styles.mapIcon}
           />
         </TouchableOpacity>
-        : null
+      ) : null
     }
   </View>
 );

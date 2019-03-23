@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import { Tick } from 'app/model/Tracker';
 import { combineTicksMonthly } from 'app/model/utils';
-import { caller } from 'app/utils/lang';
 
 import Calendar from '../calendar/Calendar';
 
@@ -15,12 +14,14 @@ export default class TrackerCal extends PureComponent {
     // TODO: if only ViewPropTypes.style left it curses
     // that opacity is not part of ViewPropTypes.style
     style: PropTypes.object,
+    onDateSelect: PropTypes.func,
   };
 
   static defaultProps = {
     ticks: [],
     trackerType: null,
     style: null,
+    onDateSelect: null,
   };
 
   constructor(props) {

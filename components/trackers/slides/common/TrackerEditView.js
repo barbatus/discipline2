@@ -81,7 +81,6 @@ export class TrackerEditView extends PureComponent {
   static defaultProps = {
     allowDelete: true,
     allowType: false,
-    showType: true,
     props: [],
     onTypeSelect: null,
     style: null,

@@ -73,4 +73,3 @@ export default class Menu extends PureComponent {
     );
   }
 }
-

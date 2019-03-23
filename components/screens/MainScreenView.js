@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { first } from 'lodash';
 
-import { addTracker } from 'app/model/actions';
+import { addTracker, updateCopilot } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
 
 import CopilotStep from '../copilot/CopilotStep';
-import coSteps from '../copilot/steps';
+import CopilotStepEnum, { CopilotScreenEnum, getScreenByStep } from '../copilot/steps';
 import { NavAddButton, NavMenuButton } from '../nav/buttons';
 import { commonStyles } from '../styles/common';
 import Animation from '../animation/Animation';
@@ -20,7 +21,12 @@ export class MainScreenView extends ScrollScreenView {
     navBar: PropTypes.object.isRequired,
   };
 
+  static propTypes = {
+    app: PropTypes.object.isRequired,
+  };
+
   slideIndex = 0;
+
   isActive = false;
 
   constructor(props) {
@@ -64,12 +70,23 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   componentDidMount() {
+    this.props.copilotEvents.on('stepChange', ({ name }) => {
+      const step = CopilotStepEnum.fromValue(name);
+      const screen = getScreenByStep(step);
+      this.props.onCopilot(screen.value, step.value);
+    });
+
     this.setMainViewBtns();
+    this.copilotIfEmptyApp();
+  }
+
+  componentWillUnmount() {
+    this.props.copilotEvents.off('stepChange');
   }
 
   getNewBtn(onPress) {
     return (
-      <CopilotStep step={coSteps.CREATE_FIRST}>
+      <CopilotStep step={CopilotStepEnum.CREATE_FIRST}>
         <NavAddButton onPress={onPress} />
       </CopilotStep>
     );
@@ -92,13 +109,19 @@ export class MainScreenView extends ScrollScreenView {
     }
   }
 
+  startCopilot(delay: number, stepId: string) {
+    setTimeout(() => {
+      this.props.start(stepId);
+    }, delay);
+  }
+
   // New tracker events.
 
   onAcceptNewTracker(tracker) {
     if (this.isActive) return;
 
     this.isActive = true;
-    this.props.onAdd(tracker, this.slideIndex + 1);
+    this.props.onAddTracker(tracker, this.slideIndex + 1);
   }
 
   onAddCompleted() {
@@ -116,7 +139,25 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   onNewTracker() {
-    this.moveRight();
+    this.moveRight(() => this.copilotIfFirstTracker());
+  }
+
+  // Copilot
+
+  copilotIfEmptyApp() {
+    const { copilot } = this.props.app.props;
+    if (!copilot[CopilotScreenEnum.EMPTY.value]) {
+      const firstStep = first(CopilotScreenEnum.EMPTY.steps);
+      this.startCopilot(1000, firstStep.value);
+    }
+  }
+
+  copilotIfFirstTracker() {
+    const { copilot } = this.props.app.props;
+    if (!copilot[CopilotScreenEnum.FIRST_TRACKER.value]) {
+      const firstStep = first(CopilotScreenEnum.FIRST_TRACKER.steps);
+      this.startCopilot(1000, firstStep.value);
+    }
   }
 
   // Common
@@ -136,5 +177,6 @@ export class MainScreenView extends ScrollScreenView {
 }
 
 export default connect(null, (dispatch) => ({
-  onAdd: (tracker, index) => dispatch(addTracker(tracker, index)),
+  onAddTracker: (tracker, index) => dispatch(addTracker(tracker, index)),
+  onCopilot: (screen, step) => dispatch(updateCopilot(screen, step)),
 }))(MainScreenView);
