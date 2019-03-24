@@ -100,13 +100,21 @@ export default class Tooltip extends PureComponent {
     this.updatePos();
   }
 
-  componentWillReceiveProps({ x, y }) {
-    if (this.props.x !== x || this.props.y !== y) {
+  componentDidUpdate(prevProps) {
+    const { x, y } = this.props;
+    if (x !== prevProps.x || y !== prevProps.y) {
       this.moveY.setValue(0);
       this.moveX.setValue(0);
       this.opacity.setValue(0);
       this.updatePos();
     }
+  }
+
+  static getDerivedStateFromProps({ x, y }, prevState) {
+    if (x !== prevState.x || y !== prevState.y) {
+      return { x, y };
+    }
+    return null;
   }
 
   updatePos() {
@@ -150,7 +158,7 @@ export default class Tooltip extends PureComponent {
   }
 
   render() {
-    const { x, y } = this.props;
+    const { x, y } = this.state;
     const { arrLeft, arrTop } = this.state;
     const animStyle = {
       left: x,

@@ -31,13 +31,11 @@ export default class TrackerCal extends PureComponent {
     };
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.ticks !== props.ticks) {
-      const { trackerType } = this.props;
-      this.setState({
-        ticksMap: combineTicksMonthly(props.ticks, trackerType),
-      });
+  static getDerivedStateFromProps({ ticks, trackerType }, prevState) {
+    if (ticks !== prevState.ticks) {
+      return { ticksMap: combineTicksMonthly(ticks, trackerType) };
     }
+    return null;
   }
 
   scrollToPrevMonth() {
@@ -49,7 +47,7 @@ export default class TrackerCal extends PureComponent {
   }
 
   render() {
-    const { style } = this.props;
+    const { style, shown } = this.props;
     const { ticksMap } = this.state;
 
     return (
@@ -59,6 +57,7 @@ export default class TrackerCal extends PureComponent {
           ref={(el) => (this.calendar = el)}
           scrollEnabled
           showControls
+          shown={shown}
           ticks={ticksMap}
           titleFormat="MMMM YYYY"
           prevButtonText="Prev"

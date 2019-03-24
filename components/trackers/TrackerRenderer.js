@@ -158,6 +158,7 @@ export default class TrackerRenderer extends PureComponent {
   };
 
   inOpacity = new Animated.Value(0);
+  mapRefs = new Map();
 
   constructor(props) {
     super(props);
@@ -175,13 +176,11 @@ export default class TrackerRenderer extends PureComponent {
     this.onTrackerEdit = ::this.onTrackerEdit;
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.trackers !== props.trackers) {
-      this.state.trackers = props.trackers;
+  static getDerivedStateFromProps({ trackers, enabled, removeIndex }, prevState) {
+    if (trackers !== prevState.trackers || enabled !== prevState.enabled) {
+      return { trackers, enabled };
     }
-    if (this.props.enabled !== props.enabled) {
-      this.state.enabled = props.enabled;
-    }
+    return null;
   }
 
   get opacity() {
@@ -283,7 +282,7 @@ export default class TrackerRenderer extends PureComponent {
       <TrackerWrapper
         {...props}
         component={Component}
-        ref={tracker.id}
+        ref={(ref) => this.mapRefs.set(tracker.id, ref)}
         key={tracker.id}
         onEdit={this.onEdit}
         onRemove={this.onRemove}

@@ -431,7 +431,7 @@
 		1182897CC86240B8A2ADDD9E /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* Discipline.temp_caseinsensitive_rename.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Discipline.temp_caseinsensitive_rename.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Discipline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Discipline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Discipline/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Discipline/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -842,7 +842,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* Discipline.temp_caseinsensitive_rename.app */,
+				13B07F961A680F5B00A75B9A /* Discipline.app */,
 				00E356EE1AD99517003FC87E /* DisciplineTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* Discipline-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* Discipline-tvOSTests.xctest */,
@@ -895,7 +895,7 @@
 			);
 			name = Discipline;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* Discipline.temp_caseinsensitive_rename.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Discipline.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* Discipline-tvOS */ = {
@@ -1595,7 +1595,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.temp_caseinsensitive_rename.app/Discipline.temp_caseinsensitive_rename";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.app/Discipline";
 			};
 			name = Debug;
 		};
@@ -1643,7 +1643,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.temp_caseinsensitive_rename.app/Discipline.temp_caseinsensitive_rename";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.app/Discipline";
 			};
 			name = Release;
 		};
@@ -1680,7 +1680,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
-				PRODUCT_NAME = Discipline.temp_caseinsensitive_rename;
+				PRODUCT_NAME = Discipline;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1717,7 +1717,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
-				PRODUCT_NAME = Discipline.temp_caseinsensitive_rename;
+				PRODUCT_NAME = Discipline;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1884,7 +1884,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vivo.apps.discipline-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.temp_caseinsensitive_rename-tvOS.app/Discipline.temp_caseinsensitive_rename-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline-tvOS.app/Discipline-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
@@ -1939,7 +1939,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vivo.apps.discipline-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline.temp_caseinsensitive_rename-tvOS.app/Discipline.temp_caseinsensitive_rename-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Discipline-tvOS.app/Discipline-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;

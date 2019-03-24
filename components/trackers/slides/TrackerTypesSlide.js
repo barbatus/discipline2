@@ -154,10 +154,11 @@ export default class TrackerTypesSlide extends PureComponent {
     this.onTypeChosen = ::this.onTypeChosen;
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.typeId !== props.typeId) {
-      this.state.type = TrackerType.fromValue(props.typeId);
+  static getDerivedStateFromProps({ typeId }, prevState) {
+    if (typeId !== prevState.typeId) {
+      return { type: TrackerType.fromValue(typeId) };
     }
+    return null;
   }
 
   onTypeChosen(type) {

@@ -117,6 +117,7 @@ export default class Calendar extends PureComponent {
       dateMs,
       titleFormat,
       onTooltipClick,
+      shown,
     } = this.props;
 
     const monthsToRender = this.getMonthsToRender(dateMs);
@@ -126,6 +127,7 @@ export default class Calendar extends PureComponent {
         <Month
           key={monthDate.month()}
           index={index}
+          shown={shown}
           customStyle={customStyle}
           monthMs={monthDate.valueOf()}
           todayMs={todayMs}

@@ -80,9 +80,9 @@ export default class Month extends PureComponent {
     this.selectDate = ::this.selectDate;
   }
 
-  static getDerivedStateFromProps({ index }, prevState) {
-    if (index !== prevState.index) {
-      return { index, tooltipShown: false };
+  static getDerivedStateFromProps({ shown, index }, prevState) {
+    if (shown !== prevState.shown || index !== prevState.index) {
+      return { index, shown, tooltipShown: false };
     }
     return null;
   }

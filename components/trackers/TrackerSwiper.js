@@ -47,55 +47,49 @@ export default class TrackerSwiper extends TrackerRenderer {
     this.handleMoveUp();
   }
 
-  componentDidUpdate() {
-    if (isNumber(this.updateIndex)) {
+  componentDidUpdate({
+    trackers: prevTrackers,
+    updateIndex: prevUpdIndex,
+    addIndex: prevAddIndex,
+    enabled: prevEnabled,
+    removeIndex: prevRemoveIndex,
+  }) {
+    const { updateIndex, addIndex, trackers, enabled, removeIndex } = this.props;
+
+    if (isNumber(updateIndex) && prevUpdIndex !== updateIndex) {
       this.cancelEdit();
-      caller(this.props.onSaveCompleted, this.updateIndex);
-      this.updateIndex = null;
+      caller(this.props.onSaveCompleted, updateIndex);
     }
 
-    if (isNumber(this.addIndex)) {
-      this.scrollTo(this.addIndex);
-      caller(this.props.onAddCompleted, this.addIndex);
-      this.addIndex = null;
+    if (isNumber(addIndex) && prevAddIndex !== addIndex) {
+      this.setState({ trackers, scrollEnabled: true });
+      this.scrollTo(addIndex);
+      caller(this.props.onAddCompleted, addIndex);
     }
-  }
-
-  componentWillReceiveProps(props, state) {
-    super.componentWillReceiveProps(props, state);
-
-    const { trackers, removeIndex, addIndex, updateIndex, enabled } = props;
-    const {
-      removeIndex: prevRemoveIndex,
-      addIndex: prevAddIndex,
-      updateIndex: prevUpdIndex,
-    } = this.props;
 
     if (isNumber(removeIndex) && prevRemoveIndex !== removeIndex) {
-      const prevTrackers = this.props.trackers;
-      this.setState({ trackers: prevTrackers });
       this.animateRemove(prevTrackers, removeIndex,
         () => this.setState({ trackers, scrollEnabled: true })
       );
       caller(this.props.onRemoveCompleted, removeIndex);
     }
 
-    if (isNumber(addIndex) && prevAddIndex !== addIndex) {
-      this.setState({ trackers, scrollEnabled: true });
-      this.addIndex = addIndex;
-    }
-
-    if (isNumber(updateIndex) && prevUpdIndex !== updateIndex) {
-      this.updateIndex = updateIndex;
-    }
-
-    if (this.props.enabled !== enabled) {
+    if (enabled !== prevEnabled) {
       if (enabled) {
         this.handleMoveUp();
       } else {
         this.unhandleMoveUp();
       }
     }
+  }
+
+  static getDerivedStateFromProps({ trackers, enabled, removeIndex }, prevState) {
+    if (removeIndex !== prevState.removeIndex) return { removeIndex };
+
+    if (trackers !== prevState.trackers || enabled !== prevState.enabled) {
+      return { trackers, enabled };
+    }
+    return null;
   }
 
   handleMoveUp() {
@@ -116,20 +110,20 @@ export default class TrackerSwiper extends TrackerRenderer {
   shakeCurrent() {
     if (this.current) {
       const trackerId = this.current.id;
-      this.refs[trackerId].shake();
+      this.mapRefs.get(trackerId).shake();
     }
   }
 
   showEdit(callback) {
     this.setState({ scrollEnabled: false }, () => {
       const trackerId = this.current.id;
-      this.refs[trackerId].showEdit(callback);
+      this.mapRefs.get(trackerId).showEdit(callback);
     });
   }
 
   cancelEdit(callback) {
     const trackerId = this.current.id;
-    return this.refs[trackerId].cancelEdit(
+    return this.mapRefs.get(trackerId).cancelEdit(
       () => this.onCancelEdit(callback));
   }
 
@@ -153,7 +147,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     const trackerId = tracker.id;
     const prevInd = index + (index >= 1 ? -1 : 1);
 
-    this.refs[trackerId].collapse(() =>
+    this.mapRefs.get(trackerId).collapse(() =>
       this.scrollTo(prevInd, () => {
         // In case of removing the first tracker,
         // we move to the next, so adjust the index accordingly.

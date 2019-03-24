@@ -97,6 +97,7 @@ class TrackersView extends PureComponent {
 
     this.state = {
       current: props.trackers.get(0),
+      calShown: false,
     };
     this.onStartEdit = ::this.onStartEdit;
     this.onTrackerEdit = ::this.onTrackerEdit;
@@ -115,17 +116,14 @@ class TrackersView extends PureComponent {
     this.onPrevMonth = ::this.onPrevMonth;
     this.cancelEdit = ::this.cancelEdit;
     this.saveEdit = ::this.saveEdit;
+    this.onSwiperMoveUpDone = ::this.onSwiperMoveUpDone;
+    this.onSwiperMoveDownDone = ::this.onSwiperMoveDownDone;
   }
 
-  componentWillReceiveProps({ trackers }) {
-    if (this.props.trackers !== trackers) {
-      const { current } = this.state;
-      if (!current) {
-        this.setState({
-          current: trackers.get(0),
-        });
-      }
-    }
+  static getDerivedStateFromProps({ trackers }, prevState) {
+    if (!trackers || prevState.current) return null;
+
+    return { current: trackers.get(0) };
   }
 
   getCancelBtn(onPress) {
@@ -224,8 +222,17 @@ class TrackersView extends PureComponent {
 
     const startDateMs = time.subtractMonth(monthDateMs);
     const endDateMs = time.addMonth(monthDateMs);
-    InteractionManager.runAfterInteractions(() => this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs)
-    );
+    InteractionManager.runAfterInteractions(() => {
+      this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs)
+    });
+  }
+
+  onSwiperMoveUpDone() {
+    this.setState({ calShown: false });
+  }
+
+  onSwiperMoveDownDone() {
+    this.setState({ calShown: true });
   }
 
   onMonthChanged(monthDateMs) {
@@ -276,7 +283,7 @@ class TrackersView extends PureComponent {
 
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
-    const { current } = this.state;
+    const { current, calShown } = this.state;
     const calcStyle = { ...commonStyles.absFilled, top: 0, opacity: this.calcOpacity };
 
     return (
@@ -284,6 +291,7 @@ class TrackersView extends PureComponent {
         <TrackerCal
           ref={(el) => (this.calendar = el)}
           {...this.props}
+          shown={calShown}
           trackerType={current ? current.type : null}
           style={calcStyle}
           onMonthChanged={this.onMonthChanged}
@@ -304,8 +312,10 @@ class TrackersView extends PureComponent {
           onSwiperShown={this.onSwiperShown}
           onSwiperMoveDown={this.onSwiperMoveDown}
           onSwiperMoveDownStart={this.onSwiperMoveDownStart}
+          onSwiperMoveDownDone={this.onSwiperMoveDownDone}
           onSwiperMoveDownCancel={onMoveDownCancel}
           onSwiperMoveUpStart={onMoveUp}
+          onSwiperMoveUpDone={this.onSwiperMoveUpDone}
           onTrackerEdit={this.onTrackerEdit}
           onSlideChange={this.onSlideChange}
         />
@@ -320,12 +330,16 @@ export default connect(
     ticks: trackers.ticks,
   }),
   (dispatch, props) => ({
-    onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) => dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs)),
+    onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) => (
+      dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs))
+    ),
     onRemove: (tracker) => dispatch(removeTracker(tracker)),
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),
     onTick: (tracker, value, data) => dispatch(tickTracker(tracker, value, data)),
     onStart: (tracker, value, data) => dispatch(startTracker(tracker, value, data)),
-    onProgress: (tracker, value, data, progress) => dispatch(updateLastTick(tracker, value, data, progress)),
+    onProgress: (tracker, value, data, progress) => (
+      dispatch(updateLastTick(tracker, value, data, progress))
+    ),
     onStop: (tracker, value, data) => dispatch(stopTracker(tracker, value, data)),
     onUndo: (tracker) => dispatch(undoLastTick(tracker)),
     onAddCompleted: (index) => {

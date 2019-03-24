@@ -188,12 +188,16 @@ export default class Trackers extends PureComponent {
     const {
       onSwiperMoveDown,
       onSwiperMoveDownStart,
+      onSwiperMoveDownDone,
       onSwiperMoveDownCancel,
     } = this.props;
     this.moveDown.subscribe(this.swiper.responder,
       onSwiperMoveDown,
       onSwiperMoveDownStart,
-      () => this.setState({ swiperEnabled: false }),
+      () => {
+        this.setState({ swiperEnabled: false });
+        caller(onSwiperMoveDownDone);
+      },
       onSwiperMoveDownCancel,
     );
   }
