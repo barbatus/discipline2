@@ -1,0 +1,42 @@
+fastlane_version "2.118.1"
+default_platform :ios
+
+# we will call some node scripts which are written in ES6 (see below)
+nodeExec = '../node_modules/.bin/babel-node'
+
+# load in config generated in the pre-build step (see above)
+file = File.read('../appConfig.json')
+appConfig = JSON.parse(file)
+
+# iOS
+platform :ios do
+  desc "Submit a new Beta Build to Apple TestFlight"
+  lane :beta do
+    # fetch previously generated certificates, but don't generate new ones if none already exist
+    match(type: "appstore", readonly: true)
+    # ensure we're on the "qa" git branch
+    ensure_git_branch(branch: "master")
+    # set the app build number from our previously generated config
+    increment_build_number(
+      xcodeproj: "./ios/Discipline.xcodeproj",
+      build_number: appConfig["buildNumber"]
+    )
+    # set the app version from our previously generated config
+    increment_version_number(
+      xcodeproj: "./ios/Discipline.xcodeproj",
+      version_number: appConfig["appVersion"]
+    )
+    # build the app for app store export
+    gym(
+      clean: true,
+      export_method: 'app-store',
+      workspace: "./ios/Discipline.xcworkspace",
+      scheme: "Discipline",
+      output_directory: "./build-tools/deploy/data"
+    )
+    # upload to TestFlight and notify testers
+    testflight(
+      skip_submission: true
+    )
+  end
+end

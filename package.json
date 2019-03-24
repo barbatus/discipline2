@@ -18,7 +18,9 @@
     "upgrade": "react-native upgrade",
     "clear": "watchman watch-del ./ && npm start -- --reset-cache",
     "link": "react-native link",
-    "flow": "flow"
+    "flow": "flow",
+    "certs:ios": "fastlane match development && fastlane match appstore",
+    "fastlane:ios": "fastlane ios beta"
   },
   "dependencies": {
     "@okgrow/react-native-copilot": "^2.3.0",
