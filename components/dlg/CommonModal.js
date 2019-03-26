@@ -70,26 +70,22 @@ export default class CommonModal extends PureComponent {
 
   render() {
     return (
-      <View>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={!!this.state.modalVisible}
-        >
-          <View style={commonStyles.flexFilled}>
-            <View style={styles.headerContainer}>
-              <TouchableOpacity onPress={this.hide}>
-                <Text style={styles.cancelText}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={commonStyles.flexFilled}>
-              {this.content}
-            </View>
-          </View>
-        </Modal>
-      </View>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={!!this.state.modalVisible}
+      >
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={this.hide}>
+            <Text style={styles.cancelText}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={commonStyles.flexFilled}>
+          {this.content}
+        </View>
+      </Modal>
     );
   }
 }

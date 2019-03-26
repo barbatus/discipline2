@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
-import { pure } from 'recompose';
-
 import PropTypes from 'prop-types';
 
 import time from 'app/time/utils';
@@ -70,7 +68,7 @@ TimeDigitFn.defaultProps = {
   style: null,
 };
 
-const TimeDigit = pure(TimeDigitFn);
+const TimeDigit = React.memo(TimeDigitFn);
 
 export default class TimeLabel extends PureComponent {
   static propTypes = {

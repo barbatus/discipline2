@@ -3,13 +3,12 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  ListView,
+  FlatList,
   Image,
   ViewPropTypes,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import PropTypes from 'prop-types';
-import { compose, pure, withHandlers } from 'recompose';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
@@ -37,16 +36,16 @@ const styles = StyleSheet.create({
   },
 });
 
-const IconFn = ({ icon, width, onIconChosen }) => (
+const Icon = React.memo(({ icon, width, onIconChosen }) => (
   <TouchableOpacity
     style={styles.col}
-    onPress={onIconChosen}
+    onPress={() => onIconChosen(icon.id)}
   >
     <Image source={icon.png} style={[styles.icon, { width }]} />
   </TouchableOpacity>
-);
+));
 
-IconFn.propTypes = {
+Icon.propTypes = {
   width: PropTypes.number.isRequired,
   icon: PropTypes.shape({
     id: PropTypes.string,
@@ -54,16 +53,6 @@ IconFn.propTypes = {
   }).isRequired,
   onIconChosen: PropTypes.func.isRequired,
 };
-
-const Icon = compose(
-  pure,
-  withHandlers({
-    onIconChosen: ({ onIconChosen, icon }) => (event) => {
-      event.preventDefault();
-      onIconChosen(icon.id);
-    },
-  }),
-)(IconFn);
 
 export default class IconsGrid extends PureComponent {
   static propTypes = {
@@ -77,29 +66,16 @@ export default class IconsGrid extends PureComponent {
 
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    });
-    this.state = { ds };
     this.renderRow = this.renderRow.bind(this);
   }
 
-  getIcons(): Array<UserIcon[]> {
+  getIconRows(): Array<UserIcon[]> {
     const icons = UserIconsStore.getAll();
 
-    let iconRow = [];
     const iconRows = [];
     const { count } = this.getColSize();
-    icons.forEach((icon, index) => {
-      iconRow.push(icon);
-      if ((index + 1) % count === 0) {
-        iconRows.push(iconRow);
-        iconRow = [];
-      }
-    });
-
-    if (iconRow.length) {
-      iconRows.push(iconRow);
+    for (let row = 0; row < icons.length; row += count) {
+      iconRows.push({ icons: icons.slice(row, row + count), key: String(row) });
     }
 
     return iconRows;
@@ -133,22 +109,20 @@ export default class IconsGrid extends PureComponent {
     );
   }
 
-  renderRow(icons) {
-    const items = icons.map((icon) => this.renderIcon(icon));
-
+  renderRow(row) {
     return (
       <View style={styles.row}>
-        {items}
+        {row.icons.map((icon) => this.renderIcon(icon))}
       </View>
     );
   }
 
   render() {
-    const icons = this.getIcons();
+    const rows = this.getIconRows();
     return (
-      <ListView
-        dataSource={this.state.ds.cloneWithRows(icons)}
-        renderRow={this.renderRow}
+      <FlatList
+        data={rows}
+        renderItem={({item}) => this.renderRow(item)}
         style={[styles.grid, this.props.style]}
       />
     );

@@ -2,8 +2,6 @@ import React from 'react';
 import { View, StyleSheet, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { pure } from 'recompose';
-
 import Tracker from 'app/model/Tracker';
 
 import { trackerStyles } from '../styles/trackerStyles';
@@ -16,20 +14,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
+const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => {
   // TODO: consider removing outer View
-  <View style={[trackerStyles.slide, style]}>
-    <TrackerEditView
-      form="newTrackerForm"
-      {...rest}
-      allowType
-      style={[styles.editView]}
-      props={Tracker.properties}
-      initialValues={tracker}
-      onSubmitSuccess={onNewTracker}
-    />
-  </View>
-);
+  return (
+    <View style={[trackerStyles.slide, style]}>
+      <TrackerEditView
+        form="newTrackerForm"
+        {...rest}
+        allowType
+        style={[styles.editView]}
+        props={Tracker.properties}
+        initialValues={tracker}
+        onSubmitSuccess={onNewTracker}
+      />
+    </View>
+  );
+};
 
 NewTrackerSlideFn.propTypes = {
   style: ViewPropTypes.style,
@@ -43,4 +43,4 @@ NewTrackerSlideFn.defaultProps = {
   tracker: null,
 };
 
-export default pure(NewTrackerSlideFn);
+export default React.memo(NewTrackerSlideFn);

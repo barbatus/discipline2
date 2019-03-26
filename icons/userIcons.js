@@ -233,6 +233,10 @@ const UserIcons = new Enum({
     value: 'xmas_stocking',
     [IconSize.NORMAL]: require('./files/user/icon8/xmas_stocking.png'),
   },
+  YOGA: {
+    value: 'yoga',
+    [IconSize.NORMAL]: require('./files/user/icon8/yoga.png'),
+  },
 });
 
 export default UserIcons;

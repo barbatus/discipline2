@@ -12,8 +12,6 @@ import {
 
 import PropTypes from 'prop-types';
 
-import { pure } from 'recompose';
-
 import slowlog from 'react-native-slowlog';
 
 import registry, { DlgType } from 'app/components/dlg/registry';
@@ -143,7 +141,7 @@ DistanceDataFn.propTypes = {
   metric: PropTypes.bool.isRequired,
 };
 
-const DistanceData = pure(DistanceDataFn);
+const DistanceData = React.memo(DistanceDataFn);
 
 const DistanceFooterFn = ({
   active, responsive, enabled, showMap, onStopBtn, onStartBtn, onShowMap,
@@ -171,7 +169,7 @@ const DistanceFooterFn = ({
   </View>
 );
 
-const DistanceFooter = pure(DistanceFooterFn);
+const DistanceFooter = React.memo(DistanceFooterFn);
 
 DistanceFooterFn.propTypes = {
   active: PropTypes.bool.isRequired,
@@ -217,7 +215,7 @@ DistanceBodyFn.propTypes = {
   showSpeed: PropTypes.bool.isRequired,
 };
 
-const DistanceBody = pure(DistanceBodyFn);
+const DistanceBody = React.memo(DistanceBodyFn);
 
 const DIST_INTRVL = 5.0;
 

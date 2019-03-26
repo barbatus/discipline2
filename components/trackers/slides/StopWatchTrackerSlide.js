@@ -8,8 +8,6 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { pure } from 'recompose';
-
 import Timers, { Timer } from 'app/time/Timers';
 
 import { trackerStyles } from '../styles/trackerStyles';
@@ -66,7 +64,7 @@ FooterBtnFn.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-const FooterBtn = pure(FooterBtnFn);
+const FooterBtn = React.memo(FooterBtnFn);
 
 export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
   timer: Timer = null;

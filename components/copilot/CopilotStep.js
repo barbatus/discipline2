@@ -1,9 +1,8 @@
 
 import React, { cloneElement } from 'react';
-import { pure } from 'recompose';
 import { CopilotStep as BaseCopilotStep } from '@okgrow/react-native-copilot';
 
-const CopilotStep = pure(
+const CopilotStep = React.memo(
   ({ step, children, ...rest }) => {
     const child = React.Children.only(children);
     return (

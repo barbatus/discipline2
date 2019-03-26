@@ -5,44 +5,17 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying fastlane version" time="0.009741">
+      <testcase classname="fastlane.lanes" name="0: Verifying fastlane version" time="0.014247">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.003158">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.003981">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: match" time="5.407382">
-        
-      </testcase>
-    
-      
-      <testcase classname="fastlane.lanes" name="3: ensure_git_branch" time="0.014089">
-        
-      </testcase>
-    
-      
-      <testcase classname="fastlane.lanes" name="4: increment_build_number" time="0.954144">
-        
-      </testcase>
-    
-      
-      <testcase classname="fastlane.lanes" name="5: increment_version_number" time="0.630953">
-        
-      </testcase>
-    
-      
-      <testcase classname="fastlane.lanes" name="6: gym" time="162.751322">
-        
-      </testcase>
-    
-      
-      <testcase classname="fastlane.lanes" name="7: testflight" time="334.065401">
-        
-          <failure message="/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/actions/actions_helper.rb:48:in `execute_action'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:232:in `block in execute_action'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:227:in `chdir'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:227:in `execute_action'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:157:in `trigger_action_by_name'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/fast_file.rb:154:in `method_missing'&#10;Fastfile:38:in `block (2 levels) in parsing_binding'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/lane.rb:33:in `call'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/lane.rb:33:in `call'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/lane_manager.rb:56:in `cruise_lane'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/command_line_handler.rb:36:in `handle'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/commands_generator.rb:108:in `block (2 levels) in run'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/commander-fastlane-4.4.6/lib/commander/command.rb:178:in `call'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/commander-fastlane-4.4.6/lib/commander/command.rb:178:in `call'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/commander-fastlane-4.4.6/lib/commander/command.rb:153:in `run'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/commander-fastlane-4.4.6/lib/commander/runner.rb:476:in `run_active_command'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:76:in `run!'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/commander-fastlane-4.4.6/lib/commander/delegates.rb:15:in `run!'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/commands_generator.rb:333:in `run'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/commands_generator.rb:41:in `start'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/fastlane/lib/fastlane/cli_tools_distributor.rb:119:in `take_off'&#10;/Users/alexbroda/.fastlane/bin/bundle/lib/ruby/gems/2.2.0/gems/fastlane-2.118.1/bin/fastlane:23:in `&lt;top (required)&gt;'&#10;/Users/alexbroda/.fastlane/bin/bundle/bin/fastlane:22:in `load'&#10;/Users/alexbroda/.fastlane/bin/bundle/bin/fastlane:22:in `&lt;main&gt;'&#10;&#10;Error uploading ipa file, for more information see above" />
+      <testcase classname="fastlane.lanes" name="2: match" time="6.027983">
         
       </testcase>
     

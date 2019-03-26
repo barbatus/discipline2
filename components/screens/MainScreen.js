@@ -138,7 +138,7 @@ export class MainScreen extends PureComponent {
     if (!app) { return null; }
 
     return (
-      <View style={cs.flexFilled}>
+      <>
         <View style={styles.background}>
           <GradientSlider
             ref={(el) => (this.gradient = el)}
@@ -160,7 +160,7 @@ export class MainScreen extends PureComponent {
         <IconsDlg ref={(el) => (this.iconsDlg = el)} />
         <MapsDlg ref={(el) => (this.mapsDlg = el)} />
         <TicksDlg ref={(el) => (this.ticksDlg = el)} />
-      </View>
+      </>
     );
   }
 }

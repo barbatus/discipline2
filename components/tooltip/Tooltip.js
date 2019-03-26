@@ -4,7 +4,6 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 import styled from 'styled-components/native';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
-import { pure } from 'recompose';
 import PropTypes from 'prop-types';
 
 import { SCREEN_WIDTH, NAV_HEIHGT } from '../styles/common';
@@ -73,7 +72,7 @@ ArrowFn.propTypes = {
   y: PropTypes.number.isRequired,
 };
 
-const Arrow = pure(ArrowFn);
+const Arrow = React.memo(ArrowFn);
 
 export default class Tooltip extends PureComponent {
   static propTypes = {

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { TouchableOpacity, Image, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
-import { pure } from 'recompose';
 import debounce from 'lodash/debounce';
 
 import { getIcon } from 'app/icons/icons';
@@ -45,7 +44,7 @@ const NavLeftButtonFn = (props) => (
   />
 );
 
-export const NavLeftButton = pure(NavLeftButtonFn);
+export const NavLeftButton = React.memo(NavLeftButtonFn);
 
 const NavRightButtonFn = (props) => (
   <NavButton
@@ -55,7 +54,7 @@ const NavRightButtonFn = (props) => (
   />
 );
 
-export const NavRightButton = pure(NavRightButtonFn);
+export const NavRightButton = React.memo(NavRightButtonFn);
 
 const NavAddButtonFn = (props) => (
   <NavButton
@@ -66,7 +65,7 @@ const NavAddButtonFn = (props) => (
   />
 );
 
-export const NavAddButton = pure(NavAddButtonFn);
+export const NavAddButton = React.memo(NavAddButtonFn);
 
 const NavBackButtonFn = (props) => (
   <NavButton
@@ -77,7 +76,7 @@ const NavBackButtonFn = (props) => (
   />
 );
 
-export const NavBackButton = pure(NavBackButtonFn);
+export const NavBackButton = React.memo(NavBackButtonFn);
 
 const NavMenuButtonFn = (props) => (
   <NavButton
@@ -88,7 +87,7 @@ const NavMenuButtonFn = (props) => (
   />
 );
 
-export const NavMenuButton = pure(NavMenuButtonFn);
+export const NavMenuButton = React.memo(NavMenuButtonFn);
 
 const NavCancelButtonFn = (props) => (
   <NavButton
@@ -99,7 +98,7 @@ const NavCancelButtonFn = (props) => (
   />
 );
 
-export const NavCancelButton = pure(NavCancelButtonFn);
+export const NavCancelButton = React.memo(NavCancelButtonFn);
 
 const NavAcceptButtonFn = (props) => (
   <NavButton
@@ -109,4 +108,4 @@ const NavAcceptButtonFn = (props) => (
   />
 );
 
-export const NavAcceptButton = pure(NavAcceptButtonFn);
+export const NavAcceptButton = React.memo(NavAcceptButtonFn);

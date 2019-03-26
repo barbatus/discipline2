@@ -7,9 +7,9 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-import { pure } from 'recompose';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
+import { pure } from 'recompose';
 
 import { propsStyles } from '../../styles/trackerStyles';
 
