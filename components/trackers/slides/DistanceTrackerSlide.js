@@ -219,7 +219,7 @@ const DistanceBody = React.memo(DistanceBodyFn);
 
 const DIST_INTRVL = 5.0;
 
-const TIME_INTRVL = 1000; // ms
+const TIME_INTRVL_MS = 1000; // ms
 
 export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   static propTypes = {
@@ -230,7 +230,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   path = [];
   speed = 0;
-  time = 0;
+  timeMs = 0;
   dist = 0;
 
   constructor(props) {
@@ -291,7 +291,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     return DistanceTrackers.get(
       trackerId,
       DIST_INTRVL,
-      TIME_INTRVL,
+      TIME_INTRVL_MS,
     );
   }
 
@@ -335,14 +335,14 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     }
   }
 
-  onTimeUpdate(time: number) {
-    this.onProgress(this.dist, { time }, { speed: this.speed });
-    this.time = time;
+  onTimeUpdate(timeMs: number) {
+    this.onProgress(this.dist, { time: timeMs }, { speed: this.speed });
+    this.timeMs = timeMs;
   }
 
   onLatLonUpdate({ dist, lat, lon, speed }) {
     this.path.push({ latitude: lat, longitude: lon });
-    this.onProgress(dist, { time: this.time, latlon: { lat, lon } }, { speed });
+    this.onProgress(dist, { time: this.timeMs, latlon: { lat, lon } }, { speed });
     this.dist = dist;
     this.speed = speed;
   }

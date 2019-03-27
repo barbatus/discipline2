@@ -3,7 +3,6 @@ import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { compose, pure, withHandlers } from 'recompose';
 
 import { getIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
@@ -25,7 +24,7 @@ const TextCol = styled.View`
 `;
 
 const TimeText = styled.Text`
-  padding-right: 10px;
+  padding-right: 5px;
 `;
 
 const NextImg = styled.Image`
@@ -33,26 +32,26 @@ const NextImg = styled.Image`
   height: 15px;
 `;
 
-const ListItemFn = ({ item, onPress, showMore }) => {
+const ListItem = React.memo(({ item, onPress, showMore }) => {
   const timeStr = moment(item.dateTimeMs).format('LT');
   return (
     <TextRow>
       <TextCol>
-        <TimeText>{timeStr}</TimeText>
+        <TimeText>{timeStr}{':'}</TimeText>
         <Text>{item.desc}</Text>
       </TextCol>
       {
         showMore ? (
-          <TouchableOpacity onPress={onPress}>
+          <TouchableOpacity onPress={() => caller(onPress, item)}>
             <NextImg source={getIcon('next')} />
           </TouchableOpacity>
         ) : null
       }
     </TextRow>
   );
-};
+});
 
-ListItemFn.propTypes = {
+ListItem.propTypes = {
   item: PropTypes.shape({
     dateTimeMs: PropTypes.number,
     desc: PropTypes.string,
@@ -61,20 +60,10 @@ ListItemFn.propTypes = {
   showMore: PropTypes.bool,
 };
 
-ListItemFn.defaultProps = {
+ListItem.defaultProps = {
   onPress: null,
   showMore: false,
 };
-
-const ListItem = compose(
-  pure,
-  withHandlers({
-    onPress: ({ onPress, item }) => (event) => {
-      event.preventDefault();
-      onPress(item);
-    },
-  }),
-)(ListItemFn);
 
 export default class TicksDlg extends CommonModal {
   constructor(props) {

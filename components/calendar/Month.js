@@ -9,7 +9,7 @@ import moment from 'moment';
 import { caller, int } from 'app/utils/lang';
 
 import Tooltip from '../tooltip/Tooltip';
-import { SCREEN_WIDTH } from '../styles/common';
+import { SCREEN_WIDTH, HINT_COLOR } from '../styles/common';
 import Day from './Day';
 
 const styles = StyleSheet.create({
@@ -46,12 +46,16 @@ const TextCol = styled.View`
 `;
 
 const TimeCol = styled(TextCol)`
-  padding-right: 10px;
+  padding-right: 5px;
 `;
 
 const TickText = styled.Text`
   color: #F5F5F5;
   font-size: 15px;
+`;
+
+const TimeText = styled(TickText)`
+  color: ${HINT_COLOR};
 `;
 
 const PADDING = 15;
@@ -131,18 +135,14 @@ export default class Month extends PureComponent {
       const timeStr = moment(tick.dateTimeMs).format('LT');
       return (
         <TextRow key={tick.dateTimeMs} isLast={index === size}>
-          <TickText>
-            {timeStr}
-          </TickText>
+          <TimeText>{timeStr}{':'}</TimeText>
         </TextRow>
       );
     });
 
     const tickDescs = ticksShown.map((tick, index) => (
       <TextRow key={tick.dateTimeMs} isLast={index === size}>
-        <TickText>
-          {tick.desc}
-        </TickText>
+        <TickText>{tick.desc}</TickText>
       </TextRow>
     ));
 

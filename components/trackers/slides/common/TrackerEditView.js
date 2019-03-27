@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
-import { pure } from 'recompose';
 
 import { propsStyles } from '../../styles/trackerStyles';
 
@@ -30,13 +29,13 @@ const BooleanPropFn = ({ input }) => (
   />
 );
 
-BooleanPropFn.propTypes = {
-  input: PropTypes.shape({
-    value: PropTypes.bool,
-  }).isRequired,
-};
+// BooleanPropFn.propTypes = {
+//   input: PropTypes.shape({
+//     value: PropTypes.bool,
+//   }).isRequired,
+// };
 
-const BooleanProp = pure(BooleanPropFn);
+const BooleanProp = React.memo(BooleanPropFn);
 
 const TrackerPropFn = ({ prop }) => (
   <View style={propsStyles.row}>
@@ -61,7 +60,7 @@ TrackerPropFn.propTypes = {
   }).isRequired,
 };
 
-const TrackerProp = pure(TrackerPropFn);
+const TrackerProp = React.memo(TrackerPropFn);
 
 export class TrackerEditView extends PureComponent {
   static propTypes = {

@@ -60,6 +60,7 @@ export default class ScrollScreenView extends PureComponent {
   moveTo(index: number, callback?: Function) {
     const scrollToX = index * SCREEN_WIDTH;
     this.scroll.scrollTo({ y: 0, x: scrollToX, animated: true });
+    // TODO: impl properly
     caller(callback);
   }
 

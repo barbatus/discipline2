@@ -15,5 +15,3 @@ const App = createApp(store);
 export default App;
 
 AppRegistry.registerComponent('Discipline', () => App);
-
-store.dispatch(loadApp());

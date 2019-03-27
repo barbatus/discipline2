@@ -22,8 +22,6 @@ export class NewTrackerScreenView extends ScrollScreenView {
     navBar: PropTypes.object.isRequired,
   };
 
-  tracker = null;
-
   constructor(props) {
     super(props);
 
@@ -115,7 +113,7 @@ export class NewTrackerScreenView extends ScrollScreenView {
   }
 
   onChange(tracker) {
-    this.tracker = tracker;
+    this.state.tracker = tracker;
   }
 
   onNewTracker(tracker) {
@@ -153,10 +151,9 @@ export class NewTrackerScreenView extends ScrollScreenView {
     this.setNewTrackerBtns();
     this.moveLeft();
 
-    const { typeId } = this.state;
-    const tracker = { ...this.tracker, typeId };
+    const { tracker, typeId } = this.state;
     this.setState({
-      tracker,
+      tracker: { ...tracker, typeId },
     });
   }
 }

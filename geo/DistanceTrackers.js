@@ -36,13 +36,13 @@ export default new DistanceTrackers();
 export class DistanceTracker {
   hInterval = null;
 
-  time: number;
+  pastTimeMs: number;
+
+  lastEventMs: number
 
   dist: number;
 
   latLon: { lat: number, lon: number };
-
-  updTime: number
 
   isStarting = false;
 
@@ -88,7 +88,7 @@ export class DistanceTracker {
     this.hInterval = null;
 
     const reset = () => {
-      this.time = 0;
+      this.pastTimeMs = 0;
       this.dist = 0;
       this.latLon = {};
     };
@@ -120,17 +120,17 @@ export class DistanceTracker {
   }
 
   fireTimeUpdate() {
-    this.events.emit('onTimeUpdate', this.time);
+    this.events.emit('onTimeUpdate', this.pastTimeMs);
   }
 
   startTracking({ latitude, longitude, heading }) {
     this.dist = 0;
-    this.time = 0;
-    this.updTime = Date.now();
+    this.pastTimeMs = 0;
+    this.lastEventMs = Date.now();
     this.heading = heading;
     this.latLon = { lat: latitude, lon: longitude };
     this.hInterval = setInterval(() => {
-      this.time += this.timeInterval;
+      this.pastTimeMs += this.timeInterval;
       this.fireTimeUpdate();
     }, this.timeInterval);
   }
@@ -138,11 +138,11 @@ export class DistanceTracker {
   setNextPosState({ coords: { speed, latitude, longitude } }) {
     if (this.latLon.latitude !== latitude ||
         this.latLon.longitude !== longitude) {
-      const time = Date.now() - this.updTime;
-      const dist = (speed / 1000) * (time / 1000);
+      const pastMs = Date.now() - this.lastEventMs;
+      const dist = (speed / 1000) * (pastMs / 1000);
       this.dist += dist;
+      this.lastEventMs = Date.now();
       this.latLon = { lat: latitude, lon: longitude };
-      this.updTime = Date.now();
       return {
         speed: speed * 3600 / 1000, // km / h
         dist: this.dist,

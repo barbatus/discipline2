@@ -9,9 +9,9 @@ import time from 'app/time/utils';
 export class Timeout {
   waitMs = 0;
 
-  cb = null;
+  cb: Function;
 
-  timeout = null;
+  timeout: number;
 
   constructor(cb: Function, waitMs: number = 0) {
     this.cb = cb;
@@ -45,13 +45,11 @@ export class Timeout {
 }
 
 export default class DayUpdateEvent {
-  downDate = null;
+  downDateMs: number;
 
-  upDate = null;
+  dayTimer: Timeout;
 
-  dayTimer = null;
-
-  cbs = [];
+  cbs: Function[] = [];
 
   subscribed = false;
 
@@ -112,15 +110,13 @@ export default class DayUpdateEvent {
   }
 
   onAppBackground() {
-    this.downDate = moment();
+    this.downDateMs = Date.now();
   }
 
   onAppActive() {
-    if (!this.downDate) return;
+    if (!this.downDateMs) return;
 
-    this.upDate = moment();
-
-    const dateChanged = !time.isSameDate(this.upDate, this.downDate);
+    const dateChanged = !time.isSameDate(Date.now(), this.downDateMs);
 
     if (dateChanged) {
       this.fireCbs();

@@ -35,6 +35,8 @@ export function isPhone5() {
   return window.width <= 320;
 }
 
+export const HINT_COLOR = '#DFDFDF';
+
 export const NAV_HEIHGT = 64;
 
 export const SCREEN_WIDTH = window.width;

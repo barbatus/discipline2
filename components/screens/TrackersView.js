@@ -121,9 +121,17 @@ class TrackersView extends PureComponent {
   }
 
   static getDerivedStateFromProps({ trackers }, prevState) {
-    if (!trackers || prevState.current) return null;
+    if (!trackers.size || prevState.current) return null;
 
     return { current: trackers.get(0) };
+  }
+
+  componentDidUpdate({ trackers: prevTrackers }) {
+    const { trackers, onAddCompleted } = this.props;
+    // Firing onAddCompleted because Trackers is not rendered when no trackers
+    if (trackers !== prevTrackers && !prevTrackers.size) {
+      InteractionManager.runAfterInteractions(onAddCompleted);
+    }
   }
 
   getCancelBtn(onPress) {
@@ -174,6 +182,12 @@ class TrackersView extends PureComponent {
   }
 
   onRemoveCompleted(index: number) {
+    const { trackers } = this.props;
+    // Resetting current tracker here since waiting
+    // for remove animation to be done
+    if (!trackers.size) {
+      this.setState({ current: null });
+    }
     this.isActive = false;
     caller(this.props.onRemoveCompleted, index);
   }
@@ -285,6 +299,8 @@ class TrackersView extends PureComponent {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
     const { current, calShown } = this.state;
     const calcStyle = { ...commonStyles.absFilled, top: 0, opacity: this.calcOpacity };
+
+    if (!current) { return null; }
 
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>

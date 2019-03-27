@@ -8,18 +8,21 @@ import { Store } from 'redux';
 
 import { StackNavigator as StackNav } from 'react-navigation';
 
+import { createStackNavigator, createAppContainer } from "react-navigation";
+
 import MainScreen from '../components/screens/MainScreen';
 
 import DayUpdateEvent from './DayUpdateEvent';
 
-import { changeDay } from '../model/actions';
+import { changeDay, loadApp } from '../model/actions';
 
-export default function CreateApp(store: Store<any>) {
-  return StackNav(
-    {
-      Home: { screen: (props) => <Home {...props} store={store} /> },
-    },
-    { headerMode: 'none' },
+export default function createApp(store: Store<any>) {
+  return createAppContainer(
+    createStackNavigator({
+        Home: { screen: (props) => <Home navigation={props.navigation} store={store} /> },
+      },
+      { headerMode: 'none' },
+    ),
   );
 }
 
@@ -31,6 +34,7 @@ class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
     this.dayUpdate.on(() => {
       store.dispatch(changeDay());
     });
+    store.dispatch(loadApp());
   }
 
   componentWillUnmount() {

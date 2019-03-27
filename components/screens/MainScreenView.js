@@ -120,14 +120,14 @@ export class MainScreenView extends ScrollScreenView {
   onAcceptNewTracker(tracker) {
     if (this.isActive) return;
 
+    if (!tracker.icon && this.copilotIfAddIcon()) return;
+
     this.isActive = true;
     this.props.onAddTracker(tracker, this.slideIndex + 1);
   }
 
   onAddCompleted() {
-    this.setMainViewBtns();
-
-    this.isActive = false;
+    this.setMainViewBtns(() => (this.isActive = false));
     this.moveLeft();
   }
 
@@ -139,7 +139,7 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   onNewTracker() {
-    this.moveRight(() => this.copilotIfFirstTracker());
+    this.moveRight();
   }
 
   // Copilot
@@ -148,16 +148,20 @@ export class MainScreenView extends ScrollScreenView {
     const { copilot } = this.props.app.props;
     if (!copilot[CopilotScreenEnum.EMPTY.value]) {
       const firstStep = first(CopilotScreenEnum.EMPTY.steps);
-      this.startCopilot(1000, firstStep.value);
+      this.startCopilot(3000, firstStep.value);
+      return true;
     }
+    return false;
   }
 
-  copilotIfFirstTracker() {
+  copilotIfAddIcon() {
     const { copilot } = this.props.app.props;
-    if (!copilot[CopilotScreenEnum.FIRST_TRACKER.value]) {
-      const firstStep = first(CopilotScreenEnum.FIRST_TRACKER.steps);
-      this.startCopilot(1000, firstStep.value);
+    if (!copilot[CopilotScreenEnum.CREATE_TRACKER.value]) {
+      const firstStep = first(CopilotScreenEnum.CREATE_TRACKER.steps);
+      this.startCopilot(500, firstStep.value);
+      return true;
     }
+    return false;
   }
 
   // Common

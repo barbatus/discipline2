@@ -1,11 +1,12 @@
 import EventEmitter from 'eventemitter3';
+import { AppState } from 'react-native';
 
 class Timers {
   timers = {};
 
-  get(id: number, int: number) {
+  get(id: number, intervalMs: number) {
     if (!this.timers[id]) {
-      this.timers[id] = new Timer(int);
+      this.timers[id] = new Timer(intervalMs);
     }
     return this.timers[id];
   }
@@ -22,44 +23,63 @@ const timers = new Timers();
 export default timers;
 
 export class Timer {
-  pastMs = 0;
+  timePastMs = 0;
 
-  int = 0;
+  timeIntMs = 0;
 
-  timer = null;
+  hTimer: number;
+
+  downDateMs: number;
 
   events: EventEmitter = new EventEmitter();
 
-  constructor(int: number = 0) {
-    this.int = int;
+  constructor(timeIntMs: number = 0) {
+    this.timeIntMs = timeIntMs;
+    this.handleAppStateChange = ::this.handleAppStateChange;
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
 
   get active() {
-    return !!this.timer;
+    return !!this.hTimer;
   }
 
   get timeMs() {
-    return this.pastMs;
+    return this.timePastMs;
   }
 
-  start(pos: number = 0) {
+  start(offsetMs: number = 0) {
     if (this.active) return;
 
-    this.pastMs = 0;
-    this.timer = setInterval(() => {
-      this.pastMs += this.int;
-      this.events.emit('onTimer', pos + this.pastMs);
-    }, this.int);
+    this.timePastMs = 0;
+    this.offsetMs = offsetMs;
+    this.hTimer = setInterval(() => {
+      this.timePastMs += this.timeIntMs;
+      this.events.emit('onTimer', offsetMs + this.timePastMs);
+    }, this.timeIntMs);
   }
 
   stop() {
     if (!this.active) return;
 
-    clearInterval(this.timer);
-    this.timer = null;
+    clearInterval(this.hTimer);
+    this.hTimer = null;
   }
 
   dispose() {
     this.events.removeAllListeners('onTimer');
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  handleAppStateChange(state) {
+    if (!this.active) return;
+
+    if (state === 'background') {
+      this.downDate = Date.now();
+    }
+
+    if (state === 'active') {
+      this.timePastMs += Date.now() - this.downDate;
+      this.events.emit('onTimer', this.offsetMs + this.timePastMs);
+    }
   }
 }

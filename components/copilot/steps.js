@@ -19,8 +19,8 @@ export const CopilotScreenEnum = new Enum({
     value: 'EMPTY_APP',
     steps: [CopilotStepEnum.CREATE_FIRST],
   },
-  FIRST_TRACKER: {
-    value: 'FIRST_TRACKER',
+  CREATE_TRACKER: {
+    value: 'ADD_ICON',
     steps: [CopilotStepEnum.ADD_ICON],
   },
 });

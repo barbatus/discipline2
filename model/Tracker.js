@@ -140,25 +140,4 @@ export class DistanceTracker extends Tracker {
   get paths() {
     return this.ticks.map((tick) => tick.latlon || []);
   }
-
-  // onAppActive(diffMs, dateChanged) {
-  //   super.onAppActive(diffMs, dateChanged);
-
-  //   if (!this.isActive) return;
-
-  //   // Each tracker can't run more than a day,
-  //   // so day's changed, we check how much time past
-  //   // since the day start to estimate exact time
-  //   // to add to the prev tracker click.
-  //   if (dateChanged) {
-  //     clearInterval(this._hInterval);
-  //     let past = time.getFromDayStartMs();
-  //     diffMs -= past;
-  //   }
-
-  //   this._time += diffMs;
-  //   this._updateTick(
-  //     this._initDist, this._dist,
-  //     this._initTime, this._time, true);
-  // }
 }
