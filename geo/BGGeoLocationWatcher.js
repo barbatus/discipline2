@@ -63,11 +63,11 @@ export default class BGGeoLocationWatcher {
       const authStatus = state.lastLocationAuthorizationStatus;
       BackgroundGeolocation.stop();
       BackgroundGeolocation.start(() => {
+        this.singleton = new BGGeoLocationWatcher();
         if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
             BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
-          callback(null, BGError.LOCATION_PERMISSION_DENIED);
+          callback(this.singleton, BGError.LOCATION_PERMISSION_DENIED);
         } else {
-          this.singleton = new BGGeoLocationWatcher();
           callback(this.singleton);
         }
       }, (error) => callback(null, error));
@@ -101,13 +101,13 @@ export default class BGGeoLocationWatcher {
       );
 
       BackgroundGeolocation.getCurrentPosition(
+        { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
         (pos) => {
           this.watching = true;
           watchPosition();
           caller(onStart, pos, null);
         },
         (errorCode) => this.handleError(errorCode),
-        { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
       );
       setTimeout(() => {
         if (!this.watching) {
@@ -130,9 +130,9 @@ export default class BGGeoLocationWatcher {
     check.assert.function(onPos);
 
     BackgroundGeolocation.getCurrentPosition(
+      BG_POS_OPT,
       (pos) => onPos(pos, null),
       (error) => onPos(null, error),
-      BG_POS_OPT,
     );
   }
 

@@ -149,6 +149,22 @@ export default class Depot {
     return ticksDB.plainTick(tick);
   }
 
+  async updateLastTickData(trackId: string, data: Object) {
+    check.assert.string(trackId);
+
+    let tick = await ticksDB.getLast(trackId);
+    if (!tick) throw new Error('Last tick not found');
+
+    return this.updateLastTick(trackId, tick.value, data);
+  }
+
+  async getLastTick(trackId: string) {
+    check.assert.number(trackId);
+
+    const tick = await ticksDB.getLast(trackId);
+    return ticksDB.plainTick(tick);
+  }
+
   async getTrackerTicks(trackId: string, minDateMs: number, maxDateMs?: number) {
     const ticks = await ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
     return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick));

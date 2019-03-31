@@ -1,3 +1,5 @@
+import { last } from 'lodash';
+
 import time from 'app/time/utils';
 
 import depot from '../depot/depot';
@@ -79,7 +81,6 @@ export const removeTracker = (tracker) => (dispatch) =>
 export const ADD_TRACKER = 'ADD_TRACKER';
 
 export const addTracker = (tracker, index) => (dispatch) =>
-  // TODO: dispatch error event on catch
   depot.addTrackerAt(tracker, index).then((added) =>
     dispatch({
       type: ADD_TRACKER,
@@ -159,12 +160,14 @@ export const undoLastTick = (tracker) => async (dispatch) => {
 export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
 export const updateLastTick = (tracker, value, data, progress) => async (dispatch) => {
-  const tick = await depot.updateLastTick(tracker.id, value, data);
+  // const tick = await depot.getLastTick(tracker.id);
+  const lastTick = last(tracker.ticks);
+  const tick = new Tick({ ...lastTick, value, data });
   return dispatch({
     type: UPDATE_LAST_TICK,
     tracker,
     progress,
-    tick: new Tick(tick),
+    tick,
   });
 };
 

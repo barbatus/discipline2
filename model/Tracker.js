@@ -25,7 +25,7 @@ export class Tick implements DBTick {
     this.data = tick.data;
     this.time = tick.time;
     this.latlon = tick.latlon;
-    this.active = this.active;
+    this.active = tick.active;
   }
 }
 

@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import Timers, { Timer } from 'app/time/Timers';
+import Timer from 'app/time/Timer';
+import Timers from 'app/model/Timers';
 
 import { trackerStyles } from '../styles/trackerStyles';
 import { slideWidth } from '../styles/slideStyles';
@@ -67,30 +68,28 @@ FooterBtnFn.propTypes = {
 const FooterBtn = React.memo(FooterBtnFn);
 
 export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
-  timer: Timer = null;
-
   constructor(props) {
     super(props);
     const { tracker } = props;
     this.state = {
       ...super.state,
       lapTimeMs: 0,
+      timeMs: tracker.value,
     };
-    this.timer = Timers.get(tracker.id, 1000);
     this.onLap = ::this.onLap;
     this.onTick = ::this.onTick;
     this.onStop = ::this.onStop;
+    this.onTimer = ::this.onTimer;
   }
 
   get bodyControls() {
-    const { tracker } = this.props;
-    const { lapTimeMs } = this.state;
+    const { timeMs, lapTimeMs } = this.state;
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
           <TimeLabel
             width={200}
-            timeMs={tracker.value}
+            timeMs={timeMs}
             lapTimeMs={lapTimeMs}
           />
         </View>
@@ -118,20 +117,21 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
   componentDidMount() {
     const { tracker } = this.props;
-    if (tracker.active && !this.timer.active) {
-      this.startTimer();
-    }
+    const timer = Timers.getOrCreate(tracker.id, tracker.value, 1000);
+    timer.events.on('onTimer', this.onTimer);
   }
 
   componentWillUnmount() {
     const { tracker } = this.props;
+    const timer = Timers.getOrCreate(tracker.id);
+    timer.events.off('onTimer', this.onTimer);
     Timers.dispose(tracker.id);
-    this.timer = null;
   }
 
   startTimer() {
-    this.timer.start(0);
-    this.timer.events.on('onTimer', ::this.onTimer);
+    const { tracker } = this.props;
+    const timer = Timers.getOrCreate(tracker.id);
+    timer.start();
     this.onStart(0);
   }
 
@@ -141,18 +141,20 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     this.startTimer();
   }
 
-  onTimer(timeMs: number) {
-    this.onProgress(timeMs);
+  onTimer(timeMs: number, lastTimeMs: number) {
+    this.onProgress(lastTimeMs);
+    this.setState({ timeMs });
   }
 
   onStop() {
-    this.timer.stop();
-    this.timer.events.removeAllListeners('onTimer');
+    const { tracker } = this.props;
+    const timer = Timers.getOrCreate(tracker.id);
+    timer.stop();
     super.onStop();
   }
 
   onLap() {
-    const { tracker } = this.props;
-    this.setState({ lapTimeMs: tracker.value });
+    const { timeMs } = this.state;
+    this.setState({ lapTimeMs: timeMs });
   }
 }

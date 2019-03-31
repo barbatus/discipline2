@@ -15,6 +15,7 @@ import {
   commonStyles as cs,
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
+  MENU_WIDTH,
 } from 'app/components/styles/common';
 
 import Menu from '../nav/Menu';
@@ -150,6 +151,7 @@ export class MainScreen extends PureComponent {
           disableGestures
           menu={this.renderMenu()}
           isOpen={isOpen}
+          openMenuOffset={MENU_WIDTH}
           onChange={this.onMenuChange}
           onSliding={this.onMenuSliding}
         >

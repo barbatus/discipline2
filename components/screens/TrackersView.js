@@ -308,6 +308,7 @@ class TrackersView extends PureComponent {
           ref={(el) => (this.calendar = el)}
           {...this.props}
           shown={calShown}
+          metric={app.props.metric}
           trackerType={current ? current.type : null}
           style={calcStyle}
           onMonthChanged={this.onMonthChanged}
@@ -353,9 +354,9 @@ export default connect(
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),
     onTick: (tracker, value, data) => dispatch(tickTracker(tracker, value, data)),
     onStart: (tracker, value, data) => dispatch(startTracker(tracker, value, data)),
-    onProgress: (tracker, value, data, progress) => (
-      dispatch(updateLastTick(tracker, value, data, progress))
-    ),
+    // onProgress: (tracker, value, data, progress) => (
+    //   dispatch(updateLastTick(tracker, value, data, progress))
+    // ),
     onStop: (tracker, value, data) => dispatch(stopTracker(tracker, value, data)),
     onUndo: (tracker) => dispatch(undoLastTick(tracker)),
     onAddCompleted: (index) => {

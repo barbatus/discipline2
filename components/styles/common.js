@@ -42,3 +42,5 @@ export const NAV_HEIHGT = 64;
 export const SCREEN_WIDTH = window.width;
 
 export const SCREEN_HEIGHT = window.height;
+
+export const MENU_WIDTH = SCREEN_WIDTH / 2 + 25;

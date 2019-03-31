@@ -11,6 +11,7 @@ export default class TrackerCal extends PureComponent {
   static propTypes = {
     trackerType: PropTypes.object,
     ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
+    metric: PropTypes.bool.isRequired,
     // TODO: if only ViewPropTypes.style left it curses
     // that opacity is not part of ViewPropTypes.style
     style: PropTypes.object,
@@ -31,9 +32,9 @@ export default class TrackerCal extends PureComponent {
     };
   }
 
-  static getDerivedStateFromProps({ ticks, trackerType }, prevState) {
+  static getDerivedStateFromProps({ ticks, trackerType, metric }, prevState) {
     if (ticks !== prevState.ticks) {
-      return { ticksMap: combineTicksMonthly(ticks, trackerType) };
+      return { ticksMap: combineTicksMonthly(ticks, trackerType, metric) };
     }
     return null;
   }

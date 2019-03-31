@@ -162,16 +162,10 @@ export class TrackerEditView extends PureComponent {
   }
 }
 
-// TODO: some weird issue with onSubmit,
-// which is called with same initial values.
-let onChange = {};
 export default reduxForm({
   enableReinitialize: true,
-  onChange: (values) => {
-    onChange = values;
-  },
   onSubmit: (values) => {
-    const tracker = { ...values, ...onChange };
+    const tracker = values;
     if (!tracker.iconId && !tracker.title) {
       throw new SubmissionError({
         title: 'Either title or icon should be defined',

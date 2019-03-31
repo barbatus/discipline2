@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Alert,
   View,
@@ -9,16 +8,14 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-
 import PropTypes from 'prop-types';
-
 import slowlog from 'react-native-slowlog';
 
 import registry, { DlgType } from 'app/components/dlg/registry';
 import { formatDistance, formatSpeed } from 'app/utils/format';
 import UserIconsStore from 'app/icons/UserIconsStore';
 import { DistanceTracker as Tracker } from 'app/model/Tracker';
-import DistanceTrackers from 'app/geo/DistanceTrackers';
+import DistanceTrackers, { Timers } from 'app/model/DistanceTrackers';
 import { BGError } from 'app/geo/BGGeoLocationWatcher';
 
 import { trackerStyles } from '../styles/trackerStyles';
@@ -77,7 +74,7 @@ const styles = StyleSheet.create({
     color: '#9B9B9B',
     fontWeight: '200',
     width: 50,
-    lineHeight: 35,
+    lineHeight: 15,
     paddingLeft: 5,
   },
   unitText2: {
@@ -85,7 +82,7 @@ const styles = StyleSheet.create({
     color: '#9B9B9B',
     fontWeight: '200',
     width: 50,
-    lineHeight: 25,
+    lineHeight: 15,
     paddingLeft: 5,
   },
   seeMap: {
@@ -228,17 +225,18 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     metric: PropTypes.bool.isRequired,
   };
 
-  path = [];
-  speed = 0;
-  timeMs = 0;
-  dist = 0;
+  paths = [];
 
   constructor(props) {
     super(props);
     slowlog(this, /.*/);
+    const { tracker } = props;
     this.state = {
       ...this.state,
       btnEnabled: true,
+      dist: tracker.value,
+      timeMs: tracker.time,
+      speed: 0,
     };
     this.showMap = ::this.showMap;
     this.onStopBtn = ::this.onStopBtn;
@@ -251,11 +249,12 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   get bodyControls() {
     const { tracker, metric } = this.props;
+    const { dist, timeMs, speed } = this.state;
     return (
       <DistanceBody
-        dist={tracker.value}
-        time={tracker.time}
-        speed={tracker.speed}
+        dist={dist}
+        time={timeMs}
+        speed={speed}
         metric={metric}
         showSpeed={!!tracker.props.showSpeed}
       />
@@ -264,13 +263,13 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   get footerControls() {
     const { tracker, responsive } = this.props;
-    const { btnEnabled } = this.state;
+    const { dist, btnEnabled } = this.state;
     return (
       <DistanceFooter
         active={tracker.active}
         responsive={responsive}
         enabled={btnEnabled}
-        showMap={!!tracker.value}
+        showMap={!!dist}
         onStopBtn={this.onStopBtn}
         onStartBtn={this.onStartBtn}
         onShowMap={this.showMap}
@@ -282,27 +281,40 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     return Tracker.properties;
   }
 
-  componentWillUnmount() {
+  async componentDidMount() {
     const { tracker } = this.props;
-    DistanceTrackers.dispose(tracker.id);
+    const timer = Timers.getOrCreate(tracker.id, tracker.time, TIME_INTRVL_MS);
+    timer.events.on('onTimer', this.onTimeUpdate);
+    try {
+      const distTracker = await DistanceTrackers.getOrCreate(
+        tracker.id,
+        tracker.value,
+        DIST_INTRVL,
+      );
+      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
+    } catch({ tracker: distTracker }) {
+      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
+    }
   }
 
-  async getDistTracker(trackerId: string) {
-    return DistanceTrackers.get(
-      trackerId,
-      DIST_INTRVL,
-      TIME_INTRVL_MS,
-    );
+  async componentWillUnmount() {
+    const { tracker } = this.props;
+    const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
+    distTracker.events.off('onLatLonUpdate', this.onLatLonUpdate);
+    DistanceTrackers.dispose(tracker.id);
+    const timer = Timers.getOrCreate(tracker.id);
+    timer.events.off('onTimer', this.onTimeUpdate);
+    Timers.dispose(tracker.id);
   }
 
   async onStartBtn() {
+    const { tracker } = this.props;
     try {
-      const { tracker } = this.props;
       this.setState({ btnEnabled: false });
-      const distTracker = await this.getDistTracker(tracker.id);
-      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
-      distTracker.events.on('onTimeUpdate', this.onTimeUpdate);
+      const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
       await distTracker.start();
+      const timer = Timers.getOrCreate(tracker.id);
+      timer.start();
       this.onDistStart();
     } catch (error) {
       if (error !== BGError.LOCATION_PERMISSION_DENIED) {
@@ -314,10 +326,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   async onStopBtn() {
     const { tracker } = this.props;
-    const distTracker = await this.getDistTracker(tracker.id);
-    distTracker.events.removeAllListeners('onLatLonUpdate');
-    distTracker.events.removeAllListeners('onTimeUpdate');
+    const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
     distTracker.stop(this.onDistStop);
+    distTracker.events.off('onLatLonUpdate', this.onLatLonUpdate);
+    const timer = Timers.getOrCreate(tracker.id);
+    timer.stop();
   }
 
   onDistStart() {
@@ -328,7 +341,6 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   onDistStop(latLon) {
     if (latLon) {
       const { dist, lat, lon } = latLon;
-      this.path.push({ latitude: lat, longitude: lon });
       this.onStop(dist, { latlon: { lat, lon } });
     } else {
       this.onStop();
@@ -336,25 +348,21 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   onTimeUpdate(timeMs: number) {
-    this.onProgress(this.dist, { time: timeMs }, { speed: this.speed });
-    this.timeMs = timeMs;
+    this.onProgress(this.dist, { time: timeMs });
+    this.setState({ timeMs })
   }
 
-  onLatLonUpdate({ dist, lat, lon, speed }) {
-    this.path.push({ latitude: lat, longitude: lon });
-    this.onProgress(dist, { time: this.timeMs, latlon: { lat, lon } }, { speed });
-    this.dist = dist;
-    this.speed = speed;
+  onLatLonUpdate({ dist, lat, lon, speed, paths }) {
+    this.paths = paths;
+    this.onProgress(dist, { latlon: { lat, lon } }, { speed });
+    this.setState({ dist, speed });
   }
 
   showMap() {
     const dlg = registry.get(DlgType.MAPS);
     const { tracker } = this.props;
-    const paths = tracker.paths.map((path) =>
-      path.map(({ lat, lon }) => ({
-        latitude: lat,
-        longitude: lon,
-      })));
+    const paths = tracker.paths.concat(this.paths)
+      .map((path) => path.map(({ lat, lon }) => ({ latitude: lat, longitude: lon })));
     dlg.show(paths);
   }
 }

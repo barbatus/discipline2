@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
+import { caller } from 'app/utils/lang';
 
 import MapsDlg from './MapsDlg';
 import CommonModal from './CommonModal';

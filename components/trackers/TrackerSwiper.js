@@ -1,24 +1,27 @@
-import { caller } from 'app/utils/lang';
-import isNumber from 'lodash/isNumber';
 import React from 'react';
 import { Animated, View } from 'react-native';
 import RNShake from 'react-native-shake';
+import isNumber from 'lodash/isNumber';
+
+import { caller } from 'app/utils/lang';
+
 import Animation from '../animation/Animation';
 import { minScale, MoveUpScaleResponderAnim } from '../animation/MoveUpScaleResponderAnim';
 import { MoveUpDownResponder } from '../animation/responders';
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 import Swiper from '../scrolls/Swiper';
 import { commonStyles, SCREEN_WIDTH } from '../styles/common';
+
 import { slideHeight } from './styles/slideStyles';
 import TrackerRenderer from './TrackerRenderer';
 
 
 export default class TrackerSwiper extends TrackerRenderer {
-  upDown = new ScreenSlideUpDownAnim(minScale);
+  responder = new MoveUpDownResponder();
 
   moveScale = new MoveUpScaleResponderAnim(slideHeight);
 
-  responder = new MoveUpDownResponder();
+  upDown = new ScreenSlideUpDownAnim(minScale);
 
   updateIndex = null;
 
@@ -62,34 +65,34 @@ export default class TrackerSwiper extends TrackerRenderer {
     }
 
     if (isNumber(addIndex) && prevAddIndex !== addIndex) {
-      this.setState({ trackers, scrollEnabled: true });
+      this.setState({ trackers });
       this.scrollTo(addIndex);
       caller(this.props.onAddCompleted, addIndex);
     }
 
     if (isNumber(removeIndex) && prevRemoveIndex !== removeIndex) {
-      this.animateRemove(prevTrackers, removeIndex,
-        () => {
-          this.setState({ trackers, scrollEnabled: true });
-          caller(this.props.onRemoveCompleted, removeIndex);
-        },
-      );
+      const tracker = prevTrackers[removeIndex];
+      this.animateRemove(tracker.id, removeIndex, () => {
+        this.setState({ trackers });
+        caller(this.props.onRemoveCompleted, removeIndex);
+        this.responder.enable();
+      });
     }
 
     if (enabled !== prevEnabled) {
       if (enabled) {
-        this.handleMoveUp();
+        this.responder.enable();
       } else {
-        this.unhandleMoveUp();
+        this.responder.disable();
       }
     }
   }
 
   static getDerivedStateFromProps({ trackers, enabled, removeIndex }, prevState) {
-    if (removeIndex !== prevState.removeIndex) return { removeIndex };
+    if (isNumber(removeIndex)) return null;
 
     if (trackers !== prevState.trackers || enabled !== prevState.enabled) {
-      return { trackers, enabled };
+      return { trackers, scrollEnabled: enabled };
     }
     return null;
   }
@@ -117,6 +120,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   showEdit(callback) {
+    this.responder.disable();
     this.setState({ scrollEnabled: false }, () => {
       const trackerId = this.current.id;
       this.mapRefs.get(trackerId).showEdit(callback);
@@ -126,7 +130,11 @@ export default class TrackerSwiper extends TrackerRenderer {
   cancelEdit(callback) {
     const trackerId = this.current.id;
     return this.mapRefs.get(trackerId).cancelEdit(
-      () => this.onCancelEdit(callback));
+      () => {
+        this.responder.enable();
+        this.onCancelEdit(callback);
+      },
+    );
   }
 
   hide(callback) {
@@ -144,9 +152,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   // When animating the removal we always scroll to the prev index.
-  animateRemove(trackers, index, callback) {
-    const tracker = trackers[index];
-    const trackerId = tracker.id;
+  animateRemove(trackerId: number, index: number, callback: Function) {
     const prevInd = index + (index >= 1 ? -1 : 1);
 
     this.mapRefs.get(trackerId).collapse(() =>
@@ -155,7 +161,7 @@ export default class TrackerSwiper extends TrackerRenderer {
         // we move to the next, so adjust the index accordingly.
         this.scrollTo(index ? prevInd : 0, null, false);
         caller(callback);
-      })
+      }),
     );
   }
 
@@ -165,7 +171,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   render() {
     const { trackers, scrollEnabled } = this.state;
-    const { style, metric, enabled, onScroll, onSwiperMoveUpDone } = this.props;
+    const { style, metric, onScroll, onSwiperMoveUpDone } = this.props;
 
     const slideStyle = {
       width: SCREEN_WIDTH,
@@ -189,7 +195,7 @@ export default class TrackerSwiper extends TrackerRenderer {
           ref={(el) => (this.swiper = el)}
           style={commonStyles.flexFilled}
           slides={slides}
-          scrollEnabled={enabled && scrollEnabled}
+          scrollEnabled={scrollEnabled}
           onTouchMove={onScroll}
           onSwiperMoveUpDone={onSwiperMoveUpDone}
         />

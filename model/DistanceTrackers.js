@@ -1,32 +1,54 @@
 import EventEmitter from 'eventemitter3';
+import { last } from 'lodash';
 
 import { caller } from 'app/utils/lang';
+import depot from 'app/depot/depot';
 
-import BGGeoLocationWatcher from './BGGeoLocationWatcher';
+import BGGeoLocationWatcher from '../geo/BGGeoLocationWatcher';
+
+import { Timers as BaseTimers } from './Timers';
+
+class DistanceTimers extends BaseTimers {
+  async onTimer(trackerId: number, lastStartMs: number) {
+    try {
+      await depot.updateLastTickData(trackerId, { time: lastStartMs });
+    } catch {}
+  }
+}
+
+export const Timers = new DistanceTimers();
 
 export class DistanceTrackers {
   trackers = {};
 
-  async get(id: number, distInt?: number, timeInt?: number) {
-    if (!this.trackers[id]) {
+  async getOrCreate(trackerId: number, initValue?: number, distInt?: number) {
+    if (!this.trackers[trackerId]) {
       return new Promise((resolve, reject) => {
         BGGeoLocationWatcher.getOrCreate((geoWatcher, error) => {
+          this.trackers[trackerId] = new DistanceTracker(geoWatcher, initValue, distInt);
+          this.trackers[trackerId].events.on('onLatLonUpdate',
+            (geo) => this.onLatLonUpdate(trackerId, geo));
           if (error) {
-            reject(error);
+            reject({ tracker: this.trackers[trackerId], ...error });
             return;
           }
-          this.trackers[id] = new DistanceTracker(geoWatcher, distInt, timeInt);
-          resolve(this.trackers[id]);
+          resolve(this.trackers[trackerId]);
         });
       });
     }
-    return Promise.resolve(this.trackers[id]);
+    return Promise.resolve(this.trackers[trackerId]);
   }
 
-  dispose(id: number) {
-    if (this.trackers[id]) {
-      this.trackers[id].dispose();
-      delete this.trackers[id];
+  async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon, speed }) {
+    try {
+      await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
+    } catch {}
+  }
+
+  dispose(trackerId: number) {
+    if (this.trackers[trackerId]) {
+      this.trackers[trackerId].dispose();
+      delete this.trackers[trackerId];
     }
   }
 }
@@ -34,15 +56,15 @@ export class DistanceTrackers {
 export default new DistanceTrackers();
 
 export class DistanceTracker {
-  hInterval = null;
-
-  pastTimeMs: number;
-
   lastEventMs: number
+
+  lastStartDist: number;
 
   dist: number;
 
   latLon: { lat: number, lon: number };
+
+  paths = [];
 
   isStarting = false;
 
@@ -50,18 +72,20 @@ export class DistanceTracker {
 
   events = new EventEmitter();
 
-  constructor(geoWatcher, distInt = 5, timeInt = 100) {
+  constructor(geoWatcher, initValue: number, distInt: number = 5) {
+    this.dist = initValue;
     this.geoWatcher = geoWatcher;
     this.distInterval = distInt;
-    this.timeInterval = timeInt;
     this.onPosChange = ::this.onPosChange;
   }
 
-  get active() {
-    return !!this.hInterval;
+  reset(initValue: number) {
+    this.dist = initValue;
+    this.lastStartDist = 0;
+    this.latLon = {};
   }
 
-  async start() {
+  start() {
     if (this.isStarting || this.active) return Promise.resolve();
 
     this.isStarting = true;
@@ -74,6 +98,7 @@ export class DistanceTracker {
           return;
         }
 
+        this.active = true;
         this.startTracking(pos.coords);
         this.unwatch = this.geoWatcher.on('position', this.onPosChange);
         resolve();
@@ -84,26 +109,16 @@ export class DistanceTracker {
   stop(callback) {
     if (!this.active) return;
 
-    clearInterval(this.hInterval);
-    this.hInterval = null;
-
-    const reset = () => {
-      this.pastTimeMs = 0;
-      this.dist = 0;
-      this.latLon = {};
-    };
-
     this.unwatch();
     this.geoWatcher.stopWatch(() => {
+      this.reset();
       caller(callback);
-      reset();
     });
   }
 
   dispose() {
     this.stop();
     this.events.removeAllListeners('onLatLonUpdate');
-    this.events.removeAllListeners('onTimeUpdate');
     this.geoWatcher = null;
   }
 
@@ -119,35 +134,33 @@ export class DistanceTracker {
     this.events.emit('onLatLonUpdate', latLon);
   }
 
-  fireTimeUpdate() {
-    this.events.emit('onTimeUpdate', this.pastTimeMs);
-  }
-
   startTracking({ latitude, longitude, heading }) {
-    this.dist = 0;
-    this.pastTimeMs = 0;
+    this.lastStartDist = 0;
     this.lastEventMs = Date.now();
     this.heading = heading;
     this.latLon = { lat: latitude, lon: longitude };
-    this.hInterval = setInterval(() => {
-      this.pastTimeMs += this.timeInterval;
-      this.fireTimeUpdate();
-    }, this.timeInterval);
+    this.paths.push([]);
   }
 
   setNextPosState({ coords: { speed, latitude, longitude } }) {
-    if (this.latLon.latitude !== latitude ||
-        this.latLon.longitude !== longitude) {
+    if (this.latLon.lat !== latitude ||
+        this.latLon.lon !== longitude) {
       const pastMs = Date.now() - this.lastEventMs;
-      const dist = (speed / 1000) * (pastMs / 1000);
-      this.dist += dist;
+      const speedAbs = Math.abs(speed);
+      const nextDist = (speedAbs / 1000) * (pastMs / 1000);
+      this.lastStartDist += nextDist;
+      this.dist += nextDist;
       this.lastEventMs = Date.now();
       this.latLon = { lat: latitude, lon: longitude };
+      const path = last(this.paths);
+      path.push(this.latLon);
       return {
-        speed: speed * 3600 / 1000, // km / h
+        speed: speedAbs * 3600 / 1000, // km / h
         dist: this.dist,
+        lastStartDist: this.lastStartDist,
         lat: this.latLon.lat,
         lon: this.latLon.lon,
+        paths: this.paths,
       };
     }
     return null;

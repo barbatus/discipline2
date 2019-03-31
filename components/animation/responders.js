@@ -7,6 +7,8 @@ const ANGLE_TRESHOLD = Math.sin(10 * (Math.PI / 180));
 const DY_TRESHOLD = 20;
 
 export class MoveUpDownResponder {
+  disabled = false;
+
   constructor() {
     this.panHandlers = this.createResponder().panHandlers;
   }
@@ -43,6 +45,14 @@ export class MoveUpDownResponder {
     this.onMoveDownCancel = null;
   }
 
+  disable() {
+    this.disabled = true;
+  }
+
+  enable() {
+    this.disabled = false;
+  }
+
   dispose() {
     this.unsubscribeUp();
     this.unsubscribeDown();
@@ -54,6 +64,8 @@ export class MoveUpDownResponder {
 
     return PanResponder.create({
       onMoveShouldSetPanResponder: (e: Object, state: Object) => {
+        if (this.disabled) return false;
+
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
         const sin = dx / Math.sqrt((dy * dy) + (dx * dx));
