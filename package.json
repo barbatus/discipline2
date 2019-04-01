@@ -55,11 +55,11 @@
     "react-navigation": "^3.5.1",
     "react-redux": "^6.0.1",
     "react-timer-mixin": "^0.13.3",
-    "recompose": "^0.30.0",
     "redux": "4.0.1",
     "redux-actions": "2.2.1",
     "redux-form": "^8.1.0",
     "redux-thunk": "^2.2.0",
+    "redux-thunk-error-handler": "^1.0.5-alpha.0",
     "relational-pouch": "^3.0.0",
     "styled-components": "^3.2.6"
   },

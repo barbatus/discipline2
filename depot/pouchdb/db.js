@@ -87,10 +87,19 @@ function fromRawDoc(pouchDoc: Object) {
 }
 
 const api = {
-  save: async (type: string, data: Object) =>
-    (await db.rel.save(type, data))[`${type}s`][0],
-  del: async (type: string, obj: Object) =>
-    (await db.rel.del(type, obj)).deleted,
+  save: async (type: string, doc: Object) => {
+    try {
+      return (await db.rel.save(type, doc))[`${type}s`][0];
+    } catch(error) {
+      // Resolve update conflict
+      if (error.status === 409) {
+        const savedDoc = await api.find(type, doc.id);
+        return await api.save(type, { ...doc, rev: savedDoc.rev });
+      }
+    }
+  },
+  del: async (type: string, doc: Object) =>
+    (await db.rel.del(type, doc)).deleted,
   find: async (type: string, id: string) =>
     (await db.rel.find(type, id))[`${type}s`][0],
   findAll: async (type: string) =>

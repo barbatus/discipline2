@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { first } from 'lodash';
+import first from 'lodash/first';
 
 import { addTracker, updateCopilot } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
@@ -70,11 +70,11 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   componentDidMount() {
-    this.props.copilotEvents.on('stepChange', ({ name }) => {
-      const step = CopilotStepEnum.fromValue(name);
-      const screen = getScreenByStep(step);
-      this.props.onCopilot(screen.value, step.value);
-    });
+    // this.props.copilotEvents.on('stepChange', ({ name }) => {
+    //   const step = CopilotStepEnum.fromValue(name);
+    //   const screen = getScreenByStep(step);
+    //   this.props.onCopilot(screen.value, step.value);
+    // });
 
     this.setMainViewBtns();
     this.copilotIfEmptyApp();
@@ -120,7 +120,7 @@ export class MainScreenView extends ScrollScreenView {
   onAcceptNewTracker(tracker) {
     if (this.isActive) return;
 
-    if (!tracker.icon && this.copilotIfAddIcon()) return;
+    if (this.copilotIfAddIcon(tracker)) return;
 
     this.isActive = true;
     this.props.onAddTracker(tracker, this.slideIndex + 1);
@@ -140,28 +140,35 @@ export class MainScreenView extends ScrollScreenView {
 
   onNewTracker() {
     this.moveRight();
+    const { copilot } = this.props.app.props;
+    if (!(CopilotScreenEnum.EMPTY.value in copilot)) {
+      const firstStep = first(CopilotScreenEnum.EMPTY.steps);
+      this.props.onCopilot(CopilotScreenEnum.EMPTY.value, firstStep.value);
+    }
   }
 
   // Copilot
 
   copilotIfEmptyApp() {
     const { copilot } = this.props.app.props;
-    if (!copilot[CopilotScreenEnum.EMPTY.value]) {
-      const firstStep = first(CopilotScreenEnum.EMPTY.steps);
-      this.startCopilot(3000, firstStep.value);
-      return true;
-    }
-    return false;
+    if (CopilotScreenEnum.EMPTY.value in copilot) return false;
+
+    const firstStep = first(CopilotScreenEnum.EMPTY.steps);
+    this.startCopilot(2000, firstStep.value);
+    return true;
   }
 
-  copilotIfAddIcon() {
+  copilotIfAddIcon(tracker) {
     const { copilot } = this.props.app.props;
-    if (!copilot[CopilotScreenEnum.CREATE_TRACKER.value]) {
-      const firstStep = first(CopilotScreenEnum.CREATE_TRACKER.steps);
-      this.startCopilot(500, firstStep.value);
-      return true;
-    }
-    return false;
+    if (CopilotScreenEnum.CREATE_TRACKER.value in copilot) return false;
+
+    const firstStep = first(CopilotScreenEnum.CREATE_TRACKER.steps);
+    if (tracker.iconId) {
+      this.props.onCopilot(CopilotScreenEnum.CREATE_TRACKER.value, firstStep.value);
+      return false;
+    } 
+    this.startCopilot(500, firstStep.value);
+    return true;
   }
 
   // Common

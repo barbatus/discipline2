@@ -22,6 +22,7 @@ const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => {
         form="newTrackerForm"
         {...rest}
         allowType
+        allowDelete={false}
         style={[styles.editView]}
         props={Tracker.properties}
         initialValues={tracker}

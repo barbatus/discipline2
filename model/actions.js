@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import last from 'lodash/last';
 
 import time from 'app/time/utils';
 
@@ -9,12 +9,8 @@ import Trackers from './Trackers';
 export const UPDATE_APP_PROPS = 'UPDATE_APP_PROPS';
 
 export const updateAppProps = (props) => (dispatch) =>
-  depot.updateAppProps(props).then((app) =>
-    dispatch({
-      type: UPDATE_APP_PROPS,
-      app,
-    }),
-  );
+  depot.updateAppProps(props)
+    .then((app) => dispatch({ type: UPDATE_APP_PROPS, app }))
 
 export const UPDATE_COPILOT = 'UPDATE_COPILOT';
 
@@ -22,12 +18,8 @@ export const updateCopilot = (screen, step) => async (dispatch) => {
   const app = await depot.loadApp();
   const copilot = app.props.copilot;
   const updated = { ...copilot, [screen]: step };
-  depot.updateAppProps({ copilot: updated }).then((app) =>
-    dispatch({
-      type: UPDATE_COPILOT,
-      app,
-    }),
-  );
+  return depot.updateAppProps({ copilot: updated })
+    .then((app) => dispatch({ type: UPDATE_COPILOT, app }));
 };
 
 export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
@@ -71,33 +63,20 @@ export const loadTestApp = () => async (dispatch) => {
 export const REMOVE_TRACKER = 'REMOVE_TRACK';
 
 export const removeTracker = (tracker) => (dispatch) =>
-  depot.removeTracker(tracker.id).then(() =>
-    dispatch({
-      type: REMOVE_TRACKER,
-      tracker,
-    }),
-  );
+  depot.removeTracker(tracker.id)
+    .then(() => dispatch({ type: REMOVE_TRACKER, tracker }))
 
 export const ADD_TRACKER = 'ADD_TRACKER';
 
 export const addTracker = (tracker, index) => (dispatch) =>
-  depot.addTrackerAt(tracker, index).then((added) =>
-    dispatch({
-      type: ADD_TRACKER,
-      tracker: added,
-      index,
-    }),
-  );
+  depot.addTrackerAt(tracker, index)
+    .then((added) => dispatch({ type: ADD_TRACKER, tracker: added, index }))
 
 export const UPDATE_TRACKER = 'UPDATE_TRACKER';
 
 export const updateTracker = (tracker) => (dispatch) =>
-  depot.updateTracker(tracker).then((updated) =>
-    dispatch({
-      type: UPDATE_TRACKER,
-      tracker: updated,
-    }),
-  );
+  depot.updateTracker(tracker)
+    .then((updated) => dispatch({ type: UPDATE_TRACKER, tracker: updated }))
 
 export const TICK_TRACKER = 'TICK_TRACKER';
 

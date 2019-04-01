@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Animated, InteractionManager, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
-
 import { connect } from 'react-redux';
 import { submit } from 'redux-form';
-
+import reactMixin from 'react-mixin';
+import TimerMixin from 'react-timer-mixin';
 import moment from 'moment';
 import { List } from 'immutable';
 
@@ -130,7 +130,7 @@ class TrackersView extends PureComponent {
     const { trackers, onAddCompleted } = this.props;
     // Firing onAddCompleted because Trackers is not rendered when no trackers
     if (trackers !== prevTrackers && !prevTrackers.size) {
-      InteractionManager.runAfterInteractions(onAddCompleted);
+      window.requestAnimationFrame(onAddCompleted);
     }
   }
 

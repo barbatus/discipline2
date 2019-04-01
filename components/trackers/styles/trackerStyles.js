@@ -2,11 +2,11 @@ import { StyleSheet } from 'react-native';
 
 import { slideDef, slideWidth } from './slideStyles';
 
-const BACK_COLOR = '#F5F5F5';
+export const BACK_COLOR = '#F5F5F5';
 
-const HINT_COLOR = '#DFDFDF';
+export const HINT_COLOR = '#DFDFDF';
 
-const ERROR_COLOR = '#FF001F';
+export const ERROR_COLOR = '#FF001F';
 
 export const trackerDef = {
   ...slideDef,

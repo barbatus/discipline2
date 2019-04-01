@@ -11,13 +11,14 @@ import {
   ViewPropTypes,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { compose, pure, withHandlers } from 'recompose';
-import { first, last } from 'lodash';
+import first from 'lodash/first';
+import last from 'lodash/last';
 
 import { getTrackerIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
 import { caller } from 'app/utils/lang';
 
+import { BACK_COLOR } from '../styles/trackerStyles';
 import { slideStyles, slideDef } from '../styles/slideStyles';
 
 const clean = (str) => {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   types: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: BACK_COLOR,
     ...slideDef.borderRadius,
     ...slideDef.borderBottomRadius,
   },
@@ -95,18 +96,19 @@ const styles = StyleSheet.create({
 
 const TypeView = styled.View`
   width: 75px;
+  display: flex;
   flex-direction: column;
   shadow-color: rgba(185, 185, 185, 0.4);
   shadow-opacity: 1;
   shadow-radius: 0;
   shadow-offset: 0px -1px;
   border-top-width: 4px;
-  border-top-color: ${({ isSelected }) => isSelected ? '#1A7CF9' : 'transparent'};
-  background-color: ${({ isSelected }) => isSelected ? '#E6E6E6' : 'transparent'};
+  border-top-color: ${({ isSelected }) => isSelected ? '#1A7CF9' : BACK_COLOR};
+  background-color: ${({ isSelected }) => isSelected ? '#E6E6E6' : BACK_COLOR};
 `;
 
-const SlideTypeFn = ({ type, selected, onTypeChosen }) => (
-  <TouchableWithoutFeedback onPress={onTypeChosen}>
+const SlideType = React.memo(({ type, selected, onTypeChosen }) => (
+  <TouchableWithoutFeedback onPress={() => onTypeChosen(type)}>
     <TypeView isSelected={selected}>
       <View style={styles.typeIconContainer}>
         <Image source={getTrackerIcon(type.valueOf())} style={styles.typeIcon} />
@@ -118,20 +120,13 @@ const SlideTypeFn = ({ type, selected, onTypeChosen }) => (
       </View>
     </TypeView>
   </TouchableWithoutFeedback>
-);
+));
 
-SlideTypeFn.propTypes = {
+SlideType.propTypes = {
   type: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
   onTypeChosen: PropTypes.func.isRequired,
 };
-
-const SlideType = compose(
-  pure,
-  withHandlers({
-    onTypeChosen: ({ type, onTypeChosen }) => () => onTypeChosen(type),
-  }),
-)(SlideTypeFn);
 
 export default class TrackerTypesSlide extends PureComponent {
   static propTypes = {

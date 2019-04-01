@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import { last } from 'lodash';
+import last from 'lodash/last';
 
 import { caller } from 'app/utils/lang';
 import depot from 'app/depot/depot';
@@ -10,9 +10,7 @@ import { Timers as BaseTimers } from './Timers';
 
 class DistanceTimers extends BaseTimers {
   async onTimer(trackerId: number, lastStartMs: number) {
-    try {
-      await depot.updateLastTickData(trackerId, { time: lastStartMs });
-    } catch {}
+    await depot.updateLastTickData(trackerId, { time: lastStartMs });
   }
 }
 
@@ -40,9 +38,7 @@ export class DistanceTrackers {
   }
 
   async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon, speed }) {
-    try {
-      await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
-    } catch {}
+    await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
   }
 
   dispose(trackerId: number) {
