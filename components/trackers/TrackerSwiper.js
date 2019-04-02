@@ -65,7 +65,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     }
 
     if (isNumber(addIndex) && prevAddIndex !== addIndex) {
-      this.setState({ trackers });
+      // this.setState({ trackers });
       this.scrollTo(addIndex);
       caller(this.props.onAddCompleted, addIndex);
     }
@@ -155,14 +155,14 @@ export default class TrackerSwiper extends TrackerRenderer {
   animateRemove(trackerId: number, index: number, callback: Function) {
     const prevInd = index + (index >= 1 ? -1 : 1);
 
-    this.mapRefs.get(trackerId).collapse(() =>
+    this.mapRefs.get(trackerId).collapse(() => (
       this.scrollTo(prevInd, () => {
         // In case of removing the first tracker,
         // we move to the next, so adjust the index accordingly.
         this.scrollTo(index ? prevInd : 0, null, false);
         caller(callback);
-      }),
-    );
+      })
+    ));
   }
 
   onCancelEdit(callback) {

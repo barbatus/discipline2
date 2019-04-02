@@ -1,3 +1,4 @@
+/* eslint react/no-multi-comp: 0 */
 import check from 'check-types';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';

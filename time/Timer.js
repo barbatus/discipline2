@@ -1,5 +1,4 @@
 import EventEmitter from 'eventemitter3';
-import { AppState } from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 
 let timerCount = 0;

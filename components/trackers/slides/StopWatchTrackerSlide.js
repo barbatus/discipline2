@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import Timer from 'app/time/Timer';
 import Timers from 'app/model/Timers';
 
 import { trackerStyles } from '../styles/trackerStyles';

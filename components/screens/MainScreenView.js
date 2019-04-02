@@ -70,11 +70,11 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   componentDidMount() {
-    // this.props.copilotEvents.on('stepChange', ({ name }) => {
-    //   const step = CopilotStepEnum.fromValue(name);
-    //   const screen = getScreenByStep(step);
-    //   this.props.onCopilot(screen.value, step.value);
-    // });
+    this.props.copilotEvents.on('stepChange', ({ name }) => {
+      const step = CopilotStepEnum.fromValue(name);
+      const screen = getScreenByStep(step);
+      this.props.onCopilot(screen.value, step.value);
+    });
 
     this.setMainViewBtns();
     this.copilotIfEmptyApp();
@@ -166,7 +166,7 @@ export class MainScreenView extends ScrollScreenView {
     if (tracker.iconId) {
       this.props.onCopilot(CopilotScreenEnum.CREATE_TRACKER.value, firstStep.value);
       return false;
-    } 
+    }
     this.startCopilot(500, firstStep.value);
     return true;
   }

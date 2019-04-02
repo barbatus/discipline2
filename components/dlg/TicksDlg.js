@@ -38,7 +38,10 @@ const ListItem = React.memo(({ item, onPress, showMore }) => {
   return (
     <TextRow>
       <TextCol>
-        <TimeText>{timeStr}{':'}</TimeText>
+        <TimeText>
+          {timeStr}
+          {':'}
+        </TimeText>
         <Text>{item.desc}</Text>
       </TextCol>
       {
@@ -88,11 +91,12 @@ export default class TicksDlg extends CommonModal {
   }
 
   showMap(item) {
-    const paths = item.paths.map((path) =>
+    const paths = item.paths.map((path) => (
       path.map(({ lat, lon }) => ({
         latitude: lat,
         longitude: lon,
-      })));
+      }))),
+    );
     this.mapsDlg.show(paths);
   }
 

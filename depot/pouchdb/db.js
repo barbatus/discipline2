@@ -90,20 +90,18 @@ const api = {
   save: async (type: string, doc: Object) => {
     try {
       return (await db.rel.save(type, doc))[`${type}s`][0];
-    } catch(error) {
+    } catch (error) {
       // Resolve update conflict
       if (error.status === 409) {
         const savedDoc = await api.find(type, doc.id);
-        return await api.save(type, { ...doc, rev: savedDoc.rev });
+        return api.save(type, { ...doc, rev: savedDoc.rev });
       }
+      throw error;
     }
   },
-  del: async (type: string, doc: Object) =>
-    (await db.rel.del(type, doc)).deleted,
-  find: async (type: string, id: string) =>
-    (await db.rel.find(type, id))[`${type}s`][0],
-  findAll: async (type: string) =>
-    (await db.rel.find(type))[`${type}s`],
+  del: async (type: string, doc: Object) => (await db.rel.del(type, doc)).deleted,
+  find: async (type: string, id: string) => (await db.rel.find(type, id))[`${type}s`][0],
+  findAll: async (type: string) => (await db.rel.find(type))[`${type}s`],
   findOne: async (type: string) => {
     const result = await db.rel.find(type);
     return api.merge(type, result)[0];
@@ -120,8 +118,9 @@ const api = {
     const doc = docs[0];
     return doc ? fromRawDoc(doc) : null;
   },
-  findHasMany: async (type: string, relType: string, id: string) =>
-    (await db.rel.findHasMany(type, relType, id))[`${type}s`],
+  findHasMany: async (type: string, relType: string, id: string) => (
+    (await db.rel.findHasMany(type, relType, id))[`${type}s`]
+  ),
   merge: (type: string, result: Object) => {
     let typeValues = result[`${type}s`];
     const types = `${type}s`;
@@ -165,9 +164,9 @@ const api = {
     };
     selector[`data.${depType}`] = depId;
     selector[`data.${field}`] = { $gte: minValue, $lt: maxValue };
-    const result = await db.find({ selector }).then((findRes) =>
+    const result = await db.find({ selector }).then((findRes) => (
       db.rel.parseRelDocs(type, findRes.docs)
-    );
+    ));
     return api.merge('tick', result);
   },
 };

@@ -87,13 +87,13 @@ export default class MapsDlg extends CommonModal {
   async onAfterShown(paths = []) {
     const { region } = this.state;
 
-    const all = flatten(paths);
-    const len = all.length;
-    const latitude = all.reduce((accum, p) => accum + p.latitude, 0) / len;
-    const longitude = all.reduce((accum, p) => accum + p.longitude, 0) / len;
+    const coords = flatten(paths);
+    const len = coords.length;
+    const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
+    const longitude = coords.reduce((accum, p) => accum + p.longitude, 0) / len;
     region.timing({ latitude, longitude }, 1000).start();
 
-    this.map.getNode().fitToCoordinates(all, {
+    this.map.getNode().fitToCoordinates(coords, {
       edgePadding: DEFAULT_PADDING,
       animated: true,
     });

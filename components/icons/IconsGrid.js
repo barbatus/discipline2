@@ -1,3 +1,5 @@
+/* eslint react/no-multi-comp: 0 */
+
 import React, { PureComponent } from 'react';
 import {
   TouchableOpacity,
@@ -122,7 +124,7 @@ export default class IconsGrid extends PureComponent {
     return (
       <FlatList
         data={rows}
-        renderItem={({item}) => this.renderRow(item)}
+        renderItem={({ item }) => this.renderRow(item)}
         style={[styles.grid, this.props.style]}
       />
     );

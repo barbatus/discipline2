@@ -24,6 +24,7 @@ export default class Calendar extends PureComponent {
     weekStart: PropTypes.number,
     monthToRender: PropTypes.number,
     dateMs: PropTypes.number,
+    shown: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -36,6 +37,7 @@ export default class Calendar extends PureComponent {
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
     onDateSelect: null,
+    shown: false,
   };
 
   constructor(props) {

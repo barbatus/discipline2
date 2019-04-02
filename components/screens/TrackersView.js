@@ -3,8 +3,6 @@ import { StyleSheet, Animated, InteractionManager, ViewPropTypes } from 'react-n
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { submit } from 'redux-form';
-import reactMixin from 'react-mixin';
-import TimerMixin from 'react-timer-mixin';
 import moment from 'moment';
 import { List } from 'immutable';
 
@@ -19,7 +17,6 @@ import {
   removeTracker,
   updateTracker,
   undoLastTick,
-  updateLastTick,
   updateCalendar,
   completeChange,
   startTracker,
@@ -69,6 +66,7 @@ class TrackersView extends PureComponent {
     onRemove: PropTypes.func.isRequired,
     onCalendarUpdate: PropTypes.func.isRequired,
     onSaveCompleted: PropTypes.func.isRequired,
+    onAddCompleted: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     onSlideChange: PropTypes.func,
     onMoveUp: PropTypes.func,
@@ -237,7 +235,7 @@ class TrackersView extends PureComponent {
     const startDateMs = time.subtractMonth(monthDateMs);
     const endDateMs = time.addMonth(monthDateMs);
     InteractionManager.runAfterInteractions(() => {
-      this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs)
+      this.props.onCalendarUpdate(current, monthDateMs, startDateMs, endDateMs);
     });
   }
 

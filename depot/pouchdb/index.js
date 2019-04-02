@@ -53,9 +53,9 @@ export default class Depot {
   }
 
   async loadTrackers(trackers: Tracker[]): Promise<Tracker[]> {
-    const allTicks = await Promise.all(trackers.map((tracker) =>
+    const allTicks = await Promise.all(trackers.map((tracker) => (
       this.getTrackerTicks(tracker.id, time.getDateMs())
-    ));
+    )));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
       active: false,
@@ -152,7 +152,7 @@ export default class Depot {
   async updateLastTickData(trackId: string, data: Object) {
     check.assert.string(trackId);
 
-    let tick = await ticksDB.getLast(trackId);
+    const tick = await ticksDB.getLast(trackId);
     if (!tick) throw new Error('Last tick not found');
 
     return this.updateLastTick(trackId, tick.value, data);
@@ -174,8 +174,7 @@ export default class Depot {
     const app = await appDB.getRaw();
     const appVer = DeviceInfo.getVersion();
     if (app.ver !== appVer) {
-      const promises = app.trackers.map((tracker) =>
-        appDB.removeTracker(tracker));
+      const promises = app.trackers.map((tracker) => appDB.removeTracker(tracker));
       await Promise.all(promises);
       await appDB.setVer(appVer);
       return true;

@@ -126,7 +126,7 @@ export default class SumTrackerSlide extends TrackerSlide {
         <View style={styles.inputContainer}>
           <TextInput
             editable={responsive}
-            keyboardType={'numeric'}
+            keyboardType="numeric"
             placeholder="Enter value"
             placeholderTextColor={trackerDef.hintText.color}
             style={styles.sumInput}
@@ -148,7 +148,8 @@ export default class SumTrackerSlide extends TrackerSlide {
         <View style={styles.textContainer}>
           <Text style={styles.sumText}>=</Text>
           <Text style={styles.sumText}>
-            $ {tracker.value}
+            $
+            {tracker.value}
           </Text>
         </View>
       </View>

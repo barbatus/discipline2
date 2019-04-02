@@ -44,6 +44,7 @@ export default class Trackers extends PureComponent {
     onSwiperScaleDone: PropTypes.func,
     onSwiperMoveUpStart: PropTypes.func,
     onSwiperMoveUpDone: PropTypes.func,
+    onSwiperMoveDownDone: PropTypes.func,
     onSwiperShown: PropTypes.func,
     onSlideChange: PropTypes.func,
     trackers: PropTypes.instanceOf(List).isRequired,
@@ -62,6 +63,7 @@ export default class Trackers extends PureComponent {
     onSwiperScaleDone: null,
     onSwiperMoveUpStart: null,
     onSwiperMoveUpDone: null,
+    onSwiperMoveDownDone: null,
     onSwiperShown: null,
     onSlideChange: null,
     style: null,
@@ -158,11 +160,12 @@ export default class Trackers extends PureComponent {
     // Scroll, show, update w/o flicking.
     this.bscroll.hide();
     this.sscroll.hide();
-    this.swiper.scrollTo(index, () =>
+    this.swiper.scrollTo(index, () => (
       this.swiper.show(() => {
         this.renderTrackers(this.props.trackers);
         caller(this.props.onSwiperShown);
-      }), false);
+      })
+    ), false);
   }
 
   onSmallSlideTap(index: number) {

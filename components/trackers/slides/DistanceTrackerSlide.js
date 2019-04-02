@@ -292,7 +292,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         DIST_INTRVL,
       );
       distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
-    } catch({ tracker: distTracker }) {
+    } catch ({ tracker: distTracker }) {
       distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
     }
   }
@@ -349,7 +349,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   onTimeUpdate(timeMs: number) {
     this.onProgress(this.dist, { time: timeMs });
-    this.setState({ timeMs })
+    this.setState({ timeMs });
   }
 
   onLatLonUpdate({ dist, lat, lon, speed, paths }) {

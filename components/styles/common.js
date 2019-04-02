@@ -43,4 +43,4 @@ export const SCREEN_WIDTH = window.width;
 
 export const SCREEN_HEIGHT = window.height;
 
-export const MENU_WIDTH = SCREEN_WIDTH / 2 + 25;
+export const MENU_WIDTH = (SCREEN_WIDTH / 2) + 25;

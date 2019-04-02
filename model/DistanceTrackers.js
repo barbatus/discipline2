@@ -37,7 +37,7 @@ export class DistanceTrackers {
     return Promise.resolve(this.trackers[trackerId]);
   }
 
-  async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon, speed }) {
+  async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon }) {
     await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
   }
 

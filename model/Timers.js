@@ -7,8 +7,9 @@ export class Timers {
   getOrCreate(trackerId: number, initValueMs?: number, intervalMs?: number) {
     if (!this.timers[trackerId]) {
       this.timers[trackerId] = new Timer(initValueMs, intervalMs);
-      this.timers[trackerId].events.on('onTimer', (timeMs: number, lastStartMs: number) =>
-        this.onTimer(trackerId, lastStartMs));
+      this.timers[trackerId].events.on('onTimer', (timeMs: number, lastStartMs: number) => (
+        this.onTimer(trackerId, lastStartMs)
+      ));
     }
     return this.timers[trackerId];
   }

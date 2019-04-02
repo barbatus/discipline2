@@ -39,8 +39,7 @@ const cloneTracker = (trackers, tracker, index?: number, ticks?: Tick[]) => {
   }
   let trTicks = tracker.ticks;
   if (ticks) {
-    const tcks = tracker.ticks.filter((tck1) =>
-      !ticks.find((tck2) => tck1.id === tck2.id));
+    const tcks = tracker.ticks.filter((tck1) => !ticks.find((tck2) => tck1.id === tck2.id));
     trTicks = tcks.concat(ticks);
   }
   return trackers.update(trIndex, () => Trackers.clone(
@@ -53,8 +52,7 @@ const cloneTicks = (trackers, tracker, progress, ticks: Tick[]) => {
   const trIndex = findIndex(trackers, tracker);
   let trTicks = tracker.ticks;
   if (ticks) {
-    const tcks = tracker.ticks.filter((tck1) =>
-      !ticks.find((tck2) => tck1.id === tck2.id));
+    const tcks = tracker.ticks.filter((tck1) => !ticks.find((tck2) => tck1.id === tck2.id));
     trTicks = tcks.concat(ticks);
   }
   return trackers.update(trIndex, () => Trackers.clone(trackers.get(trIndex), {

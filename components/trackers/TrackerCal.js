@@ -16,6 +16,7 @@ export default class TrackerCal extends PureComponent {
     // that opacity is not part of ViewPropTypes.style
     style: PropTypes.object,
     onDateSelect: PropTypes.func,
+    shown: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -23,6 +24,7 @@ export default class TrackerCal extends PureComponent {
     trackerType: null,
     style: null,
     onDateSelect: null,
+    shown: false,
   };
 
   constructor(props) {

@@ -14,23 +14,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => {
+const NewTrackerSlideFn = ({ style, tracker, onNewTracker, ...rest }) => (
   // TODO: consider removing outer View
-  return (
-    <View style={[trackerStyles.slide, style]}>
-      <TrackerEditView
-        form="newTrackerForm"
-        {...rest}
-        allowType
-        allowDelete={false}
-        style={[styles.editView]}
-        props={Tracker.properties}
-        initialValues={tracker}
-        onSubmitSuccess={onNewTracker}
-      />
-    </View>
-  );
-};
+  <View style={[trackerStyles.slide, style]}>
+    <TrackerEditView
+      form="newTrackerForm"
+      {...rest}
+      allowType
+      allowDelete={false}
+      style={[styles.editView]}
+      props={Tracker.properties}
+      initialValues={tracker}
+      onSubmitSuccess={onNewTracker}
+    />
+  </View>
+);
 
 NewTrackerSlideFn.propTypes = {
   style: ViewPropTypes.style,

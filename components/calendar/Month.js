@@ -135,7 +135,10 @@ export default class Month extends PureComponent {
       const timeStr = moment(tick.dateTimeMs).format('LT');
       return (
         <TextRow key={tick.dateTimeMs} isLast={index === size}>
-          <TimeText>{timeStr}{':'}</TimeText>
+          <TimeText>
+            {timeStr}
+            {':'}
+          </TimeText>
         </TextRow>
       );
     });

@@ -41,9 +41,7 @@ export class MoveUpScaleResponderAnim {
   ) {
     assert.ok(responder);
 
-    this.scale.addListener(({ value }) =>
-      caller(onScale, value <= minScale ? 0 : value)
-    );
+    this.scale.addListener(({ value }) => caller(onScale, value <= minScale ? 0 : value));
     this.unsubCb = responder.subscribeUp({
       onMove: (dy) => {
         const speed = Math.abs(dy) * 2;
