@@ -1,5 +1,5 @@
-
 import React, { cloneElement } from 'react';
+import PropTypes from 'prop-types';
 import { CopilotStep as BaseCopilotStep } from '@okgrow/react-native-copilot';
 
 const CopilotStep = React.memo(
@@ -12,5 +12,14 @@ const CopilotStep = React.memo(
     );
   }
 );
+
+CopilotStep.propTypes = {
+  children: PropTypes.element.isRequired,
+  step: PropTypes.shape({
+    title: PropTypes.string,
+    order: PropTypes.number,
+    value: PropTypes.string,
+  }).isRequired,
+};
 
 export default CopilotStep;

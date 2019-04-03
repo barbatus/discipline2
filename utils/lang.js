@@ -16,3 +16,13 @@ export function round(number, precision) {
 export function int(number) {
   return Math.floor(number);
 }
+
+export class ValuedError<T> extends Error {
+  value: T;
+
+  constructor(value: T, baseError) {
+    super();
+    this.value = value;
+    this.baseError = baseError;
+  }
+}

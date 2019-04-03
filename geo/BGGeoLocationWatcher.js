@@ -1,21 +1,22 @@
 import check from 'check-types';
-
 import BackgroundGeolocation from 'react-native-background-geolocation';
-
 import EventEmitter from 'eventemitter3';
 
-import { caller } from 'app/utils/lang';
+import { ValuedError } from 'app/utils/lang';
 
 import Enum from '../depot/Enum';
 
 function configureBackgroundGeolocation(callback) {
   BackgroundGeolocation.ready({
+    reset: true,
     desiredAccuracy: 0,
     distanceFilter: 5,
     stopOnTerminate: false,
     autoSync: false,
     stationaryRadius: 0,
     disableElasticity: true,
+    foregroundService: true,
+    debug: true,
   }, callback);
 }
 
@@ -56,21 +57,28 @@ export default class BGGeoLocationWatcher {
 
   singleton: BGGeoLocationWatcher = null;
 
-  static getOrCreate(callback) {
-    if (this.singleton) callback(this.singleton);
+  static async getOrCreate() {
+    if (BGGeoLocationWatcher.singleton) {
+      return Promise.resolve(BGGeoLocationWatcher.singleton);
+    }
 
-    configureBackgroundGeolocation((state) => {
-      const authStatus = state.lastLocationAuthorizationStatus;
-      BackgroundGeolocation.stop();
-      BackgroundGeolocation.start(() => {
-        this.singleton = new BGGeoLocationWatcher();
-        if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
-            BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
-          callback(this.singleton, BGError.LOCATION_PERMISSION_DENIED);
-        } else {
-          callback(this.singleton);
-        }
-      }, (error) => callback(null, error));
+    return new Promise((resolve, reject) => {
+      configureBackgroundGeolocation((state) => {
+        const authStatus = state.lastLocationAuthorizationStatus;
+        BackgroundGeolocation.stop();
+        BackgroundGeolocation.start(() => {
+          BGGeoLocationWatcher.singleton = new BGGeoLocationWatcher();
+          if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
+              BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
+            reject(new ValuedError(
+              BGGeoLocationWatcher.singleton,
+              BGError.LOCATION_PERMISSION_DENIED,
+            ));
+          } else {
+            resolve(BGGeoLocationWatcher.singleton);
+          }
+        }, (error) => reject(new ValuedError(null, error)));
+      });
     });
   }
 
@@ -87,53 +95,57 @@ export default class BGGeoLocationWatcher {
     this.emitter.removeListener(event, cb, context);
   }
 
-  watchPos(onStart: Function) {
-    if (this.watching) {
-      caller(onStart);
-      return;
-    }
+  async watchPos() {
+    return new Promise((resolve, reject) => {
+      if (this.watching) {
+        resolve();
+        return;
+      }
 
-    BackgroundGeolocation.changePace(true, () => {
-      const watchPosition = () => BackgroundGeolocation.watchPosition(
-        (pos) => this.emitter.emit('position', pos),
-        (errorCode) => caller(onStart, null, this.handleError(errorCode)),
-        BG_POS_OPT,
-      );
+      BackgroundGeolocation.changePace(true, () => {
+        const watchPosition = () => BackgroundGeolocation.watchPosition(
+          (pos) => this.emitter.emit('position', pos),
+          (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
+          BG_POS_OPT,
+        );
 
+        BackgroundGeolocation.getCurrentPosition(
+          { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
+          (pos) => {
+            this.watching = true;
+            watchPosition();
+            resolve(pos);
+          },
+          (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
+        );
+        setTimeout(() => {
+          if (!this.watching) {
+            reject(new ValuedError(null, BGError.LOCATION_TIMEOUT));
+          }
+        }, 1.5 * LOCATION_TIMEOUT * 1000);
+      }, (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))));
+    });
+  }
+
+  async stopWatch() {
+    return new Promise((resolve) => {
+      if (this.listenerCount('position') === 0) {
+        this.watching = false;
+        BackgroundGeolocation.changePace(false);
+        BackgroundGeolocation.stopWatchPosition();
+      }
+      resolve();
+    });
+  }
+
+  async getPos() {
+    return new Promise((resolve, reject) => {
       BackgroundGeolocation.getCurrentPosition(
-        { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
-        (pos) => {
-          this.watching = true;
-          watchPosition();
-          caller(onStart, pos, null);
-        },
-        (errorCode) => this.handleError(errorCode),
+        BG_POS_OPT,
+        (pos) => resolve(pos),
+        (error) => reject(error),
       );
-      setTimeout(() => {
-        if (!this.watching) {
-          caller(onStart, null, BGError.LOCATION_TIMEOUT);
-        }
-      }, 1.5 * LOCATION_TIMEOUT * 1000);
-    }, (errorCode) => caller(onStart, null, this.handleError(errorCode)));
-  }
-
-  stopWatch(onStop: Function) {
-    if (this.listenerCount('position') === 0) {
-      this.watching = false;
-      BackgroundGeolocation.changePace(false);
-      BackgroundGeolocation.stopWatchPosition();
-    }
-    caller(onStop);
-  }
-
-  getPos(onPos: Function) {
-    check.assert.function(onPos);
-
-    BackgroundGeolocation.getCurrentPosition(
-      BG_POS_OPT,
-      (pos) => onPos(pos, null),
-      (error) => onPos(null, error),
-    );
+    });
   }
 
   subscribe(event: string) {

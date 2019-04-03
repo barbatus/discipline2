@@ -29,11 +29,11 @@ const BooleanPropFn = ({ input }) => (
   />
 );
 
-// BooleanPropFn.propTypes = {
-//   input: PropTypes.shape({
-//     value: PropTypes.bool,
-//   }).isRequired,
-// };
+BooleanPropFn.propTypes = {
+  input: PropTypes.shape({
+    value: PropTypes.bool,
+  }).isRequired,
+};
 
 const BooleanProp = React.memo(BooleanPropFn);
 

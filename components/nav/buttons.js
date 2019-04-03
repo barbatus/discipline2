@@ -12,6 +12,7 @@ export class NavButton extends PureComponent {
     style: ViewPropTypes.style,
     iconStyle: Image.propTypes.style,
     icon: PropTypes.string.isRequired,
+    copilot: PropTypes.object,
     onPress: PropTypes.func,
   };
 
@@ -19,6 +20,7 @@ export class NavButton extends PureComponent {
     style: null,
     iconStyle: null,
     onPress: null,
+    copilot: null,
   };
 
   render() {

@@ -15,7 +15,7 @@ import { commonStyles } from '../styles/common';
 const styles = StyleSheet.create({
   headerContainer: {
     height: 64,
-    paddingTop: 10,
+    paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
     flexDirection: 'row',
@@ -69,11 +69,12 @@ export default class CommonModal extends PureComponent {
   }
 
   render() {
+    const { modalVisible } = this.state;
     return (
       <Modal
         animationType="slide"
         transparent={false}
-        visible={!!this.state.modalVisible}
+        visible={modalVisible}
       >
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={this.hide}>

@@ -269,7 +269,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         active={tracker.active}
         responsive={responsive}
         enabled={btnEnabled}
-        showMap={!!dist}
+        showMap={true}
         onStopBtn={this.onStopBtn}
         onStartBtn={this.onStartBtn}
         onShowMap={this.showMap}
@@ -292,7 +292,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         DIST_INTRVL,
       );
       distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
-    } catch ({ tracker: distTracker }) {
+    } catch ({ value: distTracker }) {
       distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
     }
   }
@@ -326,9 +326,12 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   async onStopBtn() {
     const { tracker } = this.props;
-    const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
-    distTracker.stop(this.onDistStop);
-    distTracker.events.off('onLatLonUpdate', this.onLatLonUpdate);
+    try {
+      const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
+      await distTracker.stop();
+      this.onDistStop();
+    } catch {}
+
     const timer = Timers.getOrCreate(tracker.id);
     timer.stop();
   }
@@ -338,13 +341,8 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     this.onStart(0, { time: 0, latlon: [] });
   }
 
-  onDistStop(latLon) {
-    if (latLon) {
-      const { dist, lat, lon } = latLon;
-      this.onStop(dist, { latlon: { lat, lon } });
-    } else {
-      this.onStop();
-    }
+  onDistStop() {
+    this.onStop();
   }
 
   onTimeUpdate(timeMs: number) {
