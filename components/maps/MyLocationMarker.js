@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View } from 'react-native';
 import { Marker } from 'react-native-maps';
@@ -72,73 +72,67 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class MyLocationMarker extends React.PureComponent {
-  static propTypes = {
-    enableHack: PropTypes.bool,
-  };
-
-  static defaultProps = {
-    enableHack: false,
-  };
-
-  geoWatcher: BGGeoLocationWatcher = null;
-
-  unwatch: Function = null;
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      coords: null,
-    };
-    this.onPosChange = ::this.onPosChange;
-  }
-
-  async componentDidMount() {
-    try {
-      const watcher = await BGGeoLocationWatcher.getOrCreate();
-      this.unwatch = watcher.on('position', this.onPosChange);
-      watcher.watchPos();
-      this.geoWatcher = watcher;
-      // eslint-disable-next-line no-empty
-    } catch {}
-  }
-
-  componentWillUnmount() {
-    if (this.geoWatcher) {
-      this.unwatch();
-      this.geoWatcher.stopWatch();
-    }
-  }
-
-  onPosChange({ coords }) {
-    this.setState({ coords });
-  }
-
-  render() {
-    const { coords } = this.state;
-    if (!coords) return null;
-
-    const { heading } = coords;
-    const rotate = heading >= 0 ? `${heading}deg` : null;
-
-    return (
-      <Marker {...this.props} anchor={ANCHOR} style={styles.mapMarker} coordinate={coords}>
-        <View style={styles.container}>
-          <View style={styles.markerHalo} />
-          {
-            rotate && (
-              <View style={[styles.heading, { transform: [{ rotate }] }]}>
-                <View style={styles.headingPointer} />
-              </View>
-            )
-          }
-          <View style={styles.marker}>
-            <Text style={{ width: 0, height: 0 }}>
-              {this.props.enableHack && rotate}
-            </Text>
-          </View>
-        </View>
-      </Marker>
-    );
-  }
+async function getGeoWatcher(callback, setCoords) {
+  const watcher = await BGGeoLocationWatcher.getOrCreate();
+  const unwatch = watcher.on('position', ({ coords }) => setCoords(coords));
+  watcher.watchPos();
+  callback(watcher, unwatch);
 }
+
+const MyLocationMarker = React.memo((props) => {
+  const [coords, setCoords] = useState(null);
+
+  if (props.coords !== coords) {
+    setCoords(props.coords);
+  }
+
+  useEffect(() => {
+    let geoWatcher = null;
+    let unsubscribe = null;
+    getGeoWatcher((watcher, unwatch) =>
+      { geoWatcher = watcher; unsubscribe = unwatch },
+      setCoords,
+    );
+    return () => {
+      if (geoWatcher) {
+        unsubscribe();
+        geoWatcher.stopWatch();
+      }
+    };
+  }, []);
+
+  if (!coords) return null;
+
+  const { heading } = coords;
+  const rotate = heading >= 0 ? `${heading}deg` : null;
+
+  return (
+    <Marker {...props} anchor={ANCHOR} style={styles.mapMarker} coordinate={coords}>
+      <View style={styles.container}>
+        <View style={styles.markerHalo} />
+        {
+          rotate && (
+            <View style={[styles.heading, { transform: [{ rotate }] }]}>
+              <View style={styles.headingPointer} />
+            </View>
+          )
+        }
+        <View style={styles.marker}>
+          <Text style={{ width: 0, height: 0 }}>
+            {props.enableHack && rotate}
+          </Text>
+        </View>
+      </View>
+    </Marker>
+  );
+});
+
+MyLocationMarker.propTypes = {
+  enableHack: PropTypes.bool,
+};
+  
+MyLocationMarker.defaultProps = {
+  enableHack: false,
+};
+
+export default MyLocationMarker;

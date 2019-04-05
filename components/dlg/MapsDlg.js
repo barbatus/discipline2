@@ -30,7 +30,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 export default class MapsDlg extends CommonModal {
   constructor(props) {
     super(props);
-
     const region = new MapView.AnimatedRegion({
       latitude: 0,
       longitude: 0,
@@ -43,11 +42,11 @@ export default class MapsDlg extends CommonModal {
       paths: [],
       region,
     };
-    this.setLocation = ::this.setLocation;
+    this.showLocation = ::this.showLocation;
   }
 
   get content() {
-    const { paths, region, settingLocation } = this.state;
+    const { paths, region, settingLocation, coords } = this.state;
 
     const polylines = paths.map((path) => (
       <MapView.Polyline
@@ -68,10 +67,10 @@ export default class MapsDlg extends CommonModal {
           showsMyLocationButton
         >
           {polylines}
-          <MyLocationMarker />
+          <MyLocationMarker coords={coords} />
         </MapView.Animated>
         <View style={mapStyles.buttonContainer}>
-          <TouchableOpacity style={mapStyles.button} onPress={this.setLocation}>
+          <TouchableOpacity style={mapStyles.button} onPress={this.showLocation}>
             {
               settingLocation ?
                 <ActivityIndicator size="small" /> :
@@ -83,7 +82,7 @@ export default class MapsDlg extends CommonModal {
     );
   }
 
-  async setLocation() {
+  async showLocation(moveToMyLocation: boolean) {
     const { region, settingLocation } = this.state;
     if (settingLocation) return;
 
@@ -91,32 +90,35 @@ export default class MapsDlg extends CommonModal {
     try {
       const watcher = await BGGeoLocationWatcher.getOrCreate();
       const pos = await watcher.getPos();
-      if (pos) {
+
+      if (moveToMyLocation) {
         const { latitude, longitude } = pos.coords;
         region.timing({ latitude, longitude }, 1000).start();
       }
-      this.setState({ settingLocation: false });
+      this.setState({ settingLocation: false, coords: pos.coords });
     } catch {
       this.setState({ settingLocation: false });
     }
   }
 
   async onBeforeShown(paths = []) {
-    this.setState({ paths });
+    const validPaths = paths.filter(path => Boolean(path.length));
+    this.setState({ paths: validPaths });
   }
 
   async onAfterShown(paths = []) {
-    const coords = flatten(paths);
-    const len = coords.length;
-    if (len === 0) {
-      this.setLocation();
-      return;
-    }
-
     const { region } = this.state;
-    const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
-    const longitude = coords.reduce((accum, p) => accum + p.longitude, 0) / len;
-    region.timing({ latitude, longitude }, 1000).start();
+    const validPaths = paths.filter(path => Boolean(path.length));
+    const coords = flatten(validPaths);
+    const len = coords.length;
+    const moveToMyLocation = len === 0;
+    this.showLocation(moveToMyLocation);
+
+    if (!moveToMyLocation) {
+      const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
+      const longitude = coords.reduce((accum, p) => accum + p.longitude, 0) / len;
+      region.timing({ latitude, longitude }, 1000).start();
+    }
 
     this.map.getNode().fitToCoordinates(coords, {
       edgePadding: DEFAULT_PADDING,

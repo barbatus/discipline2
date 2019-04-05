@@ -22,20 +22,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const BooleanPropFn = ({ input }) => (
+const BooleanProp = React.memo(({ input }) => (
   <Switch
     onValueChange={(value) => input.onChange(value)}
     value={!!input.value}
   />
-);
+));
 
-BooleanPropFn.propTypes = {
+BooleanProp.propTypes = {
   input: PropTypes.shape({
-    value: PropTypes.bool,
+    value: function(props, propName) {
+      if (typeof props[propName] === 'boolean' || props[propName] === '') {
+        return;
+      }
+      return new Error('Invalid property input.value');
+    },
   }).isRequired,
 };
-
-const BooleanProp = React.memo(BooleanPropFn);
 
 const TrackerPropFn = ({ prop }) => (
   <View style={propsStyles.row}>
@@ -104,7 +107,7 @@ export class TrackerEditView extends PureComponent {
   }
 
   renderPropsGroup() {
-    const { props } = this.props;
+    const { props, initialValues } = this.props;
     return (
       <View style={[propsStyles.group, styles.mainGroup]}>
         {

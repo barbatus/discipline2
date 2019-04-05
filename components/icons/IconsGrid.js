@@ -56,6 +56,31 @@ Icon.propTypes = {
   onIconChosen: PropTypes.func.isRequired,
 };
 
+function getColSize() {
+  let count = 5;
+
+  // For iPhone 5.
+  if (window.width <= 320) {
+    count = 4;
+  }
+
+  const pad = count * 0;
+  const width = Math.floor((window.width - pad) / count);
+
+  return { width, count };
+}
+
+function getIconRows(): Array<UserIcon[]> {
+  const icons = UserIconsStore.getAll();
+  const iconRows = [];
+  const { count } = getColSize();
+  for (let row = 0; row < icons.length; row += count) {
+    iconRows.push({ icons: icons.slice(row, row + count), key: String(row) });
+  }
+
+  return iconRows;
+}
+
 export default class IconsGrid extends PureComponent {
   static propTypes = {
     style: ViewPropTypes.style,
@@ -69,37 +94,12 @@ export default class IconsGrid extends PureComponent {
   constructor(props) {
     super(props);
     this.renderRow = this.renderRow.bind(this);
-  }
-
-  getIconRows(): Array<UserIcon[]> {
-    const icons = UserIconsStore.getAll();
-
-    const iconRows = [];
-    const { count } = this.getColSize();
-    for (let row = 0; row < icons.length; row += count) {
-      iconRows.push({ icons: icons.slice(row, row + count), key: String(row) });
-    }
-
-    return iconRows;
-  }
-
-  getColSize() {
-    let count = 5;
-
-    // For iPhone 5.
-    if (window.width <= 320) {
-      count = 4;
-    }
-
-    const pad = count * 0;
-    const width = Math.floor((window.width - pad) / count);
-
-    return { width, count };
+    this.rows = getIconRows();
   }
 
   renderIcon(icon: UserIcon) {
     const { onIconChosen } = this.props;
-    const { width } = this.getColSize();
+    const { width } = getColSize();
 
     return (
       <Icon
@@ -120,10 +120,9 @@ export default class IconsGrid extends PureComponent {
   }
 
   render() {
-    const rows = this.getIconRows();
     return (
       <FlatList
-        data={rows}
+        data={this.rows}
         renderItem={({ item }) => this.renderRow(item)}
         style={[styles.grid, this.props.style]}
       />

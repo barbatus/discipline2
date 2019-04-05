@@ -119,11 +119,11 @@ export default class TrackerSwiper extends TrackerRenderer {
     }
   }
 
-  showEdit(callback) {
+  showEdit(onStart, onDone) {
     this.responder.disable();
     this.setState({ scrollEnabled: false }, () => {
       const trackerId = this.current.id;
-      this.mapRefs.get(trackerId).showEdit(callback);
+      this.mapRefs.get(trackerId).showEdit(onStart, onDone);
     });
   }
 

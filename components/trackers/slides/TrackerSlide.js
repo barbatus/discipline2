@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Animated, ViewPropTypes } from 'react-native';
 
+import Animation from 'app/components/animation/Animation';
 import FlipAnimation from 'app/components/animation/FlipAnimation';
 import ScaleAnimation from 'app/components/animation/ScaleAnimation';
 
@@ -84,11 +85,14 @@ export default class TrackerSlide extends PureComponent {
     }
   }
 
-  showEdit(callback) {
+  showEdit(onStart, onDone) {
+    if (Animation.on) return;
+
+    caller(onStart);
     const { tracker } = this.props;
     Keyboard.dismiss();
     this.setState({ editTracker: tracker },
-      () => this.flip.animateIn(callback));
+      () => this.flip.animateIn(onDone));
   }
 
   cancelEdit(callback) {

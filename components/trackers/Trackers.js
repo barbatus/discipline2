@@ -118,8 +118,7 @@ export default class Trackers extends PureComponent {
   }
 
   onEdit(tracker: Tracker) {
-    this.swiper.showEdit();
-    caller(this.props.onEdit, tracker);
+    this.swiper.showEdit(() => caller(this.props.onEdit, tracker));
   }
 
   onRemove(tracker: Tracker) {

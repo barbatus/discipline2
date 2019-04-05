@@ -96,7 +96,9 @@ export default class TrackerView extends PureComponent {
           <View style={{ flex: 1 }}>
             <View style={trackerStyles.headerContainer}>
               <View style={trackerStyles.barContainer}>
-                <TouchableOpacity onPress={onEdit}>
+                <TouchableOpacity
+                  hitSlop={{ bottom: 15, left: 15 }}
+                  onPress={onEdit}>
                   <Image
                     source={getIcon('info')}
                     style={trackerStyles.infoIcon}

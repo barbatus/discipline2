@@ -39,6 +39,7 @@ export default class TrackerTypeSelect extends PureComponent {
     const errorText = error ? trackerStyles.errorText : null;
     return (
       <TouchableOpacity
+        hitSlop={{ top: 10, bottom: 10 }}
         style={propsStyles.colRight}
         onPress={onTypeSelect}
       >

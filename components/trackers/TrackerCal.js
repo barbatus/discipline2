@@ -36,7 +36,7 @@ export default class TrackerCal extends PureComponent {
 
   static getDerivedStateFromProps({ ticks, trackerType, metric }, prevState) {
     if (ticks !== prevState.ticks) {
-      return { ticksMap: combineTicksMonthly(ticks, trackerType, metric) };
+      return { ticksMap: combineTicksMonthly(ticks, trackerType, metric), ticks };
     }
     return null;
   }

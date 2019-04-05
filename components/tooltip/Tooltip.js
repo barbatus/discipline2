@@ -12,7 +12,7 @@ const ARROW_WIDTH = 25;
 
 const ARROW_HEIHGT = 10;
 
-const TOP_MARGIN = 15;
+const TOP_MARGIN = 10;
 
 const PADDING = 10;
 

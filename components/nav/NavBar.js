@@ -92,7 +92,7 @@ export default class NavBar extends PureComponent {
   }
 
   animateOpacity(value, callback) {
-    const anim = Animation.timing(this.btnOpacity, 500, value);
+    const anim = Animation.timing(this.btnOpacity, 250, value);
     Animation.animate([anim], callback);
   }
 

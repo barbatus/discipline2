@@ -11,11 +11,12 @@ function configureBackgroundGeolocation(callback) {
     reset: true,
     desiredAccuracy: 0,
     distanceFilter: 5,
-    stopOnTerminate: false,
+    stopOnTerminate: true,
     autoSync: false,
     stationaryRadius: 0,
     disableElasticity: true,
-    foregroundService: true,
+    isMoving: true,
+    preventSuspend: true,
     debug: true,
   }, callback);
 }
@@ -98,8 +99,7 @@ export default class BGGeoLocationWatcher {
   async watchPos() {
     return new Promise((resolve, reject) => {
       if (this.watching) {
-        resolve();
-        return;
+        return this.getPos({ samples: 1, maximumAge: 0 });
       }
 
       BackgroundGeolocation.changePace(true, () => {
@@ -138,12 +138,12 @@ export default class BGGeoLocationWatcher {
     });
   }
 
-  async getPos() {
+  async getPos(options) {
     return new Promise((resolve, reject) => {
       BackgroundGeolocation.getCurrentPosition(
-        BG_POS_OPT,
-        (pos) => resolve(pos),
-        (error) => reject(error),
+        { ...BG_POS_OPT, ...options},
+        (pos) => pos ? resolve(pos) : reject(new ValuedError(null, BGError.LOCATION_UNKNOWN)),
+        (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
       );
     });
   }

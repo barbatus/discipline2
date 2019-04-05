@@ -51,7 +51,7 @@ const TimeCol = styled(TextCol)`
 
 const TickText = styled.Text`
   color: #F5F5F5;
-  font-size: 15px;
+  font-weight: 300;
 `;
 
 const TimeText = styled(TickText)`
@@ -116,8 +116,14 @@ export default class Month extends PureComponent {
   }
 
   selectDate(day: number) {
+    const { selDateMs: curDateMs, tooltipShown: curTooltipShown } = this.state;    
     const { monthMs, ticks } = this.props;
     const selDateMs = moment(monthMs).date(day).valueOf();
+    if (curDateMs === selDateMs) {
+      this.setState({ tooltipShown: !curTooltipShown });
+      return;
+    }
+
     const tooltipShown = selDateMs ?
       ticks.has(moment(selDateMs).date() - 1) : false;
     this.setState({ selDateMs, tooltipShown });

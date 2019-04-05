@@ -45,6 +45,7 @@ export class DistanceTrackers {
   }
 
   async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon }) {
+    console.log('dist');
     await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
   }
 
@@ -120,6 +121,7 @@ export class DistanceTracker {
     this.stop();
     this.events.removeAllListeners('onLatLonUpdate');
     this.geoWatcher = null;
+    this.paths = null;
   }
 
   onPosChange(pos) {
@@ -161,7 +163,7 @@ export class DistanceTracker {
         lastStartDist: this.lastStartDist,
         lat: this.latLon.lat,
         lon: this.latLon.lon,
-        paths: this.paths,
+        paths: this.paths.slice(),
       };
     }
     return null;
