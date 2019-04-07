@@ -1,4 +1,5 @@
 /* @flow */
+import './polyfills'
 
 import App from './App';
 

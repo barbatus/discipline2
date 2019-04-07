@@ -1,5 +1,5 @@
 /* eslint no-underscore-dangle: 0 */
-import PouchDB from 'pouchdb-react-native';
+import PouchDB from '@craftzdog/pouchdb-core-react-native';
 import SQLite from 'react-native-sqlite-2';
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite';
 import Relational from 'relational-pouch';
@@ -71,9 +71,9 @@ db.createIndex({
   },
 });
 
-db.createIndex({
-  index: { fields: ['data.tracker', '_id'] },
-});
+// db.createIndex({
+//   index: { fields: ['data.tracker', '_id'] },
+// });
 
 db.createIndex({
   index: { fields: ['data.tick', '_id'] },

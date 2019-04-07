@@ -74,26 +74,6 @@ export default class Swiper extends PureComponent {
     return this.state.index;
   }
 
-  /*
-    setActiveDot(curInd: number, prevInd: number) {
-      if (this.refs[`page${prevInd}`]) {
-        this.refs[`page${prevInd}`].setNativeProps({
-          style: {
-            backgroundColor: stylesDef.basicDot.backgroundColor,
-          },
-        });
-      }
-
-      if (this.refs[`page${curInd}`]) {
-        this.refs[`page${curInd}`].setNativeProps({
-          style: {
-            backgroundColor: stylesDef.activeDot.backgroundColor,
-          },
-        });
-      }
-    }
-  */
-
   onSlideChange(index, previ, animated) {
     this.setState({ index });
     caller(this.props.onSlideChange, index, previ, animated);

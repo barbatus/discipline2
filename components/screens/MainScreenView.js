@@ -110,8 +110,13 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   startCopilot(delay: number, stepId: string) {
-    setTimeout(() => {
-      this.props.start(stepId);
+    return setTimeout(() => {
+      const { copilot } = this.props.app.props;
+      const step = CopilotStepEnum.fromValue(stepId);
+      const screen = getScreenByStep(step);
+      if (!(screen.value in copilot)) {
+        this.props.start(stepId);
+      }
     }, delay);
   }
 
@@ -154,10 +159,6 @@ export class MainScreenView extends ScrollScreenView {
     if (CopilotScreenEnum.EMPTY.value in copilot) return false;
 
     const firstStep = first(CopilotScreenEnum.EMPTY.steps);
-    if (this.slideIndex === 1) {
-      this.props.onCopilot(CopilotScreenEnum.EMPTY.value, firstStep.value);
-      return true;
-    }
     this.startCopilot(2000, firstStep.value);
     return true;
   }
