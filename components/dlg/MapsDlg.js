@@ -102,13 +102,13 @@ export default class MapsDlg extends CommonModal {
   }
 
   async onBeforeShown(paths = []) {
-    const validPaths = paths.filter(path => Boolean(path.length));
+    const validPaths = paths.filter((path) => Boolean(path.length));
     this.setState({ paths: validPaths });
   }
 
   async onAfterShown(paths = []) {
     const { region } = this.state;
-    const validPaths = paths.filter(path => Boolean(path.length));
+    const validPaths = paths.filter((path) => Boolean(path.length));
     const coords = flatten(validPaths);
     const len = coords.length;
     const moveToMyLocation = len === 0;

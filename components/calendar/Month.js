@@ -116,7 +116,7 @@ export default class Month extends PureComponent {
   }
 
   selectDate(day: number) {
-    const { selDateMs: curDateMs, tooltipShown: curTooltipShown } = this.state;    
+    const { selDateMs: curDateMs, tooltipShown: curTooltipShown } = this.state;
     const { monthMs, ticks } = this.props;
     const selDateMs = moment(monthMs).date(day).valueOf();
     if (curDateMs === selDateMs) {

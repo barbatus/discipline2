@@ -1,19 +1,24 @@
 import React, { PureComponent } from 'react';
-
 import PropTypes from 'prop-types';
-
 import { StyleSheet, View } from 'react-native';
 
 import NavBar from '../nav/NavBar';
-
-import { SCREEN_WIDTH, SCREEN_HEIGHT, NAV_HEIHGT } from '../styles/common';
+import {
+  OFFSET_TOP,
+  SCREEN_WIDTH,
+  WIN_HEIGHT,
+  NAV_HEIHGT,
+  CONTENT_TOP_MARGIN,
+} from '../styles/common';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
+    flex: 1,
+    top: OFFSET_TOP,
   },
   content: {
-    height: SCREEN_HEIGHT - NAV_HEIHGT,
+    top: CONTENT_TOP_MARGIN,
+    height: WIN_HEIGHT - NAV_HEIHGT,
     width: SCREEN_WIDTH,
   },
 });

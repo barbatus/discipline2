@@ -14,7 +14,7 @@ export default class TrackerCal extends PureComponent {
     metric: PropTypes.bool.isRequired,
     // TODO: if only ViewPropTypes.style left it curses
     // that opacity is not part of ViewPropTypes.style
-    style: PropTypes.object,
+    style: PropTypes.arrayOf(PropTypes.object),
     onDateSelect: PropTypes.func,
     shown: PropTypes.bool,
   };

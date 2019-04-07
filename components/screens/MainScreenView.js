@@ -154,6 +154,10 @@ export class MainScreenView extends ScrollScreenView {
     if (CopilotScreenEnum.EMPTY.value in copilot) return false;
 
     const firstStep = first(CopilotScreenEnum.EMPTY.steps);
+    if (this.slideIndex === 1) {
+      this.props.onCopilot(CopilotScreenEnum.EMPTY.value, firstStep.value);
+      return true;
+    }
     this.startCopilot(2000, firstStep.value);
     return true;
   }

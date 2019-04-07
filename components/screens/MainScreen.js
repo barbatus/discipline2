@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SideMenu from 'react-native-side-menu';
@@ -11,12 +11,7 @@ import IconsDlg from 'app/components/dlg/IconsDlg';
 import MapsDlg from 'app/components/dlg/MapsDlg';
 import TicksDlg from 'app/components/dlg/TicksDlg';
 
-import {
-  commonStyles as cs,
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-  MENU_WIDTH,
-} from 'app/components/styles/common';
+import { MENU_WIDTH } from 'app/components/styles/common';
 
 import Menu from '../nav/Menu';
 import GradientSlider from '../common/GradientSlider2';
@@ -24,14 +19,6 @@ import CopilotTooltip from '../copilot/Tooltip';
 
 import Screen from './Screen';
 import MainScreenView from './MainScreenView';
-
-const styles = StyleSheet.create({
-  background: {
-    position: 'absolute',
-    height: SCREEN_HEIGHT,
-    width: SCREEN_WIDTH,
-  },
-});
 
 export class MainScreen extends PureComponent {
   static propTypes = {
@@ -139,14 +126,11 @@ export class MainScreen extends PureComponent {
     if (!app) { return null; }
 
     return (
-      <>
-        <View style={styles.background}>
-          <GradientSlider
-            ref={(el) => (this.gradient = el)}
-            style={cs.absFilled}
-            slides={slides}
-          />
-        </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <GradientSlider
+          ref={(el) => (this.gradient = el)}
+          slides={slides}
+        />
         <SideMenu
           disableGestures
           menu={this.renderMenu()}
@@ -162,7 +146,7 @@ export class MainScreen extends PureComponent {
         <IconsDlg ref={(el) => (this.iconsDlg = el)} />
         <MapsDlg ref={(el) => (this.mapsDlg = el)} />
         <TicksDlg ref={(el) => (this.ticksDlg = el)} />
-      </>
+      </SafeAreaView>
     );
   }
 }

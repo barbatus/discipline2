@@ -40,20 +40,22 @@ export default class TrackerView extends PureComponent {
     style: PropTypes.object,
     bodyStyle: ViewPropTypes.style,
     footerStyle: ViewPropTypes.style,
-    tracker: PropTypes.instanceOf(Tracker),
-    onTap: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
+    tracker: PropTypes.instanceOf(Tracker).isRequired,
+    onTap: PropTypes.func,
+    onEdit: PropTypes.func,
     backImg: PropTypes.string,
     bodyControls: PropTypes.element.isRequired,
-    footerControls: PropTypes.element.isRequired,
+    footerControls: PropTypes.element,
   };
 
   static defaultProps = {
     style: null,
     bodyStyle: null,
     footerStyle: null,
-    tracker: null,
     backImg: null,
+    onTap: null,
+    onEdit: null,
+    footerControls: null,
   };
 
   getMainIcon(iconId) {
@@ -97,8 +99,9 @@ export default class TrackerView extends PureComponent {
             <View style={trackerStyles.headerContainer}>
               <View style={trackerStyles.barContainer}>
                 <TouchableOpacity
-                  hitSlop={{ bottom: 15, left: 15 }}
-                  onPress={onEdit}>
+                  hitSlop={{ bottom: 15, left: 15, right: 15 }}
+                  onPress={onEdit}
+                >
                   <Image
                     source={getIcon('info')}
                     style={trackerStyles.infoIcon}

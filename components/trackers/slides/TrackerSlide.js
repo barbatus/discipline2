@@ -12,6 +12,7 @@ import Tracker from 'app/model/Tracker';
 import { commonStyles } from 'app/components/styles/common';
 
 import { trackerStyles } from '../styles/trackerStyles';
+
 import TrackerView from './common/TrackerView';
 import TrackerEditView from './common/TrackerEditView';
 

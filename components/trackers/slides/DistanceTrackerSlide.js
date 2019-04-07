@@ -269,7 +269,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         active={tracker.active}
         responsive={responsive}
         enabled={btnEnabled}
-        showMap={true}
+        showMap={Boolean(dist)}
         onStopBtn={this.onStopBtn}
         onStartBtn={this.onStartBtn}
         onShowMap={this.showMap}
@@ -330,6 +330,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
       await distTracker.stop();
       this.onDistStop();
+      // eslint-disable-next-line no-empty
     } catch {}
 
     const timer = Timers.getOrCreate(tracker.id);

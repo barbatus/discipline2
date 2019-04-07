@@ -1,12 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Animated } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PropTypes from 'prop-types';
 
 import flatten from 'lodash/flatten';
 import times from 'lodash/times';
 
-import { commonDef, SCREEN_WIDTH } from '../styles';
+import { commonDef, WIN_HEIGHT, SCREEN_WIDTH } from '../styles';
+
+const styles = StyleSheet.create({
+  background: {
+    position: 'absolute',
+    height: WIN_HEIGHT,
+  },
+});
 
 const COLORS = [
   '#60C2E3',
@@ -59,20 +66,16 @@ export default class GradientSlider extends PureComponent {
   render() {
     const width = this.slides * SCREEN_WIDTH;
     const grads = this.getGrad(this.slides);
+    const style = [styles.background, {
+      width, transform: [{ translateX: this.move }],
+    }];
     return (
-      <Animated.View
-        style={[
-          commonDef.absFilled, {
-            width,
-            transform: [{ translateX: this.move }],
-          },
-        ]}
-      >
+      <Animated.View style={style}>
         <LinearGradient
           start={{ x: 0.0, y: 0.5 }}
           end={{ x: 1.0, y: 0.5 }}
           colors={grads}
-          style={commonDef.absFilled}
+          style={commonDef.flexFilled}
         />
       </Animated.View>
     );

@@ -1,3 +1,5 @@
+/*  eslint no-undef: 0 */
+
 import {
   Tracker as DBTracker,
   Tick as DBTick,
@@ -119,7 +121,7 @@ export class DistanceTracker extends Tracker {
     ];
   }
 
-  static defaultValues(data?: $Subtype<NewTracker>) {
+  static defaultValues(data?: $Shape<NewTracker>) {
     return {
       active: false,
       props: { alerts: false, showSpeed: false },

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Animated, InteractionManager, ViewPropTypes } from 'react-native';
+import { StyleSheet, Animated, InteractionManager, ViewPropTypes, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { submit } from 'redux-form';
@@ -32,7 +32,8 @@ import {
 
 import TrackerCal from '../trackers/TrackerCal';
 import Trackers from '../trackers/Trackers';
-import { commonStyles } from '../styles/common';
+import DummyTrackerSlide from '../trackers/slides/DummyTrackerSlide';
+import { commonStyles, CONTENT_HEIGHT, SCREEN_WIDTH } from '../styles/common';
 
 const MONTH_NAMES = [
   'January',
@@ -51,6 +52,15 @@ const MONTH_NAMES = [
 
 const styles = StyleSheet.create({
   navTitle: { fontSize: 19, fontWeight: '200' },
+  calc: {
+    ...commonStyles.absFilled,
+    height: CONTENT_HEIGHT / 2,
+    top: 0,
+  },
+  trackersContainer: {
+    height: CONTENT_HEIGHT,
+    width: SCREEN_WIDTH,
+  },
 });
 
 class TrackersView extends PureComponent {
@@ -296,10 +306,10 @@ class TrackersView extends PureComponent {
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
     const { current, calShown } = this.state;
-    const calcStyle = { ...commonStyles.absFilled, top: 0, opacity: this.calcOpacity };
 
-    if (!current) { return null; }
+    if (!current) { return <DummyTrackerSlide />; }
 
+    const calcStyle = { opacity: this.calcOpacity, zIndex: calShown ? 1 : 0 };
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
@@ -308,32 +318,34 @@ class TrackersView extends PureComponent {
           shown={calShown}
           metric={app.props.metric}
           trackerType={current ? current.type : null}
-          style={calcStyle}
+          style={[styles.calc, calcStyle]}
           onMonthChanged={this.onMonthChanged}
           onTooltipClick={this.onTooltipClick}
         />
-        <Trackers
-          ref={(el) => (this.trackers = el)}
-          {...this.props}
-          style={commonStyles.flexFilled}
-          metric={app.props.metric}
-          onRemove={this.onRemove}
-          onRemoveCompleted={this.onRemoveCompleted}
-          onEdit={this.onStartEdit}
-          onCancel={onCancel}
-          onSaveCompleted={this.onSaveCompleted}
-          onSwiperScaleMove={this.onSwiperScaleMove}
-          onSwiperScaleDone={this.onSwiperScaleDone}
-          onSwiperShown={this.onSwiperShown}
-          onSwiperMoveDown={this.onSwiperMoveDown}
-          onSwiperMoveDownStart={this.onSwiperMoveDownStart}
-          onSwiperMoveDownDone={this.onSwiperMoveDownDone}
-          onSwiperMoveDownCancel={onMoveDownCancel}
-          onSwiperMoveUpStart={onMoveUp}
-          onSwiperMoveUpDone={this.onSwiperMoveUpDone}
-          onTrackerEdit={this.onTrackerEdit}
-          onSlideChange={this.onSlideChange}
-        />
+        <View style={styles.trackersContainer}>
+          <Trackers
+            ref={(el) => (this.trackers = el)}
+            {...this.props}
+            style={commonStyles.flexFilled}
+            metric={app.props.metric}
+            onRemove={this.onRemove}
+            onRemoveCompleted={this.onRemoveCompleted}
+            onEdit={this.onStartEdit}
+            onCancel={onCancel}
+            onSaveCompleted={this.onSaveCompleted}
+            onSwiperScaleMove={this.onSwiperScaleMove}
+            onSwiperScaleDone={this.onSwiperScaleDone}
+            onSwiperShown={this.onSwiperShown}
+            onSwiperMoveDown={this.onSwiperMoveDown}
+            onSwiperMoveDownStart={this.onSwiperMoveDownStart}
+            onSwiperMoveDownDone={this.onSwiperMoveDownDone}
+            onSwiperMoveDownCancel={onMoveDownCancel}
+            onSwiperMoveUpStart={onMoveUp}
+            onSwiperMoveUpDone={this.onSwiperMoveUpDone}
+            onTrackerEdit={this.onTrackerEdit}
+            onSlideChange={this.onSlideChange}
+          />
+        </View>
       </Animated.View>
     );
   }

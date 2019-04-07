@@ -97,9 +97,11 @@ export default class BGGeoLocationWatcher {
   }
 
   async watchPos() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (this.watching) {
-        return this.getPos({ samples: 1, maximumAge: 0 });
+        const pos = await this.getPos({ samples: 1, maximumAge: 0 });
+        resolve(pos);
+        return;
       }
 
       BackgroundGeolocation.changePace(true, () => {
@@ -141,7 +143,7 @@ export default class BGGeoLocationWatcher {
   async getPos(options) {
     return new Promise((resolve, reject) => {
       BackgroundGeolocation.getCurrentPosition(
-        { ...BG_POS_OPT, ...options},
+        { ...BG_POS_OPT, ...options },
         (pos) => pos ? resolve(pos) : reject(new ValuedError(null, BGError.LOCATION_UNKNOWN)),
         (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
       );

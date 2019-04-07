@@ -1,3 +1,5 @@
+/* eslint react/no-multi-comp: 0 */
+
 import React, { PureComponent } from 'react';
 import {
   View,
@@ -31,9 +33,9 @@ const BooleanProp = React.memo(({ input }) => (
 
 BooleanProp.propTypes = {
   input: PropTypes.shape({
-    value: function(props, propName) {
+    value: (props, propName) => {
       if (typeof props[propName] === 'boolean' || props[propName] === '') {
-        return;
+        return null;
       }
       return new Error('Invalid property input.value');
     },
@@ -107,7 +109,7 @@ export class TrackerEditView extends PureComponent {
   }
 
   renderPropsGroup() {
-    const { props, initialValues } = this.props;
+    const { props } = this.props;
     return (
       <View style={[propsStyles.group, styles.mainGroup]}>
         {

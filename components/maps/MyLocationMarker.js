@@ -89,10 +89,10 @@ const MyLocationMarker = React.memo((props) => {
   useEffect(() => {
     let geoWatcher = null;
     let unsubscribe = null;
-    getGeoWatcher((watcher, unwatch) =>
-      { geoWatcher = watcher; unsubscribe = unwatch },
-      setCoords,
-    );
+    getGeoWatcher((watcher, unwatch) => {
+      geoWatcher = watcher;
+      unsubscribe = unwatch;
+    }, setCoords);
     return () => {
       if (geoWatcher) {
         unsubscribe();
@@ -129,10 +129,16 @@ const MyLocationMarker = React.memo((props) => {
 
 MyLocationMarker.propTypes = {
   enableHack: PropTypes.bool,
+  coords: PropTypes.shape({
+    heading: PropTypes.number,
+    latitude: PropTypes.number,
+    longitude: PropTypes.number,
+  }),
 };
-  
+
 MyLocationMarker.defaultProps = {
   enableHack: false,
+  coords: null,
 };
 
 export default MyLocationMarker;

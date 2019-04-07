@@ -45,7 +45,6 @@ export class DistanceTrackers {
   }
 
   async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon }) {
-    console.log('dist');
     await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
   }
 
