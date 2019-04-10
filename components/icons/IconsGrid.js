@@ -9,12 +9,11 @@ import {
   Image,
   ViewPropTypes,
 } from 'react-native';
-import Dimensions from 'Dimensions';
 import PropTypes from 'prop-types';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
-const window = Dimensions.get('window');
+import { IS_IPHONE5, SCREEN_WIDTH } from '../styles/common';
 
 const styles = StyleSheet.create({
   grid: {
@@ -57,15 +56,9 @@ Icon.propTypes = {
 };
 
 function getColSize() {
-  let count = 5;
-
-  // For iPhone 5.
-  if (window.width <= 320) {
-    count = 4;
-  }
-
+  const count = IS_IPHONE5 ? 4 : 5;
   const pad = count * 0;
-  const width = Math.floor((window.width - pad) / count);
+  const width = Math.floor((SCREEN_WIDTH - pad) / count);
 
   return { width, count };
 }
@@ -113,7 +106,7 @@ export default class IconsGrid extends PureComponent {
 
   renderRow(row) {
     return (
-      <View style={styles.row}>
+      <View key={row.key} style={styles.row}>
         {row.icons.map((icon) => this.renderIcon(icon))}
       </View>
     );

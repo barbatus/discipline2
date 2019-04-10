@@ -1,6 +1,5 @@
 /* @flow */
-import './polyfills'
-
+import './polyfills';
 import App from './App';
 
 export default App;

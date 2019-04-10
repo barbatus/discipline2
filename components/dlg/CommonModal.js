@@ -1,18 +1,16 @@
 import check from 'check-types';
-
 import React, { PureComponent } from 'react';
-
-import {
-  StyleSheet,
-  View,
-  Modal,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import Modal from 'react-native-modal';
 
 import { commonStyles } from '../styles/common';
 
 const styles = StyleSheet.create({
+  modal: {
+    backgroundColor: 'white',
+    margin: 0,
+    height: 0,
+  },
   headerContainer: {
     height: 64,
     paddingTop: 15,
@@ -36,8 +34,10 @@ export default class CommonModal extends PureComponent {
     super(props);
     this.state = {
       modalVisible: false,
+      modalInit: false,
     };
     this.hide = ::this.hide;
+    this.onModalShown = ::this.onModalShown;
   }
 
   get content() {
@@ -51,6 +51,10 @@ export default class CommonModal extends PureComponent {
   onBeforeHidden() {}
 
   onAfterHidden() {}
+
+  onModalShown() {
+    this.setState({ modalInit: true });
+  }
 
   show(...args) {
     check.assert.like(this.state.modalVisible, true, 'Dlg already shown');
@@ -69,12 +73,14 @@ export default class CommonModal extends PureComponent {
   }
 
   render() {
-    const { modalVisible } = this.state;
+    const { modalVisible, modalInit } = this.state;
     return (
       <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
+        style={styles.modal}
+        isVisible={modalVisible}
+        hasBackdrop={false}
+        hideModalContentWhileAnimating
+        onModalShow={this.onModalShown}
       >
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={this.hide}>
@@ -84,7 +90,7 @@ export default class CommonModal extends PureComponent {
           </TouchableOpacity>
         </View>
         <View style={commonStyles.flexFilled}>
-          {this.content}
+          {modalInit ? this.content : null}
         </View>
       </Modal>
     );

@@ -3,7 +3,7 @@ import { View, StyleSheet, findNodeHandle, TouchableOpacity } from 'react-native
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 
 import { caller, int } from 'app/utils/lang';
@@ -27,10 +27,17 @@ const styles = StyleSheet.create({
   },
   tooltipContent: {
     flex: 1,
-    padding: 10,
+    padding: 12.5,
     flexWrap: 'nowrap',
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  tooltipLinkIcon: {
+    position: 'absolute',
+    right: 1,
+    top: 1,
+    color: '#F5F5F5',
+    opacity: 0.8,
   },
 });
 
@@ -167,6 +174,11 @@ export default class Month extends PureComponent {
               {tickDescs}
             </TextCol>
           </View>
+          <Icon
+            name="arrow-top-right-bold-outline"
+            size={15}
+            style={styles.tooltipLinkIcon}
+          />
         </TouchableOpacity>
       </Tooltip>
     );

@@ -53,9 +53,10 @@ export default class Depot {
   }
 
   async loadTrackers(trackers: Tracker[]): Promise<Tracker[]> {
-    const allTicks = await Promise.all(trackers.map((tracker) => (
-      this.getTrackerTicks(tracker.id, time.getDateMs())
-    )));
+    const allTicks = await Promise.all(trackers.map((tracker) => {
+      const fromTimeMs = tracker.active ? time.getYesterdayMs() : time.getDateMs();
+      return this.getTrackerTicks(tracker.id, fromTimeMs);
+    }));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
       active: false,

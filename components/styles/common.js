@@ -31,9 +31,7 @@ export const commonStyles = StyleSheet.create({
   ...commonDef,
 });
 
-export function isPhone5() {
-  return window.width <= 320;
-}
+export const IS_IPHONE5 = window.width <= 320;
 
 export const HINT_COLOR = '#DFDFDF';
 

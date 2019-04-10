@@ -49,6 +49,7 @@
     "react-native-gesture-handler": "^1.1.0",
     "react-native-linear-gradient": "2.4.0",
     "react-native-maps": "^0.23.0",
+    "react-native-modal": "^9.0.0",
     "react-native-navbar": "^2.1.0",
     "react-native-shake": "^3.2.2",
     "react-native-side-menu": "^1.1.3",

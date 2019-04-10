@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     color: '#27ae60',
   },
   bottomBar: {
-    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
@@ -58,7 +57,7 @@ const Tooltip = ({
       <View style={styles.tooltipContainer}>
         <Text style={styles.tooltipText}>{currentStep.text}</Text>
       </View>
-      <View style={[styles.bottomBar]}>
+      <View style={styles.bottomBar}>
         {
           !isLastStep ? (
             <TouchableOpacity onPress={handleStop}>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  Alert,
   View,
   TouchableOpacity,
   Image,
@@ -15,7 +16,7 @@ import Keyboard from 'app/utils/keyboard';
 
 import { caller } from 'app/utils/lang';
 
-import { isPhone5 } from 'app/components/styles/common';
+import { IS_IPHONE5 } from 'app/components/styles/common';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
 
@@ -25,13 +26,13 @@ import TrackerSlide from './TrackerSlide';
 
 const WIDGET_WIDTH = slideWidth - 40;
 
-const FONT_SIZE = isPhone5() ? 40 : 50;
+const FONT_SIZE = IS_IPHONE5 ? 40 : 50;
 
-const BTN_SIZE = isPhone5() ? 40 : 45;
+const BTN_SIZE = IS_IPHONE5 ? 40 : 45;
 
 const INPUT_WIDTH = WIDGET_WIDTH;
 
-const INPUT_HEIGHT = isPhone5() ? 50 : 60;
+const INPUT_HEIGHT = IS_IPHONE5 ? 50 : 60;
 
 const styles = StyleSheet.create({
   controlsContainer: {
@@ -111,7 +112,23 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   shake() {
-    caller(this.props.onUndo);
+    const { tracker } = this.props;
+    if (tracker.lastTick) {
+      Alert.alert('Do you want to undo?', null,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            style: 'ok',
+            onPress: () => caller(this.props.onUndo),
+          },
+        ],
+        { cancelable: false },
+      );
+    }
   }
 
   onTap() {
