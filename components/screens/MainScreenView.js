@@ -29,6 +29,8 @@ export class MainScreenView extends ScrollScreenView {
 
   isActive = false;
 
+  hTimers = {};
+
   constructor(props) {
     super(props);
 
@@ -148,6 +150,7 @@ export class MainScreenView extends ScrollScreenView {
     const { copilot } = this.props.app.props;
     if (!(CopilotScreenEnum.EMPTY.value in copilot)) {
       const firstStep = first(CopilotScreenEnum.EMPTY.steps);
+      clearTimeout(this.hTimers[firstStep.value]);
       this.props.onCopilot(CopilotScreenEnum.EMPTY.value, firstStep.value);
     }
   }
@@ -159,7 +162,7 @@ export class MainScreenView extends ScrollScreenView {
     if (CopilotScreenEnum.EMPTY.value in copilot) return false;
 
     const firstStep = first(CopilotScreenEnum.EMPTY.steps);
-    this.startCopilot(2000, firstStep.value);
+    this.hTimers[firstStep.value] = this.startCopilot(2000, firstStep.value);
     return true;
   }
 
@@ -172,7 +175,7 @@ export class MainScreenView extends ScrollScreenView {
       this.props.onCopilot(CopilotScreenEnum.CREATE_TRACKER.value, firstStep.value);
       return false;
     }
-    this.startCopilot(500, firstStep.value);
+    this.hTimers[firstStep.value] = this.startCopilot(500, firstStep.value);
     return true;
   }
 

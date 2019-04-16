@@ -4,30 +4,23 @@ import {
   Tracker as DBTracker,
   Tick as DBTick,
   type TrackerId,
-  NewTracker,
   type PropType,
+  NewTracker,
 } from 'app/depot/interfaces';
 import { TrackerType, DEFAULT_TRACKER_PROPS } from 'app/depot/consts';
-
 import UserIconsStore from 'app/icons/UserIconsStore';
 
 export class Tick implements DBTick {
   id: string;
 
-  dateTimeMs: number;
+  createdAt: number;
 
   value: number;
 
   data: ?Object;
 
   constructor(tick: DBTick) {
-    this.id = tick.id;
-    this.dateTimeMs = tick.dateTimeMs;
-    this.value = tick.value;
-    this.data = tick.data;
-    this.time = tick.time;
-    this.latlon = tick.latlon;
-    this.active = tick.active;
+    Object.assign(this, tick);
   }
 }
 
@@ -62,13 +55,8 @@ export default class Tracker implements DBTracker {
   }
 
   constructor(tracker: DBTracker) {
-    this.id = tracker.id;
-    this.title = tracker.title;
-    this.iconId = tracker.iconId;
-    this.typeId = tracker.typeId;
+    Object.assign(this, tracker);
     this.ticks = mapTicks(tracker.ticks);
-    this.props = tracker.props;
-    this.active = tracker.active;
   }
 
   get type() {
@@ -108,6 +96,22 @@ export default class Tracker implements DBTracker {
     const len = this.ticks.length;
     if (!len) return null;
     return this.ticks[len - 1].value;
+  }
+}
+
+export class SumTracker extends Tracker {
+  static get properties() {
+    return [
+      ...Tracker.properties,
+      { propId: 'showBuck', name: 'Show $ Sign' },
+    ];
+  }
+
+  static defaultValues(data?: $Shape<NewTracker>) {
+    return {
+      props: { alerts: false, showBuck: false },
+      ...data,
+    };
   }
 }
 

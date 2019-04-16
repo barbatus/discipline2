@@ -3,6 +3,7 @@ import last from 'lodash/last';
 import time from 'app/time/utils';
 
 import depot from '../depot/depot';
+
 import { Tick, mapTicks } from './Tracker';
 import Trackers from './Trackers';
 
@@ -84,8 +85,8 @@ export const updateTracker = (tracker) => (dispatch) => (
 export const TICK_TRACKER = 'TICK_TRACKER';
 
 export const tickTracker = (tracker, value, data) => async (dispatch) => {
-  const dateTimeMs = time.getDateTimeMs();
-  const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
+  const createdAt = time.getNowMs();
+  const tick = await depot.addTick(tracker.id, createdAt, value, data);
   return dispatch({
     type: TICK_TRACKER,
     tracker,
@@ -96,10 +97,10 @@ export const tickTracker = (tracker, value, data) => async (dispatch) => {
 export const START_TRACKER = 'START_TRACKER';
 
 export const startTracker = (tracker, value, data) => async (dispatch) => {
-  const dateTimeMs = time.getDateTimeMs();
+  const createdAt = time.getNowMs();
   const startedTracker = Trackers.clone(tracker, { active: true });
   const updTracker = await depot.updateTracker(startedTracker);
-  const tick = await depot.addTick(tracker.id, dateTimeMs, value, data);
+  const tick = await depot.addTick(tracker.id, createdAt, value, data);
   return dispatch({
     type: START_TRACKER,
     tracker: updTracker,
@@ -163,7 +164,7 @@ export const completeChange = (index) => ({
 export const CHANGE_DAY = 'CHANGE_DAY';
 
 export const changeDay = () => async (dispatch) => {
-  const trackers = await depot.loadTrackers();
+  const trackers = await depot.getTrackers();
   return dispatch({
     type: CHANGE_DAY,
     trackers,

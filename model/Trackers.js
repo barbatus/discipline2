@@ -2,16 +2,16 @@ import { TrackerType } from '../depot/consts';
 import { Tracker as DBTracker } from '../depot/interfaces';
 import depot from '../depot/depot';
 
-import Tracker, { DistanceTracker } from './Tracker';
+import Tracker, { DistanceTracker, SumTracker } from './Tracker';
 
 export default class Trackers {
-  static getAll() {
-    const trackers = depot.loadTrackers();
-    return trackers.map((trackDoc) => this.create(trackDoc));
+  static async getAll() {
+    const app = await depot.getApp();
+    return app.trackers.map((trackDoc) => this.create(trackDoc));
   }
 
-  static getOne(trackId: number) {
-    const trackDoc = depot.getTracker(trackId);
+  static async getOne(trackId: number) {
+    const trackDoc = await depot.getTracker(trackId);
     return this.create(trackDoc);
   }
 
@@ -20,8 +20,8 @@ export default class Trackers {
     return this.create(trackDoc);
   }
 
-  static addAt(tracker: Tracker, index) {
-    const trackDoc = depot.addTrackerAt(tracker, index);
+  static async addAt(tracker: Tracker, index) {
+    const trackDoc = await depot.addTrackerAt(tracker, index);
     return this.create(trackDoc);
   }
 
@@ -34,6 +34,8 @@ export default class Trackers {
     switch (type) {
       case TrackerType.DISTANCE.valueOf():
         return new DistanceTracker(tracker);
+      case TrackerType.SUM.valueOf():
+        return new SumTracker(tracker);
       default:
         return new Tracker(tracker);
     }

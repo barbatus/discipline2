@@ -17,6 +17,13 @@ export type AppProps = { alerts: boolean; copilot: Copilot };
 export interface App {
   ver: string;
   props: AppProps;
+  trackers: Array<Tracker>;
+}
+
+export interface RawApp {
+  ver: string;
+  props: AppProps;
+  trackers: Array<string>;
 }
 
 export type PropType = {
@@ -30,6 +37,7 @@ export interface Tracker {
   iconId: string;
   active: boolean;
   ticks?: Array<Tick>;
+  notifications?: Array<Notification>;
   props: Array<PropType>;
 }
 
@@ -44,8 +52,13 @@ export type PlainTick = Tick & PropType;
 
 export interface Tick {
   id: string;
-  dateTimeMs: number;
+  createdAt: number;
   value: number;
   data: any;
   [key: $Values<typeof TrackerToPropType>]: Object;
+}
+
+export interface Notification {
+  id: string;
+  createdAt: number;
 }

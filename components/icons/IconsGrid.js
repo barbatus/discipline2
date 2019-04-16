@@ -63,6 +63,8 @@ function getColSize() {
   return { width, count };
 }
 
+UserIconsStore.preloadAll();
+
 function getIconRows(): Array<UserIcon[]> {
   const icons = UserIconsStore.getAll();
   const iconRows = [];
@@ -86,8 +88,8 @@ export default class IconsGrid extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.renderRow = this.renderRow.bind(this);
     this.rows = getIconRows();
+    this.renderRow = this.renderRow.bind(this);
   }
 
   renderIcon(icon: UserIcon) {

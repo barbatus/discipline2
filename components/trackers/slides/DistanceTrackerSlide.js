@@ -14,7 +14,7 @@ import slowlog from 'react-native-slowlog';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import { formatDistance, formatSpeed } from 'app/utils/format';
 import UserIconsStore from 'app/icons/UserIconsStore';
-import { DistanceTracker as Tracker } from 'app/model/Tracker';
+import { DistanceTracker } from 'app/model/Tracker';
 import DistanceTrackers, { Timers } from 'app/model/DistanceTrackers';
 import { BGError } from 'app/geo/BGGeoLocationWatcher';
 
@@ -221,7 +221,7 @@ const TIME_INTRVL_MS = 1000; // ms
 export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   static propTypes = {
     responsive: PropTypes.bool,
-    tracker: PropTypes.instanceOf(Tracker).isRequired,
+    tracker: PropTypes.instanceOf(DistanceTracker).isRequired,
     metric: PropTypes.bool.isRequired,
   };
 
@@ -278,7 +278,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   get trackerProps() {
-    return Tracker.properties;
+    return DistanceTracker.properties;
   }
 
   async componentDidMount() {

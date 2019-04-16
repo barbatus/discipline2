@@ -7,10 +7,9 @@ import isObject from 'lodash/isObject';
 import has from 'lodash/has';
 import omit from 'lodash/omit';
 
-import time from 'app/time/utils';
-
 import { TrackerToPropType } from '../consts';
 import { type PlainTick, Tick, Tracker } from '../interfaces';
+
 import db from './db';
 
 type PouchTick = { ...Tick, tracker: Tracker };
@@ -21,11 +20,11 @@ class Ticks {
   }
 
   async getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number): Promise<Tick[]> {
-    return db.selectBy('tick', 'tracker', trackId, 'dateTimeMs', minDateMs, maxDateMs);
+    return db.selectBy('tick', 'tracker', trackId, 'createdAt', minDateMs, maxDateMs);
   }
 
   async add(
-    tick: { tracker: Tracker, dateTimeMs: number, value?: number },
+    tick: { tracker: Tracker, createdAt: number, value?: number },
     data?: Object,
   ): Promise<Tick> {
     const newTick = Object.assign({}, tick);
@@ -37,11 +36,15 @@ class Ticks {
     return db.save('tick', newTick);
   }
 
-  async getLast(trackId: string): Promise<Tick> {
+  async getLastOne(trackId: string): Promise<Tick> {
     check.assert.string(trackId);
 
-    const ticks = await this.getForPeriod(trackId, time.getDateMs());
-    return ticks[ticks.length - 1];
+    const tick = await db.selectOrderBy('tick', 'tracker', trackId, 'createdAt');
+    return tick[0];
+  }
+
+  async getLastWithLimit(trackId: string, limit: number): Promise<Notification[]> {
+    return db.selectOrderBy('tick', 'tracker', trackId, 'createdAt', limit);
   }
 
   async update(tick: PouchTick, value: number, data?: Object) {

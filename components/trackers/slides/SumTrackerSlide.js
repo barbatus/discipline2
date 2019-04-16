@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Alert,
   View,
@@ -9,17 +8,15 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
-
 import Keyboard from 'app/utils/keyboard';
-
 import { caller } from 'app/utils/lang';
-
 import { IS_IPHONE5 } from 'app/components/styles/common';
+import { SumTracker } from 'app/model/Tracker';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
-
 import { slideWidth } from '../styles/slideStyles';
 
 import TrackerSlide from './TrackerSlide';
@@ -85,10 +82,18 @@ const styles = StyleSheet.create({
 });
 
 export default class SumTrackerSlide extends TrackerSlide {
+  static propTypes = {
+    tracker: PropTypes.instanceOf(SumTracker).isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.onPlus = ::this.onPlus;
     this.onChangeText = ::this.onChangeText;
+  }
+
+  get trackerProps() {
+    return SumTracker.properties;
   }
 
   cancelEdit(callback) {
@@ -165,7 +170,7 @@ export default class SumTrackerSlide extends TrackerSlide {
         <View style={styles.textContainer}>
           <Text style={styles.sumText}>=</Text>
           <Text style={styles.sumText}>
-            $
+            { tracker.props.showBuck ? '$' : null }
             {tracker.value}
           </Text>
         </View>

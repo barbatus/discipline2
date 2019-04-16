@@ -98,7 +98,9 @@ export default class TrackerSlide extends PureComponent {
 
   cancelEdit(callback) {
     Keyboard.dismiss();
-    this.flip.animateOut(callback);
+    this.flip.animateOut(() => {
+      this.setState({ editTracker: null }, callback);
+    });
   }
 
   collapse(callback) {

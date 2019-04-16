@@ -23,7 +23,7 @@ class Ticks {
     const ticks = db.objects('Tick');
     return ticks
       .filtered(`trackId = ${trackId}`)
-      .sorted('dateTimeMs')
+      .sorted('createdAt')
       .map((tick) => tick);
   }
 
@@ -32,13 +32,13 @@ class Ticks {
     check.assert.number(minDateMs);
 
     const ticks = db.objects('Tick');
-    let query = `trackId = ${trackId} AND dateTimeMs >= ${minDateMs}`;
+    let query = `trackId = ${trackId} AND createdAt >= ${minDateMs}`;
     if (maxDateMs) {
-      query = `${query} AND dateTimeMs < ${maxDateMs}`;
+      query = `${query} AND createdAt < ${maxDateMs}`;
     }
 
     return ticks.filtered(query)
-      .sorted('dateTimeMs')
+      .sorted('createdAt')
       .map((tick) => tick);
   }
 

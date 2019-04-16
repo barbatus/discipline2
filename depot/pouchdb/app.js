@@ -2,23 +2,24 @@
 
 import db from './db';
 
-import { App as IApp, Tracker, NewTracker } from '../interfaces';
+import { App, RawApp, Tracker, NewTracker } from '../interfaces';
+
 import trackersDB from './trackers';
 
-class App {
+class AppDB {
   async create(ver: string, props: any) {
     return db.save('app', { ver, props, trackers: [] });
   }
 
-  async update(app: IApp) {
+  async update(app: RawApp) {
     return db.save('app', app);
   }
 
-  async get() {
+  async get(): Promise<App> {
     return db.findOne('app');
   }
 
-  async getRaw() {
+  async getRaw(): Promise<RawApp> {
     return db.findOneRaw('app');
   }
 
@@ -72,4 +73,4 @@ class App {
   }
 }
 
-export default new App();
+export default new AppDB();

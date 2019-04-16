@@ -68,7 +68,7 @@ const TickSchema = {
       type: 'int',
       indexed: true,
     },
-    dateTimeMs: {
+    createdAt: {
       type: 'int',
       indexed: true,
     },

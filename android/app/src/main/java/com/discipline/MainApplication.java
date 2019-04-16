@@ -3,6 +3,11 @@ package com.discipline;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.RNThreadPackage;
+import co.apptailor.Worker.BaseReactPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.wix.reactnativenotifications.RNNotificationsPackage;
+import io.realm.react.RealmReactPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
@@ -92,6 +97,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNThreadPackage(),
+            new BaseReactPackage(),
+            new VectorIconsPackage(),
+            new RNNotificationsPackage(),
+            new RealmReactPackage(),
             new BackgroundTimerPackage(),
             new RNGestureHandlerPackage(),
             new RNBackgroundFetchPackage(),

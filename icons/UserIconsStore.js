@@ -1,5 +1,6 @@
-import UserIcons from './userIcons';
+import { Image } from 'react-native';
 
+import UserIcons from './userIcons';
 import { IconSize } from './consts';
 
 export class UserIcon {
@@ -31,5 +32,16 @@ export default class UserIconsStore {
 
   static getAll(): Array<UserIcon> {
     return UserIcons.symbols().map((icon) => new UserIcon(icon));
+  }
+
+  static async preloadAll() {
+    const icons = UserIconsStore.getAll();
+    return Promise.all(icons.map((icon) => {
+      const img = {
+        ...Image.resolveAssetSource(icon.png),
+        cache: 'force-cache',
+      };
+      return Image.prefetch(img);
+    }));
   }
 }

@@ -88,7 +88,7 @@ export default class Month extends PureComponent {
     };
     this.dayWidth = 0;
     this.dayHeight = 0;
-    this.selectDate = ::this.selectDate;
+    this.onSelectDate = ::this.onSelectDate;
   }
 
   static getDerivedStateFromProps({ shown, index }, prevState) {
@@ -122,17 +122,17 @@ export default class Month extends PureComponent {
     };
   }
 
-  selectDate(day: number) {
+  onSelectDate(day: number) {
     const { selDateMs: curDateMs, tooltipShown: curTooltipShown } = this.state;
     const { monthMs, ticks } = this.props;
     const selDateMs = moment(monthMs).date(day).valueOf();
+    const dateHasTicks = ticks.has(moment(selDateMs).date() - 1);
     if (curDateMs === selDateMs) {
-      this.setState({ tooltipShown: !curTooltipShown });
+      this.setState({ tooltipShown: dateHasTicks && !curTooltipShown });
       return;
     }
 
-    const tooltipShown = selDateMs ?
-      ticks.has(moment(selDateMs).date() - 1) : false;
+    const tooltipShown = selDateMs ? dateHasTicks : false;
     this.setState({ selDateMs, tooltipShown });
     caller(this.props.onDateSelect, selDateMs);
   }
@@ -145,9 +145,9 @@ export default class Month extends PureComponent {
     const ticksShown = ticks.get(dayIndex).slice(0, 3);
     const size = ticksShown.length - 1;
     const tickTimes = ticksShown.map((tick, index) => {
-      const timeStr = moment(tick.dateTimeMs).format('LT');
+      const timeStr = moment(tick.createdAt).format('LT');
       return (
-        <TextRow key={tick.dateTimeMs} isLast={index === size}>
+        <TextRow key={tick.createdAt} isLast={index === size}>
           <TimeText>
             {timeStr}
             {':'}
@@ -157,7 +157,7 @@ export default class Month extends PureComponent {
     });
 
     const tickDescs = ticksShown.map((tick, index) => (
-      <TextRow key={tick.dateTimeMs} isLast={index === size}>
+      <TextRow key={tick.createdAt} isLast={index === size}>
         <TickText>{tick.desc}</TickText>
       </TextRow>
     ));
@@ -165,7 +165,10 @@ export default class Month extends PureComponent {
     const tooltipPos = this.getTooltipPos(selDateMs);
     return (
       <Tooltip x={tooltipPos.x} y={tooltipPos.y}>
-        <TouchableOpacity onPress={() => onTooltipClick(ticks.get(dayIndex))}>
+        <TouchableOpacity
+          hitSlop={{ bottom: 15, right: 15 }}
+          onPress={() => onTooltipClick(ticks.get(dayIndex))}
+        >
           <View style={styles.tooltipContent}>
             <TimeCol>
               {tickTimes}
@@ -204,7 +207,7 @@ export default class Month extends PureComponent {
         <Day
           key={startDay.valueOf()}
           ref={(ref) => (this.dayRef = ref)}
-          onPress={this.selectDate}
+          onPress={this.onSelectDate}
           value={startDay.date()}
           isToday={startDay.isSame(todayMs, 'day')}
           isSelected={startDay.isSame(selDateMs, 'day')}

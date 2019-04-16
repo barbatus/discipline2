@@ -30,6 +30,12 @@ db.setSchema([
           options: { async: true },
         },
       },
+      notifications: {
+        hasMany: {
+          type: 'notification',
+          options: { async: true },
+        },
+      },
       app: {
         belongsTo: {
           type: 'app',
@@ -63,11 +69,30 @@ db.setSchema([
       },
     },
   },
+  {
+    singular: 'notification',
+    plural: 'notifications',
+    relations: {
+      tracker: {
+        belongsTo: {
+          type: 'tracker',
+          options: { async: true },
+        },
+      },
+    },
+  },
 ]);
 
 db.createIndex({
   index: {
-    fields: ['data.dateTimeMs', 'data.tracker', '_id'],
+    fields: ['data.createdAt', 'data.tracker', '_id'],
+  },
+});
+
+// For sorting by createdAt
+db.createIndex({
+  index: {
+    fields: ['data.createdAt'],
   },
 });
 
@@ -77,6 +102,10 @@ db.createIndex({
 
 db.createIndex({
   index: { fields: ['data.tick', '_id'] },
+});
+
+db.createIndex({
+  index: { fields: ['data.notification', '_id'] },
 });
 
 function fromRawDoc(pouchDoc: Object) {
@@ -118,8 +147,8 @@ const api = {
     const doc = docs[0];
     return doc ? fromRawDoc(doc) : null;
   },
-  findHasMany: async (type: string, relType: string, id: string) => (
-    (await db.rel.findHasMany(type, relType, id))[`${type}s`]
+  findHasMany: async (type: string, relType: string, relId: string) => (
+    (await api.selectHasMany(type, relType, relId))[`${type}s`]
   ),
   merge: (type: string, result: Object) => {
     let typeValues = result[`${type}s`];
@@ -150,8 +179,8 @@ const api = {
   },
   selectBy: async (
     type: string,
-    depType: string,
-    depId: string,
+    relType: string,
+    relId: string,
     field: string,
     minValue: number,
     maxValue: number,
@@ -162,12 +191,49 @@ const api = {
         $lt: db.rel.makeDocID({ type, id: {} }),
       },
     };
-    selector[`data.${depType}`] = depId;
+    selector[`data.${relType}`] = relId;
     selector[`data.${field}`] = { $gte: minValue, $lt: maxValue };
     const result = await db.find({ selector }).then((findRes) => (
       db.rel.parseRelDocs(type, findRes.docs)
     ));
-    return api.merge('tick', result);
+    return api.merge(type, result);
+  },
+  selectOrderBy: async (
+    type: string,
+    relType: string,
+    relId: string,
+    orderByField: string,
+    limit = 1,
+  ) => {
+    const selector = {
+      _id: {
+        $gt: db.rel.makeDocID({ type }),
+        $lt: db.rel.makeDocID({ type, id: {} }),
+      },
+    };
+    selector[`data.${relType}`] = relId;
+    selector[`data.${orderByField}`] = { $gte: null };
+    const result = await db.find({
+      selector,
+      sort: [{ [`data.${orderByField}`]: 'desc' }],
+      limit,
+    }).then((findRes) => (
+      db.rel.parseRelDocs(type, findRes.docs)
+    ));
+    return api.merge(type, result);
+  },
+  selectHasMany: async (type: string, relType: string, relId: string) => {
+    const selector = {
+      _id: {
+        $gt: db.rel.makeDocID({ type }),
+        $lt: db.rel.makeDocID({ type, id: {} }),
+      },
+    };
+    selector[`data.${relType}`] = relId;
+    selector['data.createdAt'] = { $gte: null };
+    return db.find({ selector }).then((findRes) => (
+      db.rel.parseRelDocs(type, findRes.docs)
+    ));
   },
 };
 

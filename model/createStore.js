@@ -2,11 +2,12 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
 import createThunkErrorHandlerMiddleware from 'redux-thunk-error-handler';
+import Reactotron from 'reactotron-react-native';
 
 import { trackersReducer } from './reducers';
 
 function uncatchErrorHandler(error) {
-  console.error(error);
+  Reactotron.error(error);
 }
 
 const errorHandlerMiddleware = createThunkErrorHandlerMiddleware({ onError: uncatchErrorHandler });

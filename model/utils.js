@@ -9,14 +9,14 @@ import { Tick } from './Tracker';
 
 export function combineTicksMonthly(ticks: Tick[], type: TrackerType, metric: boolean) {
   const months = groupBy(ticks, (tick) => {
-    const tickDate = moment(tick.dateTimeMs);
+    const tickDate = moment(tick.createdAt);
     return tickDate.month();
   });
   return Object.keys(months).reduce((map, monthKey) => {
     const month = parseInt(monthKey, 10);
     const ticksMonthly = months[monthKey];
     const days = groupBy(ticksMonthly, (tick) => {
-      const tickDate = moment(tick.dateTimeMs);
+      const tickDate = moment(tick.createdAt);
       return tickDate.date() - 1;
     });
     const dayMap = Object.keys(days).reduce((accum, dayKey) => {
@@ -29,7 +29,7 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, metric: bo
 }
 
 export function combineTicksDaily(ticks: Tick[], type: TrackerType, metric: boolean) {
-  const mins = groupBy(ticks, (tick) => tick.dateTimeMs - (tick.dateTimeMs % 60000),
+  const mins = groupBy(ticks, (tick) => tick.createdAt - (tick.createdAt % 60000),
   );
   const tickPrints = Object.keys(mins).map((minKey) => {
     const minMs = parseInt(minKey, 10);
@@ -42,15 +42,15 @@ export function combineTicksDaily(ticks: Tick[], type: TrackerType, metric: bool
 function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: boolean) {
   switch (type) {
     case TrackerType.GOAL:
-      return { desc: 'goal is achieved', value: 1, dateTimeMs: minMs };
+      return { desc: 'goal is achieved', value: 1, createdAt: minMs };
     case TrackerType.COUNTER: {
       const value = ticks.length;
       const times = value > 1 ? 'times' : 'time';
-      return { desc: `${value} ${times} raised`, value, dateTimeMs: minMs };
+      return { desc: `${value} ${times} raised`, value, createdAt: minMs };
     }
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
-      return { desc: `$${value} added`, value, dateTimeMs: minMs };
+      return { desc: `$${value} added`, value, createdAt: minMs };
     }
     case TrackerType.DISTANCE: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
@@ -66,13 +66,13 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: bool
         value,
         time,
         paths,
-        dateTimeMs: minMs,
+        createdAt: minMs,
       };
     }
     case TrackerType.STOPWATCH: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       const timeFmt = timeUtils.formatTimeMs(value);
-      return { desc: `${timeFmt.format()} tracked`, value, dateTimeMs: minMs };
+      return { desc: `${timeFmt.format()} tracked`, value, createdAt: minMs };
     }
     default:
       throw new Error('Tracker type is not supported');

@@ -82,16 +82,16 @@ export default class Depot {
   }
 
   async addTick(
-    trackId: number, dateTimeMs: number,
+    trackId: number, createdAt: number,
     value?: number, data?: Object,
   ) {
     check.assert.number(trackId);
-    check.assert.number(dateTimeMs);
+    check.assert.number(createdAt);
 
     const tracker = this.trackers.getOne(trackId);
     if (!tracker) throw new Error('Tracker not found');
 
-    const tick = this.ticks.add({ trackId, dateTimeMs, value });
+    const tick = this.ticks.add({ trackId, createdAt, value });
 
     if (data) {
       const schema = tickSchemas[tracker.typeId];

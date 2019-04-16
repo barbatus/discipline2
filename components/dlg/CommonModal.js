@@ -34,7 +34,6 @@ export default class CommonModal extends PureComponent {
     super(props);
     this.state = {
       modalVisible: false,
-      modalInit: false,
     };
     this.hide = ::this.hide;
     this.onModalShown = ::this.onModalShown;
@@ -52,9 +51,7 @@ export default class CommonModal extends PureComponent {
 
   onAfterHidden() {}
 
-  onModalShown() {
-    this.setState({ modalInit: true });
-  }
+  onModalShown() {}
 
   show(...args) {
     check.assert.like(this.state.modalVisible, true, 'Dlg already shown');
@@ -73,7 +70,7 @@ export default class CommonModal extends PureComponent {
   }
 
   render() {
-    const { modalVisible, modalInit } = this.state;
+    const { modalVisible } = this.state;
     return (
       <Modal
         style={styles.modal}
@@ -90,7 +87,7 @@ export default class CommonModal extends PureComponent {
           </TouchableOpacity>
         </View>
         <View style={commonStyles.flexFilled}>
-          {modalInit ? this.content : null}
+          {this.content}
         </View>
       </Modal>
     );

@@ -16,14 +16,14 @@ const time = {
     ]).valueOf();
   },
 
-  getYesterdayMs() {
+  getYestMs() {
     const yest = moment().subtract(1, 'days');
     return moment([
       yest.year(), yest.month(), yest.date(),
     ]).valueOf();
   },
 
-  getDateTimeMs() {
+  getNowMs() {
     return moment().valueOf();
   },
 

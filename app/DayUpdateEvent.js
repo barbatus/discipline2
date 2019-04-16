@@ -52,7 +52,7 @@ export default class DayUpdateEvent {
   subscribed = false;
 
   constructor() {
-    this.handleAppStateChange = ::this.handleAppStateChange;
+    this.onAppStateChange = ::this.onAppStateChange;
   }
 
   on(cb: Function) {
@@ -65,17 +65,17 @@ export default class DayUpdateEvent {
     }
   }
 
-  destroy() {
+  dispose() {
     this.unsubscribe();
     this.unsetDayTimer();
   }
 
   unsubscribe() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
+    AppState.removeEventListener('change', this.onAppStateChange);
   }
 
   subscribe() {
-    AppState.addEventListener('change', this.handleAppStateChange);
+    AppState.addEventListener('change', this.onAppStateChange);
   }
 
   setDayTimer() {
@@ -97,7 +97,7 @@ export default class DayUpdateEvent {
     }
   }
 
-  handleAppStateChange(state) {
+  onAppStateChange(state) {
     if (state === 'background') {
       this.onAppBackground();
     }

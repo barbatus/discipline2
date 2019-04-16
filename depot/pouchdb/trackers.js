@@ -6,6 +6,7 @@ import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 
 import { Tracker, NewTracker } from '../interfaces';
+
 import db from './db';
 
 class Trackers {

@@ -74,7 +74,7 @@ export default class TrackerIcon extends PureComponent {
               onPress={this.onIconEdit}
             >
               <Text style={styles.changeIconText}>
-                  Change Icon
+                Change Icon
               </Text>
             </CopilotButton>
           </CopilotStep>

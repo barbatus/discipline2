@@ -34,7 +34,7 @@ const NextImg = styled.Image`
 `;
 
 const ListItem = React.memo(({ item, onPress, showMore }) => {
-  const timeStr = moment(item.dateTimeMs).format('LT');
+  const timeStr = moment(item.createdAt).format('LT');
   return (
     <TextRow>
       <TextCol>
@@ -57,7 +57,7 @@ const ListItem = React.memo(({ item, onPress, showMore }) => {
 
 ListItem.propTypes = {
   item: PropTypes.shape({
-    dateTimeMs: PropTypes.number,
+    createdAt: PropTypes.number,
     desc: PropTypes.string,
   }).isRequired,
   onPress: PropTypes.func,
@@ -104,7 +104,7 @@ export default class TicksDlg extends CommonModal {
     if (ticks) {
       this.setState({
         trackType,
-        ticks: ticks.sort((a, b) => b.dateTimeMs - a.dateTimeMs),
+        ticks: ticks.sort((a, b) => b.createdAt - a.createdAt),
       });
     }
   }
