@@ -1,27 +1,50 @@
 import { InteractionManager } from 'react-native';
+import Reactotron from 'reactotron-react-native';
 
 import Timer from 'app/time/Timer';
+import depot from 'app/depot/depot';
 
-import sendNotifications from './sendNotifications';
+import PushNotification from './PushNotification';
+import sendNotifications, { MIN_TICKS_DIST_MS } from './sendNotifications';
 
-const CHECKING_INTERVAL = 10 * 1000;
+const CHECKING_INTERVAL = (MIN_TICKS_DIST_MS / 2) * 1000;
 
 class Notifications {
-  timer = new Timer(0, CHECKING_INTERVAL);
+  timer: Timer;
 
-  constructor() {
-    this.timer = new Timer(0, CHECKING_INTERVAL);
-    this.timer.events.on('onTimer', () => {
-      InteractionManager.runAfterInteractions(() => sendNotifications());
-    });
+  async start() {
+    try {
+      if (!this.timer) {
+        this.timer = new Timer(0, CHECKING_INTERVAL);
+        this.timer.events.on('onTimer', async () => {
+          const app = await depot.getApp();
+          if (!app.props.alerts) return;
+          InteractionManager.runAfterInteractions(() => sendNotifications());
+        });
+      }
+      if (!this.timer.active) {
+        await PushNotification.configure();
+        this.timer.start();
+      }
+    } catch (ex) {
+      Reactotron.log(ex);
+    }
   }
 
-  start() {
-    this.timer.start();
+  stop() {
+    if (this.timer) {
+      this.timer.stop();
+    }
+  }
+
+  checkPermissions() {
+    PushNotification.checkPermissions();
   }
 
   dispose() {
-    this.timer.dispose();
+    if (this.timer) {
+      this.timer.dispose();
+    }
   }
 }
 

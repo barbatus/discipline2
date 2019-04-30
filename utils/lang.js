@@ -6,7 +6,7 @@ export function caller(cb, ...args: *[]) {
   }
 }
 
-export function round(number, precision) {
+export function round(number, precision = 0) {
   const factor = 10 ** precision;
   const factored = number * factor;
   const rounded = Math.round(factored);

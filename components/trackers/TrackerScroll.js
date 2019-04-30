@@ -7,7 +7,7 @@ import Tracker from 'app/model/Tracker';
 import Scroll from '../scrolls/Scroll';
 import { commonStyles, SCREEN_WIDTH } from '../styles/common';
 
-import { slideHeight } from './styles/slideStyles';
+import { SLIDE_HEIGHT } from './styles/slideStyles';
 import TrackerRenderer from './TrackerRenderer';
 
 export default class TrackerScroll extends TrackerRenderer {
@@ -44,7 +44,7 @@ export default class TrackerScroll extends TrackerRenderer {
 
     const slideStyle = {
       width: SCREEN_WIDTH * scale,
-      height: slideHeight * scale,
+      height: SLIDE_HEIGHT * scale,
     };
     const slides = this.state.trackers
       .map((tracker) => (

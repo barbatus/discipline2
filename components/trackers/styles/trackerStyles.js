@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { slideDef, slideWidth } from './slideStyles';
+import { slideDef, SLIDE_WIDTH } from './slideStyles';
 
 export const BACK_COLOR = '#F5F5F5';
 
@@ -153,7 +153,7 @@ const editDef = {
   titleInput: {
     flex: 1,
     paddingRight: 0,
-    width: slideWidth - 40,
+    width: SLIDE_WIDTH - 40,
     fontSize: 30,
     textAlign: 'center',
     color: '#4A4A4A',
@@ -166,7 +166,7 @@ const editDef = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: slideWidth - 1,
+    width: SLIDE_WIDTH - 1,
     height: 45,
     backgroundColor: 'white',
     borderWidth: 1,

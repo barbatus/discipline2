@@ -135,6 +135,7 @@
     ],
     "no-undef": 2,
     "flowtype/define-flow-type": 1,
-    "flowtype/no-types-missing-file-annotation": 0
+    "flowtype/no-types-missing-file-annotation": 0,
+    "no-plusplus": 0
   }
 }

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Timers from 'app/model/Timers';
 
 import { trackerStyles } from '../styles/trackerStyles';
-import { slideWidth } from '../styles/slideStyles';
+import { SLIDE_WIDTH } from '../styles/slideStyles';
 
 import StartStopBtn from './common/StartStopBtn';
 import ProgressTrackerSlide from './ProgressTrackerSlide';
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flex: 1,
-    width: slideWidth,
+    width: SLIDE_WIDTH,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'flex-start',

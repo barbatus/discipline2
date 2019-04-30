@@ -47,6 +47,7 @@ export const DepotEvent = {
   TRACK_REMOVED: 'track_removed',
   TRACK_ADDED: 'track_added',
   TRACK_UPDATED: 'track_updated',
+  NOTIF_ADDED: 'notification_added',
 };
 
 

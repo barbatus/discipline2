@@ -12,14 +12,14 @@ import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 import Swiper from '../scrolls/Swiper';
 import { commonStyles, SCREEN_WIDTH } from '../styles/common';
 
-import { slideHeight } from './styles/slideStyles';
+import { SLIDE_HEIGHT } from './styles/slideStyles';
 import TrackerRenderer from './TrackerRenderer';
 
 
 export default class TrackerSwiper extends TrackerRenderer {
   responder = new MoveUpDownResponder();
 
-  moveScale = new MoveUpScaleResponderAnim(slideHeight);
+  moveScale = new MoveUpScaleResponderAnim(SLIDE_HEIGHT);
 
   upDown = new ScreenSlideUpDownAnim(minScale);
 
@@ -65,7 +65,6 @@ export default class TrackerSwiper extends TrackerRenderer {
     }
 
     if (isNumber(addIndex) && prevAddIndex !== addIndex) {
-      // this.setState({ trackers });
       this.scrollTo(addIndex);
       caller(this.props.onAddCompleted, addIndex);
     }
@@ -175,7 +174,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
     const slideStyle = {
       width: SCREEN_WIDTH,
-      height: slideHeight,
+      height: SLIDE_HEIGHT,
     };
     const slides = trackers.map((tracker) => (
       <View

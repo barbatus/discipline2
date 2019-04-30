@@ -1,5 +1,5 @@
 /* @flow */
-
+import check from 'check-types';
 import assert from 'assert';
 import isObject from 'lodash/isObject';
 import has from 'lodash/has';
@@ -9,34 +9,41 @@ import { Tracker, Notification } from '../interfaces';
 import db from './db';
 
 class Notifications {
-  async getOne(alertId: string): Promise<Notification> {
-    return db.find('notification', alertId);
+  async getOne(notifId: string): Promise<Notification> {
+    return db.find('notification', notifId);
+  }
+
+  async getLastOne(trackId: string): Promise<Notification> {
+    check.assert.string(trackId);
+
+    const notifs = await db.selectOrderBy('notification', 'tracker', trackId, 'createdAt');
+    return notifs[0];
   }
 
   async getLastWithLimit(trackId: string, limit: number): Promise<Notification[]> {
     return db.selectOrderBy('notification', 'tracker', trackId, 'createdAt', limit);
   }
 
-  async add(alert: { tracker: Tracker, createdAt: number }): Promise<Notification> {
-    return db.save('notification', alert);
+  async add(notif: { tracker: Tracker, createdAt: number }): Promise<Notification> {
+    return db.save('notification', notif);
   }
 
-  async remove(alertOrId: string | Notification) {
-    if (isObject(alertOrId)) {
-      assert(has(alertOrId, 'rev'));
+  async remove(notifOrId: string | Notification) {
+    if (isObject(notifOrId)) {
+      assert(has(notifOrId, 'rev'));
     }
 
-    const alert = typeof alertOrId === 'string' ?
-      await this.getOne(alertOrId) : alertOrId;
-    if (!alert) { return false; }
+    const notif = typeof notifOrId === 'string' ?
+      await this.getOne(notifOrId) : notifOrId;
+    if (!notif) { return false; }
 
-    return Boolean(await db.del('notification', alert));
+    return Boolean(await db.del('notification', notif));
   }
 
   async removeForTracker(trackId: string) {
-    const alerts = await db.findHasMany('notification', 'tracker', trackId);
-    await Promise.all(alerts.map((alert) => db.del('notification', alert)));
-    return alerts.map((alert) => alert.id);
+    const notifs = await db.findHasMany('notification', 'tracker', trackId);
+    await Promise.all(notifs.map((notif) => db.del('notification', notif)));
+    return notifs.map((notif) => notif.id);
   }
 }
 

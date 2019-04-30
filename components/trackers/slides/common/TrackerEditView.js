@@ -181,6 +181,11 @@ export default reduxForm({
         typeId: 'Type should be defined',
       });
     }
+    if (tracker.props.alerts && !tracker.title) {
+      throw new SubmissionError({
+        title: 'Title should be defined when alerts are on',
+      });
+    }
     return {
       ...tracker,
       props: {

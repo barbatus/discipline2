@@ -3,6 +3,10 @@ package com.discipline;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.bugsnag.BugsnagReactNative;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import com.swmansion.rnscreens.RNScreensPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactlibrary.RNThreadPackage;
 import co.apptailor.Worker.BaseReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -97,6 +101,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            BugsnagReactNative.getPackage(),
+            new ReactNativeConfigPackage(),
+            new RNScreensPackage(),
+            new ReactNativePushNotificationPackage(),
             new RNThreadPackage(),
             new BaseReactPackage(),
             new VectorIconsPackage(),

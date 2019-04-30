@@ -138,6 +138,10 @@ android {
 }
 
 dependencies {
+    implementation project(':bugsnag-react-native')
+    implementation project(':react-native-config')
+    implementation project(':react-native-screens')
+    implementation project(':react-native-push-notification')
     implementation project(':react-native-threads')
     implementation project(':react-native-workers')
     implementation project(':react-native-vector-icons')

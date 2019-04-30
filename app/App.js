@@ -11,7 +11,6 @@ import {
 
 import { changeDay, loadApp } from '../model/actions';
 import MainScreen from '../components/screens/MainScreen';
-import Notifications from '../notifications';
 
 import DayUpdateEvent from './DayUpdateEvent';
 
@@ -37,12 +36,10 @@ class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
       store.dispatch(changeDay());
     });
     store.dispatch(loadApp());
-    setTimeout(() => Notifications.start(), 5000);
   }
 
   componentWillUnmount() {
     this.dayUpdate.dipose();
-    Notifications.dispose();
   }
 
   render() {

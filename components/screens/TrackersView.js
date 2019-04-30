@@ -6,6 +6,7 @@ import { submit } from 'redux-form';
 import moment from 'moment';
 import { List } from 'immutable';
 
+import Notifications from 'app/notifications';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import TrackersModel from 'app/model/Trackers';
 import { Tick } from 'app/model/Tracker';
@@ -283,6 +284,9 @@ class TrackersView extends PureComponent {
 
   onTrackerEdit(tracker) {
     const { current } = this.state;
+    if (tracker.props.alerts) {
+      Notifications.checkPermissions();
+    }
     this.props.onUpdate(TrackersModel.create({
       ...current,
       ...tracker,

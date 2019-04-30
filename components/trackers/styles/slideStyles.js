@@ -5,19 +5,19 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT, NAV_HEIHGT } from '../../styles/common';
 export const SLIDE_WIDTH_OFFSET = 40;
 export const SLIDE_BOTTOM_OFFSET = 35;
 
-export const slideWidth = SCREEN_WIDTH - SLIDE_WIDTH_OFFSET;
+export const SLIDE_WIDTH = SCREEN_WIDTH - SLIDE_WIDTH_OFFSET;
 
-export const slideHeight = SCREEN_HEIGHT - NAV_HEIHGT - SLIDE_BOTTOM_OFFSET;
+export const SLIDE_HEIGHT = SCREEN_HEIGHT - NAV_HEIHGT - SLIDE_BOTTOM_OFFSET;
 
 export const slideDef = {
   slide: {
-    width: slideWidth,
-    height: slideHeight,
+    width: SLIDE_WIDTH,
+    height: SLIDE_HEIGHT,
     alignItems: 'center',
   },
   innerView: {
-    width: slideWidth,
-    height: slideHeight,
+    width: SLIDE_WIDTH,
+    height: SLIDE_HEIGHT,
     shadowColor: 'black',
     shadowOpacity: 0.2,
     shadowRadius: 5,

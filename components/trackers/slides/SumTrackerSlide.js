@@ -17,11 +17,11 @@ import { IS_IPHONE5 } from 'app/components/styles/common';
 import { SumTracker } from 'app/model/Tracker';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
-import { slideWidth } from '../styles/slideStyles';
+import { SLIDE_WIDTH } from '../styles/slideStyles';
 
 import TrackerSlide from './TrackerSlide';
 
-const WIDGET_WIDTH = slideWidth - 40;
+const WIDGET_WIDTH = SLIDE_WIDTH - 40;
 
 const FONT_SIZE = IS_IPHONE5 ? 40 : 50;
 

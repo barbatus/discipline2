@@ -50,3 +50,5 @@ export const CONTENT_HEIGHT = SCREEN_HEIGHT - NAV_HEIHGT;
 export const CONTENT_TOP_MARGIN = window.height >= 812 ? 15 : 0;
 
 export const MENU_WIDTH = (SCREEN_WIDTH / 2) + 25;
+
+export const CONTENT_OFFSET = OFFSET_TOP + NAV_HEIHGT + CONTENT_TOP_MARGIN;

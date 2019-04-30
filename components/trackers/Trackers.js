@@ -21,7 +21,7 @@ import TrackerSwiper from './TrackerSwiper';
 import TrackerScroll from './TrackerScroll';
 import MoveDownResponderAnim from '../animation/MoveDownResponderAnim';
 import { commonStyles } from '../styles/common';
-import { slideHeight } from './styles/slideStyles';
+import { SLIDE_HEIGHT } from './styles/slideStyles';
 
 const styles = StyleSheet.create({
   bigScroll: {
@@ -71,7 +71,7 @@ export default class Trackers extends PureComponent {
 
   opacity = new Animated.Value(0);
 
-  moveDown = new MoveDownResponderAnim(slideHeight);
+  moveDown = new MoveDownResponderAnim(SLIDE_HEIGHT);
 
   constructor(props) {
     super(props);

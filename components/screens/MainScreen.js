@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import SideMenu from 'react-native-side-menu';
 import { copilot } from '@okgrow/react-native-copilot';
 
+import Notifications from 'app/notifications';
 import { updateAppProps } from 'app/model/actions';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import IconsDlg from 'app/components/dlg/IconsDlg';
@@ -50,10 +51,18 @@ export class MainScreen extends PureComponent {
     this.onMeasureChange = ::this.onMeasureChange;
   }
 
+  componentDidMount() {
+    setTimeout(() => Notifications.start(), 5000);
+  }
+
   componentDidUpdate() {
     registry.register(DlgType.ICONS, this.iconsDlg);
     registry.register(DlgType.MAPS, this.mapsDlg);
     registry.register(DlgType.TICKS, this.ticksDlg);
+  }
+
+  componentWillUnmount() {
+    Notifications.dispose();
   }
 
   onSlideChange(index, previ, animated) {
@@ -91,6 +100,9 @@ export class MainScreen extends PureComponent {
   }
 
   onAlertChange(alerts: boolean) {
+    if (alerts) {
+      Notifications.checkPermissions();
+    }
     this.props.onUpdateAlerts(alerts);
   }
 
@@ -140,7 +152,7 @@ export class MainScreen extends PureComponent {
           onSliding={this.onMenuSliding}
         >
           <Screen navigator={navigator}>
-            { this.renderContent() }
+            {this.renderContent()}
           </Screen>
         </SideMenu>
         <IconsDlg ref={(el) => (this.iconsDlg = el)} />

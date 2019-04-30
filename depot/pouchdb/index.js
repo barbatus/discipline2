@@ -21,7 +21,7 @@ export default class Depot {
     const app = await appDB.get();
     if (!app) {
       const appVer = DeviceInfo.getVersion();
-      return appDB.create(appVer, { alerts: false, metric: true, copilot: {} });
+      return appDB.create(appVer, { alerts: true, metric: true, copilot: {} });
     }
     const trackers = await this.getTrackers(app.trackers);
     return { ...app, trackers };
@@ -121,10 +121,7 @@ export default class Depot {
     return this.getTrackerTicks(trackId, minDateMs, maxDateMs);
   }
 
-  async addTick(
-    trackId: string, createdAt: number,
-    value?: number, data?: Object,
-  ) {
+  async addTick(trackId: string, createdAt: number, value?: number, data?: Object) {
     check.assert.string(trackId);
     check.assert.number(createdAt);
 
@@ -169,7 +166,7 @@ export default class Depot {
   }
 
   async getLastTick(trackId: string) {
-    check.assert.number(trackId);
+    check.assert.string(trackId);
 
     const tick = await ticksDB.getLastOne(trackId);
     return ticksDB.plainTick(tick);
@@ -182,10 +179,28 @@ export default class Depot {
 
   async getLastTrackerTicks(trackId: string, limit: number) {
     const ticks = await ticksDB.getLastWithLimit(trackId, limit);
-    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick));
+    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick)).reverse();
   }
 
-  async getTrackerNotifications(trackId: string, limit: number) {
+  async addNotif(trackId: string, createdAt: number) {
+    check.assert.string(trackId);
+    check.assert.number(createdAt);
+
+    const tracker = await trackersDB.getOne(trackId);
+    if (!tracker) throw new Error('Tracker not found');
+
+    const newNotif = await notifsDB.add({ tracker, createdAt });
+    this.event.emit(DepotEvent.NOTIF_ADDED, { notificationId: newNotif.id, trackId: tracker.id });
+    return newNotif;
+  }
+
+  async getLastNotif(trackId: string) {
+    check.assert.string(trackId);
+
+    return notifsDB.getLastOne(trackId);
+  }
+
+  async getTrackerNotifs(trackId: string, limit: number) {
     return notifsDB.getLastWithLimit(trackId, limit);
   }
 

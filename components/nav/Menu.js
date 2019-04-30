@@ -1,20 +1,25 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Switch, View, Text, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
+import DeviceInfo from 'react-native-device-info';
 
 import {
   SLIDE_BOTTOM_OFFSET,
   SLIDE_WIDTH_OFFSET,
+  SLIDE_HEIGHT,
 } from 'app/components/trackers/styles/slideStyles';
+import { CONTENT_OFFSET} from 'app/components/styles/common';
+
+const MENU_COLOR = 'white';
 
 const styles = StyleSheet.create({
   menu: {
-    flex: 1,
+    top: CONTENT_OFFSET,
+    height: SLIDE_HEIGHT,
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'transparent',
     zIndex: 0,
-    paddingBottom: SLIDE_BOTTOM_OFFSET + 10,
   },
   prop: {
     flex: 0,
@@ -25,14 +30,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   lastProp: {
-    marginBottom: 0,
+    marginBottom: 30,
   },
   label: {
-    color: 'white',
+    color: MENU_COLOR,
     marginRight: 5,
     fontSize: 18,
     width: 120,
     fontWeight: '300',
+  },
+  ver: {
+    color: MENU_COLOR,
+    opacity: 0.8,
   },
 });
 
@@ -69,6 +78,11 @@ export default class Menu extends PureComponent {
             onValueChange={onAlertChange}
             value={props.alerts}
           />
+        </View>
+        <View>
+          <Text style={styles.ver}>
+            {DeviceInfo.getVersion()}v
+          </Text>
         </View>
       </View>
     );

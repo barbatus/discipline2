@@ -1,5 +1,4 @@
 import moment from 'moment';
-
 import 'moment-duration-format';
 
 import { padZero } from '../utils/format';
@@ -7,6 +6,7 @@ import { padZero } from '../utils/format';
 const SS_MS = 1000;
 const MM_MS = 60 * SS_MS;
 const HH_MS = 60 * 60 * SS_MS;
+const DAY_MS = 24 * 60 * 60 * SS_MS;
 
 const time = {
   getDateMs() {
@@ -63,6 +63,25 @@ const time = {
       format: () => `${f.hh}:${f.mm}:${f.ss}h`,
     };
     return f;
+  },
+
+  formatDurationMs(durMs): string {
+    const roundedMs = Math.round(durMs / (MM_MS * 10)) * (MM_MS * 10);
+
+    if (roundedMs < HH_MS) {
+      const mm = Math.round(roundedMs / MM_MS);
+      return `${mm} minutes`;
+    }
+
+    if (roundedMs < DAY_MS) {
+      const hh = Math.round(roundedMs / HH_MS);
+      const unit = hh > 1 ? 'hours' : 'hour';
+      return `${hh} ${unit}`;
+    }
+
+    const dd = Math.round(roundedMs / DAY_MS);
+    const unit = dd > 1 ? 'days' : 'day';
+    return `${dd} ${unit}`;
   },
 
   isSameDate(dateLike1, dateLike2) {

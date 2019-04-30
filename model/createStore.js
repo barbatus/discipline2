@@ -4,10 +4,13 @@ import { reducer as form } from 'redux-form';
 import createThunkErrorHandlerMiddleware from 'redux-thunk-error-handler';
 import Reactotron from 'reactotron-react-native';
 
+import Bugsnag from 'app/log/Bugsnag';
+
 import { trackersReducer } from './reducers';
 
 function uncatchErrorHandler(error) {
   Reactotron.error(error);
+  Bugsnag.notify(error);
 }
 
 const errorHandlerMiddleware = createThunkErrorHandlerMiddleware({ onError: uncatchErrorHandler });
