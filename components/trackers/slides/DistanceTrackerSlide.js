@@ -214,7 +214,7 @@ DistanceBodyFn.propTypes = {
 
 const DistanceBody = React.memo(DistanceBodyFn);
 
-const DIST_INTRVL = 5.0;
+const DIST_INTRVL_M = 5.0;
 
 const TIME_INTRVL_MS = 1000; // ms
 
@@ -225,8 +225,6 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     metric: PropTypes.bool.isRequired,
   };
 
-  paths = [];
-
   constructor(props) {
     super(props);
     slowlog(this, /.*/);
@@ -234,7 +232,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     this.state = {
       ...this.state,
       btnEnabled: true,
-      dist: tracker.value,
+      dist: tracker.value, // km
       timeMs: tracker.time,
       speed: 0,
     };
@@ -289,7 +287,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       const distTracker = await DistanceTrackers.getOrCreate(
         tracker.id,
         tracker.value,
-        DIST_INTRVL,
+        DIST_INTRVL_M,
       );
       distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
     } catch ({ value: distTracker }) {
@@ -347,20 +345,25 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   onTimeUpdate(timeMs: number) {
-    this.onProgress(this.dist, { time: timeMs });
+    const { dist } = this.state;
+    this.onProgress(dist, { time: timeMs });
     this.setState({ timeMs });
   }
 
-  onLatLonUpdate({ dist, lat, lon, speed, paths }) {
-    this.paths = paths;
+  onLatLonUpdate({ dist, lat, lon, speed }) {
     this.onProgress(dist, { latlon: { lat, lon } }, { speed });
+    const dlg = registry.get(DlgType.MAPS);
+    if (dlg.shown) {
+      dlg.draw(lat, lon);
+    }
     this.setState({ dist, speed });
   }
 
-  showMap() {
+  async showMap() {
     const dlg = registry.get(DlgType.MAPS);
     const { tracker } = this.props;
-    const paths = tracker.paths.concat(this.paths)
+    const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
+    const paths = tracker.paths.concat(distTracker.paths)
       .map((path) => path.map(({ lat, lon }) => ({ latitude: lat, longitude: lon })));
     dlg.show(paths);
   }

@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import DeviceInfo from 'react-native-device-info';
 
 import {
-  SLIDE_BOTTOM_OFFSET,
   SLIDE_WIDTH_OFFSET,
   SLIDE_HEIGHT,
 } from 'app/components/trackers/styles/slideStyles';
-import { CONTENT_OFFSET} from 'app/components/styles/common';
+import { CONTENT_OFFSET } from 'app/components/styles/common';
 
 const MENU_COLOR = 'white';
 
@@ -81,7 +80,8 @@ export default class Menu extends PureComponent {
         </View>
         <View>
           <Text style={styles.ver}>
-            {DeviceInfo.getVersion()}v
+            {DeviceInfo.getVersion()}
+            {'v'}
           </Text>
         </View>
       </View>

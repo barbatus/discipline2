@@ -12,7 +12,7 @@ import MapsDlg from './MapsDlg';
 import CommonModal from './CommonModal';
 
 const TextRow = styled.View`
-  padding: 10px;
+  padding: 15px;
   flex-direction: row;
   border-color: rgba(0, 0, 0, 0.1);
   border-bottom-width: 1px;
@@ -36,22 +36,20 @@ const NextImg = styled.Image`
 const ListItem = React.memo(({ item, onPress, showMore }) => {
   const timeStr = moment(item.createdAt).format('LT');
   return (
-    <TextRow>
-      <TextCol>
-        <TimeText>
-          {timeStr}
-          {':'}
-        </TimeText>
-        <Text>{item.desc}</Text>
-      </TextCol>
-      {
-        showMore ? (
-          <TouchableOpacity onPress={() => caller(onPress, item)}>
-            <NextImg source={getIcon('next')} />
-          </TouchableOpacity>
-        ) : null
-      }
-    </TextRow>
+    <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, item)}>
+      <TextRow>
+        <TextCol>
+          <TimeText>
+            {timeStr}
+            {':'}
+          </TimeText>
+          <Text>{item.desc}</Text>
+        </TextCol>
+        {
+          showMore ? <NextImg source={getIcon('next')} /> : null
+        }
+      </TextRow>
+     </TouchableOpacity>
   );
 });
 

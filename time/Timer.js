@@ -22,10 +22,6 @@ export default class Timer {
     timerCount += 1;
   }
 
-  reset(initValue: number) {
-    this.timeMs = initValue;
-  }
-
   start() {
     if (this.active) return;
 

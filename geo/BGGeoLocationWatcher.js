@@ -9,15 +9,15 @@ import Enum from '../depot/Enum';
 function configureBackgroundGeolocation(callback) {
   BackgroundGeolocation.ready({
     reset: true,
+    debug: true,
     desiredAccuracy: 0,
-    distanceFilter: 5,
+    distanceFilter: 2,
     stopOnTerminate: true,
     autoSync: false,
     stationaryRadius: 0,
     disableElasticity: true,
     isMoving: true,
     preventSuspend: true,
-    debug: true,
   }, callback);
 }
 

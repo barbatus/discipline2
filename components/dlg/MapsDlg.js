@@ -3,10 +3,12 @@ import {
   View,
   ActivityIndicator,
   TouchableOpacity,
+  InteractionManager,
 } from 'react-native';
 import flatten from 'lodash/flatten';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import last from 'lodash/last';
 
 import BGGeoLocationWatcher from 'app/geo/BGGeoLocationWatcher';
 
@@ -27,10 +29,20 @@ const ASPECT_RATIO = SCREEN_WIDTH / SCREEN_HEIGHT;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+const PolyLine = React.memo(({ coords }) => (
+  <MapView.Polyline
+    coordinates={coords}
+    strokeColor={PATH_COLOR}
+    strokeWidth={4}
+  />
+));
+
 export default class MapsDlg extends CommonModal {
+  mapInit = false;
+
   constructor(props) {
     super(props);
-    const region = new MapView.AnimatedRegion({
+    this.region = new MapView.AnimatedRegion({
       latitude: 0,
       longitude: 0,
       latitudeDelta: LATITUDE_DELTA,
@@ -39,21 +51,19 @@ export default class MapsDlg extends CommonModal {
     const baseState = this.state;
     this.state = {
       ...baseState,
-      paths: [],
-      region,
+      polylines: [],
     };
     this.showLocation = ::this.showLocation;
+    this.onRegionChange = ::this.onRegionChange;
   }
 
   get content() {
-    const { paths, region, settingLocation, coords } = this.state;
+    const { polylines, settingLocation, coords } = this.state;
 
-    const polylines = paths.map((path) => (
-      <MapView.Polyline
-        key={`${path[0].latitude}${path[0].longitude}`}
-        coordinates={path}
-        strokeColor={PATH_COLOR}
-        strokeWidth={4}
+    const polylineElems = polylines.map((polyline) => (
+      <PolyLine
+        key={`${polyline.id}`}
+        coords={polyline.coords}
       />
     ));
     return (
@@ -61,12 +71,13 @@ export default class MapsDlg extends CommonModal {
         <MapView.Animated
           style={mapStyles.mapView}
           ref={(el) => (this.map = el)}
-          region={region}
+          region={this.region}
           zoomEnabled
           loadingEnabled
           showsMyLocationButton
+          onRegionChangeComplete={this.onRegionChange}
         >
-          {polylines}
+          {polylineElems}
           <MyLocationMarker coords={coords} />
         </MapView.Animated>
         <View style={mapStyles.buttonContainer}>
@@ -82,8 +93,22 @@ export default class MapsDlg extends CommonModal {
     );
   }
 
+  draw(lat: number, lon: number) {
+    const { polylines } = this.state;
+    const lastLine = last(polylines);
+    const rest = polylines.filter((it) => it !== lastLine);
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        polylines: rest.concat({
+          ...lastLine,
+          coords: lastLine.coords.concat({ latitude: lat, longitude: lon }),
+        }),
+      });
+    });
+  }
+
   async showLocation(moveToMyLocation: boolean) {
-    const { region, settingLocation } = this.state;
+    const { settingLocation } = this.state;
     if (settingLocation) return;
 
     this.setState({ settingLocation: true });
@@ -93,7 +118,14 @@ export default class MapsDlg extends CommonModal {
 
       if (moveToMyLocation) {
         const { latitude, longitude } = pos.coords;
-        region.timing({ latitude, longitude }, 1000).start();
+        this.region
+          .timing({
+            latitude,
+            longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }, 1000)
+          .start();
       }
       this.setState({ settingLocation: false, coords: pos.coords });
     } catch {
@@ -102,14 +134,13 @@ export default class MapsDlg extends CommonModal {
   }
 
   async onBeforeShown(paths = []) {
-    const validPaths = paths.filter((path) => Boolean(path.length));
-    this.setState({ paths: validPaths });
+    const now = Date.now();
+    const polylines = paths.map((path, index) => ({ id: now + index, coords: path.slice() }));
+    this.setState({ polylines });
   }
 
   async onAfterShown(paths = []) {
-    const { region } = this.state;
-    const validPaths = paths.filter((path) => Boolean(path.length));
-    const coords = flatten(validPaths);
+    const coords = flatten(paths);
     const len = coords.length;
     const moveToMyLocation = len === 0;
     this.showLocation(moveToMyLocation);
@@ -117,12 +148,26 @@ export default class MapsDlg extends CommonModal {
     if (!moveToMyLocation) {
       const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
       const longitude = coords.reduce((accum, p) => accum + p.longitude, 0) / len;
-      region.timing({ latitude, longitude }, 1000).start();
+      this.region
+        .timing({
+          latitude,
+          longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        }, 1000)
+        .start();
     }
 
     this.map.getNode().fitToCoordinates(coords, {
       edgePadding: DEFAULT_PADDING,
       animated: true,
     });
+  }
+
+  onRegionChange(region) {
+    if (this.mapInit) {
+      this.region.setValue(region);
+    }
+    this.mapInit = true;
   }
 }

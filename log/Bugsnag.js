@@ -15,7 +15,7 @@ const Bugsnag = {
     if (this.client) {
       this.client.notify(error);
     }
-  }
+  },
 };
 
 export default Bugsnag;

@@ -73,18 +73,20 @@ const styles = StyleSheet.create({
 });
 
 async function getGeoWatcher(callback, setCoords) {
-  const watcher = await BGGeoLocationWatcher.getOrCreate();
-  const unwatch = watcher.on('position', ({ coords }) => setCoords(coords));
-  watcher.watchPos();
-  callback(watcher, unwatch);
+  try {
+    const watcher = await BGGeoLocationWatcher.getOrCreate();
+    const unwatch = watcher.on('position', ({ coords }) => setCoords(coords));
+    watcher.watchPos();
+    callback(watcher, unwatch);
+  } catch (ex) {
+    console.log(ex);
+  }
 }
 
 const MyLocationMarker = React.memo((props) => {
   const [coords, setCoords] = useState(null);
 
-  if (props.coords !== coords) {
-    setCoords(props.coords);
-  }
+  useEffect(() => setCoords(props.coords), [props.coords]);
 
   useEffect(() => {
     let geoWatcher = null;

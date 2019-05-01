@@ -43,6 +43,10 @@ export default class CommonModal extends PureComponent {
     return null;
   }
 
+  get shown() {
+    return this.state.modalVisible;
+  }
+
   onBeforeShown() {}
 
   onAfterShown() {}

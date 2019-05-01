@@ -1,8 +1,9 @@
 import check from 'check-types';
 import EventEmitter from 'eventemitter3';
 import last from 'lodash/last';
-import isNumber from 'lodash/isNumber';
+import Reactotron from 'reactotron-react-native';
 
+import Bugsnag from 'app/log/Bugsnag';
 import { ValuedError } from 'app/utils/lang';
 import depot from 'app/depot/depot';
 
@@ -21,11 +22,11 @@ export const Timers = new DistanceTimers();
 export class DistanceTrackers {
   trackers = {};
 
-  async getOrCreate(trackerId: number, initValue?: number, distInt?: number) {
+  async getOrCreate(trackerId: number, initValue?: number, distFilter?: number) {
     if (!this.trackers[trackerId]) {
       return new Promise(async (resolve, reject) => {
         const createTracker = (geoWatcher) => {
-          const tracker = new DistanceTracker(geoWatcher, initValue, distInt);
+          const tracker = new DistanceTracker(geoWatcher, initValue, distFilter);
           tracker.events.on('onLatLonUpdate', (geo) => this.onLatLonUpdate(trackerId, geo));
           return tracker;
         };
@@ -58,16 +59,23 @@ export class DistanceTrackers {
 
 export default new DistanceTrackers();
 
+interface IDistState {
+  dist: number; // km
+  delta: number; // km
+  lastStartDist: number; // km
+  timestamp: number; // ms
+  lat: number;
+  lon: number;
+}
+
 export class DistanceTracker {
   events = new EventEmitter();
 
-  dist: number;
+  state: IDistState;
 
-  lastStartDist: number;
+  dist: number = 0; // km
 
-  lastEventMs: number;
-
-  latLon: { lat: number, lon: number };
+  distFilter: number = 0.005; // 5m
 
   paths = [];
 
@@ -75,20 +83,20 @@ export class DistanceTracker {
 
   unwatch = null;
 
-  constructor(geoWatcher, initValue: number, distInt: number = 5) {
+  constructor(geoWatcher, initValue: number, distFilterM: number = 5) {
     check.assert.number(initValue);
 
-    this.dist = initValue;
+    this.state = {
+      dist: initValue,
+      lastStartDist: 0,
+      delta: 0,
+      timestamp: Date.now(),
+      lat: null,
+      lon: null,
+    };
     this.geoWatcher = geoWatcher;
-    this.distInterval = distInt;
+    this.distFilter = distFilterM / 1000;
     this.onPosChange = ::this.onPosChange;
-  }
-
-  reset(initValue?: number) {
-    if (isNumber(initValue)) {
-      this.dist = initValue;
-    }
-    this.lastStartDist = 0;
   }
 
   async start() {
@@ -112,7 +120,6 @@ export class DistanceTracker {
       await this.geoWatcher.stopWatch();
     } finally {
       this.active = false;
-      this.reset(this.dist);
     }
   }
 
@@ -126,8 +133,14 @@ export class DistanceTracker {
   onPosChange(pos) {
     let state;
     // eslint-disable-next-line no-cond-assign
-    if ((state = this.setNextPosState(pos))) {
-      this.fireLatLonUpdate(state);
+    if ((state = this.setNextPosState(this.state, pos))) {
+      if ((state.dist - this.dist) >= this.distFilter) {
+        this.fireLatLonUpdate(state);
+        this.dist = state.dist;
+      }
+      this.state = state;
+      const path = last(this.paths);
+      path.push({ lat: state.lat, lon: state.lon });
     }
   }
 
@@ -137,38 +150,37 @@ export class DistanceTracker {
 
   startTracking({ latitude, longitude, heading }) {
     this.active = true;
-    this.lastStartDist = 0;
-    this.lastEventMs = Date.now();
     this.heading = heading;
-    this.latLon = { lat: latitude, lon: longitude };
+    this.state = {
+      ...this.state,
+      lat: latitude,
+      lon: longitude,
+      timestamp: Date.now(),
+      lastStartDist: 0,
+    };
     this.paths.push([]);
   }
 
-  setNextPosState({ coords: { speed, latitude, longitude } }) {
-    if (this.latLon.lat !== latitude ||
-        this.latLon.lon !== longitude) {
-      const pastMs = Date.now() - this.lastEventMs;
+  setNextPosState(prevState, { coords: { speed, latitude, longitude } }) {
+    if (prevState.lat !== latitude ||
+        prevState.lon !== longitude) {
+      const pastMs = Date.now() - prevState.timestamp;
       const speedAbs = Math.abs(speed);
-      const nextDist = (speedAbs / 1000) * (pastMs / 1000);
-      this.lastStartDist += nextDist;
-      this.dist += nextDist;
-      this.lastEventMs = Date.now();
-      this.latLon = { lat: latitude, lon: longitude };
-      const path = last(this.paths);
-      path.push(this.latLon);
+      const delta = (speedAbs / 1000) * (pastMs / 1000);
       return {
+        delta,
         speed: speedAbs * 3600 / 1000, // km / h
-        dist: this.dist,
-        lastStartDist: this.lastStartDist,
-        lat: this.latLon.lat,
-        lon: this.latLon.lon,
-        paths: this.paths.slice(),
+        dist: prevState.dist + delta,
+        lastStartDist: prevState.lastStartDist + delta,
+        lat: latitude,
+        lon: longitude,
+        timestamp: Date.now(),
       };
     }
     return null;
   }
 
   onGeoError(error) {
-    console.log(error);
+    Reactotron.error(error);
   }
 }
