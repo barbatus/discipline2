@@ -244,7 +244,7 @@ export default class Trackers extends PureComponent {
   }
 
   render() {
-    const { swTrackers, scTrackers, swiperEnabled } = this.state;
+    const { swTrackers, scTrackers, swiperEnabled, searchView } = this.state;
     const { style } = this.props;
 
     const combinedStyle = [
@@ -260,6 +260,7 @@ export default class Trackers extends PureComponent {
           trackers={scTrackers}
           style={styles.bigScroll}
           scale={5 / 8}
+          shown={searchView}
           onCenterSlideTap={this.onCenterSlideTap}
         />
         <TrackerScroll
@@ -269,6 +270,7 @@ export default class Trackers extends PureComponent {
           style={styles.smallScroll}
           scale={1 / 4}
           responsive={false}
+          shown={searchView}
           onSlideTap={this.onSmallSlideTap}
         />
         <TrackerSwiper
@@ -277,6 +279,7 @@ export default class Trackers extends PureComponent {
           enabled={swiperEnabled}
           trackers={swTrackers}
           style={commonStyles.absFilled}
+          shown={!searchView}
           onScaleStart={this.onScaleStart}
           onScaleCancel={this.onScaleDone}
           onScaleMove={this.onScaleMove}

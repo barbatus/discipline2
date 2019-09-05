@@ -1,6 +1,7 @@
 import { self } from 'react-native-threads';
-import Reactotron from 'reactotron-react-native';
+
+import logger from 'app/log';
 
 self.onmessage = (message) => {
-  Reactotron.log(message);
+  logger.log(message, { context: 'threadRunner' });
 };

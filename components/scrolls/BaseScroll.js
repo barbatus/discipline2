@@ -46,8 +46,6 @@ export default class BaseScroll extends PureComponent {
 
   prevInd = 0;
 
-  offsetX = 0;
-
   pageX = 0;
 
   onScrollToCb = null;
@@ -57,7 +55,6 @@ export default class BaseScroll extends PureComponent {
 
     const { slideWidth, index } = this.props;
     this.prevInd = index;
-    this.offsetX = slideWidth * index;
     this.pageX = slideWidth;
     this.onTouchStart = ::this.onTouchStart;
     this.onTouchMove = ::this.onTouchMove;
@@ -83,12 +80,6 @@ export default class BaseScroll extends PureComponent {
 
     if (this.indexInn === 0 && dx <= 0) return;
     if (this.indexInn === slides.length - 1 && dx >= 0) return;
-
-    // Adjust offset and index after moving.
-    // Offset and index become float.
-    this.offsetX += dx;
-    const index = this.indexInn + (dx / slideWidth);
-    this.indexInn = Math.min(Math.max(index, 0), slides.length - 1);
 
     caller(this.props.onTouchMove, dx);
   }
@@ -121,7 +112,7 @@ export default class BaseScroll extends PureComponent {
     }
 
     const newIndex = Math.min(index, slides.length - 1);
-    if (this.indexInn === newIndex) {
+    if (Math.round(this.indexInn) === newIndex) {
       caller(callback, false);
       return;
     }
@@ -161,10 +152,7 @@ export default class BaseScroll extends PureComponent {
   updateSlideIndexByOffset(offsetX: number) {
     const { slideWidth } = this.props;
 
-    const diff = offsetX - this.offsetX;
-    // Sometimes it's not round integer.
-    this.indexInn = Math.round(this.indexInn + (diff / slideWidth));
-    this.offsetX = slideWidth * this.indexInn;
+    this.indexInn = offsetX / slideWidth;
   }
 
   render() {

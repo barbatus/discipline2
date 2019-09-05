@@ -42,7 +42,7 @@ export function combineTicksDaily(ticks: Tick[], type: TrackerType, metric: bool
 function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: boolean) {
   switch (type) {
     case TrackerType.GOAL:
-      return { desc: 'goal is achieved', value: 1, createdAt: minMs };
+      return { desc: 'goal achieved', value: 1, createdAt: minMs };
     case TrackerType.COUNTER: {
       const value = ticks.length;
       const times = value > 1 ? 'times' : 'time';

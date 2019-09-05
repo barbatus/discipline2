@@ -1,10 +1,12 @@
-import Reactotron from 'reactotron-react-native';
+import { InteractionManager } from 'react-native';
 import regression from 'regression';
 
+import Logger from 'app/log';
 import time from 'app/time/utils';
+import Timer from 'app/time/Timer';
 import depot from 'app/depot/depot';
 
-import PushNotification from './PushNotification';
+import PushNotification from './index';
 
 export const MIN_TICKS_DIST_MS = 10 * 60 * 1000;
 
@@ -28,15 +30,15 @@ function predictNextDist(ticks) {
   return result.predict(ticks.length)[1];
 }
 
-export default async function () {
+export async function sendAlerts() {
   const app = await depot.getApp();
   const tracksToNotify = app.trackers.filter((tracker) => tracker.props.alerts);
   tracksToNotify.forEach(async (tracker) => {
     const ticks = await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 2);
     const lastTick = ticks[ticks.length - 1];
-    const lastNotif = await depot.getLastNotif(tracker.id);
+    const lastAlert = await depot.getLastAlert(tracker.id);
 
-    if (lastTick && lastNotif && lastTick.createdAt <= lastNotif.createdAt) return;
+    if (lastTick && lastAlert && lastTick.createdAt <= lastAlert.createdAt) return;
 
     if (!checkIfTicksFit(ticks)) return;
 
@@ -50,11 +52,54 @@ export default async function () {
     }
     averageDist /= (ticks.length - 1);
     try {
-      await depot.addNotif(tracker.id, time.getNowMs());
+      await depot.addAlert(tracker.id, time.getNowMs());
       const alertBody = `Usually you use this tracker every ${time.formatDurationMs(averageDist)}`;
       PushNotification.localNotification(`${tracker.title} Tracker`, alertBody);
     } catch (ex) {
-      Reactotron.error(ex);
+      Logger.error(ex, { context: 'TrackerAlerts:sendAlerts' });
     }
   });
 }
+
+const CHECKING_INTERVAL = (MIN_TICKS_DIST_MS / 2) * 1000;
+
+class TrackerAlerts {
+  timer: Timer;
+
+  async start() {
+    try {
+      if (!this.timer) {
+        this.timer = new Timer(0, CHECKING_INTERVAL);
+        this.timer.events.on('onTimer', async () => {
+          const app = await depot.getApp();
+          if (!app.props.alerts) return;
+          InteractionManager.runAfterInteractions(() => sendAlerts());
+        });
+      }
+      if (!this.timer.active) {
+        await PushNotification.configure();
+        this.timer.start();
+      }
+    } catch (ex) {
+      Logger.error(ex, { context: 'TrackerAlerts:start' });
+    }
+  }
+
+  stop() {
+    if (this.timer) {
+      this.timer.stop();
+    }
+  }
+
+  checkPermissions() {
+    PushNotification.checkPermissions();
+  }
+
+  dispose() {
+    if (this.timer) {
+      this.timer.dispose();
+    }
+  }
+}
+
+export default new TrackerAlerts();

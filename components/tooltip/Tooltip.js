@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Animated, StyleSheet, View, findNodeHandle } from 'react-native';
-import NativeMethodsMixin from 'NativeMethodsMixin';
+import { Animated, StyleSheet, View, UIManager, findNodeHandle } from 'react-native';
 import styled from 'styled-components/native';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
@@ -12,7 +11,7 @@ const ARROW_WIDTH = 25;
 
 const ARROW_HEIHGT = 10;
 
-const TOP_MARGIN = 10;
+const TOP_MARGIN = ARROW_HEIHGT + 2;
 
 const PADDING = 10;
 
@@ -61,11 +60,11 @@ const ArrowView = styled.View`
   position: absolute;
 `;
 
-const ArrowFn = ({ x, y }) => {
+const ArrowFn = React.memo(({ x, y }) => {
   const arrStyle = y > 0 ? [styles.arrDown] : [styles.arrUp];
   arrStyle.push({ left: x, top: y });
   return <ArrowView style={arrStyle} />;
-};
+});
 
 ArrowFn.propTypes = {
   x: PropTypes.number.isRequired,
@@ -119,8 +118,7 @@ export default class Tooltip extends PureComponent {
   updatePos() {
     const node = findNodeHandle(this.view);
     if (node) {
-      this.setTimeout(() => NativeMethodsMixin.measure.call(node,
-        (x, y, width, height, pageX, pageY) => {
+      this.setTimeout(() => UIManager.measure(node, (x, y, width, height, pageX, pageY) => {
           const haflW = width / 2;
           const rightX = x + haflW - SCREEN_WIDTH + PADDING;
           const leftX = x - haflW - PADDING;

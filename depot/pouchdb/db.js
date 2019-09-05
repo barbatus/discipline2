@@ -30,9 +30,9 @@ db.setSchema([
           options: { async: true },
         },
       },
-      notifications: {
+      alerts: {
         hasMany: {
-          type: 'notification',
+          type: 'alert',
           options: { async: true },
         },
       },
@@ -70,8 +70,8 @@ db.setSchema([
     },
   },
   {
-    singular: 'notification',
-    plural: 'notifications',
+    singular: 'alert',
+    plural: 'alerts',
     relations: {
       tracker: {
         belongsTo: {
@@ -105,7 +105,7 @@ db.createIndex({
 });
 
 db.createIndex({
-  index: { fields: ['data.notification', '_id'] },
+  index: { fields: ['data.alert', '_id'] },
 });
 
 function fromRawDoc(pouchDoc: Object) {

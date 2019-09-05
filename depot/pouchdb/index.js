@@ -11,7 +11,7 @@ import { DepotEvent } from '../consts';
 
 import trackersDB from './trackers';
 import ticksDB from './ticks';
-import notifsDB from './notifications';
+import alertsDB from './alerts';
 import appDB from './app';
 
 export default class Depot {
@@ -182,26 +182,26 @@ export default class Depot {
     return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick)).reverse();
   }
 
-  async addNotif(trackId: string, createdAt: number) {
+  async addAlert(trackId: string, createdAt: number) {
     check.assert.string(trackId);
     check.assert.number(createdAt);
 
     const tracker = await trackersDB.getOne(trackId);
     if (!tracker) throw new Error('Tracker not found');
 
-    const newNotif = await notifsDB.add({ tracker, createdAt });
-    this.event.emit(DepotEvent.NOTIF_ADDED, { notificationId: newNotif.id, trackId: tracker.id });
-    return newNotif;
+    const newAlert = await alertsDB.add({ tracker, createdAt });
+    this.event.emit(DepotEvent.ALERT_ADDED, { alertId: newAlert.id, trackId: tracker.id });
+    return newAlert;
   }
 
-  async getLastNotif(trackId: string) {
+  async getLastAlert(trackId: string) {
     check.assert.string(trackId);
 
-    return notifsDB.getLastOne(trackId);
+    return alertsDB.getLastOne(trackId);
   }
 
-  async getTrackerNotifs(trackId: string, limit: number) {
-    return notifsDB.getLastWithLimit(trackId, limit);
+  async getTrackerAlerts(trackId: string, limit: number) {
+    return alertsDB.getLastWithLimit(trackId, limit);
   }
 
   async resetTestData() {

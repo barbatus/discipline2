@@ -1,7 +1,6 @@
 /* @flow */
 
 import assert from 'assert';
-
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 

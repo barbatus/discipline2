@@ -6,7 +6,7 @@ import {
   InteractionManager,
 } from 'react-native';
 import flatten from 'lodash/flatten';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import last from 'lodash/last';
 
@@ -37,28 +37,53 @@ const PolyLine = React.memo(({ coords }) => (
   />
 ));
 
+const getLocation = async () => {
+  const watcher = await BGGeoLocationWatcher.getOrCreate();
+  const pos = await watcher.getPos();
+  return pos.coords;
+}
+
+const LocationButton = React.memo(({ onMyLocation }) => {
+  const [settingLocation, setSettingLocation] = React.useState(false);
+
+  const showLocation = React.useCallback(async () => {
+    setSettingLocation(true);
+    const location = await getLocation();
+    onMyLocation(location);
+    setSettingLocation(false);
+  }, [onMyLocation]);
+
+  return (
+    <View style={mapStyles.buttonContainer}>
+      <TouchableOpacity style={mapStyles.button} onPress={showLocation}>
+        {
+          settingLocation ?
+            <ActivityIndicator size="small" /> :
+            <Icon name="my-location" size={25} style={mapStyles.buttonIcon} />
+        }
+      </TouchableOpacity>
+    </View>
+  );
+});
+
 export default class MapsDlg extends CommonModal {
-  mapInit = false;
+  regionBeingChanged = false;
 
   constructor(props) {
     super(props);
-    this.region = new MapView.AnimatedRegion({
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    });
     const baseState = this.state;
     this.state = {
       ...baseState,
       polylines: [],
     };
-    this.showLocation = ::this.showLocation;
     this.onRegionChange = ::this.onRegionChange;
+    this.onRegionChangeComplete = ::this.onRegionChangeComplete;
+    this.showLocation = ::this.showLocation;
+    this.onMyLocation = ::this.onMyLocation;
   }
 
   get content() {
-    const { polylines, settingLocation, coords } = this.state;
+    const { polylines, settingLocation, coords, region } = this.state;
 
     const polylineElems = polylines.map((polyline) => (
       <PolyLine
@@ -71,29 +96,25 @@ export default class MapsDlg extends CommonModal {
         <MapView.Animated
           style={mapStyles.mapView}
           ref={(el) => (this.map = el)}
-          region={this.region}
+          region={region}
           zoomEnabled
           loadingEnabled
-          showsMyLocationButton
-          onRegionChangeComplete={this.onRegionChange}
+          provider={PROVIDER_GOOGLE}
+          showsMyLocationButton={false}
+          onRegionChange={this.onRegionChange}
+          onRegionChangeComplete={this.onRegionChangeComplete}
         >
           {polylineElems}
           <MyLocationMarker coords={coords} />
         </MapView.Animated>
-        <View style={mapStyles.buttonContainer}>
-          <TouchableOpacity style={mapStyles.button} onPress={this.showLocation}>
-            {
-              settingLocation ?
-                <ActivityIndicator size="small" /> :
-                <Icon name="my-location" size={25} style={mapStyles.buttonIcon} />
-            }
-          </TouchableOpacity>
-        </View>
+        <LocationButton onMyLocation={this.onMyLocation} />
       </>
     );
   }
 
   draw(lat: number, lon: number) {
+    if (this.regionBeingChanged) return;
+
     const { polylines } = this.state;
     const lastLine = last(polylines);
     const rest = polylines.filter((it) => it !== lastLine);
@@ -107,30 +128,27 @@ export default class MapsDlg extends CommonModal {
     });
   }
 
-  async showLocation(moveToMyLocation: boolean) {
-    const { settingLocation } = this.state;
-    if (settingLocation) return;
-
-    this.setState({ settingLocation: true });
+  async showLocation() {
     try {
-      const watcher = await BGGeoLocationWatcher.getOrCreate();
-      const pos = await watcher.getPos();
+      const coords = await getLocation();
+      const region = new MapView.AnimatedRegion({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+      this.setState({ region, coords });
+    } catch {}
+  }
 
-      if (moveToMyLocation) {
-        const { latitude, longitude } = pos.coords;
-        this.region
-          .timing({
-            latitude,
-            longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }, 1000)
-          .start();
-      }
-      this.setState({ settingLocation: false, coords: pos.coords });
-    } catch {
-      this.setState({ settingLocation: false });
-    }
+  onMyLocation(coords) {
+    const region = new MapView.AnimatedRegion({
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    });
+    this.setState({ region, coords });
   }
 
   async onBeforeShown(paths = []) {
@@ -143,19 +161,19 @@ export default class MapsDlg extends CommonModal {
     const coords = flatten(paths);
     const len = coords.length;
     const moveToMyLocation = len === 0;
-    this.showLocation(moveToMyLocation);
 
     if (!moveToMyLocation) {
       const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
       const longitude = coords.reduce((accum, p) => accum + p.longitude, 0) / len;
-      this.region
-        .timing({
-          latitude,
-          longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }, 1000)
-        .start();
+      const region = new MapView.AnimatedRegion({
+        latitude,
+        longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+      this.setState({ region });
+    } else {
+      this.showLocation();
     }
 
     this.map.getNode().fitToCoordinates(coords, {
@@ -164,10 +182,14 @@ export default class MapsDlg extends CommonModal {
     });
   }
 
-  onRegionChange(region) {
-    if (this.mapInit) {
-      this.region.setValue(region);
+  onRegionChangeComplete(region) {
+    if (this.state.region) {
+      this.state.region.setValue(region);
     }
-    this.mapInit = true;
+    this.regionBeingChanged = false;
+  }
+
+  onRegionChange(region) {
+    this.regionBeingChanged = true;
   }
 }

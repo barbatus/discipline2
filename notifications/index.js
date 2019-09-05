@@ -1,51 +1,64 @@
-import { InteractionManager } from 'react-native';
-import Reactotron from 'reactotron-react-native';
+import { Alert, Linking } from 'react-native';
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import RNPushNotification from 'react-native-push-notification';
 
-import Timer from 'app/time/Timer';
-import depot from 'app/depot/depot';
+import { caller } from 'app/utils/lang';
 
-import PushNotification from './PushNotification';
-import sendNotifications, { MIN_TICKS_DIST_MS } from './sendNotifications';
+const PushNotification = {
+  configure() {
+    RNPushNotification.configure({
+      permissions: {
+        alert: true,
+        badge: false,
+        sound: true,
+      },
+      onNotification(notification) {
+        if (notification.data.openedInForeground) {
+          // eslint-disable-next-line no-param-reassign
+          notification.userInteraction = true;
+        }
 
-const CHECKING_INTERVAL = (MIN_TICKS_DIST_MS / 2) * 1000;
-
-class Notifications {
-  timer: Timer;
-
-  async start() {
-    try {
-      if (!this.timer) {
-        this.timer = new Timer(0, CHECKING_INTERVAL);
-        this.timer.events.on('onTimer', async () => {
-          const app = await depot.getApp();
-          if (!app.props.alerts) return;
-          InteractionManager.runAfterInteractions(() => sendNotifications());
-        });
+        if (!notification.data.openedInForeground) {
+          notification.finish(PushNotificationIOS.FetchResult.NoData);
+        }
+      },
+      popInitialNotification: true,
+      requestPermissions: true,
+      playSound: false,
+    });
+  },
+  checkPermissions(onSuccess) {
+    RNPushNotification.checkPermissions(({ alert }) => {
+      if (!alert) {
+        this.allowAlerts();
+      } else {
+        caller(onSuccess);
       }
-      if (!this.timer.active) {
-        await PushNotification.configure();
-        this.timer.start();
-      }
-    } catch (ex) {
-      Reactotron.log(ex);
+    });
+  },
+  allowAlerts(delayMs = 1000) {
+    setTimeout(() => {
+      Alert.alert(
+        'Allow Alerts?',
+        'In order to receive tracker notifications, please enable them in the settings page.',
+        [
+          { text: 'Cancel' },
+          { text: 'Settings', onPress: () => Linking.openURL('app-settings:') },
+        ]
+      );
+    }, delayMs);
+  },
+  localNotification(title: string, message: string, checkPermissions: Boolean = false) {
+    if (checkPermissions) {
+      this.checkPermissions();
     }
-  }
+    RNPushNotification.localNotification({
+      title,
+      message,
+      playSound: false,
+      alertAction: 'Click here to open',
+    });
+  },
+};
 
-  stop() {
-    if (this.timer) {
-      this.timer.stop();
-    }
-  }
-
-  checkPermissions() {
-    PushNotification.checkPermissions();
-  }
-
-  dispose() {
-    if (this.timer) {
-      this.timer.dispose();
-    }
-  }
-}
-
-export default new Notifications();
+export default PushNotification;

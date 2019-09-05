@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Text, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 
+import Logger from 'app/log';
 import BGGeoLocationWatcher from 'app/geo/BGGeoLocationWatcher';
 
 import { PATH_COLOR } from './styles';
@@ -79,7 +80,7 @@ async function getGeoWatcher(callback, setCoords) {
     watcher.watchPos();
     callback(watcher, unwatch);
   } catch (ex) {
-    console.log(ex);
+    Logger.log(ex.message, { context: 'MyLocationMarker:getGeoWatcher_catch' });
   }
 }
 

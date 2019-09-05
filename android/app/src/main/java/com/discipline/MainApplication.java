@@ -1,7 +1,11 @@
 package com.discipline;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.facebook.react.PackageList;
+import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
+import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
 import com.bugsnag.BugsnagReactNative;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -99,8 +103,10 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      return packages.addAll(
+          Arrays.<ReactPackage>asList(
             BugsnagReactNative.getPackage(),
             new ReactNativeConfigPackage(),
             new RNScreensPackage(),
@@ -179,6 +185,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNDeviceInfo(),
             new RNBackgroundGeolocation(),
             new MapsPackage()
+        )
       );
     }
 

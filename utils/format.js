@@ -2,7 +2,7 @@ import check from 'check-types';
 
 import { round, int } from './lang';
 
-const MILES_TO_KM = 0.621371;
+const KM_TO_MILES = 0.621371;
 
 const FOOT_TO_MILES = 5280;
 
@@ -42,14 +42,14 @@ export function formatDistance(dist, metric) {
 }
 
 export function formatImperial(dist) {
-  if (dist < 1) {
+  if (dist * KM_TO_MILES < 0.5) {
     return {
-      format: () => int(dist * FOOT_TO_MILES),
+      format: () => int(dist * KM_TO_MILES * FOOT_TO_MILES),
       unit: 'ft',
     };
   }
 
-  const rounded = round(dist * MILES_TO_KM, 2);
+  const rounded = round(dist * KM_TO_MILES, 2);
   const mi = int(rounded);
   const ft = int(rounded * 100 % 100);
 

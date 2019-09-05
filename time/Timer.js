@@ -1,7 +1,22 @@
+import {Platform} from 'react-native';
 import EventEmitter from 'eventemitter3';
 import BackgroundTimer from 'react-native-background-timer';
 
-let timerCount = 0;
+function setIntervalInner(onInterval, timeIntMs) {
+  if (Platform.OS === 'android') {
+    return BackgroundTimer.setInterval(onInterval, timeIntMs);
+  } else {
+    return setInterval(onInterval, timeIntMs);
+  }
+}
+
+function clearIntervalInner(hInterval) {
+  if (Platform.OS === 'android') { 
+    BackgroundTimer.clearInterval(hInterval);
+  } else {
+    clearInterval(hInterval);
+  }
+}
 
 export default class Timer {
   timeMs = 0;
@@ -10,46 +25,36 @@ export default class Timer {
 
   timeIntMs = 0;
 
-  init = false;
+  events = new EventEmitter();
 
-  active = false;
-
-  events: EventEmitter = new EventEmitter();
+  hInterval = null;
 
   constructor(initValue: number, timeIntMs: number = 0) {
     this.timeMs = initValue;
     this.timeIntMs = timeIntMs;
-    timerCount += 1;
   }
 
   start() {
-    if (this.active) return;
+    if (this.hInterval) return;
 
     this.lastStartMS = 0;
-    this.active = true;
+    const onInterval = () => {
+      this.lastStartMS += this.timeIntMs;
+      this.events.emit('onTimer', this.timeMs + this.lastStartMS, this.lastStartMS);
+    };
 
-    if (!this.init) {
-      BackgroundTimer.runBackgroundTimer(() => {
-        if (this.active) {
-          this.lastStartMS += this.timeIntMs;
-          this.events.emit('onTimer', this.timeMs + this.lastStartMS, this.lastStartMS);
-        }
-      }, this.timeIntMs);
-      this.init = true;
-    }
+    this.hInterval = setIntervalInner(onInterval, this.timeIntMs);
   }
 
   stop() {
     this.timeMs = this.timeMs + this.lastStartMS;
-    this.active = false;
+    clearIntervalInner(this.hInterval);
+    this.hInterval = null;
   }
 
   dispose() {
-    this.active = false;
+    clearIntervalInner(this.hInterval);
+    this.hInterval = null;
     this.events.removeAllListeners('onTimer');
-    timerCount -= 1;
-    if (timerCount === 0) {
-      BackgroundTimer.stopBackgroundTimer();
-    }
   }
 }

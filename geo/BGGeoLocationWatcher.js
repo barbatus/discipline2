@@ -9,7 +9,7 @@ import Enum from '../depot/Enum';
 function configureBackgroundGeolocation(callback) {
   BackgroundGeolocation.ready({
     reset: true,
-    debug: true,
+    debug: false,
     desiredAccuracy: 0,
     distanceFilter: 2,
     stopOnTerminate: true,

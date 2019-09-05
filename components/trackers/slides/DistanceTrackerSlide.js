@@ -11,6 +11,7 @@ import {
 import PropTypes from 'prop-types';
 import slowlog from 'react-native-slowlog';
 
+import Logger from 'app/log';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import { formatDistance, formatSpeed } from 'app/utils/format';
 import UserIconsStore from 'app/icons/UserIconsStore';
@@ -223,6 +224,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     responsive: PropTypes.bool,
     tracker: PropTypes.instanceOf(DistanceTracker).isRequired,
     metric: PropTypes.bool.isRequired,
+    shown: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -241,8 +243,6 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     this.onStartBtn = ::this.onStartBtn;
     this.onDistStart = ::this.onDistStart;
     this.onDistStop = ::this.onDistStop;
-    this.onLatLonUpdate = ::this.onLatLonUpdate;
-    this.onTimeUpdate = ::this.onTimeUpdate;
   }
 
   get bodyControls() {
@@ -280,28 +280,45 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   async componentDidMount() {
-    const { tracker } = this.props;
-    const timer = Timers.getOrCreate(tracker.id, tracker.time, TIME_INTRVL_MS);
-    timer.events.on('onTimer', this.onTimeUpdate);
-    try {
-      const distTracker = await DistanceTrackers.getOrCreate(
-        tracker.id,
-        tracker.value,
-        DIST_INTRVL_M,
-      );
-      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
-    } catch ({ value: distTracker }) {
-      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate);
+    const { shown, tracker } = this.props;
+    if (shown) {
+      const timer = Timers.getOrCreate(tracker.id, tracker.time, TIME_INTRVL_MS);
+      let distTracker = null;
+      try {
+        distTracker = await DistanceTrackers.getOrCreate(
+          tracker.id,
+          tracker.value,
+          DIST_INTRVL_M,
+        );
+      } catch({ value: distTracker }) {}
+
+      timer.events.on('onTimer', this.onTimeUpdate, this);
+      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate, this);
+    }
+  }
+
+  async componentDidUpdate({ shown }) {
+    if (shown !== this.props.shown) {
+      const { tracker } = this.props;
+      const timer = Timers.getOrCreate(tracker.id);
+      const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
+      if (this.props.shown) {
+        timer.events.on('onTimer', this.onTimeUpdate, this);
+        distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate, this);
+      } else {
+        timer.events.removeListener('onTimer', this.onTimeUpdate, this);
+        distTracker.events.removeListener('onLatLonUpdate', this.onLatLonUpdate, this);
+      }
     }
   }
 
   async componentWillUnmount() {
     const { tracker } = this.props;
     const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
-    distTracker.events.off('onLatLonUpdate', this.onLatLonUpdate);
+    distTracker.events.off('onLatLonUpdate', this.onLatLonUpdate, this);
     DistanceTrackers.dispose(tracker.id);
     const timer = Timers.getOrCreate(tracker.id);
-    timer.events.off('onTimer', this.onTimeUpdate);
+    timer.events.off('onTimer', this.onTimeUpdate, this);
     Timers.dispose(tracker.id);
   }
 
@@ -338,6 +355,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   onDistStart() {
     Vibration.vibrate();
     this.onStart(0, { time: 0, latlon: [] });
+    Logger.log('DistanceTracker successfully started');
   }
 
   onDistStop() {
@@ -345,6 +363,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   onTimeUpdate(timeMs: number) {
+    console.log('timeMs');
     const { dist } = this.state;
     this.onProgress(dist, { time: timeMs });
     this.setState({ timeMs });

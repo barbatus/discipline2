@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, findNodeHandle, TouchableOpacity } from 'react-native';
-import NativeMethodsMixin from 'NativeMethodsMixin';
+import { UIManager, View, StyleSheet, findNodeHandle, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,15 +26,15 @@ const styles = StyleSheet.create({
   },
   tooltipContent: {
     flex: 1,
-    padding: 12.5,
+    padding: 15,
     flexWrap: 'nowrap',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   tooltipLinkIcon: {
     position: 'absolute',
-    right: 1,
-    top: 1,
+    right: 2.5,
+    top: 2.5,
     color: '#F5F5F5',
     opacity: 0.8,
   },
@@ -59,6 +58,7 @@ const TimeCol = styled(TextCol)`
 const TickText = styled.Text`
   color: #F5F5F5;
   font-weight: 300;
+  font-size: 18px;
 `;
 
 const TimeText = styled(TickText)`
@@ -101,7 +101,7 @@ export default class Month extends PureComponent {
   componentDidUpdate() {
     if (!this.dayWidth) {
       const dayNode = findNodeHandle(this.dayRef);
-      NativeMethodsMixin.measure.call(dayNode, (dx, dy, width, height) => {
+      UIManager.measure(dayNode, (dx, dy, width, height) => {
         this.dayWidth = width;
         this.dayHeight = height;
       });

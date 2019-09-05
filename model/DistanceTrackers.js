@@ -1,10 +1,9 @@
 import check from 'check-types';
 import EventEmitter from 'eventemitter3';
 import last from 'lodash/last';
-import Reactotron from 'reactotron-react-native';
 
-import Bugsnag from 'app/log/Bugsnag';
-import { ValuedError } from 'app/utils/lang';
+import Logger from 'app/log';
+import { ValuedError, round } from 'app/utils/lang';
 import depot from 'app/depot/depot';
 
 import BGGeoLocationWatcher from '../geo/BGGeoLocationWatcher';
@@ -45,8 +44,11 @@ export class DistanceTrackers {
     return Promise.resolve(this.trackers[trackerId]);
   }
 
-  async onLatLonUpdate(trackerId: number, { lastStartDist, lat, lon }) {
+  async onLatLonUpdate(trackerId: number, { stopped, dist, lastStartDist, lat, lon }) {
     await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
+    if (stopped) {
+      Logger.log(`DistanceTracker stopped with dist ${round(dist, 2)}km tracked&saved`);
+    }
   }
 
   dispose(trackerId: number) {
@@ -66,6 +68,7 @@ interface IDistState {
   timestamp: number; // ms
   lat: number;
   lon: number;
+  stopped: Boolean;
 }
 
 export class DistanceTracker {
@@ -120,6 +123,10 @@ export class DistanceTracker {
       await this.geoWatcher.stopWatch();
     } finally {
       this.active = false;
+      this.state = { ...this.state, stopped: true };
+      if (this.state.dist !== this.dist) {
+        this.fireLatLonUpdate(this.state);
+      }
     }
   }
 
@@ -175,12 +182,13 @@ export class DistanceTracker {
         lat: latitude,
         lon: longitude,
         timestamp: Date.now(),
+        stopped: false,
       };
     }
     return null;
   }
 
   onGeoError(error) {
-    Reactotron.error(error);
+    Logger.error(error, { context: 'Geo' });
   }
 }

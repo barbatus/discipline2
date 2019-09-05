@@ -8,34 +8,34 @@ export const TrackerType = new Enum({
   GOAL: {
     title: 'Daily Goal',
     value: 'GOAL',
-    desc: 'Make a daily goal and set it as reached with the help of this tracker',
+    desc: 'Track if you are done with some of your daily goals',
     hint: 'track your gym visits',
   },
 
   COUNTER: {
     title: 'Counter',
     value: 'COUNTER',
-    desc: 'Count number of a particular task or activity you do during the day',
+    desc: 'Count number of things you do during the day',
     hint: 'number of coffee cups you drink',
   },
 
   SUM: {
     title: 'Sum',
     value: 'SUM',
-    desc: 'Track expenses you make during the day for one particular category',
+    desc: 'Track expenses you make during the day',
     hint: 'an amount you spend on lunch',
   },
 
   STOPWATCH: {
     title: 'Stopwatch',
     value: 'STOPWATCH',
-    desc: 'Track time you spend on a task or activity during the day',
+    desc: 'Track how much time you spend on an activity',
   },
 
   DISTANCE: {
     title: 'Distance',
     value: 'DISTANCE',
-    desc: 'Measure the distance you cover for a particular task or activity per day',
+    desc: 'Measure distance you cover for an activity',
   },
 });
 
@@ -47,12 +47,12 @@ export const DepotEvent = {
   TRACK_REMOVED: 'track_removed',
   TRACK_ADDED: 'track_added',
   TRACK_UPDATED: 'track_updated',
-  NOTIF_ADDED: 'notification_added',
+  ALERT_ADDED: 'alert_added',
 };
 
 
 export const DEFAULT_TRACKER_PROPS = [
-  { propId: 'alerts', name: 'Send Notifications' },
+  { propId: 'alerts', name: 'Send Alerts' },
 ];
 
 export const TrackerToPropType = {

@@ -170,7 +170,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   render() {
     const { trackers, scrollEnabled } = this.state;
-    const { style, metric, onScroll, onSwiperMoveUpDone } = this.props;
+    const { style, metric, onScroll, onSwiperMoveUpDone, shown } = this.props;
 
     const slideStyle = {
       width: SCREEN_WIDTH,
@@ -181,7 +181,7 @@ export default class TrackerSwiper extends TrackerRenderer {
         key={tracker.id}
         style={[commonStyles.centered, slideStyle]}
       >
-        {this.renderTracker(tracker, metric)}
+        {this.renderTracker(tracker, metric, shown)}
       </View>
     ));
 

@@ -40,7 +40,7 @@ export default class StartStopBtn extends PureComponent {
     this.onPress = ::this.onPress;
   }
 
-  componentWillReceiveProps({ enabled, active }) {
+  componentDidUpdate({ enabled, active }) {
     if (active !== this.props.active) {
       this.enable();
       return;

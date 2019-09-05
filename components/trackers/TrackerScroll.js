@@ -40,7 +40,7 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   render() {
-    const { style, index, responsive, scale, metric } = this.props;
+    const { style, index, responsive, scale, metric, shown } = this.props;
 
     const slideStyle = {
       width: SCREEN_WIDTH * scale,
@@ -49,7 +49,7 @@ export default class TrackerScroll extends TrackerRenderer {
     const slides = this.state.trackers
       .map((tracker) => (
         <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
-          {this.renderScaledTracker(tracker, scale, responsive, metric)}
+          {this.renderScaledTracker(tracker, scale, responsive, metric, shown)}
         </View>
       ));
 

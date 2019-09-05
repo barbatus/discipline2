@@ -37,7 +37,7 @@ export interface Tracker {
   iconId: string;
   active: boolean;
   ticks?: Array<Tick>;
-  notifications?: Array<Notification>;
+  alerts?: Array<Alert>;
   props: Array<PropType>;
 }
 
@@ -58,7 +58,7 @@ export interface Tick {
   [key: $Values<typeof TrackerToPropType>]: Object;
 }
 
-export interface Notification {
+export interface Alert {
   id: string;
   createdAt: number;
 }
