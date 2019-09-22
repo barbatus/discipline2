@@ -23,7 +23,7 @@ export default class Depot {
       const appVer = DeviceInfo.getVersion();
       return appDB.create(appVer, { alerts: true, metric: true, copilot: {} });
     }
-    const trackers = await this.getTrackers(app.trackers);
+    const trackers = await this.hydrateTrackers(app.trackers);
     return { ...app, trackers };
   }
 
@@ -37,6 +37,11 @@ export default class Depot {
 
   async getApp() {
     return appDB.get();
+  }
+
+  async getTrackers() {
+    const app = await appDB.get();
+    return app.trackers.map((tracker, index) => Object.assign(tracker, { ticks: [] }));
   }
 
   async updateAppProps(props: AppProps) {
@@ -61,14 +66,13 @@ export default class Depot {
     return newTracker;
   }
 
-  async getTrackers(trackers: Tracker[]): Promise<Tracker[]> {
+  async hydrateTrackers(trackers: Tracker[]): Promise<Tracker[]> {
     const allTicks = await Promise.all(trackers.map((tracker) => {
       const fromTimeMs = tracker.active ? time.getYestMs() : time.getDateMs();
       return this.getTrackerTicks(tracker.id, fromTimeMs);
     }));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
-      active: false,
     }));
   }
 

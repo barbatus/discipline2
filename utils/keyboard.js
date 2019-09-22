@@ -8,9 +8,17 @@ export class Keyboard {
   events: EventEmitter = new EventEmitter();
 
   constructor() {
+    this.keyboardWillHide = ::this.keyboardWillHide;
     KeyboardRN.addListener(
       'keyboardWillHide',
-      this.keyboardWillHide.bind(this),
+      this.keyboardWillHide,
+    );
+  }
+
+  dispose() {
+    KeyboardRN.removeListener(
+      'keyboardWillHide',
+      this.keyboardWillHide,
     );
   }
 

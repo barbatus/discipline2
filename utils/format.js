@@ -8,10 +8,10 @@ const FOOT_TO_MILES = 5280;
 
 export const padZero = (digits) => digits < 10 ? `0${digits}` : `${digits}`;
 
-export function formatSpeed(speed) {
+export function formatSpeed(speed, metric = true) {
   check.assert.number(speed);
 
-  const unit = 'km / h';
+  const unit = metric ? 'km/h' : 'mi/h';
   if (speed < 1) {
     return {
       format: () => 0,
@@ -19,15 +19,16 @@ export function formatSpeed(speed) {
     };
   }
 
-  if (speed < 10) {
+  const unitSpeed = metric ? speed : round(speed * KM_TO_MILES, 2);
+  if (unitSpeed < 10) {
     return {
-      format: () => int(speed * 10) / 10,
+      format: () => int(unitSpeed * 10) / 10,
       unit,
     };
   }
 
   return {
-    format: () => int(speed),
+    format: () => int(unitSpeed),
     unit,
   };
 }
@@ -63,7 +64,7 @@ export function formatMetric(dist) {
   if (dist < 1) {
     return {
       format: () => int(dist * 1000),
-      unit: 'm',
+      unit: 'mi',
     };
   }
 

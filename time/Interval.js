@@ -1,4 +1,4 @@
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import EventEmitter from 'eventemitter3';
 import BackgroundTimer from 'react-native-background-timer';
 
@@ -18,32 +18,36 @@ function clearIntervalInner(hInterval) {
   }
 }
 
-export default class Timer {
+export default class Interval extends EventEmitter {
   timeMs = 0;
 
   lastStartMS = 0;
 
   timeIntMs = 0;
 
-  events = new EventEmitter();
-
   hInterval = null;
 
   constructor(initValue: number, timeIntMs: number = 0) {
+    super();
     this.timeMs = initValue;
     this.timeIntMs = timeIntMs;
   }
 
-  start() {
-    if (this.hInterval) return;
+  get value() {
+    return this.timeMs + this.lastStartMS;
+  }
 
-    this.lastStartMS = 0;
+  start(startFromMs: number = 0): boolean {
+    if (this.hInterval) return false;
+
+    this.lastStartMS = startFromMs;
     const onInterval = () => {
       this.lastStartMS += this.timeIntMs;
-      this.events.emit('onTimer', this.timeMs + this.lastStartMS, this.lastStartMS);
+      this.emit('tick', this.timeMs + this.lastStartMS, this.lastStartMS);
     };
 
     this.hInterval = setIntervalInner(onInterval, this.timeIntMs);
+    return true;
   }
 
   stop() {
@@ -52,9 +56,17 @@ export default class Timer {
     this.hInterval = null;
   }
 
+  on(cb: Function, context: any) {
+    super.on('tick', cb, context);
+  }
+
+  off(cb: Function, context: any) {
+    super.off('tick', cb, context);
+  }
+
   dispose() {
     clearIntervalInner(this.hInterval);
     this.hInterval = null;
-    this.events.removeAllListeners('onTimer');
+    this.removeAllListeners('tick');
   }
 }

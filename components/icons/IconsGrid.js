@@ -118,6 +118,8 @@ export default class IconsGrid extends PureComponent {
     return (
       <FlatList
         data={this.rows}
+        initialNumToRender={5}
+        removeClippedSubviews
         renderItem={({ item }) => this.renderRow(item)}
         style={[styles.grid, this.props.style]}
       />

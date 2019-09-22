@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "author": "Alex <alex.borodach@gmail.com>",
   "private": true,
   "scripts": {
@@ -20,7 +20,7 @@
     "link": "react-native link",
     "flow": "flow",
     "certs:ios": "fastlane match development && fastlane match appstore",
-    "fastlane:ios": "fastlane ios beta"
+    "fastlane:ios": "rm -rf ios/Pods && pod install && fastlane ios beta"
   },
   "dependencies": {
     "@craftzdog/pouchdb-core-react-native": "^7.0.0",
@@ -57,7 +57,7 @@
     "react-native-navbar": "^2.1.0",
     "react-native-push-notification": "^3.1.9",
     "react-native-screens": "^1.0.0-alpha.22",
-    "react-native-shake": "^3.3.1",
+    "react-native-sensors": "5.3.0",
     "react-native-side-menu": "^1.1.3",
     "react-native-slowlog": "^1.0.2",
     "react-native-sqlite-2": "1.7.0",
@@ -96,7 +96,6 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "flow-bin": "^0.92.0",
-    "fsevents": "^1.2.7",
     "jest": "^24.8.0",
     "lint-staged": "^3.3.1",
     "metro-react-native-babel-preset": "^0.56.0",

@@ -142,13 +142,17 @@ export default class MapsDlg extends CommonModal {
   }
 
   onMyLocation(coords) {
-    const region = new MapView.AnimatedRegion({
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    });
-    this.setState({ region, coords });
+    if (this.state.region) {
+      this.state.region.timing(coords).start();
+    } else {
+      const region = new MapView.AnimatedRegion({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+      this.setState({ region, coords });
+    }
   }
 
   async onBeforeShown(paths = []) {

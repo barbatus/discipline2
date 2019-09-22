@@ -22,7 +22,7 @@ export const TrackerType = new Enum({
   SUM: {
     title: 'Sum',
     value: 'SUM',
-    desc: 'Track expenses you make during the day',
+    desc: 'Track expenses during your day',
     hint: 'an amount you spend on lunch',
   },
 
@@ -35,7 +35,7 @@ export const TrackerType = new Enum({
   DISTANCE: {
     title: 'Distance',
     value: 'DISTANCE',
-    desc: 'Measure distance you cover for an activity',
+    desc: 'Measure distance whether it\'s jogging or just a walk to a grocery store',
   },
 });
 

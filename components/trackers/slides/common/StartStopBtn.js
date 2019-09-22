@@ -47,14 +47,14 @@ export default class StartStopBtn extends PureComponent {
     }
     if (enabled !== this.props.enabled) {
       /* eslint-disable-next-line */
-      (enabled ? this.enable() : this.disable());
+      (this.props.enabled ? this.enable() : this.disable());
     }
   }
 
   onPress() {
     if (!this.responsive) return;
 
-    this.disable();
+    //this.disable();
     this.props.onPress();
   }
 

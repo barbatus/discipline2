@@ -52,7 +52,7 @@ export class MainScreen extends PureComponent {
   }
 
   componentDidMount() {
-    setTimeout(() => TrackerAlerts.start(), 5000);
+    setTimeout(TrackerAlerts.start, 5000);
   }
 
   componentDidUpdate() {

@@ -1,6 +1,7 @@
 import check from 'check-types';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import EventEmitter from 'eventemitter3';
+import env from 'react-native-config'; 
 
 import { ValuedError } from 'app/utils/lang';
 
@@ -9,14 +10,14 @@ import Enum from '../depot/Enum';
 function configureBackgroundGeolocation(callback) {
   BackgroundGeolocation.ready({
     reset: true,
-    debug: false,
-    desiredAccuracy: 0,
-    distanceFilter: 2,
-    stopOnTerminate: true,
+    debug: Boolean(parseInt(env.GEO_DEBUG, 10)),
+    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+    distanceFilter: 1,
+    stopOnTerminate: false,
     autoSync: false,
-    stationaryRadius: 0,
+    startOnBoot: true,
+    stationaryRadius: 1,
     disableElasticity: true,
-    isMoving: true,
     preventSuspend: true,
   }, callback);
 }

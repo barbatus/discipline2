@@ -45,8 +45,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: bool
       return { desc: 'goal achieved', value: 1, createdAt: minMs };
     case TrackerType.COUNTER: {
       const value = ticks.length;
-      const times = value > 1 ? 'times' : 'time';
-      return { desc: `${value} ${times} raised`, value, createdAt: minMs };
+      return { desc: `+${value} added`, value, createdAt: minMs };
     }
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);

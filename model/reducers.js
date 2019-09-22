@@ -106,8 +106,8 @@ export const trackersReducer = handleActions(
         trackers,
       };
     },
-    [STOP_TRACKER]: (state, { tracker }) => {
-      const trackers = cloneTracker(state.trackers, tracker, null);
+    [STOP_TRACKER]: (state, { tracker, tick }) => {
+      const trackers = cloneTracker(state.trackers, tracker, null, [tick]);
       return {
         ...state,
         trackers,
@@ -152,8 +152,7 @@ export const trackersReducer = handleActions(
     },
     [CHANGE_DAY]: (state, { trackers }) => ({
       ...state,
-      trackers: new List(trackers.map(
-        (tracker) => Trackers.getOne(tracker.id))),
+      trackers: new List(trackers.map((tracker) => Trackers.create(tracker))),
     }),
     [UPDATE_CALENDAR]: (state, { dateMs, ticks }) => ({
       ...state,

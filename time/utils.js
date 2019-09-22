@@ -57,9 +57,9 @@ const time = {
     const mm = duration.minutes();
     const hh = duration.hours();
     const f = {
-      hh,
-      mm,
-      ss,
+      hh: padZero(hh),
+      mm: padZero(mm),
+      ss: padZero(ss),
       format: () => `${f.hh}:${f.mm}:${f.ss}h`,
     };
     return f;
@@ -93,7 +93,7 @@ const time = {
 
   getToEndDayMs() {
     const now = moment();
-    const end = now.endOf('day');
+    const end = moment().endOf('day');
 
     return end.diff(now, 'milliseconds');
   },

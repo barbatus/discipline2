@@ -34,6 +34,8 @@ target 'Discipline' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
 
+  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
+
   target 'DisciplineTests' do
     inherit! :search_paths
     # Pods for testing
@@ -60,9 +62,25 @@ post_install do |installer|
       " && RNC_ROOT=./node_modules/react-native-config/"\
       " && export SYMROOT=$RNC_ROOT/ios/ReactNativeConfig"\
       " && ruby $RNC_ROOT/ios/ReactNativeConfig/BuildDotenvConfig.ruby"
-      
+
       target.build_phases << phase
       target.build_phases.move(phase,0)
     end
+
+    if target.name == 'RNScreens' or
+       target.name == 'RNBackgroundGeolocation' or
+       target.name == 'yoga' or
+       target.name == 'BugsnagReactNative' or
+       target.name == 'RNGestureHandler' or
+       target.name == 'RNSqlite2' or
+       target.name == 'RNBackgroundFetch' or
+       target.name == 'RNDeviceInfo' or
+       target.name == 'BVLinearGradient' or
+       target.name == 'RNVectorIcons' or
+       target.name == 'RNSVG'
+      target.remove_from_project
+    end
   end
  end
+
+

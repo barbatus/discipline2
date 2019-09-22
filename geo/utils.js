@@ -20,3 +20,17 @@ export function getNextLatLon(lat, lon, dist, heading) {
     lon: lon2 * (180 / Math.PI),
   };
 }
+
+export function delta(lat1, lat2, lon1, lon2) {
+  const dlon = Math.PI * (lon2 - lon1) / 180;
+  const dlat = Math.PI * (lat2 - lat1) / 180;
+  const a = (Math.sin(dlat/2)) ** 2 + Math.cos(Math.PI * lat1 / 180) * Math.cos(Math.PI * lat2 / 180) * (Math.sin(dlon/2)) ** 2; 
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+export function approxDelta(lat1, lat2, lon1, lon2) {
+  const dlon = Math.cos(Math.PI * lon2 / 180) - Math.cos(Math.PI * lon1 / 180);
+  const dlat = Math.cos(Math.PI * lat2 / 180) - Math.cos(Math.PI * lat1 / 180);
+  return R * Math.sqrt(dlon ** 2 + dlat ** 2);
+}

@@ -10,7 +10,8 @@ const isLocal = env.NAME === 'local';
 const isBeta = env.NAME === 'beta';
 const isProd = env.NAME === 'prod';
 
-const config = new Configuration(env.BUGSNAG);
+const config = new Configuration();
+config.apiKey = env.BUGSNAG;
 config.notifyReleaseStages = ['beta', 'prod'];
 config.releaseStage = env.NAME;
 const remoteLogger = new Client(config);
@@ -20,13 +21,13 @@ if (isLocal) {
 }
 
 if (isBeta) {
-  PushNotification.config();
+  PushNotification.configure();
 }
 
 const Logger = {
   init: {
     if (isBeta) {
-      PushNotification.config();
+      PushNotification.configure();
     }
   },
   log(message, { context } = {}) {

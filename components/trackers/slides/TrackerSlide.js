@@ -7,7 +7,7 @@ import FlipAnimation from 'app/components/animation/FlipAnimation';
 import ScaleAnimation from 'app/components/animation/ScaleAnimation';
 
 import { caller } from 'app/utils/lang';
-import Keyboard from 'app/utils/keyboard';
+import Keyboard from 'app/utils/Keyboard';
 import Tracker from 'app/model/Tracker';
 import { commonStyles } from 'app/components/styles/common';
 

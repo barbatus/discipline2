@@ -79,7 +79,6 @@ export default class Trackers extends PureComponent {
       swTrackers: [],
       scTrackers: [],
       swiperEnabled: true,
-      scaleStart: false,
       searchView: false,
       trackers: props.trackers,
     };
@@ -102,9 +101,6 @@ export default class Trackers extends PureComponent {
   }
 
   static getDerivedStateFromProps({ trackers }, state) {
-    // Don't rerender when scaling.
-    if (state.scaleStart) { return null; }
-
     if (trackers !== state.trackers) {
       const arr = trackers.toArray();
       return state.searchView ?
@@ -126,7 +122,6 @@ export default class Trackers extends PureComponent {
   }
 
   onScaleStart() {
-    this.setState({ scaleStart: true });
     this.renderSearchTrackers(this.props.trackers);
   }
 
@@ -137,7 +132,7 @@ export default class Trackers extends PureComponent {
   }
 
   onScaleDone() {
-    this.setState({ scaleStart: false, searchView: true });
+    window.requestAnimationFrame(() => this.setState({ searchView: true }));
     this.bscroll.show();
     this.sscroll.show();
     this.swiper.hide();
@@ -261,6 +256,7 @@ export default class Trackers extends PureComponent {
           style={styles.bigScroll}
           scale={5 / 8}
           shown={searchView}
+          onSlideTap={this.onSmallSlideTap}
           onCenterSlideTap={this.onCenterSlideTap}
         />
         <TrackerScroll

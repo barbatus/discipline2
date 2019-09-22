@@ -26,3 +26,5 @@ export class ValuedError<T> extends Error {
     this.baseError = baseError;
   }
 }
+
+export const noop = () => {};

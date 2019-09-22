@@ -277,7 +277,7 @@ export default class TrackerRenderer extends PureComponent {
       case TrackerType.SUM:
         return this.renderSlide(SumTrackerSlide, tracker, trackProps);
       case TrackerType.STOPWATCH:
-        return this.renderSlide(StopWatchTrackerSlide, tracker, trackProps);
+        return this.renderSlide(StopWatchTrackerSlide, tracker, { ...trackProps, metric, shown });
       case TrackerType.DISTANCE:
         return this.renderSlide(DistanceTrackerSlide, tracker, { ...trackProps, metric, shown });
       default:

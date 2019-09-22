@@ -7,12 +7,35 @@ import { ValuedError, round } from 'app/utils/lang';
 import depot from 'app/depot/depot';
 
 import BGGeoLocationWatcher from '../geo/BGGeoLocationWatcher';
+import * as utils from '../geo/utils';
 
-import { Timers as BaseTimers } from './Timers';
+import { Timers as BaseTimers, Timer as BaseTimer } from './Timers';
 
-class DistanceTimers extends BaseTimers {
-  async onTimer(trackerId: number, lastStartMs: number) {
-    await depot.updateLastTickData(trackerId, { time: lastStartMs });
+class DistanceTimer extends BaseTimer {
+  async saveTimerUpdate(lastTickMs: number) {
+    try {
+      await depot.updateLastTickData(this.trackerId, { time: lastTickMs });
+    } catch (ex) {
+      Logger.log(`Try to save DistanceTimer: ${ex.message}`);
+    }
+  }
+}
+
+class DistanceTimers {
+  timers = {};
+
+  getOrCreate(trackerId: number, initValueMs?: number, intervalMs?: number) {
+    if (!this.timers[trackerId]) {
+      this.timers[trackerId] = new DistanceTimer(trackerId, initValueMs, intervalMs);
+    }
+    return this.timers[trackerId];
+  }
+
+  dispose(trackerId: number) {
+    if (this.timers[trackerId]) {
+      this.timers[trackerId].dispose();
+      delete this.timers[trackerId];
+    }
   }
 }
 
@@ -21,34 +44,26 @@ export const Timers = new DistanceTimers();
 export class DistanceTrackers {
   trackers = {};
 
-  async getOrCreate(trackerId: number, initValue?: number, distFilter?: number) {
+  async getOrCreate(trackerId: string, initValue?: number, distFilter?: number) {
     if (!this.trackers[trackerId]) {
       return new Promise(async (resolve, reject) => {
         const createTracker = (geoWatcher) => {
-          const tracker = new DistanceTracker(geoWatcher, initValue, distFilter);
-          tracker.events.on('onLatLonUpdate', (geo) => this.onLatLonUpdate(trackerId, geo));
-          return tracker;
-        };
+          return new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
+        }
 
         try {
           const geoWatcher = await BGGeoLocationWatcher.getOrCreate();
           this.trackers[trackerId] = createTracker(geoWatcher);
           resolve(this.trackers[trackerId]);
-        } catch (error) {
-          const geoWatcher = error.value;
+        } catch (ex) {
+          const geoWatcher = ex.value;
           this.trackers[trackerId] = createTracker(geoWatcher);
-          reject(new ValuedError(this.trackers[trackerId], error));
+          reject(new ValuedError(this.trackers[trackerId], ex));
+          Logger.log(`Try to get BGGeoLocationWatcher: ${ex.message}`);
         }
       });
     }
     return Promise.resolve(this.trackers[trackerId]);
-  }
-
-  async onLatLonUpdate(trackerId: number, { stopped, dist, lastStartDist, lat, lon }) {
-    await depot.updateLastTick(trackerId, lastStartDist, { latlon: { lat, lon } });
-    if (stopped) {
-      Logger.log(`DistanceTracker stopped with dist ${round(dist, 2)}km tracked&saved`);
-    }
   }
 
   dispose(trackerId: number) {
@@ -71,14 +86,13 @@ interface IDistState {
   stopped: Boolean;
 }
 
-export class DistanceTracker {
-  events = new EventEmitter();
+export class DistanceTracker extends EventEmitter {
 
   state: IDistState;
 
-  dist: number = 0; // km
+  savedDist: number = 0; // km
 
-  distFilter: number = 0.005; // 5m
+  distFilter: number;
 
   paths = [];
 
@@ -86,20 +100,37 @@ export class DistanceTracker {
 
   unwatch = null;
 
-  constructor(geoWatcher, initValue: number, distFilterM: number = 5) {
+  constructor(
+    trackerId: string,
+    geoWatcher: BGGeoLocationWatcher,
+    initValue: number = 0,
+    distFilterM: number = 5 // 5m
+  ) {
     check.assert.number(initValue);
+    super();
 
     this.state = {
       dist: initValue,
       lastStartDist: 0,
       delta: 0,
+      speed: 0,
       timestamp: Date.now(),
       lat: null,
       lon: null,
     };
+    this.trackerId = trackerId;
     this.geoWatcher = geoWatcher;
     this.distFilter = distFilterM / 1000;
     this.onPosChange = ::this.onPosChange;
+  }
+
+  get value() {
+    return {
+      speed: this.state.speed,
+      dist: this.state.dist,
+      lat: this.state.lat,
+      lon: this.state.lon,
+    };
   }
 
   async start() {
@@ -124,15 +155,16 @@ export class DistanceTracker {
     } finally {
       this.active = false;
       this.state = { ...this.state, stopped: true };
-      if (this.state.dist !== this.dist) {
+      if (this.state.dist !== this.savedDist) {
+        await this.saveLatLonUpdate(this.state);
         this.fireLatLonUpdate(this.state);
       }
     }
   }
 
   dispose() {
+    this.removeAllListeners('onLatLonUpdate');
     this.stop();
-    this.events.removeAllListeners('onLatLonUpdate');
     this.geoWatcher = null;
     this.paths = null;
   }
@@ -141,9 +173,10 @@ export class DistanceTracker {
     let state;
     // eslint-disable-next-line no-cond-assign
     if ((state = this.setNextPosState(this.state, pos))) {
-      if ((state.dist - this.dist) >= this.distFilter) {
+      if ((state.dist - this.savedDist) >= this.distFilter) {
+        this.saveLatLonUpdate(state);
         this.fireLatLonUpdate(state);
-        this.dist = state.dist;
+        this.savedDist = state.dist;
       }
       this.state = state;
       const path = last(this.paths);
@@ -152,7 +185,15 @@ export class DistanceTracker {
   }
 
   fireLatLonUpdate(latLon) {
-    this.events.emit('onLatLonUpdate', latLon);
+    this.emit('onLatLonUpdate', latLon);
+  }
+
+  async saveLatLonUpdate({ stopped, dist, lastStartDist, lat, lon }) {
+    try {
+      await depot.updateLastTick(this.trackerId, lastStartDist, { latlon: { lat, lon } });
+    } catch (ex) {
+      Logger.log(`Try to save DistanceTracker: ${ex.message}`);
+    }
   }
 
   startTracking({ latitude, longitude, heading }) {
@@ -168,19 +209,17 @@ export class DistanceTracker {
     this.paths.push([]);
   }
 
-  setNextPosState(prevState, { coords: { speed, latitude, longitude } }) {
-    if (prevState.lat !== latitude ||
-        prevState.lon !== longitude) {
-      const pastMs = Date.now() - prevState.timestamp;
+  setNextPosState(prevState, { coords: { speed, latitude: lat, longitude: lon } }) {
+    if (prevState.lat !== lat || prevState.lon !== lon) {
       const speedAbs = Math.abs(speed);
-      const delta = (speedAbs / 1000) * (pastMs / 1000);
+      const delta = prevState.lat ? utils.delta(prevState.lat, lat, prevState.lon, lon) : 0;
       return {
         delta,
+        lat,
+        lon,
         speed: speedAbs * 3600 / 1000, // km / h
         dist: prevState.dist + delta,
         lastStartDist: prevState.lastStartDist + delta,
-        lat: latitude,
-        lon: longitude,
         timestamp: Date.now(),
         stopped: false,
       };

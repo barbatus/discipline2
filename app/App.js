@@ -12,7 +12,7 @@ import {
 import { changeDay, loadApp } from '../model/actions';
 import MainScreen from '../components/screens/MainScreen';
 
-import DayUpdateEvent from './DayUpdateEvent';
+import DayChangeEvent from './DayChangeEvent';
 
 export default function createApp(store: Store<any>) {
   return createAppContainer(
@@ -28,18 +28,24 @@ export default function createApp(store: Store<any>) {
 }
 
 class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
-  dayUpdate = new DayUpdateEvent();
+  constructor(props) {
+    super(props);
+    this.onDayChange = ::this.onDayChange;
+  }
 
   componentDidMount() {
     const { store } = this.props;
-    this.dayUpdate.on(() => {
-      store.dispatch(changeDay());
-    });
+    DayChangeEvent.on(this.onDayChange);
     store.dispatch(loadApp());
   }
 
   componentWillUnmount() {
-    this.dayUpdate.dipose();
+    DayChangeEvent.off(this.onDayChange);
+  }
+
+  onDayChange() {
+    const { store } = this.props;
+    store.dispatch(changeDay());
   }
 
   render() {

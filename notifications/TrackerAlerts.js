@@ -3,7 +3,7 @@ import regression from 'regression';
 
 import Logger from 'app/log';
 import time from 'app/time/utils';
-import Timer from 'app/time/Timer';
+import Interval from 'app/time/Interval';
 import depot from 'app/depot/depot';
 
 import PushNotification from './index';
@@ -64,16 +64,16 @@ export async function sendAlerts() {
 const CHECKING_INTERVAL = (MIN_TICKS_DIST_MS / 2) * 1000;
 
 class TrackerAlerts {
-  timer: Timer;
+  timer: Interval;
 
   async start() {
     try {
       if (!this.timer) {
-        this.timer = new Timer(0, CHECKING_INTERVAL);
-        this.timer.events.on('onTimer', async () => {
+        this.timer = new Interval(0, CHECKING_INTERVAL);
+        this.timer.on(async () => {
           const app = await depot.getApp();
           if (!app.props.alerts) return;
-          InteractionManager.runAfterInteractions(() => sendAlerts());
+          InteractionManager.runAfterInteractions(sendAlerts);
         });
       }
       if (!this.timer.active) {

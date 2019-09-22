@@ -11,7 +11,7 @@ import {
 import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
-import Keyboard from 'app/utils/keyboard';
+import Keyboard from 'app/utils/Keyboard';
 import { caller } from 'app/utils/lang';
 import { IS_IPHONE5 } from 'app/components/styles/common';
 import { SumTracker } from 'app/model/Tracker';
@@ -86,6 +86,8 @@ export default class SumTrackerSlide extends TrackerSlide {
     tracker: PropTypes.instanceOf(SumTracker).isRequired,
   };
 
+  undoAlertOn: boolean;
+
   constructor(props) {
     super(props);
     this.onPlus = ::this.onPlus;
@@ -118,22 +120,28 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   shake() {
     const { tracker } = this.props;
-    if (tracker.lastTick) {
-      Alert.alert('Do you want to undo?', null,
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
+    if (this.undoAlertOn || !tracker.lastTick) return;
+
+    this.undoAlertOn = true;
+    const onHide = () => this.undoAlertOn = false;
+    Alert.alert('Do you want to undo?', null,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: onHide,
+        },
+        {
+          text: 'Yes',
+          style: 'ok',
+          onPress: () => {
+            caller(this.props.onUndo);
+            onHide();
           },
-          {
-            text: 'Yes',
-            style: 'ok',
-            onPress: () => caller(this.props.onUndo),
-          },
-        ],
-        { cancelable: false },
-      );
-    }
+        },
+      ],
+      { cancelable: false },
+    );
   }
 
   onTap() {

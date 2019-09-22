@@ -1,9 +1,9 @@
 import React from 'react';
 import { Animated, View } from 'react-native';
-import RNShake from 'react-native-shake';
 import isNumber from 'lodash/isNumber';
 
 import { caller } from 'app/utils/lang';
+import ShakeEvent from 'app/utils/ShakeEvent';
 
 import Animation from '../animation/Animation';
 import { minScale, MoveUpScaleResponderAnim } from '../animation/MoveUpScaleResponderAnim';
@@ -27,6 +27,11 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   addIndex = null;
 
+  constructor(props) {
+    super(props);
+    this.shakeCurrent = ::this.shakeCurrent;
+  }
+
   get current() {
     return this.state.trackers[this.index];
   }
@@ -40,13 +45,13 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   componentWillUnmount() {
-    RNShake.removeEventListener('ShakeEvent');
+    ShakeEvent.off(this.shakeCurrent);
     this.moveScale.dispose();
     this.responder.dispose();
   }
 
   componentDidMount() {
-    RNShake.addEventListener('ShakeEvent', ::this.shakeCurrent);
+    ShakeEvent.on(this.shakeCurrent);
     this.handleMoveUp();
   }
 
@@ -65,7 +70,13 @@ export default class TrackerSwiper extends TrackerRenderer {
     }
 
     if (isNumber(addIndex) && prevAddIndex !== addIndex) {
-      this.scrollTo(addIndex);
+      // Hack: the scroll list is not uptated yet here
+      // when a tacker is added at the end
+      if (addIndex === trackers.length - 1) {
+        window.requestAnimationFrame(() => this.scrollTo(addIndex));
+      } else {
+        this.scrollTo(addIndex);
+      }
       caller(this.props.onAddCompleted, addIndex);
     }
 

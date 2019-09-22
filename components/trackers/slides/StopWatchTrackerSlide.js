@@ -78,7 +78,6 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     this.onLap = ::this.onLap;
     this.onTick = ::this.onTick;
     this.onStop = ::this.onStop;
-    this.onTimer = ::this.onTimer;
   }
 
   get bodyControls() {
@@ -114,22 +113,47 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     );
   }
 
-  componentDidMount() {
-    const { tracker } = this.props;
-    const timer = Timers.getOrCreate(tracker.id, tracker.value, 1000);
-    timer.events.on('onTimer', this.onTimer);
+  async componentDidMount() {
+    const { tracker, shown } = this.props;
+    if (shown) {
+      const timer = await Timers.getOrCreate(tracker.id, 1000);
+      timer.on(this.onTimer, this);
+
+      if (tracker.active) {
+        timer.restart();
+      }
+    }
   }
 
-  componentWillUnmount() {
+  async componentDidUpdate(prevProps) {
+    const { shown, tracker } = this.props;
+  
+    if (prevProps.shown !== shown) {
+      const { tracker } = this.props;
+      const timer = await Timers.getOrCreate(tracker.id);
+      if (shown) {
+        timer.on(this.onTimer, this);
+        this.setState({ timeMs: timer.value });
+      } else {
+        timer.off(this.onTimer, this);
+      }
+    }
+
+    if (prevProps.tracker !== tracker) {
+      this.setState({ lapTimeMs: 0, timeMs: tracker.value });
+    }
+  }
+
+  async componentWillUnmount() {
     const { tracker } = this.props;
-    const timer = Timers.getOrCreate(tracker.id);
-    timer.events.off('onTimer', this.onTimer);
+    const timer = await Timers.getOrCreate(tracker.id);
+    timer.off(this.onTimer, this);
     Timers.dispose(tracker.id);
   }
 
-  startTimer() {
+  async startTimer() {
     const { tracker } = this.props;
-    const timer = Timers.getOrCreate(tracker.id);
+    const timer = await Timers.getOrCreate(tracker.id);
     timer.start();
     this.onStart(0);
   }
@@ -145,9 +169,9 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     this.setState({ timeMs });
   }
 
-  onStop() {
+  async onStop() {
     const { tracker } = this.props;
-    const timer = Timers.getOrCreate(tracker.id);
+    const timer = await Timers.getOrCreate(tracker.id);
     timer.stop();
     super.onStop();
   }

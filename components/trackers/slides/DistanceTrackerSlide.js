@@ -180,7 +180,7 @@ DistanceFooterFn.propTypes = {
 };
 
 const DistanceBodyFn = ({ dist, time, metric, speed, showSpeed }) => {
-  const speedFormat = formatSpeed(speed);
+  const speedFormat = formatSpeed(speed, metric);
   return (
     <View style={trackerStyles.controls}>
       {
@@ -292,22 +292,29 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         );
       } catch({ value: distTracker }) {}
 
-      timer.events.on('onTimer', this.onTimeUpdate, this);
-      distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate, this);
+      timer.on(this.onTimeUpdate, this);
+      distTracker.on('onLatLonUpdate', this.onLatLonUpdate, this);
     }
   }
 
-  async componentDidUpdate({ shown }) {
-    if (shown !== this.props.shown) {
+  async componentDidUpdate(prevProps) {
+    const { shown, tracker } = this.props;
+
+    if (prevProps.shown !== shown) {
       const { tracker } = this.props;
       const timer = Timers.getOrCreate(tracker.id);
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
-      if (this.props.shown) {
-        timer.events.on('onTimer', this.onTimeUpdate, this);
-        distTracker.events.on('onLatLonUpdate', this.onLatLonUpdate, this);
+      if (shown) {
+        timer.on(this.onTimeUpdate, this);
+        distTracker.on('onLatLonUpdate', this.onLatLonUpdate, this);
+        this.setState({ ...distTracker.value, timeMs: timer.value });
       } else {
-        timer.events.removeListener('onTimer', this.onTimeUpdate, this);
-        distTracker.events.removeListener('onLatLonUpdate', this.onLatLonUpdate, this);
+        timer.off(this.onTimeUpdate, this);
+        distTracker.off('onLatLonUpdate', this.onLatLonUpdate, this);
+      }
+    } else {
+      if (!tracker.active && prevProps.tracker !== tracker) {
+        this.setState({ dist: tracker.value, timeMs: tracker.time, speed: 0 });
       }
     }
   }
@@ -315,10 +322,10 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   async componentWillUnmount() {
     const { tracker } = this.props;
     const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
-    distTracker.events.off('onLatLonUpdate', this.onLatLonUpdate, this);
+    distTracker.off('onLatLonUpdate', this.onLatLonUpdate, this);
     DistanceTrackers.dispose(tracker.id);
     const timer = Timers.getOrCreate(tracker.id);
-    timer.events.off('onTimer', this.onTimeUpdate, this);
+    timer.off(this.onTimeUpdate, this);
     Timers.dispose(tracker.id);
   }
 
@@ -333,7 +340,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       this.onDistStart();
     } catch (error) {
       if (error !== BGError.LOCATION_PERMISSION_DENIED) {
-        Alert.alert('Distance Tracking', error.message);
+        Logger.log('Location permission is denied');
       }
       this.setState({ btnEnabled: true });
     }
@@ -344,12 +351,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     try {
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
       await distTracker.stop();
-      this.onDistStop();
       // eslint-disable-next-line no-empty
     } catch {}
-
     const timer = Timers.getOrCreate(tracker.id);
     timer.stop();
+    this.onDistStop();
   }
 
   onDistStart() {
@@ -359,11 +365,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   onDistStop() {
+    this.setState({ speed: 0 });
     this.onStop();
   }
 
   onTimeUpdate(timeMs: number) {
-    console.log('timeMs');
     const { dist } = this.state;
     this.onProgress(dist, { time: timeMs });
     this.setState({ timeMs });
