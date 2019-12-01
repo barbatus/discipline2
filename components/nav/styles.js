@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+export const MENU_TEXT_COLOR = 'white';
+
 const styles = StyleSheet.create({
   navTitle: {
     paddingBottom: 5,

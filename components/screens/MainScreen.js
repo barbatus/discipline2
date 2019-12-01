@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import SideMenu from 'react-native-side-menu';
 import { copilot } from '@okgrow/react-native-copilot';
 
-import TrackerAlerts from 'app/notifications/TrackerAlerts';
+import PushNotification from 'app/notifications';
+import { launchNotify } from 'app/notifications/alerts';
 import { updateAppProps } from 'app/model/actions';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import IconsDlg from 'app/components/dlg/IconsDlg';
@@ -52,17 +53,13 @@ export class MainScreen extends PureComponent {
   }
 
   componentDidMount() {
-    setTimeout(TrackerAlerts.start, 5000);
+    launchNotify();
   }
 
   componentDidUpdate() {
     registry.register(DlgType.ICONS, this.iconsDlg);
     registry.register(DlgType.MAPS, this.mapsDlg);
     registry.register(DlgType.TICKS, this.ticksDlg);
-  }
-
-  componentWillUnmount() {
-    TrackerAlerts.dispose();
   }
 
   onSlideChange(index, previ, animated) {
@@ -101,7 +98,7 @@ export class MainScreen extends PureComponent {
 
   onAlertChange(alerts: boolean) {
     if (alerts) {
-      TrackerAlerts.checkPermissions();
+      PushNotification.checkPermissions();
     }
     this.props.onUpdateAlerts(alerts);
   }

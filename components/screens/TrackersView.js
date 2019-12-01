@@ -110,6 +110,7 @@ class TrackersView extends PureComponent {
     };
     this.onStartEdit = ::this.onStartEdit;
     this.onTrackerEdit = ::this.onTrackerEdit;
+    this.onSubmitFail = ::this.onSubmitFail;
     this.onRemove = ::this.onRemove;
     this.onRemoveCompleted = ::this.onRemoveCompleted;
     this.onSaveCompleted = ::this.onSaveCompleted;
@@ -293,6 +294,10 @@ class TrackersView extends PureComponent {
     }));
   }
 
+  onSubmitFail() {
+    this.isActive = false;
+  }
+
   saveEdit() {
     if (this.isActive) return;
 
@@ -347,6 +352,7 @@ class TrackersView extends PureComponent {
             onSwiperMoveUpStart={onMoveUp}
             onSwiperMoveUpDone={this.onSwiperMoveUpDone}
             onTrackerEdit={this.onTrackerEdit}
+            onSubmitFail={this.onSubmitFail}
             onSlideChange={this.onSlideChange}
           />
         </View>

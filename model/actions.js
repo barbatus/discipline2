@@ -125,7 +125,7 @@ export const stopTracker = (tracker, value, data) => async (dispatch) => {
   }
   const tick = await depot.getLastTick(tracker.id);
   return dispatch({
-    type: STOP_TRACKER,
+    type: STOP_TRACKER_WITH_TICK_UPDATE,
     tracker: updTracker,
     tick: new Tick(tick),
   });

@@ -3,15 +3,14 @@ import { StyleSheet, Switch, View, Text, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import DeviceInfo from 'react-native-device-info';
 
-import {
-  SLIDE_WIDTH_OFFSET,
-  SLIDE_HEIGHT,
-} from 'app/components/trackers/styles/slideStyles';
+import { IS_BETA } from 'app/env';
+import { SLIDE_WIDTH_OFFSET, SLIDE_HEIGHT } from 'app/components/trackers/styles/slideStyles';
 import { CONTENT_OFFSET } from 'app/components/styles/common';
 
-const MENU_COLOR = 'white';
+import { MENU_TEXT_COLOR } from './styles';
+import Debug from './Debug';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   menu: {
     top: CONTENT_OFFSET,
     height: SLIDE_HEIGHT,
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
   prop: {
     flex: 0,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: SLIDE_WIDTH_OFFSET / 2,
     marginBottom: 20,
@@ -32,15 +31,16 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   label: {
-    color: MENU_COLOR,
+    color: MENU_TEXT_COLOR,
     marginRight: 5,
     fontSize: 18,
     width: 120,
     fontWeight: '300',
   },
   ver: {
-    color: MENU_COLOR,
+    color: MENU_TEXT_COLOR,
     opacity: 0.8,
+    textAlign: 'center',
   },
 });
 
@@ -58,31 +58,35 @@ export default class Menu extends PureComponent {
 
   render() {
     const { style, props, onMeasureChange, onAlertChange } = this.props;
+    const justify = IS_BETA ? { justifyContent: 'space-between' } : null;
     return (
-      <View style={[styles.menu, style]}>
-        <View style={styles.prop}>
-          <Text style={styles.label}>
-            Metric System
-          </Text>
-          <Switch
-            onValueChange={onMeasureChange}
-            value={props.metric}
-          />
-        </View>
-        <View style={[styles.prop, styles.lastProp]}>
-          <Text style={styles.label}>
-            Notifications
-          </Text>
-          <Switch
-            onValueChange={onAlertChange}
-            value={props.alerts}
-          />
-        </View>
+      <View style={[styles.menu, style, justify]}>
+        {IS_BETA && <Debug />}
         <View>
-          <Text style={styles.ver}>
-            {DeviceInfo.getVersion()}
-            {'v'}
-          </Text>
+          <View style={styles.prop}>
+            <Text style={styles.label}>
+              Metric System
+            </Text>
+            <Switch
+              onValueChange={onMeasureChange}
+              value={props.metric}
+            />
+          </View>
+          <View style={[styles.prop, styles.lastProp]}>
+            <Text style={styles.label}>
+              Notifications
+            </Text>
+            <Switch
+              onValueChange={onAlertChange}
+              value={props.alerts}
+            />
+          </View>
+          <View>
+            <Text style={styles.ver}>
+              {DeviceInfo.getVersion()}
+              {'v'}
+            </Text>
+          </View>
         </View>
       </View>
     );

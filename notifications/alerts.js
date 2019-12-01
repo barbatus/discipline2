@@ -1,5 +1,6 @@
 import { InteractionManager } from 'react-native';
 import regression from 'regression';
+import BackgroundFetch from 'react-native-background-fetch';
 
 import Logger from 'app/log';
 import time from 'app/time/utils';
@@ -8,7 +9,7 @@ import depot from 'app/depot/depot';
 
 import PushNotification from './index';
 
-export const MIN_TICKS_DIST_MS = 10 * 60 * 1000;
+export const MIN_TICKS_DIST_MS = 30 * 60 * 1000;
 
 export const MIN_TICKS_AMOUNT = 5;
 
@@ -21,7 +22,7 @@ function checkIfTicksFit(ticks) {
   return validDists.length >= MIN_TICKS_AMOUNT - 1;
 }
 
-function predictNextDist(ticks) {
+function predictNext(ticks) { // Regression
   const dots = [];
   for (let i = 0; i < ticks.length - 1; i++) {
     dots.push([i + 1, ticks[i + 1].createdAt - ticks[i].createdAt]);
@@ -30,7 +31,7 @@ function predictNextDist(ticks) {
   return result.predict(ticks.length)[1];
 }
 
-export async function sendAlerts() {
+export async function evalAlerts(callback: Function) {
   const app = await depot.getApp();
   const tracksToNotify = app.trackers.filter((tracker) => tracker.props.alerts);
   tracksToNotify.forEach(async (tracker) => {
@@ -42,7 +43,7 @@ export async function sendAlerts() {
 
     if (!checkIfTicksFit(ticks)) return;
 
-    const nextDistMs = predictNextDist(ticks);
+    const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
     if (distToNow < 0) return;
 
@@ -53,53 +54,42 @@ export async function sendAlerts() {
     averageDist /= (ticks.length - 1);
     try {
       await depot.addAlert(tracker.id, time.getNowMs());
-      const alertBody = `Usually you use this tracker every ${time.formatDurationMs(averageDist)}`;
-      PushNotification.localNotification(`${tracker.title} Tracker`, alertBody);
+      callback(tracker, averageDist);
     } catch (ex) {
-      Logger.error(ex, { context: 'TrackerAlerts:sendAlerts' });
+      Logger.log(ex, { context: 'alerts:evalAlerts' });
     }
   });
 }
 
-const CHECKING_INTERVAL = (MIN_TICKS_DIST_MS / 2) * 1000;
+export async function notify() {
+  try {
+    await PushNotification.configure();
 
-class TrackerAlerts {
-  timer: Interval;
-
-  async start() {
-    try {
-      if (!this.timer) {
-        this.timer = new Interval(0, CHECKING_INTERVAL);
-        this.timer.on(async () => {
-          const app = await depot.getApp();
-          if (!app.props.alerts) return;
-          InteractionManager.runAfterInteractions(sendAlerts);
-        });
-      }
-      if (!this.timer.active) {
-        await PushNotification.configure();
-        this.timer.start();
-      }
-    } catch (ex) {
-      Logger.error(ex, { context: 'TrackerAlerts:start' });
-    }
-  }
-
-  stop() {
-    if (this.timer) {
-      this.timer.stop();
-    }
-  }
-
-  checkPermissions() {
-    PushNotification.checkPermissions();
-  }
-
-  dispose() {
-    if (this.timer) {
-      this.timer.dispose();
-    }
+    const app = await depot.getApp();
+    if (!app.props.alerts) return;
+    const showAlert = (tracker) => {
+      const alertBody = `Usually you use this tracker every ${time.formatDurationMs(averageDist)}`;
+      PushNotification.localNotification(`${tracker.title} Tracker`, alertBody);
+    };
+    InteractionManager.runAfterInteractions(evalAlerts.bind(this, showAlert));
+  } catch (ex) {
+    Logger.error(ex, { context: 'alerts:notify' });
   }
 }
 
-export default new TrackerAlerts();
+export function launchNotify() {
+  BackgroundFetch.configure({
+    minimumFetchInterval: 15, // minutes (15 is minimum allowed)
+    // Android options
+    stopOnTerminate: false,
+    startOnBoot: true,
+  }, async () => {
+    await notify();
+    BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
+  }, (ex) => {
+    Logger.error(ex, { context: 'RNBackgroundFetch.configure' });
+  });
+
+  BackgroundFetch.registerHeadlessTask(notify);
+  BackgroundFetch.start();
+}

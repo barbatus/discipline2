@@ -139,6 +139,7 @@ export default class TrackerRenderer extends PureComponent {
     onProgress: PropTypes.func,
     onUndo: PropTypes.func,
     onTrackerEdit: PropTypes.func,
+    onSubmitFail: PropTypes.func,
     trackers: PropTypes.arrayOf(PropTypes.instanceOf(Tracker)).isRequired,
     enabled: PropTypes.bool.isRequired,
     responsive: PropTypes.bool,
@@ -175,6 +176,7 @@ export default class TrackerRenderer extends PureComponent {
     this.onStop = ::this.onStop;
     this.onProgress = ::this.onProgress;
     this.onTrackerEdit = ::this.onTrackerEdit;
+    this.onSubmitFail = ::this.onSubmitFail;
   }
 
   static getDerivedStateFromProps({ trackers, enabled }, prevState) {
@@ -232,6 +234,10 @@ export default class TrackerRenderer extends PureComponent {
 
   onTrackerEdit(values) {
     caller(this.props.onTrackerEdit, values);
+  }
+
+  onSubmitFail() {
+    caller(this.props.onSubmitFail);
   }
 
   hide() {
@@ -301,6 +307,7 @@ export default class TrackerRenderer extends PureComponent {
         onStop={this.onStop}
         onProgress={this.onProgress}
         onTrackerEdit={this.onTrackerEdit}
+        onSubmitFail={this.onSubmitFail}
         tracker={tracker}
       />
     );

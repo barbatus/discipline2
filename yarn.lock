@@ -6199,6 +6199,10 @@ react-native-gesture-handler@^1.1.0:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-keep-awake@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/react-native-keep-awake/-/react-native-keep-awake-4.0.0.tgz#d89fdc3fb60b3cffa979ef37dc5816196df998a2"
+
 react-native-linear-gradient@2.4.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.4.0.tgz#51d8ea12bb72a59bede9edc87b694b16b64cf435"

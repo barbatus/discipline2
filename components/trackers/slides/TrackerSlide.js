@@ -110,7 +110,7 @@ export default class TrackerSlide extends PureComponent {
   shake() {}
 
   renderBackView() {
-    const { editable, onTrackerEdit } = this.props;
+    const { editable, onTrackerEdit, onSubmitFail } = this.props;
     if (!editable) return null;
 
     const { editTracker } = this.state;
@@ -124,6 +124,7 @@ export default class TrackerSlide extends PureComponent {
         initialValues={editTracker}
         onRemove={this.onRemove}
         onSubmitSuccess={onTrackerEdit}
+        onSubmitFail={onSubmitFail}
       />
     ) : null;
   }

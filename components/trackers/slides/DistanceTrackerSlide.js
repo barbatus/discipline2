@@ -313,7 +313,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         distTracker.off('onLatLonUpdate', this.onLatLonUpdate, this);
       }
     } else {
-      if (!tracker.active && prevProps.tracker !== tracker) {
+      if (prevProps.tracker !== tracker) {
         this.setState({ dist: tracker.value, timeMs: tracker.time, speed: 0 });
       }
     }

@@ -64,7 +64,7 @@ export function formatMetric(dist) {
   if (dist < 1) {
     return {
       format: () => int(dist * 1000),
-      unit: 'mi',
+      unit: 'm',
     };
   }
 

@@ -41,7 +41,8 @@ export default class Depot {
 
   async getTrackers() {
     const app = await appDB.get();
-    return app.trackers.map((tracker, index) => Object.assign(tracker, { ticks: [] }));
+    const trackers = await this.hydrateTrackers(app.trackers);
+    return trackers;
   }
 
   async updateAppProps(props: AppProps) {
@@ -66,10 +67,14 @@ export default class Depot {
     return newTracker;
   }
 
-  async hydrateTrackers(trackers: Tracker[]): Promise<Tracker[]> {
-    const allTicks = await Promise.all(trackers.map((tracker) => {
-      const fromTimeMs = tracker.active ? time.getYestMs() : time.getDateMs();
-      return this.getTrackerTicks(tracker.id, fromTimeMs);
+  async hydrateTrackers(trackers: Tracker[], timeFromMs: number = time.getDateMs()): Promise<Tracker[]> {
+    const allTicks = await Promise.all(trackers.map(async (tracker) => {
+      let ticksFromMs = timeFromMs;
+      if (tracker.active) {
+        const lastTick = await this.getLastTick(tracker.id)
+        ticksFromMs = Math.min(ticksFromMs, lastTick.createdAt);
+      }
+      return this.getTrackerTicks(tracker.id, ticksFromMs);
     }));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],

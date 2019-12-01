@@ -1,6 +1,7 @@
 import check from 'check-types';
 import EventEmitter from 'eventemitter3';
 import last from 'lodash/last';
+import KeepAwake from 'react-native-keep-awake';
 
 import Logger from 'app/log';
 import { ValuedError, round } from 'app/utils/lang';
@@ -47,10 +48,8 @@ export class DistanceTrackers {
   async getOrCreate(trackerId: string, initValue?: number, distFilter?: number) {
     if (!this.trackers[trackerId]) {
       return new Promise(async (resolve, reject) => {
-        const createTracker = (geoWatcher) => {
-          return new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
-        }
-
+        const createTracker = (geoWatcher) =>
+          new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
         try {
           const geoWatcher = await BGGeoLocationWatcher.getOrCreate();
           this.trackers[trackerId] = createTracker(geoWatcher);
@@ -61,15 +60,27 @@ export class DistanceTrackers {
           reject(new ValuedError(this.trackers[trackerId], ex));
           Logger.log(`Try to get BGGeoLocationWatcher: ${ex.message}`);
         }
+        this.trackers[trackerId].on('onStart', this.updateKeepAwake, this);
+        this.trackers[trackerId].on('onStop', this.updateKeepAwake, this);
       });
     }
     return Promise.resolve(this.trackers[trackerId]);
   }
 
-  dispose(trackerId: number) {
+  async dispose(trackerId: number) {
     if (this.trackers[trackerId]) {
-      this.trackers[trackerId].dispose();
+      await this.trackers[trackerId].dispose();
       delete this.trackers[trackerId];
+    }
+  }
+
+  updateKeepAwake() {
+    const trackers = Object.values(this.trackers).filter(tracker => tracker.active);
+    if (trackers.length === 0) {
+      KeepAwake.deactivate();
+    }
+    if (trackers.length === 1) {
+      KeepAwake.activate();
     }
   }
 }
@@ -98,7 +109,9 @@ export class DistanceTracker extends EventEmitter {
 
   isStarting = false;
 
-  unwatch = null;
+  unwatchGeo = null;
+
+  active = false;
 
   constructor(
     trackerId: string,
@@ -140,7 +153,7 @@ export class DistanceTracker extends EventEmitter {
     try {
       const pos = await this.geoWatcher.watchPos();
       this.startTracking(pos.coords);
-      this.unwatch = this.geoWatcher.on('position', this.onPosChange);
+      this.unwatchGeo = this.geoWatcher.on('position', this.onPosChange);
     } finally {
       this.isStarting = false;
     }
@@ -149,7 +162,7 @@ export class DistanceTracker extends EventEmitter {
   async stop() {
     if (!this.active) return;
 
-    this.unwatch();
+    this.unwatchGeo();
     try {
       await this.geoWatcher.stopWatch();
     } finally {
@@ -159,14 +172,18 @@ export class DistanceTracker extends EventEmitter {
         await this.saveLatLonUpdate(this.state);
         this.fireLatLonUpdate(this.state);
       }
+      this.emit('onStop');
     }
   }
 
-  dispose() {
-    this.removeAllListeners('onLatLonUpdate');
-    this.stop();
-    this.geoWatcher = null;
-    this.paths = null;
+  async dispose() {
+    try {
+      await this.stop();
+    } finally {
+      this.removeAllListeners();
+      this.geoWatcher = null;
+      this.paths = null;
+    }
   }
 
   onPosChange(pos) {
@@ -207,6 +224,7 @@ export class DistanceTracker extends EventEmitter {
       lastStartDist: 0,
     };
     this.paths.push([]);
+    this.emit('onStart');
   }
 
   setNextPosState(prevState, { coords: { speed, latitude: lat, longitude: lon } }) {

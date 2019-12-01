@@ -106,8 +106,8 @@ export const trackersReducer = handleActions(
         trackers,
       };
     },
-    [STOP_TRACKER]: (state, { tracker, tick }) => {
-      const trackers = cloneTracker(state.trackers, tracker, null, [tick]);
+    [STOP_TRACKER]: (state, { tracker }) => {
+      const trackers = cloneTracker(state.trackers, tracker, null);
       return {
         ...state,
         trackers,
