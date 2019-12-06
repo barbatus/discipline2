@@ -1,6 +1,4 @@
-import Easing from 'Easing';
-
-import { Animated } from 'react-native';
+import { Animated, Easing } from 'react-native';
 
 import { caller } from 'app/utils/lang';
 

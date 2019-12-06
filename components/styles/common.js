@@ -1,6 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
-import Dimensions from 'Dimensions';
 const window = Dimensions.get('window');
 
 export const commonDef = {
