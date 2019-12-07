@@ -34,7 +34,6 @@ target 'Discipline' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-maps', :path => rn_maps_path
@@ -42,7 +41,7 @@ target 'Discipline' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
 
-  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
   target 'DisciplineTests' do
     inherit! :search_paths
@@ -62,33 +61,17 @@ target 'Discipline-tvOS' do
 
 end
 
-# post_install do |installer|
-#   installer.pods_project.targets.each do |target|
-#     if target.name == 'react-native-config'
-#       phase = target.project.new(Xcodeproj::Project::Object::PBXShellScriptBuildPhase)
-#       phase.shell_script = "cd ../../"\
-#       " && RNC_ROOT=./node_modules/react-native-config/"\
-#       " && export SYMROOT=$RNC_ROOT/ios/ReactNativeConfig"\
-#       " && ruby $RNC_ROOT/ios/ReactNativeConfig/BuildDotenvConfig.ruby"
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == 'react-native-config'
+      phase = target.project.new(Xcodeproj::Project::Object::PBXShellScriptBuildPhase)
+      phase.shell_script = "cd ../../"\
+      " && RNC_ROOT=./node_modules/react-native-config/"\
+      " && export SYMROOT=$RNC_ROOT/ios/ReactNativeConfig"\
+      " && ruby $RNC_ROOT/ios/ReactNativeConfig/BuildDotenvConfig.ruby"
 
-#       target.build_phases << phase
-#       target.build_phases.move(phase,0)
-#     end
-
-#     if target.name == 'RNScreens' or
-#        target.name == 'RNBackgroundGeolocation' or
-#        target.name == 'Yoga' or
-#        target.name == 'BugsnagReactNative' or
-#        target.name == 'RNGestureHandler' or
-#        target.name == 'RNSqlite2' or
-#        target.name == 'RNBackgroundFetch' or
-#        target.name == 'RNDeviceInfo' or
-#        target.name == 'BVLinearGradient' or
-#        target.name == 'RNVectorIcons' or
-#        target.name == 'RNSVG'
-#       target.remove_from_project
-#     end
-#   end
-#  end
-
-
+      target.build_phases << phase
+      target.build_phases.move(phase,0)
+    end
+  end
+ end

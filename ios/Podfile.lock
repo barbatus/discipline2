@@ -333,11 +333,10 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - boost-for-react-native
     - CocoaLumberjack
     - Google-Maps-iOS-Utils
-  trunk:
     - GoogleMaps
 
 EXTERNAL SOURCES:
@@ -474,6 +473,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 3f70bbd9aa01e04eefec36e2a085b2fc0ff1dd98
 
-PODFILE CHECKSUM: f030da6c7be923c4240babbe1d611f77516c5e4c
+PODFILE CHECKSUM: 4d38bc5f71f19d4b6df561ca023f8b4007f4eb3d
 
 COCOAPODS: 1.8.4

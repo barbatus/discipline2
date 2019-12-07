@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.8.0",
+  "version": "0.8.5",
   "author": "Alex <alex.borodach@gmail.com>",
   "private": true,
   "scripts": {
@@ -21,7 +21,7 @@
     "link": "react-native link",
     "flow": "flow",
     "certs:ios": "fastlane match development && fastlane match appstore",
-    "fastlane:ios": "rm -rf ios/Pods && pod install && fastlane ios beta"
+    "fastlane:ios": "fastlane ios beta --skip_waiting_for_build_processing"
   },
   "dependencies": {
     "@craftzdog/pouchdb-core-react-native": "^7.0.0",

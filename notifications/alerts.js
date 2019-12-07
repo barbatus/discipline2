@@ -67,9 +67,10 @@ export async function notify() {
 
     const app = await depot.getApp();
     if (!app.props.alerts) return;
+
     const showAlert = (tracker) => {
-      const alertBody = `Usually you use this tracker every ${time.formatDurationMs(averageDist)}`;
-      PushNotification.localNotification(`${tracker.title} Tracker`, alertBody);
+      const alertBody = `Usually Tracker ${tracker.title} is used every ${time.formatDurationMs(averageDist)}`;
+      PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
     InteractionManager.runAfterInteractions(evalAlerts.bind(this, showAlert));
   } catch (ex) {
@@ -89,7 +90,4 @@ export function launchNotify() {
   }, (ex) => {
     Logger.error(ex, { context: 'RNBackgroundFetch.configure' });
   });
-
-  BackgroundFetch.registerHeadlessTask(notify);
-  BackgroundFetch.start();
 }

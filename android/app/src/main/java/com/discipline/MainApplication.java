@@ -7,26 +7,14 @@ import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
-import com.sensors.RNSensorsPackage;
-import com.bugsnag.BugsnagReactNative;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.swmansion.rnscreens.RNScreensPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactlibrary.RNThreadPackage;
 import co.apptailor.Worker.BaseReactPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.wix.reactnativenotifications.RNNotificationsPackage;
 import io.realm.react.RealmReactPackage;
-import com.ocetnik.timer.BackgroundTimerPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
-import com.horcrux.svg.SvgPackage;
-import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.clipsub.RNShake.RNShakeEventPackage;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.horcrux.svg.SvgPackage;
 import com.clipsub.RNShake.RNShakeEventPackage;
@@ -110,23 +98,13 @@ public class MainApplication extends Application implements ReactApplication {
           Arrays.<ReactPackage>asList(
             BugsnagReactNative.getPackage(),
             new ReactNativeConfigPackage(),
-            new RNScreensPackage(),
             new ReactNativePushNotificationPackage(),
             new RNThreadPackage(),
             new BaseReactPackage(),
-            new VectorIconsPackage(),
             new RNNotificationsPackage(),
             new RealmReactPackage(),
-            new BackgroundTimerPackage(),
-            new RNGestureHandlerPackage(),
-            new RNBackgroundFetchPackage(),
-            new SvgPackage(),
-            new RNSqlite2Package(),
             new RNShakeEventPackage(),
             new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
             new RNBackgroundFetchPackage(),
             new SvgPackage(),
             new RNShakeEventPackage(),

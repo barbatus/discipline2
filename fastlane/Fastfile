@@ -31,7 +31,7 @@ platform :ios do
       clean: true,
       export_method: 'app-store',
       workspace: "./ios/Discipline.xcworkspace",
-      scheme: "Discipline",
+      scheme: "Discipline-beta",
       output_directory: "./build-tools/deploy/data"
     )
     # upload to TestFlight and notify testers

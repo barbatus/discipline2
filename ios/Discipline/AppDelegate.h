@@ -12,7 +12,6 @@
 #import <UserNotifications/UNNotificationRequest.h>
 #import <UserNotifications/UNNotificationResponse.h>
 #import <UserNotifications/UNNotificationContent.h>
-#import <React/RCTPushNotificationManager.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, UNUserNotificationCenterDelegate>
 

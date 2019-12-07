@@ -138,26 +138,14 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-sensors')
-    implementation project(':bugsnag-react-native')
     implementation project(':react-native-config')
-    implementation project(':react-native-screens')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-threads')
     implementation project(':react-native-workers')
-    implementation project(':react-native-vector-icons')
     implementation project(':react-native-notifications')
     implementation project(':realm')
-    implementation project(':react-native-background-timer')
-    implementation project(':react-native-gesture-handler')
-    implementation project(':react-native-background-fetch')
-    implementation project(':react-native-svg')
-    implementation project(':react-native-sqlite-2')
     implementation project(':react-native-shake')
     implementation project(':react-native-maps')
-    implementation project(':react-native-linear-gradient')
-    implementation project(':react-native-device-info')
-    implementation project(':react-native-background-geolocation')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
