@@ -51,7 +51,7 @@ export class Timer extends Interval {
     this.timeMs = this.timeMs - tick.value;
     this.start(lastTickMs);
   }
- 
+
   stop() {
     super.stop();
     this.off(this.onTimeChange, this);

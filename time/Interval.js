@@ -3,19 +3,11 @@ import EventEmitter from 'eventemitter3';
 import BackgroundTimer from 'react-native-background-timer';
 
 function setIntervalInner(onInterval, timeIntMs) {
-  if (Platform.OS === 'android') {
-    return BackgroundTimer.setInterval(onInterval, timeIntMs);
-  } else {
-    return setInterval(onInterval, timeIntMs);
-  }
+  return BackgroundTimer.setInterval(onInterval, timeIntMs);
 }
 
 function clearIntervalInner(hInterval) {
-  if (Platform.OS === 'android') { 
-    BackgroundTimer.clearInterval(hInterval);
-  } else {
-    clearInterval(hInterval);
-  }
+  BackgroundTimer.clearInterval(hInterval);
 }
 
 export default class Interval extends EventEmitter {

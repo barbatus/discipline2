@@ -90,4 +90,18 @@ export function launchNotify() {
   }, (ex) => {
     Logger.error(ex, { context: 'RNBackgroundFetch.configure' });
   });
+
+  BackgroundFetch.status((status) => {
+    switch(status) {
+      case BackgroundFetch.STATUS_RESTRICTED:
+        Logger.log('BackgroundFetch restricted');
+        break;
+      case BackgroundFetch.STATUS_DENIED:
+        Logger.log('BackgroundFetch denied');
+        break;
+      case BackgroundFetch.STATUS_AVAILABLE:
+        Logger.log('BackgroundFetch is enabled');
+        break;
+    }
+  });
 }
