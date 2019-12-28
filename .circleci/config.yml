@@ -9,14 +9,36 @@ jobs:
       FL_OUTPUT_DIR: output
     steps:
       - checkout
+
+      - restore_cache:
+        key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
       - run: yarn install
+
+      - save_cache:
+        key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+        paths:
+          - ~/.cache/yarn
+      
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
       - run:
-          command: bundle install
+          command: bundle check || bundle install --path vendor/bundle
           working_directory: ios
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: bundle exec pod install
+          working_directory: ios
+
       - run:
           name: Fastlane
           command: bundle exec fastlane ios pro
-          working_directory: ios
       - store_artifacts:
           path: output
 
