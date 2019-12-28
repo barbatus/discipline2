@@ -32,9 +32,17 @@ jobs:
           paths:
             - .bundle
 
+      - restore_cache:
+          key: 1-pods-{{ checksum "ios/Podfile.lock" }}
+
       - run:
           command: bundle exec pod install
           working_directory: ios
+
+      - save_cache:
+          key: 1-pods-{{ checksum "ios/Podfile.lock" }}
+          paths:
+            - ios/Pods
 
       - run:
           name: Fastlane
