@@ -11,14 +11,14 @@ jobs:
       - checkout
 
       - restore_cache:
-        key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       - run: yarn install
 
       - save_cache:
-        key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-        paths:
-          - ~/.cache/yarn
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
       
       - restore_cache:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
