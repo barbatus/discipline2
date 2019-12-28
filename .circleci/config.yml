@@ -19,18 +19,18 @@ jobs:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - ~/.cache/yarn
-      
+
       - restore_cache:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
 
       - run:
-          command: bundle check || bundle install --path ~/.bundle
+          command: bundle check || bundle install --path ../.bundle
           working_directory: ios
 
       - save_cache:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
-            - ~/.bundle
+            - .bundle
 
       - run:
           command: bundle exec pod install
