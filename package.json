@@ -6,7 +6,7 @@
   "scripts": {
     "start": "react-native start",
     "test2": "jest --silent=false",
-    "bundle": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output iOS/main.jsbundle --assets-dest ios",
+    "bundle": "react-native bundle --platform ios --dev false --entry-file index.js --bundle-output iOS/main.jsbundle --assets-dest ios --verbose --reset-cache",
     "lint:staged": "lint-staged",
     "prettify": "prettier --single-quote=true --trailing-comma=all --write **/**/*.js",
     "lint": "npm run lint:js",

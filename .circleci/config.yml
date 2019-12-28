@@ -44,6 +44,8 @@ jobs:
           paths:
             - ios/Pods
 
+      - run: ls utils
+
       - run: npm run bundle
 
       - run:
