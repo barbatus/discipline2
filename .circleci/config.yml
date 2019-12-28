@@ -24,13 +24,13 @@ jobs:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
 
       - run:
-          command: bundle check || bundle install --path vendor/bundle
+          command: bundle check || bundle install --path ~/.bundle
           working_directory: ios
 
       - save_cache:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
-            - vendor/bundle
+            - ~/.bundle
 
       - run:
           command: bundle exec pod install
