@@ -1,0 +1,32 @@
+
+version: 2
+jobs:
+  ios: 
+    macos:
+      xcode: "11.3.0"
+    working_directory: ~/discipline
+    environment:
+      FL_OUTPUT_DIR: output
+    steps:
+      - checkout
+      - run: yarn install
+      - run:
+          command: bundle install
+          working_directory: ios
+      - run:
+          name: Fastlane
+          command: bundle exec fastlane ios pro
+          working_directory: ios
+      - store_artifacts:
+          path: output
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - ios:
+          filters:
+            branches:
+              only: release
+
+

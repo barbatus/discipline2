@@ -21,7 +21,8 @@
     "link": "react-native link",
     "flow": "flow",
     "certs:ios": "fastlane match development && fastlane match appstore",
-    "fastlane:ios": "fastlane ios beta --skip_waiting_for_build_processing"
+    "fastlane:ios:beta": "fastlane ios beta",
+    "fastlane:ios:pro": "fastlane ios pro"
   },
   "dependencies": {
     "@craftzdog/pouchdb-core-react-native": "^7.0.0",
