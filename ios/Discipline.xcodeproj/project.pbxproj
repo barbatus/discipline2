@@ -932,6 +932,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
 				PRODUCT_NAME = Discipline;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.vivo.apps.discipline";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
