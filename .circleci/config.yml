@@ -44,6 +44,8 @@ jobs:
           paths:
             - ios/Pods
 
+      - run: npm run bundle
+
       - run:
           name: Fastlane
           command: bundle exec fastlane ios pro
