@@ -48,10 +48,6 @@ jobs:
           paths:
             - ios/Pods
 
-      - run: ls utils
-
-      - run: npm run bundle
-
       - run:
           name: Fastlane
           command: bundle exec fastlane ios << parameters.app_env >>
