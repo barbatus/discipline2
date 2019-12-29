@@ -38,17 +38,19 @@ platform :ios do
       output_directory: "./build-tools/deploy/data"
     )
     # upload to TestFlight and notify testers
-    testflight(
-      skip_submission: true,
-      skip_waiting_for_build_processing: true
-    )
+    if options[:testflight]
+      testflight(
+        skip_submission: true,
+        skip_waiting_for_build_processing: true
+      )
+    end
   end
 
   lane :beta do
-    build(branch: "beta", schema: "Discipline-beta")
+    build(branch: "beta", schema: "Discipline-beta", testflight: true)
   end
 
   lane :pro do
-    build(branch: "release", schema: "Discipline-pro")
+    build(branch: "release", schema: "Discipline-pro", testflight: false)
   end
 end
