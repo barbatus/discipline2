@@ -46,7 +46,7 @@ jobs:
 
       - run:
           name: Fastlane
-          command: bundle exec fastlane ios pro
+          command: bundle exec fastlane ios $FASTLANE_LANE
       - store_artifacts:
           path: output
 
@@ -58,5 +58,11 @@ workflows:
           filters:
             branches:
               only: release
-
-
+          environment:
+            FASTLANE_LANE: pro
+      - ios:
+          filters:
+            branches:
+              only: master
+          environment:
+            FASTLANE_LANE: beta

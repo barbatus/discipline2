@@ -855,6 +855,8 @@
 			baseConfigurationReference = 441FAE0435E5266A054733C1 /* Pods-Discipline.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -889,6 +891,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
 				PRODUCT_NAME = Discipline;
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.vivo.apps.discipline";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -898,7 +901,9 @@
 			baseConfigurationReference = C85E2898EEE8D0368D866BA5 /* Pods-Discipline.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Alexander Baradach (P7R9C37TYV)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Alexander Baradach (P7R9C37TYV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P7R9C37TYV;
@@ -933,6 +938,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.vivo.apps.discipline;
 				PRODUCT_NAME = Discipline;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.vivo.apps.discipline";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=*]" = "match AppStore com.vivo.apps.discipline";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.vivo.apps.discipline";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
