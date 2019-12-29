@@ -858,7 +858,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = P7R9C37TYV;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -904,7 +904,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alexander Baradach (3K7RPFADM5)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = P7R9C37TYV;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (

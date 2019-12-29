@@ -32,7 +32,16 @@ platform :ios do
     # build the app for app store export
     gym(
       clean: true,
+      xcargs: {
+        :PROVISIONING_PROFILE_SPECIFIER => "match AppStore com.vivo.apps.discipline",
+        :CODE_SIGN_IDENTITY => "iPhone Distribution"
+      },
       export_method: 'app-store',
+      export_options: {
+        provisioningProfiles: { 
+          "com.vivo.apps.discipline" => "match AppStore com.vivo.apps.discipline"
+        }
+      },
       workspace: "./ios/Discipline.xcworkspace",
       scheme: options[:schema],
       output_directory: "./build-tools/deploy/data"
@@ -47,7 +56,7 @@ platform :ios do
   end
 
   lane :beta do
-    build(branch: "beta", schema: "Discipline-beta", testflight: true)
+    build(branch: "master", schema: "Discipline-beta", testflight: true)
   end
 
   lane :pro do
