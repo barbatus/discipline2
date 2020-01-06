@@ -6204,9 +6204,9 @@ react-native-config@^0.11.7:
   version "0.11.7"
   resolved "https://registry.npmjs.org/react-native-config/-/react-native-config-0.11.7.tgz#a2b323f2ecd76a4df88cbb6bc86eaa2ef9febee7"
 
-react-native-device-info@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-0.13.0.tgz#81051eebd3db6959e4f1d2cb0ae8df74105040cf"
+react-native-device-info@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-5.4.0.tgz#c837afdfc7947eef0a09c1bf2f3beb127d31458b"
 
 react-native-gesture-handler@^1.1.0:
   version "1.4.1"

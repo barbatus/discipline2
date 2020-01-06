@@ -262,18 +262,18 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.0)
   - RNBackgroundFetch (2.7.0):
     - React
-  - RNBackgroundGeolocation (3.2.2):
+  - RNBackgroundGeolocation (3.4.2):
     - CocoaLumberjack (~> 3.5.1)
     - React
   - RNCPushNotificationIOS (1.0.2):
     - React
-  - RNDeviceInfo (0.9.3):
+  - RNDeviceInfo (5.4.0):
     - React
   - RNGestureHandler (1.4.1):
     - React
   - RNScreens (1.0.0-alpha.23):
     - React
-  - RNSensors (5.3.0):
+  - RNSensors (5.3.3):
     - React
   - RNSqlite2 (1.0.0):
     - React
@@ -462,17 +462,17 @@ SPEC CHECKSUMS:
   React-RCTVibration: c8e67f140a83a14a1ad9042950cca08ab29423fd
   ReactCommon: 584ef683c340894c1c82be43ce760390493ae8bf
   RNBackgroundFetch: c6dd741d7f86ad981f1f03279415c5151397559a
-  RNBackgroundGeolocation: 82e73b31e00041b271f1fc076696b09d24ce5941
+  RNBackgroundGeolocation: 8f0a20788100fbf08987d80f2053ae6eba79c566
   RNCPushNotificationIOS: 0b8d06ff190d84627dd17501bfb96652375970e4
-  RNDeviceInfo: dc3cbee96cd2392cf03d6ff6191dc15f1606a166
+  RNDeviceInfo: c7b1dc457611b9231bb780a882102e2c93edc7af
   RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
   RNScreens: f28b48b8345f2f5f39ed6195518291515032a788
-  RNSensors: c363d486c879e181905dea84a2535e49af1c2d25
+  RNSensors: 60197256ecd4e1e906dcaf6d634793f876eaa63b
   RNSqlite2: 181ae6674f53598008e7a64d8c2273c3df5d98b7
   RNSVG: 435cda60cd9e1ea6188eb0e21c12fc0f85def8e8
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 3f70bbd9aa01e04eefec36e2a085b2fc0ff1dd98
 
-PODFILE CHECKSUM: 17d0935afecebe142600bb4448600f33814cde78
+PODFILE CHECKSUM: 52831aae70faca3b43b9040eeee50ffaf9fc7b53
 
 COCOAPODS: 1.8.4
