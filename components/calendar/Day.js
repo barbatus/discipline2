@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 
+import { WHITE_COLOR } from '../styles/common';
+
 import {
   Text,
   TouchableOpacity,
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
   },
   dayText: {
     fontSize: 18,
-    color: 'white',
+    color: WHITE_COLOR,
     fontWeight: '300',
   },
   outDayText: {
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.4)',
   },
   currentDayText: {
-    color: 'white',
+    color: WHITE_COLOR,
   },
   selectedDayCircle: {
     backgroundColor: 'rgba(0, 0, 0, 0.2)',

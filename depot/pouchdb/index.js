@@ -69,12 +69,7 @@ export default class Depot {
 
   async hydrateTrackers(trackers: Tracker[], timeFromMs: number = time.getDateMs()): Promise<Tracker[]> {
     const allTicks = await Promise.all(trackers.map(async (tracker) => {
-      let ticksFromMs = timeFromMs;
-      if (tracker.active) {
-        const lastTick = await this.getLastTick(tracker.id)
-        ticksFromMs = Math.min(ticksFromMs, lastTick.createdAt);
-      }
-      return this.getTrackerTicks(tracker.id, ticksFromMs);
+      return this.getTrackerTicksFromDate(tracker);
     }));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
@@ -87,8 +82,17 @@ export default class Depot {
     const tracker = await trackersDB.getOne(trackId);
     if (!tracker) throw new Error('Tracker not found');
 
-    const ticks = await this.getTrackerTicks(tracker.id, time.getDateMs());
+    const ticks = await this.getTrackerTicksFromDate(tracker);
     return { ...tracker, ticks };
+  }
+
+  async getTrackerTicksFromDate(tracker: Tracker, dateFromMs: number = time.getDateMs()) {
+    let ticksFromMs = dateFromMs;
+    if (tracker.active) {
+      const lastTick = await this.getLastTick(tracker.id)
+      ticksFromMs = Math.min(ticksFromMs, lastTick.createdAt);
+    }
+    return this.getTrackerTicks(tracker.id, ticksFromMs);
   }
 
   async getRawTracker(trackId: string) {

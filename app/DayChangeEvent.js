@@ -40,7 +40,10 @@ export class DayChangeEvent extends EventEmitter {
     }
 
     this.dayTimeout = new Timeout(left);
-    this.dayTimeout.on(() => this.emit('change'));
+    this.dayTimeout.on(() => {
+      this.emit('change');
+      this.setDayTimeout();
+    });
   }
 
   unsetDayTimer() {

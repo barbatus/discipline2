@@ -98,7 +98,8 @@ export const START_TRACKER = 'START_TRACKER';
 
 export const startTracker = (tracker, value, data) => async (dispatch) => {
   const createdAt = time.getNowMs();
-  const startedTracker = Trackers.clone(tracker, { active: true });
+  const ticks = await depot.getTicks(tracker.id, time.getDateMs());
+  const startedTracker = Trackers.clone(tracker, { ticks, active: true });
   const updTracker = await depot.updateTracker(startedTracker);
   const tick = await depot.addTick(tracker.id, createdAt, value, data);
   return dispatch({

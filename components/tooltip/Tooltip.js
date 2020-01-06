@@ -5,7 +5,7 @@ import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
 import PropTypes from 'prop-types';
 
-import { SCREEN_WIDTH, NAV_HEIHGT } from '../styles/common';
+import { SCREEN_WIDTH, CONTENT_OFFSET } from '../styles/common';
 
 const ARROW_WIDTH = 25;
 
@@ -138,7 +138,7 @@ export default class Tooltip extends PureComponent {
 
           let yPos = -height - TOP_MARGIN;
           let arrTop = height;
-          if (NAV_HEIHGT > pageY + yPos) {
+          if (CONTENT_OFFSET > pageY + yPos) {
             yPos = Math.abs(33 + TOP_MARGIN);
             arrTop = -ARROW_HEIHGT;
           }

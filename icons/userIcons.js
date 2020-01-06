@@ -13,6 +13,10 @@ const UserIcons = new Enum({
     value: 'airplane_takeoff',
     [IconSize.NORMAL]: require('./files/user/icon8/airplane_take_off.png'),
   },
+  AVOCADO: {
+    value: 'avocado',
+    [IconSize.NORMAL]: require('./files/user/icon8/avocado.png'),
+  },
   BAR: {
     value: 'bar',
     [IconSize.NORMAL]: require('./files/user/icon8/bar.png'),
@@ -21,9 +25,17 @@ const UserIcons = new Enum({
     value: 'barbell',
     [IconSize.NORMAL]: require('./files/user/icon8/barbell.png'),
   },
+  BARBERSHOP: {
+    value: 'barbershop',
+    [IconSize.NORMAL]: require('./files/user/icon8/barbershop.png'),
+  },
   BELL: {
     value: 'bell',
     [IconSize.NORMAL]: require('./files/user/icon8/bell.png'),
+  },
+  BEER: {
+    value: 'beer',
+    [IconSize.NORMAL]: require('./files/user/icon8/beer.png'),
   },
   BICYCLE: {
     value: 'bicycle',
@@ -44,6 +56,10 @@ const UserIcons = new Enum({
   CAMPING: {
     value: 'camping',
     [IconSize.NORMAL]: require('./files/user/icon8/camping_tent.png'),
+  },
+  CANNABIS: {
+    value: 'cannabis',
+    [IconSize.NORMAL]: require('./files/user/icon8/cannabis.png'),
   },
   CAR: {
     value: 'car',
@@ -73,9 +89,21 @@ const UserIcons = new Enum({
     value: 'cook',
     [IconSize.NORMAL]: require('./files/user/icon8/cook.png'),
   },
+  CUPCAKE: {
+    value: 'cupcake',
+    [IconSize.NORMAL]: require('./files/user/icon8/cupcake.png'),
+  },
+  DENTURE: {
+    value: 'denture',
+    [IconSize.NORMAL]: require('./files/user/icon8/denture.png'),
+  },
   DOCTOR: {
     value: 'doctor',
     [IconSize.NORMAL]: require('./files/user/icon8/doctor_female.png'),
+  },
+  DOG: {
+    value: 'dog',
+    [IconSize.NORMAL]: require('./files/user/icon8/dog.png'),
   },
   FAMILY: {
     value: 'family',
@@ -117,6 +145,10 @@ const UserIcons = new Enum({
     value: 'info',
     [IconSize.NORMAL]: require('./files/user/icon8/info.png'),
   },
+  LAPTOP_CODING: {
+    value: 'laptop_coding',
+    [IconSize.NORMAL]: require('./files/user/icon8/laptop_coding.png'),
+  },
   LOCK: {
     value: 'lock',
     [IconSize.NORMAL]: require('./files/user/icon8/lock.png'),
@@ -132,6 +164,10 @@ const UserIcons = new Enum({
   MEDITATION: {
     value: 'meditation',
     [IconSize.NORMAL]: require('./files/user/icon8/meditation_guru.png'),
+  },
+  MOVIE_PROJECTOR: {
+    value: 'movie_projector',
+    [IconSize.NORMAL]: require('./files/user/icon8/movie_projector.png'),
   },
   MUSIC: {
     value: 'music',
@@ -164,6 +200,10 @@ const UserIcons = new Enum({
   READING: {
     value: 'reading',
     [IconSize.NORMAL]: require('./files/user/icon8/reading.png'),
+  },
+  RENT: {
+    value: 'rent',
+    [IconSize.NORMAL]: require('./files/user/icon8/rent.png'),
   },
   SALES: {
     value: 'sales',
@@ -205,6 +245,10 @@ const UserIcons = new Enum({
     value: 'tomato',
     [IconSize.NORMAL]: require('./files/user/icon8/tomato.png'),
   },
+  TREADMILL: {
+    value: 'treadmill',
+    [IconSize.NORMAL]: require('./files/user/icon8/treadmill.png'),
+  },
   TRAINERS: {
     value: 'trainers',
     [IconSize.NORMAL]: require('./files/user/icon8/trainers.png'),
@@ -220,6 +264,10 @@ const UserIcons = new Enum({
   TREKKING: {
     value: 'trekking',
     [IconSize.NORMAL]: require('./files/user/icon8/trekking.png'),
+  },
+  VACUUM_CLEANER: {
+    value: 'vacuum_cleaner',
+    [IconSize.NORMAL]: require('./files/user/icon8/vacuum_cleaner.png'),
   },
   WASHING_MACHINE: {
     value: 'washing_machine',

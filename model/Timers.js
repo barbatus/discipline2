@@ -30,31 +30,33 @@ const TIME_LIMIT_MS = 24 * 60 * 60 * 1000; // 24h
 export class Timer extends Interval {
   trackerId: string;
 
+  tickTimeGetter = (tick) => tick.value;
+
   constructor(trackerId: string, initValueMs?: number, intervalMs?: number) {
     super(initValueMs, intervalMs);
     this.trackerId = trackerId;
   }
 
-  start(startFromMs: number): boolean {
-    if (this.active || this.timeMs >= TIME_LIMIT_MS) return;
+  start(baseTimeMs: number, lastTickMs: number): boolean {
+    if (this.active || this.allTimeMs >= TIME_LIMIT_MS) return;
 
-    super.start(startFromMs);
+    super.start(baseTimeMs, lastTickMs);
     this.on(this.onTimeChange, this);
     return true;
   }
 
-  async restart() {
+  async restart(baseTimeMs: number) {
     if (this.active) return;
 
     const lastTick = await depot.getLastTick(this.trackerId);
+    const lastTickTimeMs = this.tickTimeGetter(lastTick);
     const diff = Date.now() - lastTick.createdAt;
     // New last tick value
-    const newLastTickMs = Math.min(Math.max(lastTick.value, diff), TIME_LIMIT_MS);
+    const newLastTickMs = Math.min(Math.max(lastTickTimeMs, diff), TIME_LIMIT_MS);
     this.saveTimerUpdate(newLastTickMs);
-    const allTimePassed = this.timeMs - lastTick.value + newLastTickMs;
+    const allTimePassed = baseTimeMs - lastTickTimeMs + newLastTickMs;
     if (allTimePassed < TIME_LIMIT_MS) {
-      this.timeMs = this.timeMs - lastTick.value;
-      this.start(newLastTickMs);
+      this.start(allTimePassed, newLastTickMs);
     }
   }
 
@@ -65,9 +67,9 @@ export class Timer extends Interval {
     this.off(this.onTimeChange, this);
   }
 
-  async onTimeChange(timeMs: number, lastTickMs: number) {
+  async onTimeChange(allTimeMs: number, lastTickMs: number) {
     await this.saveTimerUpdate(lastTickMs);
-    if (timeMs >= TIME_LIMIT_MS) {
+    if (allTimeMs >= TIME_LIMIT_MS) {
       this.stop();
     }
   }

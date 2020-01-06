@@ -13,6 +13,8 @@ import * as utils from '../geo/utils';
 import { Timers as BaseTimers, Timer as BaseTimer } from './Timers';
 
 class DistanceTimer extends BaseTimer {
+  tickTimeGetter = (tick) => tick.time;
+
   async saveTimerUpdate(lastTickMs: number) {
     try {
       await depot.updateLastTickData(this.trackerId, { time: lastTickMs });
@@ -146,10 +148,11 @@ export class DistanceTracker extends EventEmitter {
     };
   }
 
-  async start() {
+  async start(baseDist: number) {
     if (this.isStarting || this.active) return;
 
     this.isStarting = true;
+    this.state = baseDist ? { ...this.state, dist: baseDist } : this.state;
     try {
       const pos = await this.geoWatcher.watchPos();
       this.startTracking(pos.coords);
@@ -157,6 +160,10 @@ export class DistanceTracker extends EventEmitter {
     } finally {
       this.isStarting = false;
     }
+  }
+
+  async checkGPS() {
+    return this.geoWatcher.checkAvailable();
   }
 
   async stop() {

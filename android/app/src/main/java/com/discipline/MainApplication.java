@@ -7,14 +7,12 @@ import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactlibrary.RNThreadPackage;
 import co.apptailor.Worker.BaseReactPackage;
 import com.wix.reactnativenotifications.RNNotificationsPackage;
 import io.realm.react.RealmReactPackage;
 import com.clipsub.RNShake.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.horcrux.svg.SvgPackage;
 import com.clipsub.RNShake.RNShakeEventPackage;
@@ -97,14 +95,12 @@ public class MainApplication extends Application implements ReactApplication {
       return packages.addAll(
           Arrays.<ReactPackage>asList(
             BugsnagReactNative.getPackage(),
-            new ReactNativeConfigPackage(),
             new ReactNativePushNotificationPackage(),
             new RNThreadPackage(),
             new BaseReactPackage(),
             new RNNotificationsPackage(),
             new RealmReactPackage(),
             new RNShakeEventPackage(),
-            new MapsPackage(),
             new RNBackgroundFetchPackage(),
             new SvgPackage(),
             new RNShakeEventPackage(),

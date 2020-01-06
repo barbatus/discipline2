@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
-export const MENU_TEXT_COLOR = 'white';
+import { HINT_COLOR } from '../styles/common';
+
+export const MENU_TEXT_COLOR = HINT_COLOR;
 
 const styles = StyleSheet.create({
   navTitle: {

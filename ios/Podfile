@@ -41,7 +41,6 @@ target 'Discipline' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
 
-  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
   target 'DisciplineTests' do
     inherit! :search_paths

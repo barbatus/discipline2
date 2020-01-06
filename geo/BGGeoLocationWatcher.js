@@ -3,12 +3,12 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import EventEmitter from 'eventemitter3';
 import env from 'react-native-config';
 
-import { GEO_DEBUG } from 'app/env';
+import { DEBUG_GEO } from 'app/env';
 import { ValuedError } from 'app/utils/lang';
 
 import Enum from '../depot/Enum';
 
-export function configureBackgroundGeolocation(callback: Function, debug: boolean = GEO_DEBUG) {
+export function configureBackgroundGeolocation(callback: Function, debug: boolean = DEBUG_GEO) {
   BackgroundGeolocation.ready({
     reset: true,
     debug,
@@ -20,6 +20,7 @@ export function configureBackgroundGeolocation(callback: Function, debug: boolea
     stationaryRadius: 1,
     disableElasticity: true,
     preventSuspend: true,
+    locationAuthorizationRequest: 'WhenInUse',
   }, callback);
 }
 
@@ -128,6 +129,16 @@ export default class BGGeoLocationWatcher {
           }
         }, 1.5 * LOCATION_TIMEOUT * 1000);
       }, (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))));
+    });
+  }
+
+  async checkAvailable() {
+    return new Promise(async (resolve, reject) => {
+      BackgroundGeolocation.getCurrentPosition(
+        { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
+        resolve,
+        (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
+      );
     });
   }
 

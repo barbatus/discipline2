@@ -3,7 +3,7 @@ import { StyleSheet, Switch, View, Text, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import DeviceInfo from 'react-native-device-info';
 
-import { IS_BETA } from 'app/env';
+import { DEBUG_MENU } from 'app/env';
 import { SLIDE_WIDTH_OFFSET, SLIDE_HEIGHT } from 'app/components/trackers/styles/slideStyles';
 import { CONTENT_OFFSET } from 'app/components/styles/common';
 
@@ -35,11 +35,9 @@ export const styles = StyleSheet.create({
     marginRight: 5,
     fontSize: 18,
     width: 120,
-    fontWeight: '300',
   },
   ver: {
     color: MENU_TEXT_COLOR,
-    opacity: 0.8,
     textAlign: 'center',
   },
 });
@@ -58,10 +56,10 @@ export default class Menu extends PureComponent {
 
   render() {
     const { style, props, onMeasureChange, onAlertChange } = this.props;
-    const justify = IS_BETA ? { justifyContent: 'space-between' } : null;
+    const justify = DEBUG_MENU ? { justifyContent: 'space-between' } : null;
     return (
       <View style={[styles.menu, style, justify]}>
-        {IS_BETA && <Debug />}
+        {DEBUG_MENU && <Debug />}
         <View>
           <View style={styles.prop}>
             <Text style={styles.label}>

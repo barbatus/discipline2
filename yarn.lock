@@ -6171,7 +6171,7 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-background-fetch@^2.7.0, react-native-background-fetch@~2.7.0:
+react-native-background-fetch@^2.7.0:
   version "2.7.0"
   resolved "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-2.7.0.tgz#33748dea9c0c4e1a387fb2d2ac7b48e8f4596ece"
   dependencies:
@@ -6179,13 +6179,21 @@ react-native-background-fetch@^2.7.0, react-native-background-fetch@~2.7.0:
     plist "^3.0.1"
     xcode "^2.0.0"
 
-react-native-background-geolocation@^3.2.0:
-  version "3.2.2"
-  resolved "https://registry.npmjs.org/react-native-background-geolocation/-/react-native-background-geolocation-3.2.2.tgz#5fd2abc9ef3ac21afde795f60772e80c948f3bde"
+react-native-background-fetch@~2.7.1:
+  version "2.7.1"
+  resolved "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-2.7.1.tgz#1467aed0fd2851edfdf10d3d9ac4ffd0cf069a85"
+  dependencies:
+    fast-plist "^0.1.2"
+    plist "^3.0.1"
+    xcode "^2.0.0"
+
+react-native-background-geolocation@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.npmjs.org/react-native-background-geolocation/-/react-native-background-geolocation-3.4.2.tgz#77875eeaccfee0d0fab684012bf9e668b77cedb7"
   dependencies:
     fast-plist "^0.1.2"
     plist "^2.0.1"
-    react-native-background-fetch "~2.7.0"
+    react-native-background-fetch "~2.7.1"
     xcode "^0.9.1"
 
 react-native-background-timer@^2.1.1:
@@ -6254,9 +6262,9 @@ react-native-safe-area-view@^0.14.1:
   dependencies:
     debounce "^1.2.0"
 
-react-native-sensors@5.3.0:
-  version "5.3.0"
-  resolved "https://registry.npmjs.org/react-native-sensors/-/react-native-sensors-5.3.0.tgz#8c89541f80a68c185ff2f7059c3078f4975c730c"
+react-native-sensors@5.3.3:
+  version "5.3.3"
+  resolved "https://registry.npmjs.org/react-native-sensors/-/react-native-sensors-5.3.3.tgz#5d7fed1f4e6a50114ddd1e1d9cf9d33a0c857ca9"
   dependencies:
     rxjs ">= 6"
 

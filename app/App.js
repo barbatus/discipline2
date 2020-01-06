@@ -9,6 +9,8 @@ import {
   StackNavigator as StackNav,
 } from 'react-navigation';
 
+import Logger from 'app/log';
+
 import { changeDay, loadApp } from '../model/actions';
 import MainScreen from '../components/screens/MainScreen';
 
@@ -46,6 +48,7 @@ class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
   onDayChange() {
     const { store } = this.props;
     store.dispatch(changeDay());
+    Logger.log('Day has been changed');
   }
 
   render() {

@@ -42,14 +42,14 @@ export function combineTicksDaily(ticks: Tick[], type: TrackerType, metric: bool
 function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: boolean) {
   switch (type) {
     case TrackerType.GOAL:
-      return { desc: 'goal achieved', value: 1, createdAt: minMs };
+      return { desc: 'goal achieved', value: 1, createdAt: minMs, hasMore: false };
     case TrackerType.COUNTER: {
       const value = ticks.length;
-      return { desc: `+${value} added`, value, createdAt: minMs };
+      return { desc: `${value} added`, value, createdAt: minMs, hasMore: false };
     }
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
-      return { desc: `$${value} added`, value, createdAt: minMs };
+      return { desc: `$${value} added`, value, createdAt: minMs, hasMore: false };
     }
     case TrackerType.DISTANCE: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
@@ -66,12 +66,13 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: bool
         time,
         paths,
         createdAt: minMs,
+        hasMore: true,
       };
     }
     case TrackerType.STOPWATCH: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       const timeFmt = timeUtils.formatTimeMs(value);
-      return { desc: `${timeFmt.format()} tracked`, value, createdAt: minMs };
+      return { desc: `${timeFmt.format()} tracked`, value, createdAt: minMs, hasMore: false };
     }
     default:
       throw new Error('Tracker type is not supported');

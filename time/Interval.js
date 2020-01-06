@@ -2,7 +2,7 @@ import { AppState, Platform } from 'react-native';
 import EventEmitter from 'eventemitter3';
 
 export default class Interval extends EventEmitter {
-  timeMs = 0;
+  allTimeMs = 0;
 
   lastStartMS = 0;
 
@@ -16,40 +16,41 @@ export default class Interval extends EventEmitter {
 
   constructor(initValue: number, timeIntMs: number = 0) {
     super();
-    this.timeMs = initValue;
+    this.allTimeMs = 0; //initValue;
     this.timeIntMs = timeIntMs;
     this.onAppStateChange = ::this.onAppStateChange;
     AppState.addEventListener('change', this.onAppStateChange);
   }
 
   get value() {
-    return this.timeMs + this.lastStartMS;
+    return this.allTimeMs;
   }
 
   get active() {
     return Boolean(this.hInterval);
   }
 
-  start(startFromMs: number = 0): boolean {
+  start(baseValMs: number = 0, startFromMs: number = 0): boolean {
     if (this.active) return;
 
+    this.allTimeMs = baseValMs;
     this.lastStartMS = startFromMs;
     const onInterval = () => {
+      this.allTimeMs += this.timeIntMs;
       this.lastStartMS += this.timeIntMs;
-      this.emit('tick', this.timeMs + this.lastStartMS, this.lastStartMS);
+      this.emit('tick', this.allTimeMs, this.lastStartMS);
     };
 
     this.hInterval = setInterval(onInterval, this.timeIntMs);
   }
 
-  restart() {
-    this.start(Date.now() - this.lastStoppedMS);
+  restart(baseValMs: number = 0) {
+    this.start(baseValMs, this.lastStartMS + Date.now() - this.lastStoppedMS);
   }
 
   stop() {
     if (!this.active) return;
 
-    this.timeMs = this.timeMs + this.lastStartMS;
     this.lastStartMS = 0;
     this.lastStoppedMS = Date.now();
     clearInterval(this.hInterval);
@@ -70,7 +71,7 @@ export default class Interval extends EventEmitter {
       this.paused = true;
     }
     if (appState === 'active' && this.paused) {
-      this.restart();
+      this.restart(this.value);
       this.paused = false;
     }
   }

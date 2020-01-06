@@ -241,8 +241,6 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     this.showMap = ::this.showMap;
     this.onStopBtn = ::this.onStopBtn;
     this.onStartBtn = ::this.onStartBtn;
-    this.onDistStart = ::this.onDistStart;
-    this.onDistStop = ::this.onDistStop;
   }
 
   get bodyControls() {
@@ -295,6 +293,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       timer.on(this.onTimeUpdate, this);
       distTracker.on('onLatLonUpdate', this.onLatLonUpdate, this);
     }
+
+    // Distance tracker doesn't restart on reload.
+    if (tracker.active) {
+      this.onStop();
+    }
   }
 
   async componentDidUpdate(prevProps) {
@@ -315,6 +318,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     } else {
       if (prevProps.tracker !== tracker) {
         this.setState({ dist: tracker.value, timeMs: tracker.time, speed: 0 });
+        this.manageTrackers();
       }
     }
   }
@@ -334,10 +338,8 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     try {
       this.setState({ btnEnabled: false });
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
-      await distTracker.start();
-      const timer = Timers.getOrCreate(tracker.id);
-      timer.start();
-      this.onDistStart();
+      await distTracker.checkGPS();
+      this.onStart(0, { time: 0, latlon: [] });
     } catch (error) {
       if (error !== BGError.LOCATION_PERMISSION_DENIED) {
         Logger.log('Location permission is denied');
@@ -346,7 +348,36 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     }
   }
 
-  async onStopBtn() {
+  /*
+  * Start or stop associated trackers based on tracker model's values. 
+  * There is a gap on when tracker model is started (i.e. this.onStart) and when actual trackers are engaged,
+  * this is done due to keep tracker starting logic in one place and use tracker model's values
+  * for starting/stopping actual trackers.
+  */
+  async manageTrackers() {
+    const { tracker } = this.props;
+
+    const timer = Timers.getOrCreate(tracker.id);
+    if (tracker.active && !timer.active) {
+      this.start();
+    }
+
+    if (!tracker.active && timer.active) {
+      this.stop();
+    }
+  }
+
+  async start() {
+    const { tracker } = this.props;
+    const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
+    await distTracker.start(tracker.value);
+    const timer = Timers.getOrCreate(tracker.id);
+    timer.start(tracker.time);
+    Vibration.vibrate();
+    Logger.log('DistanceTracker successfully started');
+  }
+
+  async stop() {
     const { tracker } = this.props;
     try {
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
@@ -355,16 +386,9 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     } catch {}
     const timer = Timers.getOrCreate(tracker.id);
     timer.stop();
-    this.onDistStop();
   }
 
-  onDistStart() {
-    Vibration.vibrate();
-    this.onStart(0, { time: 0, latlon: [] });
-    Logger.log('DistanceTracker successfully started');
-  }
-
-  onDistStop() {
+  async onStopBtn() {
     this.setState({ speed: 0 });
     this.onStop();
   }
