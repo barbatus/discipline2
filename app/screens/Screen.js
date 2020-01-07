@@ -2,14 +2,14 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 
-import NavBar from '../nav/NavBar';
+import NavBar from 'app/components/nav/NavBar';
 import {
   OFFSET_TOP,
   SCREEN_WIDTH,
   WIN_HEIGHT,
   NAV_HEIHGT,
   CONTENT_TOP_MARGIN,
-} from '../styles/common';
+} from 'app/components/styles/common';
 
 const styles = StyleSheet.create({
   container: {

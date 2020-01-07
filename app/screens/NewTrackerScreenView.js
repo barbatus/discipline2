@@ -9,11 +9,12 @@ import Trackers from 'app/model/Trackers';
 import { TrackerType } from 'app/depot/consts';
 import { caller } from 'app/utils/lang';
 
-import Animation from '../animation/Animation';
-import { NavCancelButton, NavAcceptButton } from '../nav/buttons';
+import Animation from 'app/components/animation/Animation';
+import { NavCancelButton, NavAcceptButton } from 'app/components/nav/buttons';
+import NewTrackerSlide from 'app/components/trackers/slides/NewTrackerSlide';
+import TrackerTypesSlide from 'app/components/trackers/slides/TrackerTypesSlide';
+
 import ScrollScreenView from './ScrollScreenView';
-import NewTrackerSlide from '../trackers/slides/NewTrackerSlide';
-import TrackerTypesSlide from '../trackers/slides/TrackerTypesSlide';
 
 const TYPES = TrackerType.symbols();
 

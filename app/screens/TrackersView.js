@@ -10,6 +10,7 @@ import Notifications from 'app/notifications';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import TrackersModel from 'app/model/Trackers';
 import { Tick } from 'app/model/Tracker';
+import { tickValueFormatter } from 'app/model/ticks';
 import time from 'app/time/utils';
 import { caller } from 'app/utils/lang';
 
@@ -29,12 +30,12 @@ import {
   NavAcceptButton,
   NavLeftButton,
   NavRightButton,
-} from '../nav/buttons';
+} from 'app/components/nav/buttons';
 
-import TrackerCal from '../trackers/TrackerCal';
-import Trackers from '../trackers/Trackers';
-import DummyTrackerSlide from '../trackers/slides/DummyTrackerSlide';
-import { commonStyles, CONTENT_HEIGHT, SCREEN_WIDTH } from '../styles/common';
+import TrackerCal from 'app/components/trackers/TrackerCal';
+import Trackers from 'app/components/trackers/Trackers';
+import DummyTrackerSlide from 'app/components/trackers/slides/DummyTrackerSlide';
+import { commonStyles, CONTENT_HEIGHT, SCREEN_WIDTH } from 'app/components/styles/common';
 
 const MONTH_NAMES = [
   'January',
@@ -63,6 +64,13 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
 });
+
+function getCurrentTrackerUpdate(tracker, app) {
+  return {
+    current: tracker,
+    formatTickValue: tickValueFormatter(tracker, app.props.metric),
+  };
+}
 
 class TrackersView extends PureComponent {
   static contextTypes = {
@@ -104,8 +112,9 @@ class TrackersView extends PureComponent {
   constructor(props) {
     super(props);
 
+    const {trackers, app} = props;
     this.state = {
-      current: props.trackers.get(0),
+      ...getCurrentTrackerUpdate(trackers.get(0), app),
       calShown: false,
     };
     this.onStartEdit = ::this.onStartEdit;
@@ -130,16 +139,21 @@ class TrackersView extends PureComponent {
     this.onSwiperMoveDownDone = ::this.onSwiperMoveDownDone;
   }
 
-  static getDerivedStateFromProps({ trackers }, prevState) {
-    if (!trackers.size || prevState.current) return null;
+  static getDerivedStateFromProps({ trackers, app }, prevState) {
+    if (!trackers.size) return null;
 
-    return { current: trackers.get(0) };
+    if (prevState.current) {
+      const tracker = trackers.find(tracker => tracker.id === prevState.current.id);
+      return tracker !== prevState.current ? getCurrentTrackerUpdate(tracker, app) : null;
+    }
+
+    return getCurrentTrackerUpdate(trackers.get(0), app);
   }
 
   componentDidUpdate({ trackers: prevTrackers }) {
     const { trackers, onAddCompleted } = this.props;
     // Firing onAddCompleted because Trackers is not rendered when no trackers
-    if (trackers !== prevTrackers && !prevTrackers.size) {
+    if (trackers.size > prevTrackers.size && !prevTrackers.size) {
       window.requestAnimationFrame(onAddCompleted);
     }
   }
@@ -178,9 +192,7 @@ class TrackersView extends PureComponent {
   }
 
   onSlideChange(index: number, previ: number, animated: boolean) {
-    this.setState({
-      current: this.props.trackers.get(index),
-    });
+    this.setState(getCurrentTrackerUpdate(this.props.trackers.get(index), this.props.app));
     caller(this.props.onSlideChange, index, previ, animated);
   }
 
@@ -314,9 +326,9 @@ class TrackersView extends PureComponent {
 
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
-    const { current, calShown } = this.state;
+    const { current: tracker, formatTickValue, calShown } = this.state;
 
-    if (!current) { return <DummyTrackerSlide />; }
+    if (!tracker) { return <DummyTrackerSlide />; }
 
     const calcStyle = { opacity: this.calcOpacity, zIndex: calShown ? 1 : 0 };
     return (
@@ -325,8 +337,8 @@ class TrackersView extends PureComponent {
           ref={(el) => (this.calendar = el)}
           {...this.props}
           shown={calShown}
-          metric={app.props.metric}
-          trackerType={current ? current.type : null}
+          trackerType={tracker ? tracker.type : null}
+          formatTickValue={formatTickValue}
           style={[styles.calc, calcStyle]}
           onMonthChanged={this.onMonthChanged}
           onTooltipClick={this.onTooltipClick}

@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, View, ViewPropTypes } from 'react-native';
 
 import { caller } from 'app/utils/lang';
 
-import { commonDef, commonStyles as cs, SCREEN_WIDTH } from '../styles/common';
+import { commonDef, commonStyles as cs, SCREEN_WIDTH } from 'app/components/styles/common';
 
 const styles = StyleSheet.create({
   scroll: {

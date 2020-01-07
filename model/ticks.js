@@ -5,9 +5,23 @@ import { formatDistance } from 'app/utils/format';
 import { TrackerType } from 'app/depot/consts';
 import timeUtils from 'app/time/utils';
 
-import { Tick } from './Tracker';
+import { Tick, Tracker } from './Tracker';
 
-export function combineTicksMonthly(ticks: Tick[], type: TrackerType, metric: boolean) {
+export function tickValueFormatter(tracker: Tracker, metric: boolean) {
+  switch (tracker.type) {
+    case TrackerType.SUM:
+      return (value: Number) => tracker.props.showBuck ? `$${value}` : value;
+    case TrackerType.DISTANCE:
+      return (value: Number) => {
+        const distFmt = formatDistance(value, metric);
+        return `${distFmt.format()}${distFmt.unit}`;
+      };
+    default:
+      return (value) => value;
+  }
+}
+
+export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTickValue: (value: number) => string) {
   const months = groupBy(ticks, (tick) => {
     const tickDate = moment(tick.createdAt);
     return tickDate.month();
@@ -22,24 +36,24 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, metric: bo
     const dayMap = Object.keys(days).reduce((accum, dayKey) => {
       const day = parseInt(dayKey, 10);
       const ticksDaily = days[dayKey];
-      return accum.set(day, combineTicksDaily(ticksDaily, type, metric));
+      return accum.set(day, combineTicksDaily(ticksDaily, type, formatTickValue));
     }, new Map());
     return map.set(month, dayMap);
   }, new Map());
 }
 
-export function combineTicksDaily(ticks: Tick[], type: TrackerType, metric: boolean) {
+export function combineTicksDaily(ticks: Tick[], type: TrackerType, formatTickValue: (value: number) => string) {
   const mins = groupBy(ticks, (tick) => tick.createdAt - (tick.createdAt % 60000),
   );
   const tickPrints = Object.keys(mins).map((minKey) => {
     const minMs = parseInt(minKey, 10);
     const ticksMinly = mins[minKey];
-    return printTick(ticksMinly, minMs, type, metric);
+    return printTick(ticksMinly, minMs, type, formatTickValue);
   });
   return tickPrints.filter((print) => !!print.value);
 }
 
-function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: boolean) {
+function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickValue: (value: number) => string) {
   switch (type) {
     case TrackerType.GOAL:
       return { desc: 'goal achieved', value: 1, createdAt: minMs, hasMore: false };
@@ -49,7 +63,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: bool
     }
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
-      return { desc: `$${value} added`, value, createdAt: minMs, hasMore: false };
+      return { desc: `${formatTickValue(value)} added`, value, createdAt: minMs, hasMore: false };
     }
     case TrackerType.DISTANCE: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
@@ -58,10 +72,9 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, metric: bool
         accum.push(tick.latlon);
         return accum;
       }, []);
-      const distFmt = formatDistance(value, metric);
       const timeFmt = timeUtils.formatTimeMs(time);
       return {
-        desc: `${distFmt.format()}${distFmt.unit} in ${timeFmt.format(false)}`,
+        desc: `${formatTickValue(value)} in ${timeFmt.format(false)}`,
         value,
         time,
         paths,

@@ -3,7 +3,7 @@ import { Animated } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Tick } from 'app/model/Tracker';
-import { combineTicksMonthly } from 'app/model/utils';
+import { combineTicksMonthly } from 'app/model/ticks';
 
 import Calendar from '../calendar/Calendar';
 
@@ -11,7 +11,7 @@ export default class TrackerCal extends PureComponent {
   static propTypes = {
     trackerType: PropTypes.object,
     ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
-    metric: PropTypes.bool.isRequired,
+    formatTickValue: PropTypes.func.isRequired,
     // TODO: if only ViewPropTypes.style left it curses
     // that opacity is not part of ViewPropTypes.style
     style: PropTypes.arrayOf(PropTypes.object),
@@ -34,9 +34,9 @@ export default class TrackerCal extends PureComponent {
     };
   }
 
-  static getDerivedStateFromProps({ ticks, trackerType, metric }, prevState) {
-    if (ticks !== prevState.ticks) {
-      return { ticksMap: combineTicksMonthly(ticks, trackerType, metric), ticks };
+  static getDerivedStateFromProps({ ticks, trackerType, formatTickValue }, prevState) {
+    if (ticks !== prevState.ticks || formatTickValue !== prevState.formatTickValue) {
+      return { ticksMap: combineTicksMonthly(ticks, trackerType, formatTickValue), ticks };
     }
     return null;
   }

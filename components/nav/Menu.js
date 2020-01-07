@@ -7,7 +7,7 @@ import { DEBUG_MENU } from 'app/env';
 import { SLIDE_WIDTH_OFFSET, SLIDE_HEIGHT } from 'app/components/trackers/styles/slideStyles';
 import { CONTENT_OFFSET } from 'app/components/styles/common';
 
-import { MENU_TEXT_COLOR } from './styles';
+import menuStyles, { MENU_TEXT_COLOR } from './styles';
 import Debug from './Debug';
 
 export const styles = StyleSheet.create({
@@ -31,13 +31,13 @@ export const styles = StyleSheet.create({
     marginBottom: 30,
   },
   label: {
-    color: MENU_TEXT_COLOR,
+    ...menuStyles.menuText,
     marginRight: 5,
-    fontSize: 18,
     width: 120,
   },
   ver: {
-    color: MENU_TEXT_COLOR,
+    ...menuStyles.menuText,
+    fontSize: 14,
     textAlign: 'center',
   },
 });

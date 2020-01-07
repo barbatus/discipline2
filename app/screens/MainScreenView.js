@@ -5,12 +5,13 @@ import first from 'lodash/first';
 
 import { addTracker, updateCopilot } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
+import Keyboard from 'app/utils/Keyboard';
 
-import CopilotStep from '../copilot/CopilotStep';
-import CopilotStepEnum, { CopilotScreenEnum, getScreenByStep } from '../copilot/steps';
-import { NavAddButton, NavMenuButton } from '../nav/buttons';
-import { commonStyles } from '../styles/common';
-import Animation from '../animation/Animation';
+import CopilotStep from 'app/components/copilot/CopilotStep';
+import CopilotStepEnum, { CopilotScreenEnum, getScreenByStep } from 'app/components/copilot/steps';
+import { NavAddButton, NavMenuButton } from 'app/components/nav/buttons';
+import { commonStyles } from 'app/components/styles/common';
+import Animation from 'app/components/animation/Animation';
 
 import ScrollScreenView from './ScrollScreenView';
 import TrackersView from './TrackersView';
@@ -130,6 +131,7 @@ export class MainScreenView extends ScrollScreenView {
     if (this.copilotIfAddIcon(tracker)) return;
 
     this.isActive = true;
+    Keyboard.dismiss();
     this.props.onAddTracker(tracker, this.slideIndex + 1);
   }
 

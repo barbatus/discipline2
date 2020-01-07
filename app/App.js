@@ -12,7 +12,7 @@ import {
 import Logger from 'app/log';
 
 import { changeDay, loadApp } from '../model/actions';
-import MainScreen from '../components/screens/MainScreen';
+import MainScreen from './screens/MainScreen';
 
 import DayChangeEvent from './DayChangeEvent';
 

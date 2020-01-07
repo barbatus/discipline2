@@ -20,6 +20,7 @@ export function configureBackgroundGeolocation(callback: Function, debug: boolea
     stationaryRadius: 1,
     disableElasticity: true,
     preventSuspend: true,
+    locationAuthorizationRequest: 'Any',
   }, callback);
 }
 

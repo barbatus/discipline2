@@ -15,9 +15,9 @@ import TicksDlg from 'app/components/dlg/TicksDlg';
 
 import { MENU_WIDTH } from 'app/components/styles/common';
 
-import Menu from '../nav/Menu';
-import GradientSlider from '../common/GradientSlider2';
-import CopilotTooltip from '../copilot/Tooltip';
+import Menu from 'app/components/nav/Menu';
+import GradientSlider from 'app/components/common/GradientSlider2';
+import CopilotTooltip from 'app/components/copilot/Tooltip';
 
 import Screen from './Screen';
 import MainScreenView from './MainScreenView';
