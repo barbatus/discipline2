@@ -66,6 +66,11 @@ const styles = StyleSheet.create({
 });
 
 function getCurrentTrackerUpdate(tracker, app) {
+  if (!tracker) return {
+    current: null,
+    formatTickValue: null,
+  };
+
   return {
     current: tracker,
     formatTickValue: tickValueFormatter(tracker, app.props.metric),

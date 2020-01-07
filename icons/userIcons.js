@@ -125,6 +125,10 @@ const UserIcons = new Enum({
     value: 'hand',
     [IconSize.NORMAL]: require('./files/user/icon8/hand_cursor.png'),
   },
+  HARD_WORKING: {
+    value: 'hard_working',
+    [IconSize.NORMAL]: require('./files/user/icon8/hard_working.png'),
+  },
   HOME: {
     value: 'home',
     [IconSize.NORMAL]: require('./files/user/icon8/home.png'),
@@ -152,6 +156,10 @@ const UserIcons = new Enum({
   LOCK: {
     value: 'lock',
     [IconSize.NORMAL]: require('./files/user/icon8/lock.png'),
+  },
+  MAINTENANCE: {
+    value: 'maintenance',
+    [IconSize.NORMAL]: require('./files/user/icon8/maintenance.png'),
   },
   MAP: {
     value: 'map',
@@ -213,6 +221,10 @@ const UserIcons = new Enum({
     value: 'shopping_cart',
     [IconSize.NORMAL]: require('./files/user/icon8/shopping_cart.png'),
   },
+  SHOWER: {
+    value: 'shower',
+    [IconSize.NORMAL]: require('./files/user/icon8/shower.png'),
+  },
   SKIING: {
     value: 'skiing',
     [IconSize.NORMAL]: require('./files/user/icon8/skiing.png'),
@@ -232,6 +244,14 @@ const UserIcons = new Enum({
   SUNBATHE: {
     value: 'sunbathe',
     [IconSize.NORMAL]: require('./files/user/icon8/sunbathe.png'),
+  },
+  SWIMMING: {
+    value: 'swimming',
+    [IconSize.NORMAL]: require('./files/user/icon8/swimming.png'),
+  },
+  SYRINGE: {
+    value: 'syringe',
+    [IconSize.NORMAL]: require('./files/user/icon8/syringe.png'),
   },
   TAXI: {
     value: 'taxi',

@@ -41,7 +41,10 @@ export async function evalAlerts(callback: Function) {
 
     if (lastTick && lastAlert && lastTick.createdAt <= lastAlert.createdAt) return;
 
-    if (!checkIfTicksFit(ticks)) return;
+    if (!checkIfTicksFit(ticks)) {
+      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert: `, { context: 'alerts:evalAlerts' });
+      return;
+    };
 
     const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
@@ -72,7 +75,10 @@ export async function notify() {
       const alertBody = `Usually Tracker ${tracker.title} is used every ${time.formatDurationMs(averageDist)}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
-    InteractionManager.runAfterInteractions(evalAlerts.bind(this, showAlert));
+    InteractionManager.runAfterInteractions(() => {
+      evalAlerts(showAlert);
+      Logger.log('Alerts evaluated');
+    });
   } catch (ex) {
     Logger.error(ex, { context: 'alerts:notify' });
   }
