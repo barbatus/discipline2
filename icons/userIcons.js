@@ -89,6 +89,10 @@ const UserIcons = new Enum({
     value: 'ship',
     [IconSize.NORMAL]: require('./files/user/icon8/chip.png'),
   },
+  CHOCOLATE_BAR: {
+    value: 'chocolate_bar',
+    [IconSize.NORMAL]: require('./files/user/icon8/chocolate_bar.png'),
+  },
   COFFEE: {
     value: 'coffee',
     [IconSize.NORMAL]: require('./files/user/icon8/coffee_to_go.png'),
@@ -165,6 +169,10 @@ const UserIcons = new Enum({
     value: 'info',
     [IconSize.NORMAL]: require('./files/user/icon8/info.png'),
   },
+  INSTAGRAM: {
+    value: 'instagram',
+    [IconSize.NORMAL]: require('./files/user/icon8/instagram.png'),
+  },
   LAPTOP_CODING: {
     value: 'laptop_coding',
     [IconSize.NORMAL]: require('./files/user/icon8/laptop_coding.png'),
@@ -220,6 +228,10 @@ const UserIcons = new Enum({
   PLANET: {
     value: 'planet',
     [IconSize.NORMAL]: require('./files/user/icon8/planet.png'),
+  },
+  RAZOR: {
+    value: 'razor',
+    [IconSize.NORMAL]: require('./files/user/icon8/razor.png'),
   },
   READING: {
     value: 'reading',
@@ -281,6 +293,10 @@ const UserIcons = new Enum({
     value: 'taxi',
     [IconSize.NORMAL]: require('./files/user/icon8/taxi.png'),
   },
+  TEA: {
+    value: 'tea',
+    [IconSize.NORMAL]: require('./files/user/icon8/tea.png'),
+  },
   TEETH: {
     value: 'teeth',
     [IconSize.NORMAL]: require('./files/user/icon8/teeth.png'),
@@ -316,6 +332,10 @@ const UserIcons = new Enum({
   WASHING_MACHINE: {
     value: 'washing_machine',
     [IconSize.NORMAL]: require('./files/user/icon8/washing_machine.png'),
+  },
+  WEBER: {
+    value: 'weber',
+    [IconSize.NORMAL]: require('./files/user/icon8/weber.png'),
   },
   WED_GIFT: {
     value: 'wed_gift',

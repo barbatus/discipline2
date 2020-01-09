@@ -24,10 +24,6 @@ const TextCol = styled.View`
   flex-direction: row;
 `;
 
-const TimeText = styled.Text`
-  padding-right: 5px;
-`;
-
 const NextImg = styled.Image`
   resize-mode: contain;
   height: 15px;
@@ -38,7 +34,6 @@ const ListTick = React.memo(({ tick, onPress, showMore }) => {
     <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, tick)}>
       <TextRow>
         <TextCol>
-          <TimeText>{tick.timeDesc}:</TimeText>
           <Text>{tick.longDesc}</Text>
         </TextCol>
         {

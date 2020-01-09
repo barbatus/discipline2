@@ -290,7 +290,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         );
       } catch({ value: distTracker }) {}
 
-      timer.on(this.onTimeUpdate, this);
+      timer.on(this.onTimeUpdate, this.onTimeLimit, this);
       distTracker.on('onLatLonUpdate', this.onLatLonUpdate, this);
     }
 
@@ -308,11 +308,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
       const timer = Timers.getOrCreate(tracker.id);
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
       if (shown) {
-        timer.on(this.onTimeUpdate, this);
+        timer.on(this.onTimeUpdate, this.onTimeLimit, this);
         distTracker.on('onLatLonUpdate', this.onLatLonUpdate, this);
         this.setState({ ...distTracker.value, timeMs: timer.value });
       } else {
-        timer.off(this.onTimeUpdate, this);
+        timer.off(this.onTimeUpdate, this.onTimeLimit, this);
         distTracker.off('onLatLonUpdate', this.onLatLonUpdate, this);
       }
     } else {
@@ -329,7 +329,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     distTracker.off('onLatLonUpdate', this.onLatLonUpdate, this);
     DistanceTrackers.dispose(tracker.id);
     const timer = Timers.getOrCreate(tracker.id);
-    timer.off(this.onTimeUpdate, this);
+    timer.off(this.onTimeUpdate, this.onTimeLimit, this);
     Timers.dispose(tracker.id);
   }
 
@@ -397,6 +397,10 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     const { dist } = this.state;
     this.onProgress(dist, { time: timeMs });
     this.setState({ timeMs });
+  }
+
+  onTimeLimit() {
+    this.onStopBtn();
   }
 
   onLatLonUpdate({ dist, lat, lon, speed }) {

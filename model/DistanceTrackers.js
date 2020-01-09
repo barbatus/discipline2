@@ -225,8 +225,8 @@ export class DistanceTracker extends EventEmitter {
     this.heading = heading;
     this.state = {
       ...this.state,
-      lat: latitude,
-      lon: longitude,
+      lat: null, //latitude,
+      lon: null, //longitude,
       timestamp: Date.now(),
       lastStartDist: 0,
     };

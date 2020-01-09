@@ -36,7 +36,7 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTick
     const dayMap = Object.keys(days).reduce((accum, dayKey) => {
       const day = parseInt(dayKey, 10);
       const ticksDaily = days[dayKey];
-      const dayTickPrints = groupTicksDaily(ticksDaily, type, formatTickValue)
+      const dayTickPrints = groupTicksDaily(ticksDaily, type, formatTickValue);
       const total = dayTickPrints.reduce((accum, tick) => accum + tick.value, 0);
       const dayTicksPrint = {
         totalDesc: formatTickValue(total),
@@ -99,7 +99,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       const timeFmt = timeUtils.formatTimeMs(time);
       const distDesc = formatTickValue(value);
       return {
-        longDesc: `Tracked ${distDesc} starting at ${timeDesc}, spent ${timeFmt.format(false)}`,
+        longDesc: `Tracked ${distDesc} starting at ${timeDesc}, duration ${timeFmt.format(false)}`,
         shortDesc: `${distDesc} in ${timeFmt.format(false)}`,
         timeDesc,
         value,

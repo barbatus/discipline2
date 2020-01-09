@@ -69,19 +69,16 @@ export default class BGGeoLocationWatcher {
     return new Promise((resolve, reject) => {
       configureBackgroundGeolocation((state) => {
         const authStatus = state.lastLocationAuthorizationStatus;
-        BackgroundGeolocation.stop();
-        BackgroundGeolocation.start(() => {
-          BGGeoLocationWatcher.singleton = new BGGeoLocationWatcher();
-          if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
-              BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
-            reject(new ValuedError(
-              BGGeoLocationWatcher.singleton,
-              BGError.LOCATION_PERMISSION_DENIED,
-            ));
-          } else {
-            resolve(BGGeoLocationWatcher.singleton);
-          }
-        }, (error) => reject(new ValuedError(null, error)));
+        BGGeoLocationWatcher.singleton = new BGGeoLocationWatcher();
+        if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
+            BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
+          reject(new ValuedError(
+            BGGeoLocationWatcher.singleton,
+            BGError.LOCATION_PERMISSION_DENIED,
+          ));
+        } else {
+          resolve(BGGeoLocationWatcher.singleton);
+        }
       });
     });
   }
@@ -100,6 +97,14 @@ export default class BGGeoLocationWatcher {
   }
 
   async watchPos() {
+    return new Promise((resolve, reject) => {
+      BackgroundGeolocation.start(() => {
+        this.watchPosInner().then(resolve).catch(reject);
+      }, (error) => reject(new ValuedError(null, error)));
+    });
+  }
+
+  async watchPosInner() {
     return new Promise(async (resolve, reject) => {
       if (this.watching) {
         const pos = await this.getPos({ samples: 1, maximumAge: 0 });
@@ -146,6 +151,7 @@ export default class BGGeoLocationWatcher {
     return new Promise((resolve) => {
       if (this.listenerCount('position') === 0) {
         this.watching = false;
+        BackgroundGeolocation.stop();
         BackgroundGeolocation.changePace(false);
         BackgroundGeolocation.stopWatchPosition();
       }

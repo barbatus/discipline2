@@ -33,12 +33,20 @@ export default class TrackerCal extends PureComponent {
     super(props);
     this.state = {
       ticksMap: new Map(),
+      formatTickValue: props.formatTickValue,
     };
   }
 
   static getDerivedStateFromProps({ ticks, trackerType, formatTickValue }, prevState) {
-    if (ticks !== prevState.ticks || formatTickValue !== prevState.formatTickValue) {
-      return { ticksMap: combineTicksMonthly(ticks, trackerType, formatTickValue), ticks };
+    if (ticks !== prevState.ticks) {
+      return {
+        ticksMap: combineTicksMonthly(ticks, trackerType, prevState.formatTickValue),
+        ticks,
+        formatTickValue,
+      };
+    }
+    if (formatTickValue !== prevState.formatTickValue) {
+      return { formatTickValue };
     }
     return null;
   }

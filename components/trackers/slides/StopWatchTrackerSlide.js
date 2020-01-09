@@ -117,7 +117,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     const { tracker, shown } = this.props;
     if (shown) {
       const timer = await Timers.getOrCreate(tracker.id, 1000);
-      timer.on(this.onTimer, this);
+      timer.on(this.onTimer, this.onTimerLimit, this);
 
       if (tracker.active) {
         timer.restart(tracker.value);
@@ -132,10 +132,10 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
       const { tracker } = this.props;
       const timer = await Timers.getOrCreate(tracker.id);
       if (shown) {
-        timer.on(this.onTimer, this);
+        timer.on(this.onTimer, this.onTimerLimit, this);
         this.setState({ timeMs: timer.value });
       } else {
-        timer.off(this.onTimer, this);
+        timer.off(this.onTimer, this.onTimerLimit, this);
       }
     }
 
@@ -148,7 +148,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
   async componentWillUnmount() {
     const { tracker } = this.props;
     const timer = await Timers.getOrCreate(tracker.id);
-    timer.off(this.onTimer, this);
+    timer.off(this.onTimer, this.onTimerLimit, this);
     Timers.dispose(tracker.id);
   }
 
@@ -170,13 +170,17 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     this.onStart(0);
   }
 
+  onStop() {
+    super.onStop();
+  }
+
   onTimer(timeMs: number, lastTimeMs: number) {
     this.onProgress(lastTimeMs);
     this.setState({ timeMs });
   }
 
-  onStop() {
-    super.onStop();
+  onTimerLimit() {
+    this.onStop();
   }
 
   onLap() {

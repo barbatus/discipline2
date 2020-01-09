@@ -41,7 +41,7 @@ export class Timer extends Interval {
     if (this.active || this.allTimeMs >= TIME_LIMIT_MS) return;
 
     super.start(baseTimeMs, lastTickMs);
-    this.on(this.onTimeChange, this);
+    super.on(this.onTimeChange, this);
     return true;
   }
 
@@ -64,13 +64,24 @@ export class Timer extends Interval {
     if (!this.active) return;
 
     super.stop();
-    this.off(this.onTimeChange, this);
+    super.off(this.onTimeChange, this);
+  }
+
+  on(cb: Function, onLimit: Function, context: any) {
+    super.on(cb, context);
+    super.addListener('stop', onLimit, context);
+  }
+
+  off(cb: Function, onLimit: Function, context: any) {
+    super.off(cb, context);
+    super.removeListener('stop', onLimit, context);
   }
 
   async onTimeChange(allTimeMs: number, lastTickMs: number) {
     await this.saveTimerUpdate(lastTickMs);
     if (allTimeMs >= TIME_LIMIT_MS) {
       this.stop();
+      this.emit('stop');
     }
   }
 
