@@ -17,6 +17,8 @@ export default class TrackerScroll extends TrackerRenderer {
     index: 0,
   };
 
+  scroll = React.createRef();
+
   hide(callback) {
     Animated.timing(this.opacity, {
       duration: 500,
@@ -25,14 +27,14 @@ export default class TrackerScroll extends TrackerRenderer {
   }
 
   scrollTo(index, callback, animated) {
-    this.scroll.scrollTo(index, callback, animated);
+    this.scroll.current.scrollTo(index, callback, animated);
   }
 
   onTap(tracker: Tracker) {
     const index = this.state.trackers.findIndex(
       (nTracker) => nTracker === tracker);
 
-    const scroll = this.scroll.index;
+    const scroll = this.scroll.current.index;
     if (index === scroll) {
       caller(this.props.onCenterSlideTap, index);
     }
@@ -56,7 +58,7 @@ export default class TrackerScroll extends TrackerRenderer {
     return (
       <Animated.View style={[style, { opacity: this.opacity }]}>
         <Scroll
-          ref={(el) => (this.scroll = el)}
+          ref={this.scroll}
           style={commonStyles.flexFilled}
           centered
           index={index}

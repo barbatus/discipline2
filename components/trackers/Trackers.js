@@ -73,6 +73,12 @@ export default class Trackers extends PureComponent {
 
   moveDown = new MoveDownResponderAnim(SLIDE_HEIGHT);
 
+  bscroll = React.createRef();
+
+  sscroll = React.createRef();
+
+  swiper = React.createRef();
+
   constructor(props) {
     super(props);
     this.state = {
@@ -114,7 +120,7 @@ export default class Trackers extends PureComponent {
   }
 
   onEdit(tracker: Tracker) {
-    this.swiper.showEdit(() => caller(this.props.onEdit, tracker));
+    this.swiper.current.showEdit(() => caller(this.props.onEdit, tracker));
   }
 
   onRemove(tracker: Tracker) {
@@ -126,16 +132,16 @@ export default class Trackers extends PureComponent {
   }
 
   onScaleMove(dv) {
-    this.bscroll.opacity = 1 - dv;
-    this.sscroll.opacity = 1 - dv;
+    this.bscroll.current.opacity = 1 - dv;
+    this.sscroll.current.opacity = 1 - dv;
     caller(this.props.onSwiperScaleMove, dv);
   }
 
   onScaleDone() {
     window.requestAnimationFrame(() => this.setState({ searchView: true }));
-    this.bscroll.show();
-    this.sscroll.show();
-    this.swiper.hide();
+    this.bscroll.current.show();
+    this.sscroll.current.show();
+    this.swiper.current.hide();
     caller(this.props.onSwiperScaleDone);
   }
 
@@ -152,10 +158,10 @@ export default class Trackers extends PureComponent {
   onCenterSlideTap(index: number) {
     this.setState({ searchView: false });
     // Scroll, show, update w/o flicking.
-    this.bscroll.hide();
-    this.sscroll.hide();
-    this.swiper.scrollTo(index, () => (
-      this.swiper.show(() => {
+    this.bscroll.current.hide();
+    this.sscroll.current.hide();
+    this.swiper.current.scrollTo(index, () => (
+      this.swiper.current.show(() => {
         this.renderTrackers(this.props.trackers);
         caller(this.props.onSwiperShown);
       })
@@ -163,21 +169,21 @@ export default class Trackers extends PureComponent {
   }
 
   onSmallSlideTap(index: number) {
-    this.bscroll.scrollTo(index, true);
-    this.sscroll.scrollTo(index, true);
+    this.bscroll.current.scrollTo(index, true);
+    this.sscroll.current.scrollTo(index, true);
   }
 
   onSlideChange(index: number, previ: number, animated: boolean) {
     // Don't hinder any animation.
     InteractionManager.runAfterInteractions(() => {
-      this.bscroll.scrollTo(index, false);
-      this.sscroll.scrollTo(index, false);
+      this.bscroll.current.scrollTo(index, false);
+      this.sscroll.current.scrollTo(index, false);
     });
     caller(this.props.onSlideChange, index, previ, animated);
   }
 
   cancelEdit(callback) {
-    this.swiper.cancelEdit(callback);
+    this.swiper.current.cancelEdit(callback);
     caller(this.props.onCancel);
   }
 
@@ -188,7 +194,7 @@ export default class Trackers extends PureComponent {
       onSwiperMoveDownDone,
       onSwiperMoveDownCancel,
     } = this.props;
-    this.moveDown.subscribe(this.swiper.responder,
+    this.moveDown.subscribe(this.swiper.current.responder,
       onSwiperMoveDown,
       onSwiperMoveDownStart,
       () => {
@@ -251,7 +257,7 @@ export default class Trackers extends PureComponent {
       <Animated.View style={combinedStyle}>
         <TrackerScroll
           {...this.props}
-          ref={(el) => (this.bscroll = el)}
+          ref={this.bscroll}
           trackers={scTrackers}
           style={styles.bigScroll}
           scale={5 / 8}
@@ -261,7 +267,7 @@ export default class Trackers extends PureComponent {
         />
         <TrackerScroll
           {...this.props}
-          ref={(el) => (this.sscroll = el)}
+          ref={this.sscroll}
           trackers={scTrackers}
           style={styles.smallScroll}
           scale={1 / 4}
@@ -271,7 +277,7 @@ export default class Trackers extends PureComponent {
         />
         <TrackerSwiper
           {...this.props}
-          ref={(el) => (this.swiper = el)}
+          ref={this.swiper}
           enabled={swiperEnabled}
           trackers={swTrackers}
           style={commonStyles.absFilled}

@@ -114,6 +114,10 @@ class TrackersView extends PureComponent {
 
   isActive = false;
 
+  calendar = React.createRef();
+
+  trackers = React.createRef();
+
   constructor(props) {
     super(props);
 
@@ -224,7 +228,7 @@ class TrackersView extends PureComponent {
     const monthMs = time.getNextMonthDateMs(dateMs);
     this.setNavBarMonth(monthMs);
 
-    this.calendar.scrollToNextMonth();
+    this.calendar.current.scrollToNextMonth();
   }
 
   onPrevMonth() {
@@ -232,7 +236,7 @@ class TrackersView extends PureComponent {
     const monthMs = time.getPrevMonthDateMs(dateMs);
     this.setNavBarMonth(monthMs);
 
-    this.calendar.scrollToPrevMonth();
+    this.calendar.current.scrollToPrevMonth();
   }
 
   onSwiperScaleMove(dv: number) {
@@ -326,7 +330,7 @@ class TrackersView extends PureComponent {
   // Edit tracker events.
 
   cancelEdit() {
-    this.trackers.cancelEdit();
+    this.trackers.current.cancelEdit();
   }
 
   render() {
@@ -339,7 +343,7 @@ class TrackersView extends PureComponent {
     return (
       <Animated.View style={[commonStyles.flexFilled, style]}>
         <TrackerCal
-          ref={(el) => (this.calendar = el)}
+          ref={this.calendar}
           {...this.props}
           shown={calShown}
           trackerType={tracker ? tracker.type : null}
@@ -350,7 +354,7 @@ class TrackersView extends PureComponent {
         />
         <View style={styles.trackersContainer}>
           <Trackers
-            ref={(el) => (this.trackers = el)}
+            ref={this.trackers}
             {...this.props}
             style={commonStyles.flexFilled}
             metric={app.props.metric}

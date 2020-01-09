@@ -64,6 +64,8 @@ export default class Swiper extends PureComponent {
     onSlideNoChange: null,
   };
 
+  scroll = React.createRef();
+
   constructor(props) {
     super(props);
     this.onSlideChange = ::this.onSlideChange;
@@ -80,7 +82,7 @@ export default class Swiper extends PureComponent {
   }
 
   scrollTo(index, callback, animated) {
-    this.scroll.scrollTo(index, callback, animated);
+    this.scroll.current.scrollTo(index, callback, animated);
   }
 
   /**
@@ -140,7 +142,7 @@ export default class Swiper extends PureComponent {
     return (
       <View style={style}>
         <BaseScroll
-          ref={(el) => (this.scroll = el)}
+          ref={this.scroll}
           style={commonStyles.flexFilled}
           slides={slides}
           slideWidth={SCREEN_WIDTH}

@@ -32,6 +32,8 @@ export default class Screen extends PureComponent {
     navBar: PropTypes.object.isRequired,
   };
 
+  navBarRef = React.createRef();
+
   getChildContext() {
     return {
       navBar: this.navBar,
@@ -41,16 +43,16 @@ export default class Screen extends PureComponent {
   get navBar() {
     return {
       setButtons: (leftBtn, rightBtn, callback, animated) => {
-        this.navBarRef.setButtons(leftBtn, rightBtn, callback, animated);
+        this.navBarRef.current.setButtons(leftBtn, rightBtn, callback, animated);
       },
       setDisabled: (disabled, callback) => {
-        this.navBarRef.setDisabled(disabled, callback);
+        this.navBarRef.current.setDisabled(disabled, callback);
       },
       setTitle: (navTitle: string) => {
-        this.navBarRef.setTitle(navTitle);
+        this.navBarRef.current.setTitle(navTitle);
       },
       setOpacity: (dp: number) => {
-        this.navBarRef.setOpacity(dp);
+        this.navBarRef.current.setOpacity(dp);
       },
     };
   }
@@ -59,7 +61,7 @@ export default class Screen extends PureComponent {
     const { children } = this.props;
     return (
       <View style={styles.container}>
-        <NavBar ref={(el) => (this.navBarRef = el)} />
+        <NavBar ref={this.navBarRef} />
         <View style={styles.content}>
           {children}
         </View>

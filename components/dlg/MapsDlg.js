@@ -69,6 +69,8 @@ const LocationButton = React.memo(({ onMyLocation }) => {
 export default class MapsDlg extends CommonModal {
   regionBeingChanged = false;
 
+  map = React.createRef();
+
   constructor(props) {
     super(props);
     const baseState = this.state;
@@ -95,7 +97,7 @@ export default class MapsDlg extends CommonModal {
       <>
         <MapView.Animated
           style={mapStyles.mapView}
-          ref={(el) => (this.map = el)}
+          ref={this.map}
           region={region}
           zoomEnabled
           loadingEnabled
@@ -180,7 +182,7 @@ export default class MapsDlg extends CommonModal {
       this.showLocation();
     }
 
-    this.map.getNode().fitToCoordinates(coords, {
+    this.map.current.getNode().fitToCoordinates(coords, {
       edgePadding: DEFAULT_PADDING,
       animated: true,
     });

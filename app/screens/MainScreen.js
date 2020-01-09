@@ -6,7 +6,7 @@ import SideMenu from 'react-native-side-menu';
 import { copilot } from '@okgrow/react-native-copilot';
 
 import PushNotification from 'app/notifications';
-import { launchNotify } from 'app/notifications/alerts';
+import { launch as launchAlerts } from 'app/notifications/runner';
 import { updateAppProps } from 'app/model/actions';
 import registry, { DlgType } from 'app/components/dlg/registry';
 import IconsDlg from 'app/components/dlg/IconsDlg';
@@ -35,6 +35,12 @@ export class MainScreen extends PureComponent {
     app: null,
   };
 
+  iconsDlg = React.createRef();
+
+  mapsDlg = React.createRef();
+
+  ticksDlg = React.createRef();
+
   constructor(props) {
     super(props);
 
@@ -53,13 +59,13 @@ export class MainScreen extends PureComponent {
   }
 
   componentDidMount() {
-    launchNotify();
+    launchAlerts();
   }
 
   componentDidUpdate() {
-    registry.register(DlgType.ICONS, this.iconsDlg);
-    registry.register(DlgType.MAPS, this.mapsDlg);
-    registry.register(DlgType.TICKS, this.ticksDlg);
+    registry.register(DlgType.ICONS, this.iconsDlg.current);
+    registry.register(DlgType.MAPS, this.mapsDlg.current);
+    registry.register(DlgType.TICKS, this.ticksDlg.current);
   }
 
   onSlideChange(index, previ, animated) {
@@ -152,9 +158,9 @@ export class MainScreen extends PureComponent {
             {this.renderContent()}
           </Screen>
         </SideMenu>
-        <IconsDlg ref={(el) => (this.iconsDlg = el)} />
-        <MapsDlg ref={(el) => (this.mapsDlg = el)} />
-        <TicksDlg ref={(el) => (this.ticksDlg = el)} />
+        <IconsDlg ref={this.iconsDlg} />
+        <MapsDlg ref={this.mapsDlg} />
+        <TicksDlg ref={this.ticksDlg} />
       </SafeAreaView>
     );
   }

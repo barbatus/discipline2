@@ -170,6 +170,7 @@ export const changeDay = () => async (dispatch) => {
   const trackers = await depot.getTrackers();
   return dispatch({
     type: CHANGE_DAY,
+    dateMs: time.getDateMs(),
     trackers,
   });
 };

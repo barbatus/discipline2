@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Animated, StyleSheet, View, UIManager, findNodeHandle } from 'react-native';
+import { Animated, StyleSheet, View, UIManager, findNodeHandle, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
@@ -52,6 +52,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#BD8E83',
     borderLeftColor: 'transparent',
   },
+  tooltipContent: {
+    flex: 1,
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const ArrowView = styled.View`
@@ -77,7 +83,10 @@ export default class Tooltip extends PureComponent {
   static propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
-    children: PropTypes.element.isRequired,
+    children: PropTypes.oneOfType(
+        [PropTypes.element, PropTypes.arrayOf(PropTypes.element)],
+      ).isRequired,
+    onTooltipClick: PropTypes.func,
   };
 
   opacity = new Animated.Value(0);
@@ -85,6 +94,8 @@ export default class Tooltip extends PureComponent {
   moveY = new Animated.Value(0);
 
   moveX = new Animated.Value(0);
+
+  view = React.createRef();
 
   constructor(props) {
     super(props);
@@ -116,7 +127,7 @@ export default class Tooltip extends PureComponent {
   }
 
   updatePos() {
-    const node = findNodeHandle(this.view);
+    const node = findNodeHandle(this.view.current);
     if (node) {
       this.setTimeout(() => UIManager.measure(node, (x, y, width, height, pageX, pageY) => {
           const haflW = width / 2;
@@ -155,6 +166,7 @@ export default class Tooltip extends PureComponent {
   }
 
   render() {
+    const { onTooltipClick } = this.props;
     const { x, y } = this.state;
     const { arrLeft, arrTop } = this.state;
     const animStyle = {
@@ -168,10 +180,14 @@ export default class Tooltip extends PureComponent {
     };
     return (
       <Animated.View
-        ref={(el) => (this.view = el)}
+        ref={this.view}
         style={[styles.view, animStyle]}
       >
-        <View>{this.props.children}</View>
+        <TouchableOpacity hitSlop={{ bottom: 15, right: 15 }} onPress={onTooltipClick}>
+          <View style={styles.tooltipContent}>
+            {this.props.children}
+          </View>
+        </TouchableOpacity>
         <Arrow x={arrLeft} y={arrTop} />
       </Animated.View>
     );

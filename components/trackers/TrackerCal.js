@@ -27,6 +27,8 @@ export default class TrackerCal extends PureComponent {
     shown: false,
   };
 
+  calendar = React.createRef();
+
   constructor(props) {
     super(props);
     this.state = {
@@ -42,11 +44,11 @@ export default class TrackerCal extends PureComponent {
   }
 
   scrollToPrevMonth() {
-    this.calendar.scrollToPrevMonth();
+    this.calendar.current.scrollToPrevMonth();
   }
 
   scrollToNextMonth() {
-    this.calendar.scrollToNextMonth();
+    this.calendar.current.scrollToNextMonth();
   }
 
   render() {
@@ -57,7 +59,7 @@ export default class TrackerCal extends PureComponent {
       <Animated.View style={style}>
         <Calendar
           {...this.props}
-          ref={(el) => (this.calendar = el)}
+          ref={this.calendar}
           scrollEnabled
           showControls
           shown={shown}

@@ -50,6 +50,8 @@ export default class BaseScroll extends PureComponent {
 
   onScrollToCb = null;
 
+  scrollView = React.createRef();
+
   constructor(props) {
     super(props);
 
@@ -119,7 +121,7 @@ export default class BaseScroll extends PureComponent {
 
     const offsetX = Math.max(newIndex * slideWidth, 0);
     this.onScrollToCb = callback;
-    this.scrollView.scrollTo({
+    this.scrollView.current.scrollTo({
       x: offsetX,
       y: 0,
       animated: animated !== false,
@@ -171,7 +173,7 @@ export default class BaseScroll extends PureComponent {
     return (
       <ScrollView
         {...this.props}
-        ref={(el) => (this.scrollView = el)}
+        ref={this.scrollView}
         bounces={bounces}
         contentOffset={{ x: index * slideWidth, y: 0 }}
         keyboardShouldPersistTaps="always"

@@ -27,6 +27,8 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   addIndex = null;
 
+  swiper = React.createRef();
+
   constructor(props) {
     super(props);
     this.shakeCurrent = ::this.shakeCurrent;
@@ -37,7 +39,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   get index() {
-    return this.swiper.index;
+    return this.swiper.current.index;
   }
 
   get shown() {
@@ -158,7 +160,7 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   scrollTo(index, callback, animated) {
-    this.swiper.scrollTo(index, callback, animated);
+    this.swiper.current.scrollTo(index, callback, animated);
   }
 
   // When animating the removal we always scroll to the prev index.
@@ -202,7 +204,7 @@ export default class TrackerSwiper extends TrackerRenderer {
       <Animated.View style={swiperStyle} {...this.responder.panHandlers}>
         <Swiper
           {...this.props}
-          ref={(el) => (this.swiper = el)}
+          ref={this.swiper}
           style={commonStyles.flexFilled}
           slides={slides}
           scrollEnabled={scrollEnabled}

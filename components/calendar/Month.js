@@ -45,18 +45,8 @@ const styles = StyleSheet.create({
 });
 
 const TextRow = styled.View`
-  padding-bottom: ${({ isLast }) => (isLast ? 0 : 5)}px;
   flex-direction: row;
   align-items: center;
-`;
-
-const TextCol = styled.View`
-  flex-direction: column;
-  flex-wrap: nowrap;
-`;
-
-const TimeCol = styled(TextCol)`
-  padding-right: 5px;
 `;
 
 const TickText = styled.Text`
@@ -74,6 +64,7 @@ const MoreText = styled.Text`
 
 const TimeText = styled(TickText)`
   color: ${HINT_COLOR};
+  margin-right: 5px;
 `;
 
 export default class Month extends PureComponent {
@@ -88,6 +79,8 @@ export default class Month extends PureComponent {
   static defaultProps = {
     ticks: new Map(),
   };
+
+  dayRef = React.createRef();
 
   constructor(props) {
     super(props);
@@ -109,7 +102,7 @@ export default class Month extends PureComponent {
 
   componentDidUpdate() {
     if (!this.dayWidth) {
-      const dayNode = findNodeHandle(this.dayRef);
+      const dayNode = findNodeHandle(this.dayRef.current);
       UIManager.measure(dayNode, (dx, dy, width, height) => {
         this.dayWidth = width;
         this.dayHeight = height;
@@ -151,55 +144,40 @@ export default class Month extends PureComponent {
     const { selDateMs } = this.state;
 
     const dayIndex = moment(selDateMs).date() - 1;
-    const dayTicks = ticks.get(dayIndex);
-    const ticksShown = dayTicks.slice(0, 3);
-    const shownSize = ticksShown.length - 1;
-    const tickTimes = ticksShown.map((tick, index) => {
-      const timeStr = moment(tick.createdAt).format('LT');
-      return (
-        <TextRow key={tick.createdAt} isLast={index === shownSize}>
-          <TimeText>
-            {timeStr}
-            {':'}
-          </TimeText>
-        </TextRow>
-      );
-    });
-
-    const tickDescs = ticksShown.map((tick, index) => (
-      <TextRow key={tick.createdAt} isLast={index === shownSize}>
-        <TickText>{tick.desc}</TickText>
-      </TextRow>
-    ));
-
+    const { totalDesc, ticks: dayTicks } = ticks.get(dayIndex);
     const tooltipPos = this.getTooltipPos(selDateMs);
-    const hasMore = dayTicks.length > 3 || dayTicks.some(tick => tick.hasMore);
+
+    if (dayTicks.length > 1) {
+      return (
+        <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={() => onTooltipClick(dayTicks)}>
+          <View style={styles.ticksContent}>
+            <TextRow>
+              <TimeText>Total:</TimeText>
+              <TickText>
+                {totalDesc}
+              </TickText>
+            </TextRow>
+          </View>
+          <MoreText>
+            More
+            <Icon
+              name="arrow-top-right-bold-outline"
+              style={styles.tooltipLinkIcon}
+            />
+          </MoreText>
+        </Tooltip>
+      );
+    }
+
+    const { timeDesc, shortDesc } = dayTicks[0];
     return (
       <Tooltip x={tooltipPos.x} y={tooltipPos.y}>
-        <TouchableOpacity
-          hitSlop={{ bottom: 15, right: 15 }}
-          onPress={() => onTooltipClick(dayTicks)}
-        >
-          <View style={styles.tooltipContent}>
-            <View style={styles.ticksContent}>
-              <TimeCol>
-                {tickTimes}
-              </TimeCol>
-              <TextCol>
-                {tickDescs}
-              </TextCol>
-            </View>
-            {hasMore ? (
-              <MoreText>
-                More
-                <Icon
-                  name="arrow-top-right-bold-outline"
-                  style={styles.tooltipLinkIcon}
-                />
-              </MoreText>
-            ) : null}
-          </View>
-        </TouchableOpacity>
+        <View style={styles.ticksContent}>
+          <TextRow>
+            <TimeText>{timeDesc}:</TimeText>
+            <TickText>{shortDesc}</TickText>
+          </TextRow>
+        </View>
       </Tooltip>
     );
   }
@@ -223,7 +201,7 @@ export default class Month extends PureComponent {
       days.push(
         <Day
           key={startDay.valueOf()}
-          ref={(ref) => (this.dayRef = ref)}
+          ref={this.dayRef}
           onPress={this.onSelectDate}
           value={startDay.date()}
           isToday={startDay.isSame(todayMs, 'day')}

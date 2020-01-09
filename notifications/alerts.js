@@ -4,7 +4,6 @@ import BackgroundFetch from 'react-native-background-fetch';
 
 import Logger from 'app/log';
 import time from 'app/time/utils';
-import Interval from 'app/time/Interval';
 import depot from 'app/depot/depot';
 
 import PushNotification from './index';
@@ -42,7 +41,7 @@ export async function evalAlerts(callback: Function) {
     if (lastTick && lastAlert && lastTick.createdAt <= lastAlert.createdAt) return;
 
     if (!checkIfTicksFit(ticks)) {
-      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert: `, { context: 'alerts:evalAlerts' });
+      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, { context: 'alerts:evalAlerts' });
       return;
     };
 
@@ -71,7 +70,7 @@ export async function notify() {
     const app = await depot.getApp();
     if (!app.props.alerts) return;
 
-    const showAlert = (tracker) => {
+    const showAlert = (tracker, averageDist) => {
       const alertBody = `Usually Tracker ${tracker.title} is used every ${time.formatDurationMs(averageDist)}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
@@ -82,32 +81,4 @@ export async function notify() {
   } catch (ex) {
     Logger.error(ex, { context: 'alerts:notify' });
   }
-}
-
-export function launchNotify() {
-  BackgroundFetch.configure({
-    minimumFetchInterval: 15, // minutes (15 is minimum allowed)
-    // Android options
-    stopOnTerminate: false,
-    startOnBoot: true,
-  }, async () => {
-    await notify();
-    BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
-  }, (ex) => {
-    Logger.error(ex, { context: 'RNBackgroundFetch.configure' });
-  });
-
-  BackgroundFetch.status((status) => {
-    switch(status) {
-      case BackgroundFetch.STATUS_RESTRICTED:
-        Logger.log('BackgroundFetch restricted');
-        break;
-      case BackgroundFetch.STATUS_DENIED:
-        Logger.log('BackgroundFetch denied');
-        break;
-      case BackgroundFetch.STATUS_AVAILABLE:
-        Logger.log('BackgroundFetch is enabled');
-        break;
-    }
-  });
 }

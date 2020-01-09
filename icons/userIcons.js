@@ -17,6 +17,14 @@ const UserIcons = new Enum({
     value: 'avocado',
     [IconSize.NORMAL]: require('./files/user/icon8/avocado.png'),
   },
+  BABY: {
+    value: 'baby',
+    [IconSize.NORMAL]: require('./files/user/icon8/baby.png'),
+  },
+  BALL_POINT_PEN: {
+    value: 'ball_point_pen',
+    [IconSize.NORMAL]: require('./files/user/icon8/ball_point_pen.png'),
+  },
   BAR: {
     value: 'bar',
     [IconSize.NORMAL]: require('./files/user/icon8/bar.png'),
@@ -29,6 +37,10 @@ const UserIcons = new Enum({
     value: 'barbershop',
     [IconSize.NORMAL]: require('./files/user/icon8/barbershop.png'),
   },
+  BEACH: {
+    value: 'beach',
+    [IconSize.NORMAL]: require('./files/user/icon8/beach.png'),
+  },
   BELL: {
     value: 'bell',
     [IconSize.NORMAL]: require('./files/user/icon8/bell.png'),
@@ -40,6 +52,10 @@ const UserIcons = new Enum({
   BICYCLE: {
     value: 'bicycle',
     [IconSize.NORMAL]: require('./files/user/icon8/bicycle.png'),
+  },
+  BUYING: {
+    value: 'buying',
+    [IconSize.NORMAL]: require('./files/user/icon8/buying.png'),
   },
   BOOK_SHELF: {
     value: 'book_shelf',
@@ -241,9 +257,17 @@ const UserIcons = new Enum({
     value: 'stopwatch',
     [IconSize.NORMAL]: require('./files/user/icon8/stopwatch.png'),
   },
+  SUBWAY: {
+    value: 'subway',
+    [IconSize.NORMAL]: require('./files/user/icon8/subway.png'),
+  },
   SUNBATHE: {
     value: 'sunbathe',
     [IconSize.NORMAL]: require('./files/user/icon8/sunbathe.png'),
+  },
+  SURF: {
+    value: 'surf',
+    [IconSize.NORMAL]: require('./files/user/icon8/surf.png'),
   },
   SWIMMING: {
     value: 'swimming',

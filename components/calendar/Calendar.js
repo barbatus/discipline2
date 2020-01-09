@@ -40,6 +40,8 @@ export default class Calendar extends PureComponent {
     shown: false,
   };
 
+  calendar = React.createRef();
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -80,7 +82,7 @@ export default class Calendar extends PureComponent {
 
   scrollToItem(itemIndex: number, animated = true) {
     const scrollToX = itemIndex * SCREEN_WIDTH;
-    this.calendar.scrollTo({ y: 0, x: scrollToX, animated });
+    this.calendar.current.scrollTo({ y: 0, x: scrollToX, animated });
   }
 
   scrollEnded({ nativeEvent }) {
@@ -144,7 +146,7 @@ export default class Calendar extends PureComponent {
       <View style={[styles.calContainer, customStyle.calContainer]}>
         {this.renderHeading(titleFormat)}
         <ScrollView
-          ref={(el) => (this.calendar = el)}
+          ref={this.calendar}
           horizontal
           pagingEnabled
           style={styles.scrollView}

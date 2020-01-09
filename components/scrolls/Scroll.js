@@ -16,12 +16,14 @@ class Scroll extends PureComponent {
     centered: false,
   };
 
+  scroll = React.createRef();
+
   get index() {
-    return this.scroll.index;
+    return this.scroll.current.index;
   }
 
   scrollTo(index, callback, animated) {
-    this.scroll.scrollTo(index, callback, animated);
+    this.scroll.current.scrollTo(index, callback, animated);
   }
 
   render() {
@@ -34,7 +36,7 @@ class Scroll extends PureComponent {
 
     return (
       <BaseScroll
-        ref={(el) => (this.scroll = el)}
+        ref={this.scroll}
         {...this.props}
         pagingEnabled={false}
         contentStyle={[cs.centered, paddingStyle]}

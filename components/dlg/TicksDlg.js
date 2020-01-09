@@ -33,17 +33,13 @@ const NextImg = styled.Image`
   height: 15px;
 `;
 
-const ListItem = React.memo(({ item, onPress, showMore }) => {
-  const timeStr = moment(item.createdAt).format('LT');
+const ListTick = React.memo(({ tick, onPress, showMore }) => {
   return (
-    <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, item)}>
+    <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, tick)}>
       <TextRow>
         <TextCol>
-          <TimeText>
-            {timeStr}
-            {':'}
-          </TimeText>
-          <Text>{item.desc}</Text>
+          <TimeText>{tick.timeDesc}:</TimeText>
+          <Text>{tick.longDesc}</Text>
         </TextCol>
         {
           showMore ? <NextImg source={getIcon('next')} /> : null
@@ -53,21 +49,24 @@ const ListItem = React.memo(({ item, onPress, showMore }) => {
   );
 });
 
-ListItem.propTypes = {
-  item: PropTypes.shape({
-    createdAt: PropTypes.number,
-    desc: PropTypes.string,
+ListTick.propTypes = {
+  tick: PropTypes.shape({
+    createdAt: PropTypes.number.isRequired,
+    longDesc: PropTypes.string.isRequired,
+    timeDesc: PropTypes.string.isRequired,
   }).isRequired,
   onPress: PropTypes.func,
   showMore: PropTypes.bool,
 };
 
-ListItem.defaultProps = {
+ListTick.defaultProps = {
   onPress: null,
   showMore: false,
 };
 
 export default class TicksDlg extends CommonModal {
+  mapsDlg = React.createRef();
+
   constructor(props) {
     super(props);
     this.onItemPress = ::this.onItemPress;
@@ -83,7 +82,7 @@ export default class TicksDlg extends CommonModal {
           keyExtractor={(item, index) => index.toString()}
           renderItem={this.renderItem}
         />
-        <MapsDlg ref={(el) => (this.mapsDlg = el)} />
+        <MapsDlg ref={this.mapsDlg} />
       </View>
     ) : null;
   }
@@ -95,7 +94,7 @@ export default class TicksDlg extends CommonModal {
         longitude: lon,
       }))),
     );
-    this.mapsDlg.show(paths);
+    this.mapsDlg.current.show(paths);
   }
 
   onBeforeShown(ticks, trackType) {
@@ -118,8 +117,8 @@ export default class TicksDlg extends CommonModal {
     const { trackType } = this.state;
     const showMore = trackType === TrackerType.DISTANCE;
     return (
-      <ListItem
-        item={item}
+      <ListTick
+        tick={item}
         onPress={showMore ? this.onItemPress : null}
         showMore={showMore}
       />

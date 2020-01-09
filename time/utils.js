@@ -55,7 +55,7 @@ const time = {
 
     const ss = duration.seconds();
     const mm = duration.minutes();
-    const hh = duration.hours();
+    const hh = duration.hours() + 24 * duration.days();
     const f = {
       hh: padZero(hh),
       mm: padZero(mm),
