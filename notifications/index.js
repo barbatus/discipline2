@@ -1,5 +1,5 @@
 import { Alert, Linking } from 'react-native';
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import RNPushNotification from 'react-native-push-notification';
 
 import { caller } from 'app/utils/lang';

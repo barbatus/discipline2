@@ -34,17 +34,16 @@ export async function evalAlerts(callback: Function) {
   const app = await depot.getApp();
   const tracksToNotify = app.trackers.filter((tracker) => tracker.props.alerts);
   tracksToNotify.forEach(async (tracker) => {
-    const ticks = await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 2);
-    const lastTick = ticks[ticks.length - 1];
     const lastAlert = await depot.getLastAlert(tracker.id);
-
-    if (lastTick && lastAlert && lastTick.createdAt <= lastAlert.createdAt) return;
+    const ticksFilter = (tick) => lastAlert ? tick.createdAt > lastAlert.createdAt : true;
+    const ticks = (await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 2)).filter(ticksFilter);
 
     if (!checkIfTicksFit(ticks)) {
       Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, { context: 'alerts:evalAlerts' });
       return;
     };
 
+    const lastTick = ticks[ticks.length - 1];
     const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
     if (distToNow < 0) return;
@@ -71,7 +70,7 @@ export async function notify() {
     if (!app.props.alerts) return;
 
     const showAlert = (tracker, averageDist) => {
-      const alertBody = `Usually Tracker ${tracker.title} is used every ${time.formatDurationMs(averageDist)}`;
+      const alertBody = `Time to track ${tracker.title}? Usually you do it every ${time.formatDurationMs(averageDist)}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
     InteractionManager.runAfterInteractions(() => {
