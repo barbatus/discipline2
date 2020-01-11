@@ -89,20 +89,14 @@ const styles = StyleSheet.create({
   seeMap: {
     position: 'absolute',
     right: -60,
-    top: 5,
-    borderRadius: MAP_BUTTON_SIZE,
-    borderWidth: 2,
-    borderColor: '#D9DADB',
+    top: 0,
     height: MAP_BUTTON_SIZE,
     width: MAP_BUTTON_SIZE,
-    overflow: 'hidden',
   },
   mapIcon: {
     resizeMode: 'contain',
     height: MAP_ICON_SIZE,
     width: MAP_ICON_SIZE,
-    top: -6,
-    left: -6,
   },
   border: {
     borderWidth: 2,
@@ -158,7 +152,7 @@ const DistanceFooterFn = ({
           onPress={onShowMap}
         >
           <Image
-            source={UserIconsStore.get('map').png}
+            source={UserIconsStore.get('map_marker').png}
             style={styles.mapIcon}
           />
         </TouchableOpacity>
@@ -259,13 +253,13 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
 
   get footerControls() {
     const { tracker, responsive } = this.props;
-    const { dist, btnEnabled } = this.state;
+    const { timeMs, btnEnabled } = this.state;
     return (
       <DistanceFooter
         active={tracker.active}
         responsive={responsive}
         enabled={btnEnabled}
-        showMap={Boolean(dist)}
+        showMap={Boolean(timeMs)}
         onStopBtn={this.onStopBtn}
         onStartBtn={this.onStartBtn}
         onShowMap={this.showMap}

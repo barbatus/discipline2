@@ -54,33 +54,37 @@ export const BGError = new Enum({
   },
 });
 
+let singleton: BGGeoLocationWatcher = null;
+
+let geoPromise: Promise<BGGeoLocationWatcher> = null;
+
 export default class BGGeoLocationWatcher {
   emitter = new EventEmitter();
 
   watching = false;
 
-  singleton: BGGeoLocationWatcher = null;
-
   static async getOrCreate() {
-    if (BGGeoLocationWatcher.singleton) {
-      return Promise.resolve(BGGeoLocationWatcher.singleton);
+    if (geoPromise) {
+      return geoPromise;
     }
 
-    return new Promise((resolve, reject) => {
+    singleton = new BGGeoLocationWatcher();
+    geoPromise = new Promise((resolve, reject) => {
       configureBackgroundGeolocation((state) => {
         const authStatus = state.lastLocationAuthorizationStatus;
-        BGGeoLocationWatcher.singleton = new BGGeoLocationWatcher();
         if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
             BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
           reject(new ValuedError(
-            BGGeoLocationWatcher.singleton,
+            singleton,
             BGError.LOCATION_PERMISSION_DENIED,
           ));
         } else {
-          resolve(BGGeoLocationWatcher.singleton);
+          resolve(singleton);
         }
       });
     });
+
+    return geoPromise;
   }
 
   on(event, cb, context) {

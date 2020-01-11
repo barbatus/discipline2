@@ -16,9 +16,6 @@ import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 import { IS_IPHONE5, SCREEN_WIDTH } from '../styles/common';
 
 const styles = StyleSheet.create({
-  grid: {
-    paddingTop: 20,
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -65,8 +62,12 @@ function getColSize() {
 
 UserIconsStore.preloadAll();
 
-function getIconRows(): Array<UserIcon[]> {
-  const icons = UserIconsStore.getAll();
+function getIconRows(tagFilters: string[] = []): Array<UserIcon[]> {
+  const allIcons = UserIconsStore.getAll();
+  const regExps = tagFilters.map(filter => new RegExp('\\b' + filter, 'ig'));
+  const icons = regExps.length ? allIcons.filter(({ tags }) => {
+    return tags.some(tag => regExps.some(regExp => regExp.test(tag)));
+  }) : allIcons;
   const iconRows = [];
   const { count } = getColSize();
   for (let row = 0; row < icons.length; row += count) {
@@ -88,7 +89,6 @@ export default class IconsGrid extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.rows = getIconRows();
     this.renderRow = this.renderRow.bind(this);
   }
 
@@ -115,9 +115,11 @@ export default class IconsGrid extends PureComponent {
   }
 
   render() {
+    const { tagFilters } = this.props;
+    const rows = getIconRows(tagFilters);
     return (
       <FlatList
-        data={this.rows}
+        data={rows}
         initialNumToRender={5}
         removeClippedSubviews
         renderItem={({ item }) => this.renderRow(item)}

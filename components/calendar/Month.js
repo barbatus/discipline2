@@ -91,6 +91,7 @@ export default class Month extends PureComponent {
     this.dayWidth = 0;
     this.dayHeight = 0;
     this.onSelectDate = ::this.onSelectDate;
+    this.onTooltipClick = ::this.onTooltipClick;
   }
 
   static getDerivedStateFromProps({ shown, index }, prevState) {
@@ -124,6 +125,12 @@ export default class Month extends PureComponent {
     };
   }
 
+  getDayTicks(selDateMs) {
+    const { ticks } = this.props;
+    const dayIndex = moment(selDateMs).date() - 1;
+    return ticks.get(dayIndex);
+  }
+
   onSelectDate(day: number) {
     const { selDateMs: curDateMs, tooltipShown: curTooltipShown } = this.state;
     const { monthMs, ticks } = this.props;
@@ -139,17 +146,23 @@ export default class Month extends PureComponent {
     caller(this.props.onDateSelect, selDateMs);
   }
 
-  renderTooltip() {
-    const { ticks, onTooltipClick } = this.props;
+  onTooltipClick() {
+    const { onTooltipClick } = this.props;
     const { selDateMs } = this.state;
 
-    const dayIndex = moment(selDateMs).date() - 1;
-    const { totalDesc, ticks: dayTicks } = ticks.get(dayIndex);
+    const { ticks: dayTicks } = this.getDayTicks(selDateMs);
+    onTooltipClick(dayTicks);
+  }
+
+  renderTooltip() {
+    const { selDateMs } = this.state;
+
+    const { totalDesc, ticks: dayTicks } = this.getDayTicks(selDateMs);
     const tooltipPos = this.getTooltipPos(selDateMs);
 
     if (dayTicks.length > 1) {
       return (
-        <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={() => onTooltipClick(dayTicks)}>
+        <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={this.onTooltipClick}>
           <View style={styles.ticksContent}>
             <TextRow>
               <TimeText>Total:</TimeText>
@@ -171,7 +184,7 @@ export default class Month extends PureComponent {
 
     const { timeDesc, shortDesc } = dayTicks[0];
     return (
-      <Tooltip x={tooltipPos.x} y={tooltipPos.y}>
+      <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={this.onTooltipClick}>
         <View style={styles.ticksContent}>
           <TextRow>
             <TimeText>{timeDesc}:</TimeText>

@@ -55,7 +55,7 @@ export function groupTicksDaily(ticks: Tick[], type: TrackerType, formatTickValu
     const ticksMinly = mins[minKey];
     return printTick(ticksMinly, minMs, type, formatTickValue);
   });
-  return tickPrints.filter((print) => !!print.value);
+  return tickPrints;
 }
 
 function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickValue: (value: number) => string) {

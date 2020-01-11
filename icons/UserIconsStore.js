@@ -19,6 +19,10 @@ export class UserIcon {
   get pngLarge() {
     return this.enum[IconSize.NORMAL];
   }
+
+  get tags() {
+    return this.enum.tags;
+  }
 }
 
 export default class UserIconsStore {
