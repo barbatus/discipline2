@@ -57,6 +57,9 @@ export class Timer extends Interval {
     const allTimePassed = baseTimeMs - lastTickTimeMs + newLastTickMs;
     if (allTimePassed < TIME_LIMIT_MS) {
       this.start(allTimePassed, newLastTickMs);
+    } else {
+      this.emit('tick', allTimePassed, newLastTickMs);
+      this.emit('stop');
     }
   }
 

@@ -96,7 +96,7 @@ class TrackersView extends PureComponent {
     onMoveUp: PropTypes.func,
     onMoveDownCancel: PropTypes.func,
     onCancel: PropTypes.func,
-    dateMs: PropTypes.number.isRequired,
+    monthDateMs: PropTypes.number.isRequired,
     style: ViewPropTypes.style,
     app: PropTypes.object.isRequired,
   };
@@ -224,16 +224,16 @@ class TrackersView extends PureComponent {
   }
 
   onNextMonth() {
-    const { dateMs } = this.props;
-    const monthMs = time.getNextMonthDateMs(dateMs);
+    const { monthDateMs } = this.props;
+    const monthMs = time.getNextMonthDateMs(monthDateMs);
     this.setNavBarMonth(monthMs);
 
     this.calendar.current.scrollToNextMonth();
   }
 
   onPrevMonth() {
-    const { dateMs } = this.props;
-    const monthMs = time.getPrevMonthDateMs(dateMs);
+    const { monthDateMs } = this.props;
+    const monthMs = time.getPrevMonthDateMs(monthDateMs);
     this.setNavBarMonth(monthMs);
 
     this.calendar.current.scrollToPrevMonth();
@@ -388,8 +388,8 @@ export default connect(
     ticks: trackers.ticks,
   }),
   (dispatch, props) => ({
-    onCalendarUpdate: (tracker, dateMs, startDateMs, endDateMs) => (
-      dispatch(updateCalendar(tracker, dateMs, startDateMs, endDateMs))
+    onCalendarUpdate: (tracker, monthDateMs, startDateMs, endDateMs) => (
+      dispatch(updateCalendar(tracker, monthDateMs, startDateMs, endDateMs))
     ),
     onRemove: (tracker) => dispatch(removeTracker(tracker)),
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),

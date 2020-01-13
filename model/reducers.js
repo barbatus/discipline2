@@ -150,14 +150,14 @@ export const trackersReducer = handleActions(
         trackers,
       };
     },
-    [CHANGE_DAY]: (state, { dateMs, trackers }) => ({
+    [CHANGE_DAY]: (state, { todayMs, trackers }) => ({
       ...state,
-      dateMs,
+      todayMs,
       trackers: new List(trackers.map((tracker) => Trackers.create(tracker))),
     }),
-    [UPDATE_CALENDAR]: (state, { dateMs, ticks }) => ({
+    [UPDATE_CALENDAR]: (state, { monthDateMs, ticks }) => ({
       ...state,
-      dateMs,
+      monthDateMs,
       ticks,
     }),
     [COMPLETE_CHANGE]: (state) => ({
@@ -167,5 +167,5 @@ export const trackersReducer = handleActions(
       updateIndex: null,
     }),
   },
-  { dateMs: time.getDateMs(), trackers: List() },
+  { monthDateMs: time.getCurMonthDateMs(), trackers: List() },
 );

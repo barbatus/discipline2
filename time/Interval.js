@@ -16,7 +16,7 @@ export default class Interval extends EventEmitter {
 
   constructor(initValue: number, timeIntMs: number = 0) {
     super();
-    this.allTimeMs = 0; //initValue;
+    this.allTimeMs = initValue;
     this.timeIntMs = timeIntMs;
     this.onAppStateChange = ::this.onAppStateChange;
     AppState.addEventListener('change', this.onAppStateChange);

@@ -23,7 +23,7 @@ export default class Calendar extends PureComponent {
     todayMs: PropTypes.number,
     weekStart: PropTypes.number,
     monthToRender: PropTypes.number,
-    dateMs: PropTypes.number,
+    monthDateMs: PropTypes.number,
     shown: PropTypes.bool,
   };
 
@@ -33,7 +33,7 @@ export default class Calendar extends PureComponent {
     dayHeadings: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
     titleFormat: 'MMMM YYYY',
     todayMs: moment().valueOf(),
-    dateMs: time.getCurMonthDateMs(),
+    monthDateMs: time.getCurMonthDateMs(),
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
     onDateSelect: null,
@@ -86,11 +86,11 @@ export default class Calendar extends PureComponent {
   }
 
   scrollEnded({ nativeEvent }) {
-    const { dateMs } = this.props;
+    const { monthDateMs } = this.props;
     const position = nativeEvent.contentOffset.x;
     const currentPage = position / SCREEN_WIDTH;
     const index = int(this.props.monthToRender / 2);
-    const newMonth = moment(dateMs).add(currentPage - index, 'month');
+    const newMonth = moment(monthDateMs).add(currentPage - index, 'month');
     caller(this.props.onMonthChanged, newMonth.valueOf());
   }
 
@@ -118,13 +118,13 @@ export default class Calendar extends PureComponent {
       customStyle,
       ticks,
       todayMs,
-      dateMs,
+      monthDateMs,
       titleFormat,
       onTooltipClick,
       shown,
     } = this.props;
 
-    const monthsToRender = this.getMonthsToRender(dateMs);
+    const monthsToRender = this.getMonthsToRender(monthDateMs);
     const monthViews = monthsToRender.map((monthDate, index) => {
       const monthTicks = ticks ? ticks.get(monthDate.month()) : null;
       return (

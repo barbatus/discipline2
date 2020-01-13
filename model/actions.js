@@ -27,14 +27,14 @@ export const UPDATE_CALENDAR = 'UPDATE_CALENDAR';
 
 export const updateCalendar = (
   tracker,
-  dateMs,
+  monthDateMs,
   startDateMs,
   endDateMs,
 ) => (dispatch) => (
   depot.getTicks(tracker.id, startDateMs, endDateMs).then((ticks) => (
     dispatch({
       type: UPDATE_CALENDAR,
-      dateMs,
+      monthDateMs,
       tracker,
       ticks: mapTicks(ticks),
     })
@@ -170,7 +170,7 @@ export const changeDay = () => async (dispatch) => {
   const trackers = await depot.getTrackers();
   return dispatch({
     type: CHANGE_DAY,
-    dateMs: time.getDateMs(),
+    todayMs: time.getDateMs(),
     trackers,
   });
 };

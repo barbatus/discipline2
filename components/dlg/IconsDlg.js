@@ -4,19 +4,24 @@ import { TextInput as RNTextInput } from 'react-native';
 import styled from 'styled-components/native';
 import { debounce } from 'lodash';
 
-import { caller } from 'app/utils/lang';
+import { caller, lighten } from 'app/utils';
 
 import { HINT_COLOR } from '../styles/common';
+import IconsGridBase from '../icons/IconsGrid';
 
 import CommonModal from './CommonModal';
-import IconsGrid from '../icons/IconsGrid';
 
 const TextInput = styled(RNTextInput)`
   width: 100%;
-  margin: 10px 0;
-  padding: 5px 10px;
+  padding: 10px;
   font-size: 25;
   font-weight: 200;
+  border-bottom-color: ${lighten(HINT_COLOR, 0.05)};
+  border-bottom-width: 1;
+`;
+
+const IconsGrid = styled(IconsGridBase)`
+  padding-top: 10px;
 `;
 
 export default class IconsDlg extends CommonModal {
@@ -58,6 +63,7 @@ export default class IconsDlg extends CommonModal {
 
   onAfterHidden() {
     this.cb = null;
+    this.setState({ tagFilters: [] });
   }
 
   onIconChosen(iconId) {

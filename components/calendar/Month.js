@@ -96,7 +96,7 @@ export default class Month extends PureComponent {
 
   static getDerivedStateFromProps({ shown, index }, prevState) {
     if (shown !== prevState.shown || index !== prevState.index) {
-      return { index, shown, tooltipShown: false };
+      return { index, shown, selDateMs: null, tooltipShown: false };
     }
     return null;
   }

@@ -17,6 +17,8 @@ export default class TrackerCal extends PureComponent {
     style: PropTypes.arrayOf(PropTypes.object),
     onDateSelect: PropTypes.func,
     shown: PropTypes.bool,
+    monthDateMs: PropTypes.number,
+    todayMs: PropTypes.number,
   };
 
   static defaultProps = {

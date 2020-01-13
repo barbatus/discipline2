@@ -8,6 +8,8 @@ import {
   FlatList,
   Image,
   ViewPropTypes,
+  Text,
+  Linking,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -16,6 +18,9 @@ import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 import { IS_IPHONE5, SCREEN_WIDTH } from '../styles/common';
 
 const styles = StyleSheet.create({
+  grid: {
+    flex: 1,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -32,7 +37,36 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  footer: {
+    fontSize: 14,
+  },
+  icon8: {
+    color: 'blue',
+  },
+  container: {
+    paddingBottom: 30,
+    minHeight: 0,
+    flexGrow: 1,
+  },
+  footerContainer: {
+    position: 'absolute',
+    width: '100%',
+    alignItems: 'center',
+    bottom: 15,
+  },
 });
+
+const GridFooter = () => {
+  return (
+    <View style={styles.footer}>
+      <Text>Icons —&nbsp;
+        <Text style={styles.icon8} onPress={() => Linking.openURL('http://icons8.com')}>
+          icons8.com
+        </Text>
+      </Text>
+    </View>
+  )
+};
 
 const Icon = React.memo(({ icon, width, onIconChosen }) => (
   <TouchableOpacity
@@ -124,6 +158,9 @@ export default class IconsGrid extends PureComponent {
         removeClippedSubviews
         renderItem={({ item }) => this.renderRow(item)}
         style={[styles.grid, this.props.style]}
+        ListFooterComponent={GridFooter}
+        contentContainerStyle={styles.container}
+        ListFooterComponentStyle={styles.footerContainer}
       />
     );
   }
