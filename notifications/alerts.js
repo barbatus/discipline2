@@ -41,22 +41,20 @@ export async function evalAlerts(callback: Function) {
     if (lastAlert && lastTick && lastAlert.createdAt >= lastTick.createdAt) return;
 
     if (!checkIfTicksFit(ticks)) {
-      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, { context: 'alerts:evalAlerts' });
+      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, { context: '[alerts:evalAlerts:checkIfTicksFit]' });
       return;
     };
 
     const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
-    if (distToNow < 0) return;
-
-    let averageDist = 0;
-    for (let i = 0; i < ticks.length - 1; i++) {
-      averageDist += (ticks[i + 1].createdAt - ticks[i].createdAt);
+    if (distToNow < 0) {
+      Logger.log(`Predicted in ${time.formatDurationMs(distToNow)}`, { context: '[alerts:evalAlerts:predictNext]' });
+      return;
     }
-    averageDist /= (ticks.length - 1);
+
     try {
       await depot.addAlert(tracker.id, time.getNowMs());
-      callback(tracker, averageDist);
+      callback(tracker, nextDistMs);
     } catch (ex) {
       Logger.log(ex, { context: 'alerts:evalAlerts' });
     }
@@ -70,8 +68,8 @@ export async function notify() {
     const app = await depot.getApp();
     if (!app.props.alerts) return;
 
-    const showAlert = (tracker, averageDist) => {
-      const alertBody = `Time to track ${tracker.title}? Usually you do it every ${time.formatDurationMs(averageDist)}`;
+    const showAlert = (tracker, distMs) => {
+      const alertBody = `Time to track ${tracker.title}? Usually you do it every ${time.formatDurationMs(distMs)}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
     InteractionManager.runAfterInteractions(() => {

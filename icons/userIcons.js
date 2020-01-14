@@ -160,6 +160,11 @@ const UserIcons = new Enum({
     [IconSize.NORMAL]: require('./files/user/icon8/family.png'),
     tags: ['family'],
   },
+  FACIAL_MASK: {
+    value: 'facial_mask',
+    [IconSize.NORMAL]: require('./files/user/icon8/facial_mask.png'),
+    tags: ['facial mask', 'cosmetics'],
+  },
   FOLDER: {
     value: 'folder',
     [IconSize.NORMAL]: require('./files/user/icon8/folder.png'),
@@ -240,6 +245,11 @@ const UserIcons = new Enum({
     [IconSize.NORMAL]: require('./files/user/icon8/map_marker.png'),
     tags: ['map', 'location'],
   },
+  MASSAGE: {
+    value: 'massage',
+    [IconSize.NORMAL]: require('./files/user/icon8/massage.png'),
+    tags: ['massage', 'spa', 'relax'],
+  },
   MEDITATION: {
     value: 'meditation',
     [IconSize.NORMAL]: require('./files/user/icon8/meditation_guru.png'),
@@ -278,7 +288,7 @@ const UserIcons = new Enum({
   PIZZA: {
     value: 'pizza',
     [IconSize.NORMAL]: require('./files/user/icon8/pizza.png'),
-    tags: ['pizza', 'food'],
+    tags: ['pizza', 'food', 'fastfood'],
   },
   PLANET: {
     value: 'planet',
@@ -338,7 +348,7 @@ const UserIcons = new Enum({
   SUBWAY: {
     value: 'subway',
     [IconSize.NORMAL]: require('./files/user/icon8/subway.png'),
-    tags: ['subway'],
+    tags: ['subway', 'transport'],
   },
   SUNBATHE: {
     value: 'sunbathe',

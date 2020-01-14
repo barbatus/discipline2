@@ -22,6 +22,9 @@ const TextRow = styled.View`
 
 const TextCol = styled.View`
   flex-direction: row;
+  flex-wrap: wrap;
+  alignItems: center;
+  width: 90%;
 `;
 
 const NextImg = styled.Image`
@@ -34,7 +37,7 @@ const ListTick = React.memo(({ tick, onPress, showMore }) => {
     <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, tick)}>
       <TextRow>
         <TextCol>
-          <Text>{tick.longDesc}</Text>
+          {tick.html}
         </TextCol>
         {
           showMore ? <NextImg source={getIcon('next')} /> : null
@@ -47,7 +50,7 @@ const ListTick = React.memo(({ tick, onPress, showMore }) => {
 ListTick.propTypes = {
   tick: PropTypes.shape({
     createdAt: PropTypes.number.isRequired,
-    longDesc: PropTypes.string.isRequired,
+    html: PropTypes.object.isRequired,
     timeDesc: PropTypes.string.isRequired,
   }).isRequired,
   onPress: PropTypes.func,

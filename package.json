@@ -15,7 +15,7 @@
     "lint:js:fix": "npm run lint:eslint -- . --fix",
     "react-devtools": "react-devtools",
     "build:ios:small": "react-native run-ios --simulator 'iPhone SE'",
-    "build:ios:big": "react-native run-ios --simulator 'iPhone 8'",
+    "build:ios:big": "react-native run-ios --simulator 'iPhone 8' --configuration Release --scheme 'Discipline-beta'",
     "build:iphone": "react-native run-ios --device --configuration Release --scheme Discipline-beta",
     "build:android": "react-native run-android",
     "upgrade": "react-native upgrade",

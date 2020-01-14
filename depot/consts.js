@@ -29,7 +29,7 @@ export const TrackerType = new Enum({
   STOPWATCH: {
     title: 'Stopwatch',
     value: 'STOPWATCH',
-    desc: 'Track how much time you spend on an activity',
+    desc: 'Track time of a day activity',
   },
 
   DISTANCE: {

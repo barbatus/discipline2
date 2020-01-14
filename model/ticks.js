@@ -1,9 +1,12 @@
+import React from 'react';
+import { Text, Image, StyleSheet } from 'react-native';
 import groupBy from 'lodash/groupBy';
 import moment from 'moment';
 
 import { formatDistance } from 'app/utils/format';
 import { TrackerType } from 'app/depot/consts';
 import timeUtils from 'app/time/utils';
+import { getIcon } from 'app/icons/icons';
 
 import { Tick, Tracker } from './Tracker';
 
@@ -15,6 +18,11 @@ export function tickValueFormatter(tracker: Tracker, metric: boolean) {
       return (value: Number) => {
         const distFmt = formatDistance(value, metric);
         return `${distFmt.format()}${distFmt.unit}`;
+      };
+    case TrackerType.STOPWATCH:
+      return (value: Number) => {
+        const timeFmt = timeUtils.formatTimeMs(value);
+        return timeFmt.format();
       };
     default:
       return (value) => value;
@@ -58,12 +66,26 @@ export function groupTicksDaily(ticks: Tick[], type: TrackerType, formatTickValu
   return tickPrints;
 }
 
+const styles = StyleSheet.create({
+  bold: {
+    fontWeight: '500',
+  },
+  img: {
+    resizeMode: 'contain',
+    backgroundColor: 'white',
+    width: 20,
+    height: 20,
+  },
+});
+
+const b = (text) => <Text style={styles.bold} numberOfLines={1}>{text}</Text>;
+
 function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickValue: (value: number) => string) {
   const timeDesc = moment(minMs).format('LT');
   switch (type) {
     case TrackerType.GOAL:
       return {
-        longDesc: 'goal achieved',
+        html: 'goal achieved',
         shortDesc: 'goal achieved',
         timeDesc,
         value: 1,
@@ -72,7 +94,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
     case TrackerType.COUNTER: {
       const value = ticks.length;
       return {
-        longDesc: `+ ${value} at ${timeDesc}`,
+        html: (<><Image style={styles.img} source={getIcon('plus_sm')} /><Text>  {b(value)} at {b(timeDesc)}</Text></>),
         shortDesc: `+ ${value}`,
         timeDesc,
         value,
@@ -82,7 +104,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       return {
-        longDesc: `Added ${formatTickValue(value)} at ${timeDesc}`,
+        html: (<Text>{b(formatTickValue(value))} at {b(timeDesc)}</Text>),
         shortDesc: `+ ${formatTickValue(value)}`,
         timeDesc,
         value,
@@ -99,7 +121,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       const timeFmt = timeUtils.formatTimeMs(time);
       const distDesc = formatTickValue(value);
       return {
-        longDesc: `Tracked ${distDesc} starting at ${timeDesc}, duration ${timeFmt.format(false)}`,
+        html: (<Text>Tracked {b(distDesc)} in {b(timeFmt.format(false))} starting at {b(timeDesc)}</Text>),
         shortDesc: `${distDesc} in ${timeFmt.format(false)}`,
         timeDesc,
         value,
@@ -112,7 +134,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       const timeFmt = timeUtils.formatTimeMs(value);
       return {
-        longDesc: `Tracked ${timeFmt.format()} starting at ${timeDesc}`,
+        html: (<Text>Tracked {b(timeFmt.format())} starting at {b(timeDesc)}</Text>),
         shortDesc: timeFmt.format(),
         timeDesc,
         value,
