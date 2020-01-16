@@ -40,7 +40,6 @@ export default class Interval extends EventEmitter {
       this.lastStartMS += this.timeIntMs;
       this.emit('tick', this.allTimeMs, this.lastStartMS);
     };
-
     this.hInterval = setInterval(onInterval, this.timeIntMs);
   }
 

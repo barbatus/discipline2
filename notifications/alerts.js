@@ -35,20 +35,22 @@ export async function evalAlerts(callback: Function) {
   const tracksToNotify = app.trackers.filter((tracker) => tracker.props.alerts);
   tracksToNotify.forEach(async (tracker) => {
     const lastAlert = await depot.getLastAlert(tracker.id);
-    const ticks = await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 2);
+    const ticks = await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 3);
     const lastTick = ticks[ticks.length - 1];
 
     if (lastAlert && lastTick && lastAlert.createdAt >= lastTick.createdAt) return;
 
     if (!checkIfTicksFit(ticks)) {
-      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, { context: '[alerts:evalAlerts:checkIfTicksFit]' });
+      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, {
+        context: '[evalAlerts:checkIfTicksFit]',
+      });
       return;
     };
 
     const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
     if (distToNow < 0) {
-      Logger.log(`Predicted in ${time.formatDurationMs(distToNow)}`, { context: '[alerts:evalAlerts:predictNext]' });
+      Logger.log(`Predicted in ${time.formatDurationMs(nextDistMs)}`, { context: '[evalAlerts:predictNext]' });
       return;
     }
 
@@ -56,7 +58,7 @@ export async function evalAlerts(callback: Function) {
       await depot.addAlert(tracker.id, time.getNowMs());
       callback(tracker, nextDistMs);
     } catch (ex) {
-      Logger.log(ex, { context: 'alerts:evalAlerts' });
+      Logger.log(ex, { context: 'evalAlerts' });
     }
   });
 }

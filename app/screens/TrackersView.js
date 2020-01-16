@@ -153,7 +153,7 @@ class TrackersView extends PureComponent {
 
     if (prevState.current) {
       const tracker = trackers.find(tracker => tracker.id === prevState.current.id);
-      return tracker !== prevState.current ? getCurrentTrackerUpdate(tracker, app) : null;
+      return tracker ? getCurrentTrackerUpdate(tracker, app) : null;
     }
 
     return getCurrentTrackerUpdate(trackers.get(0), app);

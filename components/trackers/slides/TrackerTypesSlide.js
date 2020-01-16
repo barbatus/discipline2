@@ -19,6 +19,8 @@ import { getTrackerIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
 import { caller } from 'app/utils/lang';
 
+import { LINK_COLOR } from 'app/components/styles/common';
+
 import { BACK_COLOR } from '../styles/trackerStyles';
 import { slideStyles, slideDef } from '../styles/slideStyles';
 
@@ -104,7 +106,7 @@ const TypeView = styled.View`
   shadow-radius: 0;
   shadow-offset: 0px -1px;
   border-top-width: 4px;
-  border-top-color: ${({ isSelected }) => isSelected ? '#1A7CF9' : BACK_COLOR};
+  border-top-color: ${({ isSelected }) => isSelected ? LINK_COLOR : BACK_COLOR};
   background-color: ${({ isSelected }) => isSelected ? '#E6E6E6' : BACK_COLOR};
 `;
 

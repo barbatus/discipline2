@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
+import { InteractionManager } from 'react-native';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import {
@@ -47,8 +48,8 @@ class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
 
   onDayChange() {
     const { store } = this.props;
-    store.dispatch(changeDay());
-    Logger.log('Day has been changed');
+    store.dispatch(InteractionManager.runAfterInteractions(changeDay));
+    Logger.log('Day has changed');
   }
 
   render() {

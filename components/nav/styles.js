@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import Color from 'color';
 
-import { HINT_COLOR, WHITE_COLOR } from '../styles/common';
+import { HINT_COLOR, WHITE_COLOR, LINK_COLOR } from '../styles/common';
 
 export const MENU_TEXT_COLOR = Color(HINT_COLOR).lighten(0.25).hex();
 
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   navBarButtonText: {
-    color: '#1A7CF9',
+    color: LINK_COLOR,
   },
 });
 

@@ -94,7 +94,12 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
     case TrackerType.COUNTER: {
       const value = ticks.length;
       return {
-        html: (<><Image style={styles.img} source={getIcon('plus_sm')} /><Text>  {b(value)} at {b(timeDesc)}</Text></>),
+        html: (
+          <>
+            <Image style={styles.img} source={getIcon('plus_sm')} />
+            <Text>  {b(value)} at {b(timeDesc)}</Text>
+          </>
+        ),
         shortDesc: `+ ${value}`,
         timeDesc,
         value,
@@ -104,7 +109,12 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
     case TrackerType.SUM: {
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       return {
-        html: (<Text>{b(formatTickValue(value))} at {b(timeDesc)}</Text>),
+        html: (
+          <>
+            <Image style={styles.img} source={getIcon('plus_sm')} />
+            <Text>{b(formatTickValue(value))} at {b(timeDesc)}</Text>
+          </>
+        ),
         shortDesc: `+ ${formatTickValue(value)}`,
         timeDesc,
         value,

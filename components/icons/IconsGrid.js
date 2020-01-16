@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
-import { IS_IPHONE5, SCREEN_WIDTH } from '../styles/common';
+import { IS_IPHONE5, SCREEN_WIDTH, LINK_COLOR } from '../styles/common';
 
 const styles = StyleSheet.create({
   grid: {
@@ -39,12 +39,13 @@ const styles = StyleSheet.create({
   },
   footer: {
     fontSize: 14,
+    color: '#9B9B9B',
   },
   icon8: {
-    color: 'blue',
+    color: LINK_COLOR,
   },
   container: {
-    paddingBottom: 30,
+    paddingBottom: 40,
     minHeight: 0,
     flexGrow: 1,
   },
@@ -52,19 +53,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     alignItems: 'center',
-    bottom: 15,
+    bottom: 20,
   },
 });
 
 const GridFooter = () => {
   return (
-    <View style={styles.footer}>
-      <Text>Icons —&nbsp;
-        <Text style={styles.icon8} onPress={() => Linking.openURL('http://icons8.com')}>
-          icons8.com
-        </Text>
+    <Text style={styles.footer}>
+      Icons —&nbsp;
+      <Text style={styles.icon8} onPress={() => Linking.openURL('http://icons8.com')}>
+        icons8.com
       </Text>
-    </View>
+    </Text>
   )
 };
 

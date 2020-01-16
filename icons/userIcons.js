@@ -60,15 +60,15 @@ const UserIcons = new Enum({
     [IconSize.NORMAL]: require('./files/user/icon8/beer.png'),
     tags: ['beer', 'alcohol', 'drinking'],
   },
+  BEING_SICK: {
+    value: 'being_sick',
+    [IconSize.NORMAL]: require('./files/user/icon8/being_sick.png'),
+    tags: ['disease', 'sick', 'health', 'ill'],
+  },
   BICYCLE: {
     value: 'bicycle',
     [IconSize.NORMAL]: require('./files/user/icon8/bicycle.png'),
     tags: ['bicycle', 'sport'],
-  },
-  BUYING: {
-    value: 'buying',
-    [IconSize.NORMAL]: require('./files/user/icon8/buying.png'),
-    tags: ['buying', 'shopping'],
   },
   BOOK_SHELF: {
     value: 'book_shelf',
@@ -84,6 +84,11 @@ const UserIcons = new Enum({
     value: 'briefcase',
     [IconSize.NORMAL]: require('./files/user/icon8/briefcase.png'),
     tags: ['briefcase', 'business'],
+  },
+  BUYING: {
+    value: 'buying',
+    [IconSize.NORMAL]: require('./files/user/icon8/buying.png'),
+    tags: ['buying', 'shopping'],
   },
   CAMPING: {
     value: 'camping',
@@ -149,6 +154,11 @@ const UserIcons = new Enum({
     value: 'doctor',
     [IconSize.NORMAL]: require('./files/user/icon8/doctor_female.png'),
     tags: ['doctor', 'health'],
+  },
+  DOCTORS_BAG: {
+    value: 'doctors_bag',
+    [IconSize.NORMAL]: require('./files/user/icon8/doctors_bag.png'),
+    tags: ['doctor', 'clinic', 'disease'],
   },
   DOG: {
     value: 'dog',

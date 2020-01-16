@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import Modal from 'react-native-modal';
 
-import { commonStyles } from '../styles/common';
+import { commonStyles, LINK_COLOR, CONTENT_TOP_MARGIN } from '../styles/common';
 
 const styles = StyleSheet.create({
   modal: {
@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
     height: 0,
   },
   headerContainer: {
-    height: 64,
-    paddingTop: 15,
+    height: 64 + CONTENT_TOP_MARGIN,
+    paddingTop: 15 + CONTENT_TOP_MARGIN,
     paddingLeft: 15,
     paddingRight: 15,
     flexDirection: 'row',
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     fontSize: 17,
-    color: '#1A7CF9',
+    color: LINK_COLOR,
   },
 });
 
@@ -79,7 +79,7 @@ export default class CommonModal extends PureComponent {
       <Modal
         style={styles.modal}
         isVisible={modalVisible}
-        hasBackdrop={false}
+        hasBackdrop={true}
         hideModalContentWhileAnimating
         onModalShow={this.onModalShown}
       >

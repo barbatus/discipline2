@@ -36,6 +36,8 @@ export const HINT_COLOR = '#DFDFDF';
 
 export const WHITE_COLOR = '#F5F5F5';
 
+export const LINK_COLOR = '#1A7CF9';
+
 export const NAV_HEIHGT = 64;
 
 export const SCREEN_WIDTH = window.width;
