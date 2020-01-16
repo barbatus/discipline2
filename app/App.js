@@ -48,7 +48,9 @@ class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
 
   onDayChange() {
     const { store } = this.props;
-    store.dispatch(InteractionManager.runAfterInteractions(changeDay));
+    InteractionManager.runAfterInteractions(() => {
+      store.dispatch(changeDay);
+    });
     Logger.log('Day has changed');
   }
 
