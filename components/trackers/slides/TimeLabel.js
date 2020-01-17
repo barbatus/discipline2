@@ -99,7 +99,7 @@ export default class TimeLabel extends PureComponent {
           {hh ? <TimeDigit style={digitStyle} width={digWidth} value={hh} /> : null}
           {hh ? <Text style={delimStyle}>:</Text> : null}
           <TimeDigit style={digitStyle} width={digWidth} value={mm} />
-          <Text style={delimStyle}>:</Text>
+          <Text style={delimStyle}>,</Text>
           <TimeDigit style={digitStyle} width={digWidth} value={ss} />
         </View>
         <View style={styles.textContainer}>

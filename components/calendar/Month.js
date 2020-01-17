@@ -70,6 +70,7 @@ const TimeText = styled(TickText)`
 export default class Month extends PureComponent {
   static propTypes = {
     ticks: PropTypes.instanceOf(Map),
+    toggleTooltip: PropTypes.bool,
     monthMs: PropTypes.number.isRequired,
     todayMs: PropTypes.number.isRequired,
     onDateSelect: PropTypes.func.isRequired,
@@ -94,9 +95,9 @@ export default class Month extends PureComponent {
     this.onTooltipClick = ::this.onTooltipClick;
   }
 
-  static getDerivedStateFromProps({ shown, index }, prevState) {
-    if (shown !== prevState.shown || index !== prevState.index) {
-      return { index, shown, selDateMs: null, tooltipShown: false };
+  static getDerivedStateFromProps({ toggleTooltip, index }, prevState) {
+    if (toggleTooltip !== prevState.toggleTooltip || index !== prevState.index) {
+      return { index, toggleTooltip, selDateMs: null, tooltipShown: false };
     }
     return null;
   }

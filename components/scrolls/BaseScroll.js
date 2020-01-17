@@ -114,7 +114,7 @@ export default class BaseScroll extends PureComponent {
     }
 
     const newIndex = Math.min(index, slides.length - 1);
-    if (Math.round(this.indexInn) === newIndex) {
+    if (this.index === newIndex) {
       caller(callback, false);
       return;
     }
@@ -136,11 +136,11 @@ export default class BaseScroll extends PureComponent {
   endScrolling(offsetX: number, animated: boolean) {
     this.updateSlideIndexByOffset(offsetX);
 
-    if (this.prevInd === this.indexInn) {
+    if (this.prevInd === this.index) {
       caller(this.props.onSlideNoChange);
     } else {
-      caller(this.props.onSlideChange, this.indexInn, this.prevInd, animated);
-      this.prevInd = this.indexInn;
+      caller(this.props.onSlideChange, this.index, this.prevInd, animated);
+      this.prevInd = this.index;
     }
 
     caller(this.onScrollToCb, true);

@@ -50,7 +50,9 @@ export async function evalAlerts(callback: Function) {
     const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
     if (distToNow < 0) {
-      Logger.log(`Predicted in ${time.formatDurationMs(nextDistMs)}`, { context: '[evalAlerts:predictNext]' });
+      Logger.log(`New tick in ${time.formatDurationMs(nextDistMs)} for ${tracker.title}`, {
+        context: '[evalAlerts:predictNext]',
+      });
       return;
     }
 

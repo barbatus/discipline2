@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Alert } from 'react-native';
 import first from 'lodash/first';
 
+import { MAX_TRACKERS } from 'app/env';
 import { addTracker, updateCopilot } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
 import Keyboard from 'app/utils/Keyboard';
@@ -148,6 +150,15 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   onNewTracker() {
+    const { trackers } = this.props;
+    if (trackers.size > MAX_TRACKERS) {
+      return Alert.alert(
+        'Trackers Limit',
+        'Sorry, there is no more than 40 trackers allowed.',
+        { text: 'Ok' },
+      );
+    }
+
     this.moveRight();
     const { copilot } = this.props.app.props;
     if (!(CopilotScreenEnum.EMPTY.value in copilot)) {
@@ -197,7 +208,9 @@ export class MainScreenView extends ScrollScreenView {
   }
 }
 
-export default connect(null, (dispatch) => ({
+export default connect(({ trackers }) => ({
+  ...trackers,
+}), (dispatch) => ({
   onAddTracker: (tracker, index) => dispatch(addTracker(tracker, index)),
   onCopilot: (screen, step) => dispatch(updateCopilot(screen, step)),
 }))(MainScreenView);

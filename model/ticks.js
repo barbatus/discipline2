@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: 20,
     height: 20,
+    marginRight: 10,
   },
 });
 
@@ -85,8 +86,8 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
   switch (type) {
     case TrackerType.GOAL:
       return {
-        html: 'goal achieved',
-        shortDesc: 'goal achieved',
+        html: (<Text>{timeDesc}: the goal was achieved</Text>),
+        shortDesc: 'the goal was achieved',
         timeDesc,
         value: 1,
         createdAt: minMs,
@@ -97,7 +98,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
         html: (
           <>
             <Image style={styles.img} source={getIcon('plus_sm')} />
-            <Text>  {b(value)} at {b(timeDesc)}</Text>
+            <Text>{b(value)} at {b(timeDesc)}</Text>
           </>
         ),
         shortDesc: `+ ${value}`,

@@ -24,7 +24,8 @@ export default class Calendar extends PureComponent {
     weekStart: PropTypes.number,
     monthToRender: PropTypes.number,
     monthDateMs: PropTypes.number,
-    shown: PropTypes.bool,
+    // TODO: for time being
+    toggleTooltip: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -37,7 +38,7 @@ export default class Calendar extends PureComponent {
     weekStart: moment().weekday(0).isoWeekday() - 1,
     monthToRender: 3,
     onDateSelect: null,
-    shown: false,
+    toggleTooltip: false,
   };
 
   calendar = React.createRef();
@@ -121,7 +122,7 @@ export default class Calendar extends PureComponent {
       monthDateMs,
       titleFormat,
       onTooltipClick,
-      shown,
+      toggleTooltip,
     } = this.props;
 
     const monthsToRender = this.getMonthsToRender(monthDateMs);
@@ -131,7 +132,7 @@ export default class Calendar extends PureComponent {
         <Month
           key={monthDate.month()}
           index={index}
-          shown={shown}
+          toggleTooltip={toggleTooltip}
           customStyle={customStyle}
           monthMs={monthDate.valueOf()}
           todayMs={todayMs}

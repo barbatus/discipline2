@@ -178,7 +178,7 @@ export default class SumTrackerSlide extends TrackerSlide {
         <View style={styles.textContainer}>
           <Text style={styles.sumText}>=</Text>
           <Text style={styles.sumText}>
-            { tracker.props.showBuck ? '$' : null }
+            { tracker.props.showBuck ? '$ ' : null }
             {tracker.value}
           </Text>
         </View>

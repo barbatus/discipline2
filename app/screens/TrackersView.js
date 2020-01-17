@@ -125,6 +125,7 @@ class TrackersView extends PureComponent {
     this.state = {
       ...getCurrentTrackerUpdate(trackers.get(0), app),
       calShown: false,
+      toggleTooltip: false,
     };
     this.onStartEdit = ::this.onStartEdit;
     this.onTrackerEdit = ::this.onTrackerEdit;
@@ -273,7 +274,8 @@ class TrackersView extends PureComponent {
   }
 
   onSwiperMoveUpDone() {
-    this.setState({ calShown: false });
+    const { toggleTooltip } = this.state;
+    this.setState({ calShown: false, toggleTooltip: !toggleTooltip });
   }
 
   onSwiperMoveDownDone() {
@@ -335,17 +337,19 @@ class TrackersView extends PureComponent {
 
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
-    const { current: tracker, formatTickValue, calShown } = this.state;
+    const { current: tracker, formatTickValue, calShown, toggleTooltip } = this.state;
 
     if (!tracker) { return <DummyTrackerSlide />; }
 
     const calcStyle = { opacity: this.calcOpacity, zIndex: calShown ? 1 : 0 };
     return (
-      <Animated.View style={[commonStyles.flexFilled, style]}>
+      <Animated.View style={[commonStyles.flexFilled, style]} onStartShouldSetResponder={evt => {
+        this.setState({ toggleTooltip: !toggleTooltip });
+      }}>
         <TrackerCal
           ref={this.calendar}
           {...this.props}
-          shown={calShown}
+          toggleTooltip={toggleTooltip}
           trackerType={tracker ? tracker.type : null}
           formatTickValue={formatTickValue}
           style={[styles.calc, calcStyle]}
