@@ -9,16 +9,17 @@ import {
   WIN_HEIGHT,
   NAV_HEIHGT,
   CONTENT_TOP_MARGIN,
+  CONTENT_HEIGHT,
 } from 'app/components/styles/common';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    top: OFFSET_TOP,
+    justifyContent: 'center',
   },
   content: {
-    top: CONTENT_TOP_MARGIN,
-    height: WIN_HEIGHT - NAV_HEIHGT,
+    paddingTop: CONTENT_TOP_MARGIN,
+    height: CONTENT_HEIGHT,
     width: SCREEN_WIDTH,
   },
 });
