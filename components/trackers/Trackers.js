@@ -213,6 +213,7 @@ export default class Trackers extends PureComponent {
     Animated.timing(this.opacity, {
       duration: 500,
       toValue: 1,
+      useNativeDriver: true,
     }).start(callback);
   }
 

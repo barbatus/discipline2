@@ -1,5 +1,4 @@
 import EventEmitter from 'eventemitter3';
-import { AppState, InteractionManager } from 'react-native';
 
 import time from 'app/time/utils';
 import Timeout from 'app/time/Timeout';

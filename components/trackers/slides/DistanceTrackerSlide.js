@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Alert,
   View,
   Text,
   StyleSheet,
@@ -282,7 +281,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
           tracker.value,
           DIST_INTRVL_M,
         );
-      } catch({ value: distTracker }) {}
+      } catch ({ value: distTracker }) {}
 
       timer.on(this.onTimeUpdate, this.onTimeLimit, this);
       distTracker.on('onLatLonUpdate', this.onLatLonUpdate, this);
@@ -309,11 +308,9 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
         timer.off(this.onTimeUpdate, this.onTimeLimit, this);
         distTracker.off('onLatLonUpdate', this.onLatLonUpdate, this);
       }
-    } else {
-      if (prevProps.tracker !== tracker) {
-        this.setState({ dist: tracker.value, timeMs: tracker.time, speed: 0 });
-        this.manageTrackers();
-      }
+    } else if (prevProps.tracker !== tracker) {
+      this.setState({ dist: tracker.value, timeMs: tracker.time, speed: 0 });
+      this.manageTrackers();
     }
   }
 
@@ -343,7 +340,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   /*
-  * Start or stop associated trackers based on tracker model's values. 
+  * Start or stop associated trackers based on tracker model's values.
   * There is a gap on when tracker model is started (i.e. this.onStart) and when actual trackers are engaged,
   * this is done due to keep tracker starting logic in one place and use tracker model's values
   * for starting/stopping actual trackers.

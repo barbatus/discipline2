@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { type Step } from '@okgrow/react-native-copilot';
+import { type Step } from 'react-native-copilot';
 
 import CoSteps, { checkIfStepLast, checkIfStepFirst } from './steps';
 

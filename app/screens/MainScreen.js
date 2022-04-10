@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { SafeAreaView } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import SideMenu from 'react-native-side-menu';
-import { copilot } from '@okgrow/react-native-copilot';
+import SideMenu from 'react-native-side-menu-updated';
+import { copilot } from 'react-native-copilot';
 
 import PushNotification from 'app/notifications';
 import { launch as launchAlerts } from 'app/notifications/runner';

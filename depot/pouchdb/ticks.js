@@ -27,7 +27,7 @@ class Ticks {
     tick: { tracker: Tracker, createdAt: number, value?: number },
     data?: Object,
   ): Promise<Tick> {
-    const newTick = Object.assign({}, tick);
+    const newTick = { ...tick };
     const { tracker } = tick;
     if (data) {
       const tickData = await db.save(TrackerToPropType[tracker.typeId], data);

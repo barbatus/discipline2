@@ -22,7 +22,7 @@ function runInBackground() {
   });
 
   BackgroundFetch.status((status) => {
-    switch(status) {
+    switch (status) {
       case BackgroundFetch.STATUS_RESTRICTED:
         Logger.log('BackgroundFetch restricted');
         break;

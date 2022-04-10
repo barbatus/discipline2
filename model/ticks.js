@@ -8,7 +8,7 @@ import { TrackerType } from 'app/depot/consts';
 import timeUtils from 'app/time/utils';
 import { getIcon } from 'app/icons/icons';
 
-import { Tick, Tracker } from './Tracker';
+import Tracker, { Tick } from './Tracker';
 
 export function tickValueFormatter(tracker: Tracker, metric: boolean) {
   switch (tracker.type) {
@@ -86,7 +86,10 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
   switch (type) {
     case TrackerType.GOAL:
       return {
-        html: (<Text>{timeDesc}: the goal was achieved</Text>),
+        html: (<Text>
+          {timeDesc}
+: the goal was achieved
+        </Text>),
         shortDesc: 'the goal was achieved',
         timeDesc,
         value: 1,
@@ -98,7 +101,13 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
         html: (
           <>
             <Image style={styles.img} source={getIcon('plus_sm')} />
-            <Text>{b(value)} at {b(timeDesc)}</Text>
+            <Text>
+              {b(value)}
+              {' '}
+at
+              {' '}
+              {b(timeDesc)}
+            </Text>
           </>
         ),
         shortDesc: `+ ${value}`,
@@ -113,7 +122,13 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
         html: (
           <>
             <Image style={styles.img} source={getIcon('plus_sm')} />
-            <Text>{b(formatTickValue(value))} at {b(timeDesc)}</Text>
+            <Text>
+              {b(formatTickValue(value))}
+              {' '}
+at
+              {' '}
+              {b(timeDesc)}
+            </Text>
           </>
         ),
         shortDesc: `+ ${formatTickValue(value)}`,
@@ -132,7 +147,16 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       const timeFmt = timeUtils.formatTimeMs(time);
       const distDesc = formatTickValue(value);
       return {
-        html: (<Text>Tracked {b(distDesc)} in {b(timeFmt.format(false))} starting at {b(timeDesc)}</Text>),
+        html: (<Text>
+Tracked
+          {b(distDesc)}
+          {' '}
+in
+          {b(timeFmt.format(false))}
+          {' '}
+starting at
+          {b(timeDesc)}
+        </Text>),
         shortDesc: `${distDesc} in ${timeFmt.format(false)}`,
         timeDesc,
         value,
@@ -145,7 +169,13 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       const value = ticks.reduce((accum, tick) => accum + tick.value, 0);
       const timeFmt = timeUtils.formatTimeMs(value);
       return {
-        html: (<Text>Tracked {b(timeFmt.format())} starting at {b(timeDesc)}</Text>),
+        html: (<Text>
+Tracked
+          {b(timeFmt.format())}
+          {' '}
+starting at
+          {b(timeDesc)}
+        </Text>),
         shortDesc: timeFmt.format(),
         timeDesc,
         value,

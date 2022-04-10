@@ -14,7 +14,7 @@ import { styles as menuStyles } from './Menu';
 
 export const styles = StyleSheet.create({
   group: {
-    marginBottom: 40
+    marginBottom: 40,
   },
 });
 

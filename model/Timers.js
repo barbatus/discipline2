@@ -1,5 +1,6 @@
 import depot from 'app/depot/depot';
 import Interval from 'app/time/Interval';
+import Logger from 'app/log';
 
 import Trackers from './Trackers';
 

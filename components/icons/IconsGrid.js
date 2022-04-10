@@ -57,16 +57,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const GridFooter = () => {
-  return (
-    <Text style={styles.footer}>
+const GridFooter = () => (
+  <Text style={styles.footer}>
       Icons —&nbsp;
-      <Text style={styles.icon8} onPress={() => Linking.openURL('http://icons8.com')}>
+    <Text style={styles.icon8} onPress={() => Linking.openURL('http://icons8.com')}>
         icons8.com
-      </Text>
     </Text>
-  )
-};
+  </Text>
+);
 
 const Icon = React.memo(({ icon, width, onIconChosen }) => (
   <TouchableOpacity
@@ -98,10 +96,8 @@ UserIconsStore.preloadAll();
 
 function getIconRows(tagFilters: string[] = []): Array<UserIcon[]> {
   const allIcons = UserIconsStore.getAll();
-  const regExps = tagFilters.map(filter => new RegExp('\\b' + filter, 'ig'));
-  const icons = regExps.length ? allIcons.filter(({ tags }) => {
-    return tags.some(tag => regExps.some(regExp => regExp.test(tag)));
-  }) : allIcons;
+  const regExps = tagFilters.map((filter) => new RegExp(`\\b${filter}`, 'ig'));
+  const icons = regExps.length ? allIcons.filter(({ tags }) => tags.some((tag) => regExps.some((regExp) => regExp.test(tag)))) : allIcons;
   const iconRows = [];
   const { count } = getColSize();
   for (let row = 0; row < icons.length; row += count) {

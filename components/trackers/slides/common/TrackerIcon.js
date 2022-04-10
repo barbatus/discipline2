@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { walkthroughable } from '@okgrow/react-native-copilot';
+import { walkthroughable } from 'react-native-copilot';
 
 import { getIcon, UserIconsStore } from 'app/icons/icons';
 

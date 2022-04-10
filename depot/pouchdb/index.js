@@ -68,9 +68,7 @@ export default class Depot {
   }
 
   async hydrateTrackers(trackers: Tracker[], timeFromMs: number = time.getDateMs()): Promise<Tracker[]> {
-    const allTicks = await Promise.all(trackers.map(async (tracker) => {
-      return this.getTrackerTicksFromDate(tracker);
-    }));
+    const allTicks = await Promise.all(trackers.map(async (tracker) => this.getTrackerTicksFromDate(tracker)));
     return trackers.map((tracker, index) => Object.assign(tracker, {
       ticks: allTicks[index],
     }));
@@ -89,7 +87,7 @@ export default class Depot {
   async getTrackerTicksFromDate(tracker: Tracker, dateFromMs: number = time.getDateMs()) {
     let ticksFromMs = dateFromMs;
     if (tracker.active) {
-      const lastTick = await this.getLastTick(tracker.id)
+      const lastTick = await this.getLastTick(tracker.id);
       ticksFromMs = Math.min(ticksFromMs, lastTick.createdAt);
     }
     return this.getTrackerTicks(tracker.id, ticksFromMs);

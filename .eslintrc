@@ -136,6 +136,12 @@
     "no-undef": 2,
     "flowtype/define-flow-type": 1,
     "flowtype/no-types-missing-file-annotation": 0,
-    "no-plusplus": 0
+    "no-plusplus": 0,
+    "react/static-property-placement": ["warn", "property assignment", {
+      "propTypes": "static public field",
+      "defaultProps": "static public field",
+      "contextTypes": "static public field",
+      "childContextTypes": "static public field"
+    }]
   }
 }

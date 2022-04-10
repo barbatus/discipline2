@@ -23,6 +23,7 @@ export default class TrackerScroll extends TrackerRenderer {
     Animated.timing(this.opacity, {
       duration: 500,
       toValue: 0,
+      useNativeDriver: true,
     }).start(callback);
   }
 

@@ -45,7 +45,7 @@ export async function evalAlerts(callback: Function) {
         context: '[evalAlerts:checkIfTicksFit]',
       });
       return;
-    };
+    }
 
     const nextDistMs = predictNext(ticks);
     const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);

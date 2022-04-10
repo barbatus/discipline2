@@ -2,7 +2,7 @@
 import { Client, Configuration } from 'bugsnag-react-native';
 import Reactotron from 'reactotron-react-native';
 
-import env from 'react-native-config'; 
+import env from 'react-native-config';
 
 import PushNotification from 'app/notifications';
 
@@ -26,9 +26,9 @@ if (isBeta) {
 
 const Logger = {
   init: {
-    if (isBeta) {
+    if(isBeta) {
       PushNotification.configure();
-    }
+    },
   },
   log(message, { context } = {}) {
     const logMsg = context ? `${context}: ${message}` : message;

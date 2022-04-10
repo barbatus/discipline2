@@ -1,5 +1,6 @@
 platform :ios, '10.0'
 source 'https://cdn.cocoapods.org/'
+require_relative '../node_modules/react-native/scripts/autolink-ios'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'Discipline' do
@@ -27,9 +28,9 @@ target 'Discipline' do
   pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
   pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
   pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-  pod 'ReactCommon/jscallinvoker', :path => "../node_modules/react-native/ReactCommon"
+  pod 'ReactCommon/callinvoker', :path => "../node_modules/react-native/ReactCommon"
   pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
-  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga', :modular_headers => true
 
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
@@ -44,11 +45,17 @@ target 'Discipline' do
 
 
   target 'DisciplineTests' do
-    inherit! :search_paths
+    inherit! :complete
     # Pods for testing
   end
 
   use_native_modules!
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable these next few lines.
+  add_flipper_pods!
 end
 
 target 'Discipline-tvOS' do
@@ -74,4 +81,5 @@ post_install do |installer|
       target.build_phases.move(phase,0)
     end
   end
+  flipper_post_install(installer)
  end

@@ -79,7 +79,7 @@ export default class CommonModal extends PureComponent {
       <Modal
         style={styles.modal}
         isVisible={modalVisible}
-        hasBackdrop={true}
+        hasBackdrop
         hideModalContentWhileAnimating
         onModalShow={this.onModalShown}
       >

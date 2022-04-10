@@ -2,12 +2,12 @@ import check from 'check-types';
 
 import React, { PureComponent } from 'react';
 import { StyleSheet, Animated } from 'react-native';
-import NavigationBar from 'react-native-navbar';
 
 import Animation from '../animation/Animation';
 
 import NavTitle from './Title';
 
+import NavigationBar from '../navbar/NavBar';
 import { SCREEN_WIDTH, NAV_HEIHGT } from '../styles/common';
 
 const styles = StyleSheet.create({

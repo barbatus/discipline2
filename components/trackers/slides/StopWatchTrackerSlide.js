@@ -127,7 +127,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
 
   async componentDidUpdate(prevProps) {
     const { shown, tracker } = this.props;
-  
+
     if (prevProps.shown !== shown) {
       const { tracker } = this.props;
       const timer = await Timers.getOrCreate(tracker.id);

@@ -84,4 +84,3 @@ class Timeout extends EventEmitter {
 }
 
 export default Timeout;
-

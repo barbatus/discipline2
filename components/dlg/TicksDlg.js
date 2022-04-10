@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import { getIcon } from 'app/icons/icons';
@@ -32,20 +31,18 @@ const NextImg = styled.Image`
   height: 15px;
 `;
 
-const ListTick = React.memo(({ tick, onPress, showMore }) => {
-  return (
-    <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, tick)}>
-      <TextRow>
-        <TextCol>
-          {tick.html}
-        </TextCol>
-        {
-          showMore ? <NextImg source={getIcon('next')} /> : null
-        }
-      </TextRow>
-     </TouchableOpacity>
-  );
-});
+const ListTick = React.memo(({ tick, onPress, showMore }) => (
+  <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, tick)}>
+    <TextRow>
+      <TextCol>
+        {tick.html}
+      </TextCol>
+      {
+        showMore ? <NextImg source={getIcon('next')} /> : null
+      }
+    </TextRow>
+  </TouchableOpacity>
+));
 
 ListTick.propTypes = {
   tick: PropTypes.shape({

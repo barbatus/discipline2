@@ -1,4 +1,4 @@
-import { AppState, Platform } from 'react-native';
+import { AppState } from 'react-native';
 import EventEmitter from 'eventemitter3';
 
 export default class Interval extends EventEmitter {

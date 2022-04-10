@@ -188,7 +188,10 @@ export default class Month extends PureComponent {
       <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={this.onTooltipClick}>
         <View style={styles.ticksContent}>
           <TextRow>
-            <TimeText>{timeDesc}:</TimeText>
+            <TimeText>
+              {timeDesc}
+:
+            </TimeText>
             <TickText>{shortDesc}</TickText>
           </TextRow>
         </View>

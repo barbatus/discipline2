@@ -84,8 +84,8 @@ export default class Tooltip extends PureComponent {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
     children: PropTypes.oneOfType(
-        [PropTypes.element, PropTypes.arrayOf(PropTypes.element)],
-      ).isRequired,
+      [PropTypes.element, PropTypes.arrayOf(PropTypes.element)],
+    ).isRequired,
     onTooltipClick: PropTypes.func,
   };
 
@@ -130,38 +130,38 @@ export default class Tooltip extends PureComponent {
     const node = findNodeHandle(this.view.current);
     if (node) {
       this.setTimeout(() => UIManager.measure(node, (x, y, width, height, pageX, pageY) => {
-          const haflW = width / 2;
-          const rightX = x + haflW - SCREEN_WIDTH + PADDING;
-          const leftX = x - haflW - PADDING;
-          let xPos = -haflW;
-          let arrLeft = (width - ARROW_WIDTH) / 2;
-          // If tooltip is out of the screen on the right.
-          if (rightX >= 0) {
-            xPos = -haflW - rightX;
-            arrLeft += rightX;
-          }
+        const haflW = width / 2;
+        const rightX = x + haflW - SCREEN_WIDTH + PADDING;
+        const leftX = x - haflW - PADDING;
+        let xPos = -haflW;
+        let arrLeft = (width - ARROW_WIDTH) / 2;
+        // If tooltip is out of the screen on the right.
+        if (rightX >= 0) {
+          xPos = -haflW - rightX;
+          arrLeft += rightX;
+        }
 
-          // If tooltip is out of the screen on the left.
-          if (leftX <= 0) {
-            xPos = -haflW + Math.abs(leftX);
-            arrLeft += leftX;
-          }
+        // If tooltip is out of the screen on the left.
+        if (leftX <= 0) {
+          xPos = -haflW + Math.abs(leftX);
+          arrLeft += leftX;
+        }
 
-          let yPos = -height - TOP_MARGIN;
-          let arrTop = height;
-          if (CONTENT_OFFSET > pageY + yPos) {
-            yPos = Math.abs(33 + TOP_MARGIN);
-            arrTop = -ARROW_HEIHGT;
-          }
+        let yPos = -height - TOP_MARGIN;
+        let arrTop = height;
+        if (CONTENT_OFFSET > pageY + yPos) {
+          yPos = Math.abs(33 + TOP_MARGIN);
+          arrTop = -ARROW_HEIHGT;
+        }
 
-          this.moveY.setValue(yPos);
-          this.moveX.setValue(xPos);
-          this.opacity.setValue(1);
-          this.setState({
-            arrTop,
-            arrLeft,
-          });
-        }), 15);
+        this.moveY.setValue(yPos);
+        this.moveX.setValue(xPos);
+        this.opacity.setValue(1);
+        this.setState({
+          arrTop,
+          arrLeft,
+        });
+      }), 15);
     }
   }
 

@@ -43,4 +43,3 @@ export class ShakeEvent extends EventEmitter {
 }
 
 export default new ShakeEvent();
-

@@ -50,8 +50,7 @@ export class DistanceTrackers {
   async getOrCreate(trackerId: string, initValue?: number, distFilter?: number) {
     if (!this.trackers[trackerId]) {
       return new Promise(async (resolve, reject) => {
-        const createTracker = (geoWatcher) =>
-          new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
+        const createTracker = (geoWatcher) => new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
         try {
           const geoWatcher = await BGGeoLocationWatcher.getOrCreate();
           this.trackers[trackerId] = createTracker(geoWatcher);
@@ -77,7 +76,7 @@ export class DistanceTrackers {
   }
 
   updateKeepAwake() {
-    const trackers = Object.values(this.trackers).filter(tracker => tracker.active);
+    const trackers = Object.values(this.trackers).filter((tracker) => tracker.active);
     if (trackers.length === 0) {
       KeepAwake.deactivate();
     }
@@ -100,7 +99,6 @@ interface IDistState {
 }
 
 export class DistanceTracker extends EventEmitter {
-
   state: IDistState;
 
   savedDist: number = 0; // km
@@ -225,8 +223,8 @@ export class DistanceTracker extends EventEmitter {
     this.heading = heading;
     this.state = {
       ...this.state,
-      lat: null, //latitude,
-      lon: null, //longitude,
+      lat: null, // latitude,
+      lon: null, // longitude,
       timestamp: Date.now(),
       lastStartDist: 0,
     };

@@ -41,7 +41,7 @@ const getLocation = async () => {
   const watcher = await BGGeoLocationWatcher.getOrCreate();
   const pos = await watcher.getPos();
   return pos.coords;
-}
+};
 
 const LocationButton = React.memo(({ onMyLocation }) => {
   const [settingLocation, setSettingLocation] = React.useState(false);

@@ -1,4 +1,4 @@
-import env from 'react-native-config'; 
+import env from 'react-native-config';
 
 export const IS_LOCAL = env.NAME === 'local';
 export const IS_BETA = env.NAME === 'beta';

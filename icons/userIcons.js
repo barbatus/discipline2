@@ -123,12 +123,12 @@ const UserIcons = new Enum({
   COFFEE: {
     value: 'coffee',
     [IconSize.NORMAL]: require('./files/user/icon8/coffee_to_go.png'),
-    tags: ['coffee',  'coffeine', 'breakfast'],
+    tags: ['coffee', 'coffeine', 'breakfast'],
   },
   COMB: {
     value: 'comb',
     [IconSize.NORMAL]: require('./files/user/icon8/comb.png'),
-    tags: ['comb',  'hair', 'haircut'],
+    tags: ['comb', 'hair', 'haircut'],
   },
   COMET: {
     value: 'comet',

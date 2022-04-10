@@ -66,10 +66,12 @@ const styles = StyleSheet.create({
 });
 
 function getCurrentTrackerUpdate(tracker, app) {
-  if (!tracker) return {
-    current: null,
-    formatTickValue: null,
-  };
+  if (!tracker) {
+    return {
+      current: null,
+      formatTickValue: null,
+    };
+  }
 
   return {
     current: tracker,
@@ -121,7 +123,7 @@ class TrackersView extends PureComponent {
   constructor(props) {
     super(props);
 
-    const {trackers, app} = props;
+    const { trackers, app } = props;
     this.state = {
       ...getCurrentTrackerUpdate(trackers.get(0), app),
       calShown: false,
@@ -153,7 +155,7 @@ class TrackersView extends PureComponent {
     if (!trackers.size) return null;
 
     if (prevState.current) {
-      const tracker = trackers.find(tracker => tracker.id === prevState.current.id);
+      const tracker = trackers.find((tracker) => tracker.id === prevState.current.id);
       return tracker ? getCurrentTrackerUpdate(tracker, app) : null;
     }
 
@@ -343,9 +345,12 @@ class TrackersView extends PureComponent {
 
     const calcStyle = { opacity: this.calcOpacity, zIndex: calShown ? 1 : 0 };
     return (
-      <Animated.View style={[commonStyles.flexFilled, style]} onStartShouldSetResponder={evt => {
-        this.setState({ toggleTooltip: !toggleTooltip });
-      }}>
+      <Animated.View
+        style={[commonStyles.flexFilled, style]}
+        onStartShouldSetResponder={(evt) => {
+          this.setState({ toggleTooltip: !toggleTooltip });
+        }}
+      >
         <TrackerCal
           ref={this.calendar}
           {...this.props}

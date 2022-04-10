@@ -41,11 +41,8 @@ export default class UserIconsStore {
   static async preloadAll() {
     const icons = UserIconsStore.getAll();
     return Promise.all(icons.map((icon) => {
-      const img = {
-        ...Image.resolveAssetSource(icon.png),
-        cache: 'force-cache',
-      };
-      return Image.prefetch(img);
+      const source = Image.resolveAssetSource(icon.png);
+      return Image.prefetch(source.uri);
     }));
   }
 }

@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { WHITE_COLOR } from '../styles/common';
-
 import {
   Text,
   TouchableOpacity,
@@ -11,6 +9,8 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+
+import { WHITE_COLOR } from '../styles/common';
 
 const styles = StyleSheet.create({
   dayButton: {

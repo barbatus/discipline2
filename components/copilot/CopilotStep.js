@@ -1,6 +1,6 @@
 import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
-import { CopilotStep as BaseCopilotStep } from '@okgrow/react-native-copilot';
+import { CopilotStep as BaseCopilotStep } from 'react-native-copilot';
 
 const CopilotStep = React.memo(
   ({ step, children, ...rest }) => {
