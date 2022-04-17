@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   navTitle: { fontSize: 19, fontWeight: '200' },
   calc: {
     ...commonStyles.absFilled,
-    height: CONTENT_HEIGHT / 2,
+    height: CONTENT_HEIGHT * 0.4,
     top: 0,
   },
   trackersContainer: {

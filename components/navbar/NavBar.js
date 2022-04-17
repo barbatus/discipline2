@@ -97,7 +97,7 @@ export default class NavigationBar extends PureComponent {
     title: null,
     statusBar: {
       style: 'default',
-      hidden: true,
+      hidden: false,
       hideAnimation: 'slide',
       showAnimation: 'slide',
     },
