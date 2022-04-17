@@ -39,7 +39,7 @@
     "events": "^3.0.0",
     "haversine": "^1.0.1",
     "immutable": "^3.8.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "moment": "2.20.1",
     "moment-duration-format": "^2.1.1",
     "pouchdb-adapter-react-native-sqlite": "^2.0.0",
