@@ -4,11 +4,11 @@ import React, { PureComponent } from 'react';
 import { InteractionManager } from 'react-native';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
+import { createAppContainer } from 'react-navigation';
 import {
   createStackNavigator,
-  createAppContainer,
   StackNavigator as StackNav,
-} from 'react-navigation';
+} from 'react-navigation-stack';
 
 import Logger from 'app/log';
 
