@@ -145,7 +145,7 @@ export default class MapsDlg extends CommonModal {
 
   onMyLocation(coords) {
     if (this.state.region) {
-      this.state.region.timing(coords).start();
+      this.state.region.timing(coords, { useNativeDriver: true }).start();
     } else {
       const region = new MapView.AnimatedRegion({
         latitude: coords.latitude,
@@ -181,8 +181,7 @@ export default class MapsDlg extends CommonModal {
     } else {
       this.showLocation();
     }
-
-    this.map.current.getNode().fitToCoordinates(coords, {
+    this.map.current.fitToCoordinates(coords, {
       edgePadding: DEFAULT_PADDING,
       animated: true,
     });

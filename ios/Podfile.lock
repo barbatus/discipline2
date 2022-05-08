@@ -1,16 +1,16 @@
 PODS:
   - boost-for-react-native (1.63.0)
-  - BugsnagReactNative (2.23.1):
-    - BugsnagReactNative/Core (= 2.23.1)
+  - BugsnagReactNative (2.23.10):
+    - BugsnagReactNative/Core (= 2.23.10)
     - React
-  - BugsnagReactNative/Core (2.23.1):
+  - BugsnagReactNative/Core (2.23.10):
     - React
   - BVLinearGradient (2.4.0):
     - React
   - CocoaAsyncSocket (7.6.5)
-  - CocoaLumberjack (3.6.2):
-    - CocoaLumberjack/Core (= 3.6.2)
-  - CocoaLumberjack/Core (3.6.2)
+  - CocoaLumberjack (3.7.4):
+    - CocoaLumberjack/Core (= 3.7.4)
+  - CocoaLumberjack/Core (3.7.4)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.64.2)
   - FBReactNativeSpec (0.64.2):
@@ -283,8 +283,8 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
-  - react-native-background-timer (2.1.1):
-    - React
+  - react-native-background-timer (2.4.1):
+    - React-Core
   - react-native-config (0.11.7):
     - React
   - react-native-google-maps (0.27.1):
@@ -363,16 +363,16 @@ PODS:
     - React-perflogger (= 0.64.2)
   - RNBackgroundFetch (4.1.0):
     - React-Core
-  - RNBackgroundGeolocation (3.10.0):
-    - CocoaLumberjack (~> 3.6.1)
+  - RNBackgroundGeolocation (4.6.0):
+    - CocoaLumberjack (~> 3.7.2)
     - React-Core
   - RNCMaskedView (0.1.0):
     - React
-  - RNCPushNotificationIOS (1.0.2):
+  - RNCPushNotificationIOS (1.10.1):
+    - React-Core
+  - RNDeviceInfo (5.6.5):
     - React
-  - RNDeviceInfo (5.4.0):
-    - React
-  - RNGestureHandler (2.4.0):
+  - RNGestureHandler (2.4.2):
     - React-Core
   - RNScreens (2.18.1):
     - React-Core
@@ -380,9 +380,11 @@ PODS:
     - React
   - RNSqlite2 (1.0.0):
     - React
-  - RNSVG (9.9.4):
+  - RNSVG (9.13.6):
     - React
-  - RNVectorIcons (6.6.0):
+  - RNVectorIcons (6.7.0):
+    - React
+  - toolbar-android (0.2.1):
     - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -458,6 +460,7 @@ DEPENDENCIES:
   - RNSqlite2 (from `../node_modules/react-native-sqlite-2/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - "toolbar-android (from `../node_modules/@react-native-community/toolbar-android`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -571,15 +574,17 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  toolbar-android:
+    :path: "../node_modules/@react-native-community/toolbar-android"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  BugsnagReactNative: c6d12b6ea33c10db071c063b47c3b7f60ff75883
+  BugsnagReactNative: 98fb350df4bb0c94cce903023531a1a5cc11fa51
   BVLinearGradient: 8913bd8fdc47b85abc801ae8bae007bbfb6b4ce5
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  CocoaLumberjack: bd155f2dd06c0e0b03f876f7a3ee55693122ec94
+  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 3e083553e88489ab7651ab3370b03f4e8d3ff1f6
@@ -606,7 +611,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-background-timer: 1b6e6b4e10f1b74c367a1fdc3c72b67c619b222b
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-config: 55548054279d92e0e4566ea15a8b9b81028ec342
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
@@ -625,16 +630,17 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   RNBackgroundFetch: 1f47e8f793ad7a1ae7f0e3db5437f4feaf887a03
-  RNBackgroundGeolocation: 1184aff02a730e243785482561d0b8d9649548a3
+  RNBackgroundGeolocation: 29a4237da5245586f5b1379bd37e9a7d0bb9457a
   RNCMaskedView: 303773894e9b1048029b4ec4ab017071b7c56211
-  RNCPushNotificationIOS: 0b8d06ff190d84627dd17501bfb96652375970e4
-  RNDeviceInfo: c7b1dc457611b9231bb780a882102e2c93edc7af
-  RNGestureHandler: 50e6ffee79932d14ea747d4ea4cc99aac0f24e86
+  RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
+  RNDeviceInfo: c5f8f3a456adcbba405ace475254b08febc4c095
+  RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSensors: 60197256ecd4e1e906dcaf6d634793f876eaa63b
   RNSqlite2: 181ae6674f53598008e7a64d8c2273c3df5d98b7
-  RNSVG: 435cda60cd9e1ea6188eb0e21c12fc0f85def8e8
-  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
+  RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
+  toolbar-android: 2a73856e98b750d7e71ce4644d3f41cc98211719
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

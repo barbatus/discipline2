@@ -409,7 +409,6 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
     const paths = tracker.paths.concat(distTracker.paths)
       .map((path) => path.map(({ lat, lon }) => ({ latitude: lat, longitude: lon })));
-    console.log(distTracker);
     dlg.show(paths);
   }
 }
