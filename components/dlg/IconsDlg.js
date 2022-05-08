@@ -14,10 +14,10 @@ import CommonModal from './CommonModal';
 const TextInput = styled(RNTextInput)`
   width: 100%;
   padding: 10px;
-  font-size: 25;
+  font-size: 25px;
   font-weight: 200;
   border-bottom-color: ${lighten(HINT_COLOR, 0.05)};
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
 `;
 
 const IconsGrid = styled(IconsGridBase)`
