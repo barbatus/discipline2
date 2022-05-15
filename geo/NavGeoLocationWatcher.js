@@ -31,7 +31,7 @@ export default class NavGeoLocationWatcherKls {
   watchPos(onStart: Function) {
     check.assert.function(onStart);
 
-    if (this.watchId) return;
+    if (this.watchId) {return;}
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {

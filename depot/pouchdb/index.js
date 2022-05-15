@@ -78,7 +78,7 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) throw new Error('Tracker not found');
+    if (!tracker) {throw new Error('Tracker not found');}
 
     const ticks = await this.getTrackerTicksFromDate(tracker);
     return { ...tracker, ticks };
@@ -97,14 +97,14 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) throw new Error('Tracker not found');
+    if (!tracker) {throw new Error('Tracker not found');}
 
     return tracker;
   }
 
   async updateTracker(tracker: Tracker) {
     const updTracker = await trackersDB.update(tracker);
-    if (!updTracker) throw new Error('No tracker found');
+    if (!updTracker) {throw new Error('No tracker found');}
 
     this.event.emit(DepotEvent.TRACK_UPDATED, {
       trackId: updTracker.id,
@@ -116,7 +116,7 @@ export default class Depot {
     check.assert.string(trackId);
 
     const removed = appDB.removeTracker(trackId);
-    if (!removed) throw new Error('Tracker no found');
+    if (!removed) {throw new Error('Tracker no found');}
 
     this.event.emit(DepotEvent.TRACK_REMOVED, { trackId });
     const ids = await ticksDB.removeForTracker(trackId);
@@ -137,7 +137,7 @@ export default class Depot {
     check.assert.number(createdAt);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) throw new Error('Tracker not found');
+    if (!tracker) {throw new Error('Tracker not found');}
 
     const newTick = await ticksDB.add({ tracker, createdAt, value }, data);
     this.event.emit(DepotEvent.TICK_ADDED, { tickId: newTick.id, trackId: tracker.id });
@@ -148,7 +148,7 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tick = await ticksDB.getLastOne(trackId);
-    if (!tick) throw new Error('Last tick not found');
+    if (!tick) {throw new Error('Last tick not found');}
 
     await ticksDB.remove(tick.id);
     this.event.emit(DepotEvent.TICKS_REMOVED, { tickIds: [tick.id], trackId });
@@ -158,7 +158,7 @@ export default class Depot {
     check.assert.string(trackId);
 
     let tick = await ticksDB.getLastOne(trackId);
-    if (!tick) throw new Error('Last tick not found');
+    if (!tick) {throw new Error('Last tick not found');}
 
     const tracker = await trackersDB.getOne(trackId);
     const updTick = { ...tick, tracker };
@@ -171,7 +171,7 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tick = await ticksDB.getLastOne(trackId);
-    if (!tick) throw new Error('Last tick not found');
+    if (!tick) {throw new Error('Last tick not found');}
 
     return this.updateLastTick(trackId, tick.value, data);
   }
@@ -198,7 +198,7 @@ export default class Depot {
     check.assert.number(createdAt);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) throw new Error('Tracker not found');
+    if (!tracker) {throw new Error('Tracker not found');}
 
     const newAlert = await alertsDB.add({ tracker, createdAt });
     this.event.emit(DepotEvent.ALERT_ADDED, { alertId: newAlert.id, trackId: tracker.id });

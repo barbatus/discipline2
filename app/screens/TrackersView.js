@@ -152,7 +152,7 @@ class TrackersView extends PureComponent {
   }
 
   static getDerivedStateFromProps({ trackers, app }, prevState) {
-    if (!trackers.size) return null;
+    if (!trackers.size) {return null;}
 
     if (prevState.current) {
       const tracker = trackers.find((tracker) => tracker.id === prevState.current.id);
@@ -209,7 +209,7 @@ class TrackersView extends PureComponent {
   }
 
   onRemove(tracker) {
-    if (this.isActive) return;
+    if (this.isActive) {return;}
 
     this.isActive = true;
     this.props.onRemove(tracker);
@@ -324,7 +324,7 @@ class TrackersView extends PureComponent {
   }
 
   saveEdit() {
-    if (this.isActive) return;
+    if (this.isActive) {return;}
 
     this.isActive = true;
     const { dispatch } = this.props;

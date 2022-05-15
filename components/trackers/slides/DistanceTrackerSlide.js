@@ -373,7 +373,7 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     try {
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
       await distTracker.stop();
-      // eslint-disable-next-line no-empty
+
     } catch {}
     const timer = Timers.getOrCreate(tracker.id);
     timer.stop();

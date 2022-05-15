@@ -42,7 +42,7 @@ export default class NavBar extends PureComponent {
       return;
     }
 
-    if (this.isActive) return;
+    if (this.isActive) {return;}
 
     this.isActive = true;
     const showButtons = () => {

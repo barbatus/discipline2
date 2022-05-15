@@ -38,7 +38,7 @@ export async function evalAlerts(callback: Function) {
     const ticks = await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 3);
     const lastTick = ticks[ticks.length - 1];
 
-    if (lastAlert && lastTick && lastAlert.createdAt >= lastTick.createdAt) return;
+    if (lastAlert && lastTick && lastAlert.createdAt >= lastTick.createdAt) {return;}
 
     if (!checkIfTicksFit(ticks)) {
       Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, {
@@ -70,7 +70,7 @@ export async function notify() {
     await PushNotification.configure();
 
     const app = await depot.getApp();
-    if (!app.props.alerts) return;
+    if (!app.props.alerts) {return;}
 
     const showAlert = (tracker, distMs) => {
       const alertBody = `Time to track ${tracker.title}? Usually you do it every ${time.formatDurationMs(distMs)}`;

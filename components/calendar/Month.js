@@ -68,6 +68,8 @@ const TimeText = styled(TickText)`
 `;
 
 export default class Month extends PureComponent {
+  dayRef = React.createRef();
+
   static propTypes = {
     ticks: PropTypes.instanceOf(Map),
     toggleTooltip: PropTypes.bool,
@@ -80,8 +82,6 @@ export default class Month extends PureComponent {
   static defaultProps = {
     ticks: new Map(),
   };
-
-  dayRef = React.createRef();
 
   constructor(props) {
     super(props);

@@ -62,7 +62,7 @@ export default class FlipAnimation {
   }
 
   animateIn(callback: Function) {
-    if (this.animInOut) return;
+    if (this.animInOut) {return;}
 
     Animation.setValue(this.move2, 0);
 
@@ -76,7 +76,7 @@ export default class FlipAnimation {
   }
 
   animateOut(callback: Function) {
-    if (this.animInOut) return;
+    if (this.animInOut) {return;}
 
     Animation.setValue(this.move1, 0);
 

@@ -105,7 +105,7 @@ export default class NavigationBar extends PureComponent {
   };
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {};
   }
 

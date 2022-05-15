@@ -94,7 +94,7 @@ export default class Tracker implements DBTracker {
 
   get lastValue() {
     const len = this.ticks.length;
-    if (!len) return null;
+    if (!len) {return null;}
     return this.ticks[len - 1].value;
   }
 }

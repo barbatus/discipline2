@@ -120,10 +120,10 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   shake() {
     const { tracker } = this.props;
-    if (this.undoAlertOn || !tracker.lastTick) return;
+    if (this.undoAlertOn || !tracker.lastTick) {return;}
 
     this.undoAlertOn = true;
-    const onHide = () => this.undoAlertOn = false;
+    const onHide = () => { this.undoAlertOn = false; };
     Alert.alert('Do you want to undo?', null,
       [
         {

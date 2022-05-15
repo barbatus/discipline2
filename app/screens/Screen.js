@@ -4,10 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import NavBar from 'app/components/nav/NavBar';
 import {
-  OFFSET_TOP,
   SCREEN_WIDTH,
-  WIN_HEIGHT,
-  NAV_HEIHGT,
   CONTENT_TOP_MARGIN,
   CONTENT_HEIGHT,
 } from 'app/components/styles/common';
@@ -25,6 +22,8 @@ const styles = StyleSheet.create({
 });
 
 export default class Screen extends PureComponent {
+  navBarRef = React.createRef();
+
   static propTypes = {
     children: PropTypes.element.isRequired,
   };
@@ -32,8 +31,6 @@ export default class Screen extends PureComponent {
   static childContextTypes = {
     navBar: PropTypes.object.isRequired,
   };
-
-  navBarRef = React.createRef();
 
   getChildContext() {
     return {

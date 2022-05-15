@@ -43,6 +43,8 @@ const stylesDef = {
 const styles = StyleSheet.create(stylesDef);
 
 export default class Swiper extends PureComponent {
+  scroll = React.createRef();
+
   static propTypes = {
     slides: PropTypes.array.isRequired,
     style: ViewPropTypes.style,
@@ -63,8 +65,6 @@ export default class Swiper extends PureComponent {
     onEndDrag: null,
     onSlideNoChange: null,
   };
-
-  scroll = React.createRef();
 
   constructor(props) {
     super(props);
@@ -108,7 +108,7 @@ export default class Swiper extends PureComponent {
   }
 
   renderDots(index: number, size: number) {
-    if (size <= 1) return null;
+    if (size <= 1) {return null;}
 
     const dots = [];
     const basicDot = [styles.basicDot, this.scaleDot(size)];

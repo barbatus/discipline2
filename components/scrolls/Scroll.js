@@ -7,6 +7,8 @@ import { commonStyles as cs, SCREEN_WIDTH } from '../styles/common';
 import BaseScroll from './BaseScroll';
 
 class Scroll extends PureComponent {
+  scroll = React.createRef();
+
   static propTypes = {
     centered: PropTypes.bool,
     slideWidth: PropTypes.number.isRequired,
@@ -15,8 +17,6 @@ class Scroll extends PureComponent {
   static defaultProps = {
     centered: false,
   };
-
-  scroll = React.createRef();
 
   get index() {
     return this.scroll.current.index;

@@ -47,7 +47,7 @@ function runInForeground() {
 let isLaunched = false;
 
 export function launch() {
-  if (isLaunched) return;
+  if (isLaunched) {return;}
 
   runInBackground();
   runInForeground();

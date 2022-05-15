@@ -25,10 +25,10 @@ if (isBeta) {
 }
 
 const Logger = {
-  init: {
-    if(isBeta) {
+  init() {
+    if (isBeta) {
       PushNotification.configure();
-    },
+    }
   },
   log(message, { context } = {}) {
     const logMsg = context ? `${context}: ${message}` : message;

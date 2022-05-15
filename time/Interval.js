@@ -31,7 +31,7 @@ export default class Interval extends EventEmitter {
   }
 
   start(baseValMs: number = 0, startFromMs: number = 0): boolean {
-    if (this.active) return;
+    if (this.active) {return;}
 
     this.allTimeMs = baseValMs;
     this.lastStartMS = startFromMs;
@@ -48,7 +48,7 @@ export default class Interval extends EventEmitter {
   }
 
   stop() {
-    if (!this.active) return;
+    if (!this.active) {return;}
 
     this.lastStartMS = 0;
     this.lastStoppedMS = Date.now();

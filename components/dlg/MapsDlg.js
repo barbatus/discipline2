@@ -115,7 +115,7 @@ export default class MapsDlg extends CommonModal {
   }
 
   draw(lat: number, lon: number) {
-    if (this.regionBeingChanged) return;
+    if (this.regionBeingChanged) {return;}
 
     const { polylines } = this.state;
     const lastLine = last(polylines);

@@ -34,7 +34,7 @@ class Timeout extends EventEmitter {
   }
 
   start(): boolean {
-    if (this.active) return false;
+    if (this.active) {return false;}
 
     this.startTimeMs = Date.now();
     this.timeout = setTimeout(() => {
@@ -45,7 +45,7 @@ class Timeout extends EventEmitter {
   }
 
   stop() {
-    if (!this.active) return;
+    if (!this.active) {return;}
 
     clearTimeout(this.timeout);
     this.timeout = null;

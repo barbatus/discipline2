@@ -75,13 +75,13 @@ export default class BaseScroll extends PureComponent {
   onTouchMove(event) {
     const { slides, slideWidth, scrollEnabled } = this.props;
 
-    if (!scrollEnabled || slides.length <= 1) return;
+    if (!scrollEnabled || slides.length <= 1) {return;}
 
     const dx = this.pageX - event.nativeEvent.pageX;
     this.pageX = event.nativeEvent.pageX;
 
-    if (this.indexInn === 0 && dx <= 0) return;
-    if (this.indexInn === slides.length - 1 && dx >= 0) return;
+    if (this.indexInn === 0 && dx <= 0) {return;}
+    if (this.indexInn === slides.length - 1 && dx >= 0) {return;}
 
     caller(this.props.onTouchMove, dx);
   }
@@ -95,7 +95,7 @@ export default class BaseScroll extends PureComponent {
     caller(this.props.onScrollBegin, event);
   }
 
-  /* eslint-disable no-param-reassign */
+
   scrollTo(
     index: number,
     callback?: Function | boolean,

@@ -14,7 +14,7 @@ const PushNotification = {
       },
       onNotification(notification) {
         if (notification.data.openedInForeground) {
-          // eslint-disable-next-line no-param-reassign
+
           notification.userInteraction = true;
         }
 

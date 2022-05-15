@@ -1,4 +1,4 @@
-/* eslint-disable global-require */
+
 
 const appIcons = {
   back: require('./files/app/back.png'),

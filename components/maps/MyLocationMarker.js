@@ -104,7 +104,7 @@ const MyLocationMarker = React.memo((props) => {
     };
   }, []);
 
-  if (!coords) return null;
+  if (!coords) {return null;}
 
   const { heading } = coords;
   const rotate = heading >= 0 ? `${heading}deg` : null;

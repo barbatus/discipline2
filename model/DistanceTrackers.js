@@ -4,13 +4,13 @@ import last from 'lodash/last';
 import KeepAwake from 'react-native-keep-awake';
 
 import Logger from 'app/log';
-import { ValuedError, round } from 'app/utils/lang';
+import { ValuedError } from 'app/utils/lang';
 import depot from 'app/depot/depot';
 
 import BGGeoLocationWatcher from '../geo/BGGeoLocationWatcher';
 import * as utils from '../geo/utils';
 
-import { Timers as BaseTimers, Timer as BaseTimer } from './Timers';
+import { Timer as BaseTimer } from './Timers';
 
 class DistanceTimer extends BaseTimer {
   tickTimeGetter = (tick) => tick.time;
@@ -147,7 +147,7 @@ export class DistanceTracker extends EventEmitter {
   }
 
   async start(baseDist: number) {
-    if (this.isStarting || this.active) return;
+    if (this.isStarting || this.active) {return;}
 
     this.isStarting = true;
     this.state = baseDist ? { ...this.state, dist: baseDist } : this.state;
@@ -165,7 +165,7 @@ export class DistanceTracker extends EventEmitter {
   }
 
   async stop() {
-    if (!this.active) return;
+    if (!this.active) {return;}
 
     this.unwatchGeo();
     try {
@@ -193,7 +193,7 @@ export class DistanceTracker extends EventEmitter {
 
   onPosChange(pos) {
     let state;
-    // eslint-disable-next-line no-cond-assign
+
     if ((state = this.setNextPosState(this.state, pos))) {
       if ((state.dist - this.savedDist) >= this.distFilter) {
         this.saveLatLonUpdate(state);

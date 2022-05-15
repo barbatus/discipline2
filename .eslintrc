@@ -1,7 +1,8 @@
 {
   "parser": "babel-eslint",
   "extends": [
-    "airbnb",
+    "@react-native-community",
+    "plugin:import/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:flowtype/recommended"
@@ -25,7 +26,12 @@
     }
   },
   "settings": {
-    "import/resolver": "reactnative",
+    "import/resolver": {
+      "alias": [["app", "."]]
+    },
+    "import/ignore": [
+      "node_modules/react-native/index\\.js$"
+    ],
     "import/core-modules": [
       "Dimensions",
       "NativeMethodsMixin",
@@ -36,6 +42,7 @@
     }
   },
   "rules": {
+    "prettier/prettier": 0,
     "arrow-parens": [
       "error",
       "always"

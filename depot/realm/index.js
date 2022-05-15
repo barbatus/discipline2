@@ -31,7 +31,7 @@ export default class Depot {
     check.assert.number(trackId);
 
     const tracker = this.trackers.getOne(trackId);
-    if (!tracker) throw new Error('Tracker not found');
+    if (!tracker) {throw new Error('Tracker not found');}
 
     const ticks = this.getTrackerTicks(tracker, time.getDateMs());
     return { ...tracker, ticks };
@@ -62,7 +62,7 @@ export default class Depot {
 
   async updateTracker(tracker: Tracker) {
     const updTracker = this.trackers.update(tracker);
-    if (!updTracker) throw new Error('Tracker no found');
+    if (!updTracker) {throw new Error('Tracker no found');}
 
     this.event.emit(DepotEvent.TRACK_UPDATED, {
       trackId: updTracker.id,
@@ -72,7 +72,7 @@ export default class Depot {
 
   async removeTracker(trackId: number) {
     const removed = this.trackers.remove(trackId);
-    if (!removed) throw new Error('Tracker no found');
+    if (!removed) {throw new Error('Tracker no found');}
 
     this.event.emit(DepotEvent.TRACK_REMOVED, { trackId });
     const ids = this.ticks.removeForTracker(trackId);
@@ -89,7 +89,7 @@ export default class Depot {
     check.assert.number(createdAt);
 
     const tracker = this.trackers.getOne(trackId);
-    if (!tracker) throw new Error('Tracker not found');
+    if (!tracker) {throw new Error('Tracker not found');}
 
     const tick = this.ticks.add({ trackId, createdAt, value });
 
@@ -110,7 +110,7 @@ export default class Depot {
     check.assert.number(trackId);
 
     const tick = this.ticks.getLast(trackId);
-    if (!tick) throw new Error('Last tick not found');
+    if (!tick) {throw new Error('Last tick not found');}
 
     this.ticks.remove(tick.id);
     this.event.emit(DepotEvent.TICKS_REMOVED, { tickIds: [tick.id], trackId });
