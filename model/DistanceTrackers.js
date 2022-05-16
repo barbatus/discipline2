@@ -152,9 +152,9 @@ export class DistanceTracker extends EventEmitter {
     this.isStarting = true;
     this.state = baseDist ? { ...this.state, dist: baseDist } : this.state;
     try {
+      this.unwatchGeo = this.geoWatcher.on('position', this.onPosChange);
       const pos = await this.geoWatcher.watchPos();
       this.startTracking(pos.coords);
-      this.unwatchGeo = this.geoWatcher.on('position', this.onPosChange);
     } finally {
       this.isStarting = false;
     }
