@@ -337,6 +337,8 @@ PODS:
     - React-Core
   - react-native-safe-area-context (0.6.0):
     - React
+  - react-native-sqlite-2 (3.6.0-beta.1):
+    - React-Core
   - React-perflogger (0.67.4)
   - React-RCTActionSheet (0.67.4):
     - React-Core/RCTActionSheetHeaders (= 0.67.4)
@@ -417,8 +419,6 @@ PODS:
     - React-Core
   - RNSensors (5.3.3):
     - React
-  - RNSqlite2 (1.0.0):
-    - React
   - RNSVG (9.13.6):
     - React
   - RNVectorIcons (6.7.0):
@@ -484,6 +484,7 @@ DEPENDENCIES:
   - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-sqlite-2 (from `../node_modules/react-native-sqlite-2`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -503,7 +504,6 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSensors (from `../node_modules/react-native-sensors`)
-  - RNSqlite2 (from `../node_modules/react-native-sqlite-2/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - "toolbar-android (from `../node_modules/@react-native-community/toolbar-android`)"
@@ -583,6 +583,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-sqlite-2:
+    :path: "../node_modules/react-native-sqlite-2"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -621,8 +623,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSensors:
     :path: "../node_modules/react-native-sensors"
-  RNSqlite2:
-    :path: "../node_modules/react-native-sqlite-2/ios"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -676,6 +676,7 @@ SPEC CHECKSUMS:
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-maps: 60a75aa547d576fdb91be1f95113665215b59461
   react-native-safe-area-context: d288138da2c800caa111f9352e9333f186a06ead
+  react-native-sqlite-2: a7180dd5e48e492b80f9cbb9a43c0a454f3f96fc
   React-perflogger: 0afaf2f01a47fd0fc368a93bfbb5bd3b26db6e7f
   React-RCTActionSheet: 59f35c4029e0b532fc42114241a06e170b7431a2
   React-RCTAnimation: aae4f4bed122e78bdab72f7118d291d70a932ce2
@@ -695,7 +696,6 @@ SPEC CHECKSUMS:
   RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSensors: 60197256ecd4e1e906dcaf6d634793f876eaa63b
-  RNSqlite2: 181ae6674f53598008e7a64d8c2273c3df5d98b7
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
   toolbar-android: 2a73856e98b750d7e71ce4644d3f41cc98211719
