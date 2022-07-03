@@ -1,4 +1,4 @@
-fastlane_version "2.118.1"
+fastlane_version '2.207.0'
 default_platform :ios
 
 # we will call some node scripts which are written in ES6 (see below)

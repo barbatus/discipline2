@@ -14,7 +14,6 @@ const PushNotification = {
       },
       onNotification(notification) {
         if (notification.data.openedInForeground) {
-
           notification.userInteraction = true;
         }
 

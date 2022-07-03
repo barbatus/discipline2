@@ -58,5 +58,6 @@ build-tools
 ios/assets
 .bundle
 
-# CocoaPods
+# Ruby / CocoaPods
 /ios/Pods/
+/vendor/bundle/

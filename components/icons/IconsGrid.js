@@ -7,11 +7,12 @@ import {
   StyleSheet,
   FlatList,
   Image,
-  ViewPropTypes,
   Text,
   Linking,
 } from 'react-native';
 import PropTypes from 'prop-types';
+
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import UserIconsStore, { UserIcon } from 'app/icons/UserIconsStore';
 
