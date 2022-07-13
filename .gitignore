@@ -57,6 +57,7 @@ buck-out/
 build-tools
 ios/assets
 .bundle
+report.xml
 
 # Ruby / CocoaPods
 /ios/Pods/
