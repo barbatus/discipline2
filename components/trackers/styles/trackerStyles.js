@@ -91,8 +91,8 @@ export const trackerDef = {
     resizeMode: 'contain',
     backgroundColor: 'white',
     borderRadius: 40,
-    height: 80,
-    width: 80,
+    height: IS_IPHONE5 ? 70 : 80,
+    width: IS_IPHONE5 ? 70 : 80,
   },
   filledBtn: {
     backgroundColor: '#3DCF43',

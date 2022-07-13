@@ -15,7 +15,7 @@ export default class MoveDownResponderAnim {
   unsubCb = null;
 
   constructor(slideHeight: number) {
-    this.maxDy = 0.4 * slideHeight;
+    this.maxDy = 0.6 * slideHeight;
   }
 
   get style(): Object {

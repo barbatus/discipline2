@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 
-import { SCREEN_WIDTH, SCREEN_HEIGHT, NAV_HEIHGT } from '../../styles/common';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, NAV_HEIHGT, IS_IPHONE5 } from '../../styles/common';
 
 export const SLIDE_WIDTH_OFFSET = 40;
-export const SLIDE_BOTTOM_OFFSET = 45;
+export const SLIDE_BOTTOM_OFFSET = IS_IPHONE5 ? 35 : 45;
 
 export const SLIDE_WIDTH = SCREEN_WIDTH - SLIDE_WIDTH_OFFSET;
 
