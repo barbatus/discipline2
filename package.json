@@ -45,7 +45,7 @@
     "haversine": "^1.0.1",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
-    "moment": "2.20.1",
+    "moment": "2.29.4",
     "moment-duration-format": "^2.1.1",
     "pouchdb-adapter-react-native-sqlite": "3.0.1",
     "pouchdb-find": "7.3.0",
