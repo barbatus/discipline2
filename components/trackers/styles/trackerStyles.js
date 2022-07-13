@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { IS_IPHONE5 } from 'app/components/styles/common';
+
 import { slideDef, SLIDE_WIDTH } from './slideStyles';
 
 export const BACK_COLOR = '#F5F5F5';
@@ -49,7 +51,7 @@ export const trackerDef = {
     flex: 0.35,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: IS_IPHONE5 ? 'center' : 'flex-start',
   },
   controls: {
     flex: 1,
@@ -64,8 +66,8 @@ export const trackerDef = {
   },
   mainIcon: {
     resizeMode: 'contain',
-    width: 80,
-    height: 80,
+    width: IS_IPHONE5 ? 70 : 80,
+    height: IS_IPHONE5 ? 70 : 80,
   },
   infoIcon: {
     resizeMode: 'contain',
@@ -147,7 +149,7 @@ const editDef = {
   },
   iconContainer: {
     ...trackerDef.iconContainer,
-    alignItems: 'flex-end',
+    alignItems: IS_IPHONE5 ? 'center' : 'flex-end',
     flex: 0.6,
   },
   titleInput: {

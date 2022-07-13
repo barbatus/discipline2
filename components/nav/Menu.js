@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Switch, View, Text, ViewPropTypes } from 'react-native';
+import { StyleSheet, Switch, View, Text } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 import DeviceInfo from 'react-native-device-info';
 

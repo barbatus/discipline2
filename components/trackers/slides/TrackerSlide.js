@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Animated, ViewPropTypes } from 'react-native';
+import { Animated } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import Animation from 'app/components/animation/Animation';
 import FlipAnimation from 'app/components/animation/FlipAnimation';

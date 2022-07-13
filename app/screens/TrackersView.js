@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Animated, InteractionManager, ViewPropTypes, View } from 'react-native';
+import { StyleSheet, Animated, InteractionManager, View } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { submit } from 'redux-form';

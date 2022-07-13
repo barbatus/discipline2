@@ -4,8 +4,8 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ViewPropTypes,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import { getIcon } from 'app/icons/icons';
 import Tracker from 'app/model/Tracker';

@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, ViewPropTypes } from 'react-native';
+import { ScrollView } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 import isBoolean from 'lodash/isBoolean';
 

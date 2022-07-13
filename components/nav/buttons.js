@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { TouchableOpacity, Image, ViewPropTypes } from 'react-native';
+import { TouchableOpacity, Image } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 

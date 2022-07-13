@@ -4,8 +4,8 @@ import {
   Text,
   View,
   Platform,
-  ViewPropTypes,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 
 import NavbarButton from './NavButton';

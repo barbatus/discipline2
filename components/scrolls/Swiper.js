@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, Animated, ViewPropTypes } from 'react-native';
+import { StyleSheet, View, Animated } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 
 import { caller } from 'app/utils/lang';

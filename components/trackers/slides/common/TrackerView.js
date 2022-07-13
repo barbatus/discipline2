@@ -7,9 +7,9 @@ import {
   Text,
   StyleSheet,
   Animated,
-  TouchableWithoutFeedback,
-  ViewPropTypes,
+  TouchableWithoutFeedback
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import PropTypes from 'prop-types';
 

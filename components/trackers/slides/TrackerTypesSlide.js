@@ -9,8 +9,8 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  ViewPropTypes,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import styled from 'styled-components/native';
 import first from 'lodash/first';
 import last from 'lodash/last';

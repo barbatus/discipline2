@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import EventEmitter from 'eventemitter3';
 
-import { ScrollView, StyleSheet, View, ViewPropTypes } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import { caller } from 'app/utils/lang';
 

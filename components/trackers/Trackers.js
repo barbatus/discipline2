@@ -5,8 +5,8 @@ import {
   StyleSheet,
   Animated,
   InteractionManager,
-  ViewPropTypes,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 
 import reactMixin from 'react-mixin';
