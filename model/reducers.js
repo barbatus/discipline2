@@ -153,7 +153,8 @@ export const trackersReducer = handleActions(
     [CHANGE_DAY]: (state, { todayMs, trackers }) => ({
       ...state,
       todayMs,
-      trackers: new List(trackers.map((tracker) => Trackers.create({ ...tracker, ticks: [] }))),
+      trackers: new List(trackers.map((tracker) =>
+        Trackers.create({ ...tracker, active: false, ticks: [] }))),
     }),
     [UPDATE_CALENDAR]: (state, { monthDateMs, ticks }) => ({
       ...state,

@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PureComponent } from 'react';
-import { InteractionManager } from 'react-native';
+import { InteractionManager, LogBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { createAppContainer } from 'react-navigation';
@@ -16,6 +16,8 @@ import { changeDay, loadApp } from '../model/actions';
 import MainScreen from './screens/MainScreen';
 
 import DayChangeEvent from './DayChangeEvent';
+
+LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 export default function createApp(store: Store<any>) {
   return createAppContainer(
@@ -49,7 +51,7 @@ class Home extends PureComponent<{ store: Store<any>, navigation: StackNav }> {
   onDayChange() {
     const { store } = this.props;
     InteractionManager.runAfterInteractions(() => {
-      store.dispatch(changeDay);
+      store.dispatch(changeDay());
     });
     Logger.log('Day has changed');
   }

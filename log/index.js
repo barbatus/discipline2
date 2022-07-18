@@ -40,7 +40,8 @@ const Logger = {
     }
   },
   error(error, { context }) {
-    const logMsg = context ? `${context}: ${error.message}` : error.message;
+    const errorMsg = error.message || `Unknown error ${error.toString()}`;
+    const logMsg = context ? `${context}: ${errorMsg}` : errorMsg;
     if (isLocal) {
       Reactotron.error(error);
     }

@@ -14,11 +14,13 @@ class Timeout extends EventEmitter {
 
   paused = false;
 
+  changeSub = null;
+
   constructor(waitMs: number = 0) {
     super();
     this.waitMs = waitMs;
     this.onAppStateChange = ::this.onAppStateChange;
-    AppState.addEventListener('change', this.onAppStateChange);
+    this.changeSub = AppState.addEventListener('change', this.onAppStateChange);
     this.start();
   }
 
@@ -79,7 +81,7 @@ class Timeout extends EventEmitter {
   dispose() {
     this.stop();
     this.removeAllListeners('tick');
-    AppState.removeEventListener('change', this.onAppStateChange);
+    this.changeSub.remove();
   }
 }
 

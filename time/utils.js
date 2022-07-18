@@ -48,7 +48,7 @@ const time = {
         hh: null,
         mm: padZero(mm),
         ss: padZero(ss),
-        format: () => `${f.mm}:${f.ss}m`,
+        format: () => `${f.mm}:${f.ss}min`,
       };
       return f;
     }

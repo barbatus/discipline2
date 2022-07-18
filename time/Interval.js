@@ -14,12 +14,14 @@ export default class Interval extends EventEmitter {
 
   paused = false;
 
+  changeSub = null;
+
   constructor(initValue: number, timeIntMs: number = 0) {
     super();
     this.allTimeMs = initValue;
     this.timeIntMs = timeIntMs;
     this.onAppStateChange = ::this.onAppStateChange;
-    AppState.addEventListener('change', this.onAppStateChange);
+    this.changeSub = AppState.addEventListener('change', this.onAppStateChange);
   }
 
   get value() {
@@ -79,6 +81,6 @@ export default class Interval extends EventEmitter {
     clearInterval(this.hInterval);
     this.hInterval = null;
     this.removeAllListeners('tick');
-    AppState.removeEventListener('change', this.onAppStateChange);
+    this.changeSub.remove();
   }
 }

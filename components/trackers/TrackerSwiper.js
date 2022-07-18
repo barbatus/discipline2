@@ -103,7 +103,10 @@ export default class TrackerSwiper extends TrackerRenderer {
   static getDerivedStateFromProps({ trackers, enabled, removeIndex }, prevState) {
     if (isNumber(removeIndex)) {return null;}
 
-    if (trackers !== prevState.trackers || enabled !== prevState.enabled) {
+    if (trackers !== prevState.trackers) {
+      return { trackers, scrollEnabled: prevState.scrollEnabled };
+    }
+    if (prevState.scrollEnabled && enabled !== prevState.scrollEnabled) {
       return { trackers, scrollEnabled: enabled };
     }
     return null;
