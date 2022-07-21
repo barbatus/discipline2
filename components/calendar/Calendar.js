@@ -16,9 +16,6 @@ export default class Calendar extends PureComponent {
     ticks: PropTypes.instanceOf(Map),
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
-    onDateSelect: PropTypes.func,
-    onMonthChanged: PropTypes.func.isRequired,
-    onTooltipClick: PropTypes.func.isRequired,
     titleFormat: PropTypes.string,
     todayMs: PropTypes.number,
     weekStart: PropTypes.number,
@@ -26,6 +23,10 @@ export default class Calendar extends PureComponent {
     monthDateMs: PropTypes.number,
     // TODO: for time being
     toggleTooltip: PropTypes.bool,
+    showTotal: PropTypes.bool,
+    onDateSelect: PropTypes.func,
+    onMonthChanged: PropTypes.func.isRequired,
+    onTooltipClick: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -60,7 +61,7 @@ export default class Calendar extends PureComponent {
     this.scrollToItem(index, false);
   }
 
-  getMonthsToRender(monthMs) {
+  getMonthsToRender(monthMs: number) {
     const months = [];
     const index = int(this.props.monthToRender / 2);
     for (let i = -index; i <= index; i += 1) {
@@ -123,11 +124,12 @@ export default class Calendar extends PureComponent {
       titleFormat,
       onTooltipClick,
       toggleTooltip,
+      showTotal,
     } = this.props;
 
     const monthsToRender = this.getMonthsToRender(monthDateMs);
     const monthViews = monthsToRender.map((monthDate, index) => {
-      const monthTicks = ticks ? ticks.get(monthDate.month()) : null;
+      const monthTicks = ticks?.get(monthDate.month());
       return (
         <Month
           key={monthDate.month()}
@@ -136,7 +138,8 @@ export default class Calendar extends PureComponent {
           customStyle={customStyle}
           monthMs={monthDate.valueOf()}
           todayMs={todayMs}
-          ticks={monthTicks}
+          ticks={monthTicks?.ticks}
+          totalDesc={showTotal ? monthTicks?.totalDesc : null}
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}
         />

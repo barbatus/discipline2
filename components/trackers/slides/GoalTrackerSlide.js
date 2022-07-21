@@ -18,13 +18,14 @@ export default class GoalTrackerSlide extends TrackerSlide {
   constructor(props) {
     super(props);
     this.onTick = ::this.onTick;
+    this.onUndo = ::this.onUndo;
   }
 
   get bodyControls() {
     const { responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
-        <TouchableOpacity disabled={!responsive} onPress={this.onTick}>
+        <TouchableOpacity disabled={!responsive} onLongPress={this.onUndo} onPress={this.onTick}>
           <Image source={getIcon('check')} style={this.checkStyle} />
         </TouchableOpacity>
       </View>
@@ -45,7 +46,15 @@ export default class GoalTrackerSlide extends TrackerSlide {
       [trackerStyles.checkBtn, trackerStyles.filledBtn] : trackerStyles.checkBtn;
   }
 
+  onUndo() {
+    const { tracker } = this.props;
+    if (!tracker.checked) {return;}
+    caller(this.props.onUndo);
+  }
+
   onTick() {
+    const { tracker } = this.props;
+    if (tracker.checked) {return;}
     Vibration.vibrate();
     caller(this.props.onTick);
   }

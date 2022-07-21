@@ -11,7 +11,7 @@ import { commonDef, commonStyles as cs, SCREEN_WIDTH } from 'app/components/styl
 
 const styles = StyleSheet.create({
   scroll: {
-    overflow: 'hidden',
+    overflow: 'visible',
   },
   slideContainer: {
     ...commonDef.flexFilled,

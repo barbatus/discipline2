@@ -1,15 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Animated } from 'react-native';
+import { Animated, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
+import { EnumSymbol } from 'app/depot/Enum';
+import { TrackerType } from 'app/depot/consts';
 import { Tick } from 'app/model/Tracker';
 import { combineTicksMonthly } from 'app/model/ticks';
 
 import Calendar from '../calendar/Calendar';
 
+const styles = StyleSheet.create({});
+
 export default class TrackerCal extends PureComponent {
   static propTypes = {
-    trackerType: PropTypes.object,
+    trackerType: PropTypes.instanceOf(EnumSymbol),
     ticks: PropTypes.arrayOf(PropTypes.instanceOf(Tick)),
     formatTickValue: PropTypes.func.isRequired,
     // TODO: if only ViewPropTypes.style left it curses
@@ -62,16 +66,18 @@ export default class TrackerCal extends PureComponent {
   }
 
   render() {
-    const { style, shown } = this.props;
+    const { trackerType, style, shown } = this.props;
     const { ticksMap } = this.state;
 
+    const showTotal = trackerType !== TrackerType.STOPWATCH;
     return (
-      <Animated.View style={style}>
+      <Animated.View style={[styles.container, style]}>
         <Calendar
           {...this.props}
           ref={this.calendar}
           scrollEnabled
           showControls
+          showTotal={showTotal}
           shown={shown}
           ticks={ticksMap}
           titleFormat="MMMM YYYY"

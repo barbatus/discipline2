@@ -67,6 +67,20 @@ const TimeText = styled(TickText)`
   margin-right: 5px;
 `;
 
+const TotalView = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0.5;
+`;
+
+const TotalText = styled.Text`
+  font-size: 40px;
+  color: ${WHITE_COLOR};
+`;
+
 export default class Month extends PureComponent {
   dayRef = React.createRef();
 
@@ -75,6 +89,7 @@ export default class Month extends PureComponent {
     toggleTooltip: PropTypes.bool,
     monthMs: PropTypes.number.isRequired,
     todayMs: PropTypes.number.isRequired,
+    totalDesc: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onDateSelect: PropTypes.func.isRequired,
     onTooltipClick: PropTypes.func.isRequired,
   };
@@ -199,6 +214,16 @@ export default class Month extends PureComponent {
     );
   }
 
+  renderTotal() {
+    const { totalDesc } = this.props;
+    return totalDesc ? (
+      <TotalView>
+        <TotalText>=</TotalText>
+        <TotalText>{totalDesc}</TotalText>
+      </TotalView>
+    ) : null;
+  }
+
   render() {
     const { monthMs, todayMs, ticks } = this.props;
     const { selDateMs } = this.state;
@@ -243,6 +268,7 @@ export default class Month extends PureComponent {
       <View style={styles.monthContainer}>
         {tooltipShown ? this.renderTooltip() : null}
         {weekRows}
+        {this.renderTotal()}
       </View>
     );
   }

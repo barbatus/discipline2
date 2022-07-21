@@ -36,10 +36,10 @@ class Ticks {
     return db.save('tick', newTick);
   }
 
-  async getLastOne(trackId: string): Promise<Tick> {
+  async getLastOne(trackId: string, minDateMs?: number): Promise<Tick> {
     check.assert.string(trackId);
 
-    const tick = await db.selectOrderBy('tick', 'tracker', trackId, 'createdAt');
+    const tick = await db.selectOrderBy('tick', 'tracker', trackId, 'createdAt', minDateMs);
     return tick[0];
   }
 

@@ -135,6 +135,15 @@ export class MainScreen extends PureComponent {
     );
   }
 
+  getMenuStyle(leftX) {
+    return {
+      overflow: 'visible',
+      transform: [{
+        translateX: leftX,
+      }]
+    };
+  }
+
   render() {
     const { app, slides, navigator } = this.props;
     const { isOpen } = this.state;
@@ -153,6 +162,7 @@ export class MainScreen extends PureComponent {
           openMenuOffset={MENU_WIDTH}
           onChange={this.onMenuChange}
           onSliding={this.onMenuSliding}
+          animationStyle={this.getMenuStyle}
         >
           <Screen navigator={navigator}>
             {this.renderContent()}

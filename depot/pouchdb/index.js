@@ -147,7 +147,7 @@ export default class Depot {
   async undoLastTick(trackId: string) {
     check.assert.string(trackId);
 
-    const tick = await ticksDB.getLastOne(trackId);
+    const tick = await ticksDB.getLastOne(trackId, time.getDateMs());
     if (!tick) {throw new Error('Last tick not found');}
 
     await ticksDB.remove(tick.id);

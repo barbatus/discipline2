@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scrollView: {
+    flexGrow: 0,
     zIndex: 2,
     overflow: 'visible',
   },

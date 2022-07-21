@@ -31,6 +31,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   constructor(props) {
     super(props);
+    this.state  = { ...super.state, scrollEnabled: true };
     this.shakeCurrent = ::this.shakeCurrent;
   }
 
@@ -97,17 +98,15 @@ export default class TrackerSwiper extends TrackerRenderer {
       } else {
         this.responder.disable();
       }
+      this.setState({ scrollEnabled: enabled });
     }
   }
 
-  static getDerivedStateFromProps({ trackers, enabled, removeIndex }, prevState) {
+  static getDerivedStateFromProps({ trackers, removeIndex }, prevState) {
     if (isNumber(removeIndex)) {return null;}
 
     if (trackers !== prevState.trackers) {
-      return { trackers, scrollEnabled: prevState.scrollEnabled };
-    }
-    if (prevState.scrollEnabled && enabled !== prevState.scrollEnabled) {
-      return { trackers, scrollEnabled: enabled };
+      return { trackers };
     }
     return null;
   }

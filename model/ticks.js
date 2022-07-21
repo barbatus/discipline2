@@ -41,6 +41,7 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTick
       const tickDate = moment(tick.createdAt);
       return tickDate.date() - 1;
     });
+    let monthTotal = 0;
     const dayMap = Object.keys(days).reduce((accum, dayKey) => {
       const day = parseInt(dayKey, 10);
       const ticksDaily = days[dayKey];
@@ -48,11 +49,15 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTick
       const total = dayTickPrints.reduce((accum, tick) => accum + tick.value, 0);
       const dayTicksPrint = {
         totalDesc: formatTickValue(total),
-        ticks: groupTicksDaily(ticksDaily, type, formatTickValue),
+        ticks: dayTickPrints,
       };
+      monthTotal += total;
       return accum.set(day, dayTicksPrint);
     }, new Map());
-    return map.set(month, dayMap);
+    return map.set(month, {
+      totalDesc: formatTickValue(monthTotal),
+      ticks: dayMap,
+    });
   }, new Map());
 }
 
@@ -86,10 +91,11 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
   switch (type) {
     case TrackerType.GOAL:
       return {
-        html: (<Text>
-          {timeDesc}
-: the goal was achieved
-        </Text>),
+        html: (
+          <Text>
+            {timeDesc}: the goal was achieved
+          </Text>
+        ),
         shortDesc: 'the goal was achieved',
         timeDesc,
         value: 1,
@@ -102,7 +108,9 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
           <>
             <Image style={styles.img} source={getIcon('plus_sm')} />
             <Text>
-              {`${value} at ${timeDesc}`}
+              {b(value)}
+              {' at '}
+              {b(timeDesc)}
             </Text>
           </>
         ),
@@ -119,7 +127,9 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
           <>
             <Image style={styles.img} source={getIcon('plus_sm')} />
             <Text>
-              {`${formatTickValue(value)} at ${timeDesc}`}
+              {b(formatTickValue(value))}
+              {' at '}
+              {b(timeDesc)}
             </Text>
           </>
         ),
@@ -141,7 +151,13 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       return {
         html: (
           <Text>
-            {`Tracked ${distDesc} with time ${timeFmt.format()} starting at ${timeDesc}`}
+            Tracked
+            {' '}
+            {b(distDesc)}
+            {' with time '}
+            {b(timeFmt.format(false))}
+            {' starting at '}
+            {b(timeDesc)}
           </Text>
         ),
         shortDesc: `${distDesc} in ${timeFmt.format(false)}`,
@@ -158,7 +174,11 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       return {
         html: (
           <Text>
-            {`Tracked ${timeFmt.format()} starting at ${timeDesc}`}
+            Tracked
+            {' '}
+            {b(timeFmt.format())}
+            {' starting at '}
+            {b(timeDesc)}
           </Text>
         ),
         shortDesc: timeFmt.format(),
