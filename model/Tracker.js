@@ -49,7 +49,7 @@ export default class Tracker implements DBTracker {
   static defaultValues(data: NewTracker) {
     return {
       active: false,
-      props: { alerts: false },
+      props: { alerts: false, freq: '1d' },
       ...data,
     };
   }
@@ -108,8 +108,12 @@ export class SumTracker extends Tracker {
   }
 
   static defaultValues(data?: $Shape<NewTracker>) {
+    const values = Tracker.defaultValues();
     return {
-      props: { alerts: false, showBuck: false },
+      props: {
+        ...values.props,
+        showBuck: false,
+      },
       ...data,
     };
   }
@@ -126,9 +130,13 @@ export class DistanceTracker extends Tracker {
   }
 
   static defaultValues(data?: $Shape<NewTracker>) {
+    const values = Tracker.defaultValues();
     return {
       active: false,
-      props: { alerts: false, showSpeed: false },
+      props: {
+        ...values.props,
+        showSpeed: false,
+      },
       ...data,
     };
   }

@@ -17,6 +17,7 @@ import { propsStyles } from '../../styles/trackerStyles';
 import TrackerIcon from './TrackerIcon';
 import TrackerTitle from './TrackerTitle';
 import TrackerTypeSelect from './TrackerTypeSelect';
+import FreqProp from './FreqProp';
 
 const styles = StyleSheet.create({
   mainGroup: {
@@ -42,9 +43,16 @@ BooleanProp.propTypes = {
   }).isRequired,
 };
 
+const PropToC = {
+  alerts: BooleanProp,
+  showSpeed: BooleanProp,
+  showBuck: BooleanProp,
+  freq: FreqProp,
+};
+
 const TrackerPropFn = ({ prop }) => (
   <View style={propsStyles.row}>
-    <View style={propsStyles.colLeftWide}>
+    <View style={[propsStyles.colLeftWide, propsStyles[`leftCol${prop.propId}`]]}>
       <Text style={propsStyles.colText}>
         { prop.name }
       </Text>
@@ -52,7 +60,7 @@ const TrackerPropFn = ({ prop }) => (
     <View style={propsStyles.colRight}>
       <Field
         name={`props.${prop.propId}`}
-        component={BooleanProp}
+        component={PropToC[prop.propId]}
       />
     </View>
   </View>

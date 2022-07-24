@@ -39,6 +39,20 @@ export const TrackerType = new Enum({
   },
 });
 
+export const FreqType = new Enum({
+  DAILY: {
+    title: 'Daily',
+    value: 'd',
+  },
+  WEEKLY: {
+    title: 'Weekly',
+    value: 'w',
+  },
+  MONTHLY: {
+    title: 'Monthly',
+    value: 'm',
+  },
+});
 
 export const DepotEvent = {
   TICK_ADDED: 'tick_added',
@@ -53,6 +67,7 @@ export const DepotEvent = {
 
 export const DEFAULT_TRACKER_PROPS = [
   { propId: 'alerts', name: 'Send Alerts' },
+  { propId: 'freq', name: 'Frequency' },
 ];
 
 export const TrackerToPropType = {

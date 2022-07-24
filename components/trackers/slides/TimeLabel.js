@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import PropTypes from 'prop-types';
 
+import { MAIN_TEXT } from 'app/components/styles';
 import time from 'app/time/utils';
 
 const styles = StyleSheet.create({
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 52,
     fontWeight: '100',
-    color: '#4A4A4A',
+    color: MAIN_TEXT,
     textAlign: 'center',
   },
   slotStyle: {

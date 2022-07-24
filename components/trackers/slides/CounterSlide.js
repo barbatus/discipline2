@@ -13,6 +13,8 @@ import { getIcon } from 'app/icons/icons';
 
 import { caller } from 'app/utils/lang';
 
+import { MAIN_TEXT } from 'app/components/styles';
+
 import { trackerStyles } from '../styles/trackerStyles';
 
 import TrackerSlide from './TrackerSlide';
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
   countText: {
     fontSize: 56,
     fontWeight: '200',
-    color: '#4A4A4A',
+    color: MAIN_TEXT,
   },
 });
 

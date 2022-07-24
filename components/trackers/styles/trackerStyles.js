@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { IS_IPHONE5 } from 'app/components/styles/common';
+import { IS_IPHONE5, MAIN_TEXT } from 'app/components/styles/common';
 
 import { slideDef, SLIDE_WIDTH } from './slideStyles';
 
@@ -158,7 +158,7 @@ const editDef = {
     width: SLIDE_WIDTH - 40,
     fontSize: 30,
     textAlign: 'center',
-    color: '#4A4A4A',
+    color: MAIN_TEXT,
     fontWeight: '200',
   },
   group: {
@@ -184,11 +184,12 @@ const editDef = {
     paddingLeft: 15,
   },
   colRight: {
-    flex: 0.5,
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingRight: 15,
+    paddingLeft: 15,
   },
   colText: {
     fontSize: 16,
@@ -212,10 +213,12 @@ export const propsStyles = StyleSheet.create({
   },
   colLeftWide: {
     ...editDef.colLeft,
-    flex: 0.7,
   },
   firstGroupRow: {
     ...editDef.row,
     borderBottomWidth: 0,
+  },
+  leftColfreq: {
+    display: 'none',
   },
 });

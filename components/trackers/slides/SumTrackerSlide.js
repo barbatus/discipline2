@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { getIcon } from 'app/icons/icons';
 import Keyboard from 'app/utils/Keyboard';
 import { caller } from 'app/utils/lang';
-import { IS_IPHONE5 } from 'app/components/styles/common';
+import { IS_IPHONE5, MAIN_TEXT } from 'app/components/styles/common';
 import { SumTracker } from 'app/model/Tracker';
 
 import { trackerDef, trackerStyles } from '../styles/trackerStyles';
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     width: INPUT_WIDTH,
     paddingRight: BTN_SIZE + 10,
     fontSize: FONT_SIZE,
-    color: '#4A4A4A',
+    color: MAIN_TEXT,
     textAlign: 'center',
     fontWeight: '200',
   },

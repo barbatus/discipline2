@@ -19,7 +19,7 @@ import { getTrackerIcon } from 'app/icons/icons';
 import { TrackerType } from 'app/depot/consts';
 import { caller } from 'app/utils/lang';
 
-import { LINK_COLOR } from 'app/components/styles/common';
+import { LINK_COLOR, MAIN_COLOR } from 'app/components/styles';
 
 import { BACK_COLOR } from '../styles/trackerStyles';
 import { slideStyles, slideDef } from '../styles/slideStyles';
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    color: '#4A4A4A',
+    color: MAIN_COLOR,
     paddingTop: 20,
     fontWeight: '200',
   },

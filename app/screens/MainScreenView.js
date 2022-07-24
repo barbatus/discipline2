@@ -37,6 +37,8 @@ export class MainScreenView extends ScrollScreenView {
   constructor(props) {
     super(props);
 
+    this.state = { rightView: null };
+
     this.onSlideChange = ::this.onSlideChange;
     this.onAddCompleted = ::this.onAddCompleted;
     this.setMainViewBtns = ::this.setMainViewBtns;
@@ -65,13 +67,8 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   get rightView() {
-    return (
-      <NewTrackerScreenView
-        parent={this.emitter}
-        onAccept={this.onAcceptNewTracker}
-        onCancel={this.cancelNewTracker}
-      />
-    );
+    const { rightView } = this.state;
+    return rightView;
   }
 
   componentDidMount() {
@@ -158,6 +155,16 @@ export class MainScreenView extends ScrollScreenView {
         { text: 'Ok' },
       );
     }
+
+    this.setState({
+      rightView: (
+        <NewTrackerScreenView
+          parent={this.emitter}
+          onAccept={this.onAcceptNewTracker}
+          onCancel={this.cancelNewTracker}
+        />
+      )
+    });
 
     this.moveRight();
     const { copilot } = this.props.app.props;
