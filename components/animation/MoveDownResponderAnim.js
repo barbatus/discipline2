@@ -38,7 +38,7 @@ export default class MoveDownResponderAnim {
       caller(onMove, value / this.maxDy);
     });
     this.unsubCb = responder.subscribeDown({
-      onMove: (dy) => {
+      onMove: dy => {
         const offset = Math.min(Math.abs(dy), this.maxDy);
         this.moveY.setValue(offset);
       },

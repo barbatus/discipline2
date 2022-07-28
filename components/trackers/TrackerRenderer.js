@@ -114,7 +114,7 @@ class TrackerWrapper extends PureComponent {
     const { component, responsive, ...rest } = this.props;
     return React.createElement(component, {
       ...rest,
-      ref: (el) => (this.tracker = el),
+      ref: el => (this.tracker = el),
       responsive,
       onEdit: this.onEdit,
       onRemove: this.onRemove,
@@ -223,9 +223,9 @@ export default class TrackerRenderer extends PureComponent {
   }
 
   onProgress(tracker: Tracker, value: number, data: any, progress: any) {
-    InteractionManager.runAfterInteractions(() => (
-      caller(this.props.onProgress, tracker, value, data, progress)
-    ));
+    InteractionManager.runAfterInteractions(() =>
+      caller(this.props.onProgress, tracker, value, data, progress),
+    );
   }
 
   onUndo(tracker: Tracker) {
@@ -250,7 +250,14 @@ export default class TrackerRenderer extends PureComponent {
 
   renderTracker(tracker: Tracker, metric: boolean, shown: boolean) {
     const { enabled } = this.props;
-    return this.renderTrackerInternal(tracker, 1.0, true, enabled, metric, shown);
+    return this.renderTrackerInternal(
+      tracker,
+      1.0,
+      true,
+      enabled,
+      metric,
+      shown,
+    );
   }
 
   renderScaledTracker(
@@ -263,7 +270,14 @@ export default class TrackerRenderer extends PureComponent {
     check.assert.number(scale);
     check.assert.boolean(responsive);
 
-    return this.renderTrackerInternal(tracker, scale, responsive, false, metric, shown);
+    return this.renderTrackerInternal(
+      tracker,
+      scale,
+      responsive,
+      false,
+      metric,
+      shown,
+    );
   }
 
   renderTrackerInternal(
@@ -283,9 +297,17 @@ export default class TrackerRenderer extends PureComponent {
       case TrackerType.SUM:
         return this.renderSlide(SumTrackerSlide, tracker, trackProps);
       case TrackerType.STOPWATCH:
-        return this.renderSlide(StopWatchTrackerSlide, tracker, { ...trackProps, metric, shown });
+        return this.renderSlide(StopWatchTrackerSlide, tracker, {
+          ...trackProps,
+          metric,
+          shown,
+        });
       case TrackerType.DISTANCE:
-        return this.renderSlide(DistanceTrackerSlide, tracker, { ...trackProps, metric, shown });
+        return this.renderSlide(DistanceTrackerSlide, tracker, {
+          ...trackProps,
+          metric,
+          shown,
+        });
       default:
         throw new Error('Tracker type is not supported');
     }
@@ -296,7 +318,7 @@ export default class TrackerRenderer extends PureComponent {
       <TrackerWrapper
         {...props}
         component={Component}
-        ref={(ref) => this.mapRefs.set(tracker.id, ref)}
+        ref={ref => this.mapRefs.set(tracker.id, ref)}
         key={tracker.id}
         onEdit={this.onEdit}
         onRemove={this.onRemove}

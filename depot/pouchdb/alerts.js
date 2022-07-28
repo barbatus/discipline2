@@ -16,7 +16,12 @@ class Alerts {
   async getLastOne(trackId: string): Promise<Alert> {
     check.assert.string(trackId);
 
-    const alerts = await db.selectOrderBy('alert', 'tracker', trackId, 'createdAt');
+    const alerts = await db.selectOrderBy(
+      'alert',
+      'tracker',
+      trackId,
+      'createdAt',
+    );
     return alerts[0];
   }
 
@@ -33,17 +38,19 @@ class Alerts {
       assert(has(alertOrId, 'rev'));
     }
 
-    const alert = typeof alertOrId === 'string' ?
-      await this.getOne(alertOrId) : alertOrId;
-    if (!alert) { return false; }
+    const alert =
+      typeof alertOrId === 'string' ? await this.getOne(alertOrId) : alertOrId;
+    if (!alert) {
+      return false;
+    }
 
     return Boolean(await db.del('alert', alert));
   }
 
   async removeForTracker(trackId: string) {
     const alerts = await db.findHasMany('alert', 'tracker', trackId);
-    await Promise.all(alerts.map((alert) => db.del('alert', alert)));
-    return alerts.map((alert) => alert.id);
+    await Promise.all(alerts.map(alert => db.del('alert', alert)));
+    return alerts.map(alert => alert.id);
   }
 }
 

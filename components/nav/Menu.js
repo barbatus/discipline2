@@ -5,10 +5,13 @@ import PropTypes from 'prop-types';
 import DeviceInfo from 'react-native-device-info';
 
 import { DEBUG_MENU } from 'app/env';
-import { SLIDE_WIDTH_OFFSET, SLIDE_HEIGHT } from 'app/components/trackers/styles/slideStyles';
+import {
+  SLIDE_WIDTH_OFFSET,
+  SLIDE_HEIGHT,
+} from 'app/components/trackers/styles/slideStyles';
 import { CONTENT_TOP_MARGIN } from 'app/components/styles/common';
 
-import menuStyles, { MENU_TEXT_COLOR } from './styles';
+import menuStyles from './styles';
 import Debug from './Debug';
 
 export const styles = StyleSheet.create({
@@ -68,22 +71,12 @@ export default class Menu extends PureComponent {
           {DEBUG_MENU && <Debug />}
           <View>
             <View style={styles.prop}>
-              <Text style={styles.label}>
-                Metric System
-              </Text>
-              <Switch
-                onValueChange={onMeasureChange}
-                value={props.metric}
-              />
+              <Text style={styles.label}>Metric System</Text>
+              <Switch onValueChange={onMeasureChange} value={props.metric} />
             </View>
             <View style={[styles.prop, styles.lastProp]}>
-              <Text style={styles.label}>
-                Notifications
-              </Text>
-              <Switch
-                onValueChange={onAlertChange}
-                value={props.alerts}
-              />
+              <Text style={styles.label}>Notifications</Text>
+              <Switch onValueChange={onAlertChange} value={props.alerts} />
             </View>
             <View>
               <Text style={styles.ver}>

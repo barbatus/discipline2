@@ -1,5 +1,11 @@
 import React, { PureComponent } from 'react';
-import { UIManager, View, StyleSheet, findNodeHandle, TouchableOpacity } from 'react-native';
+import {
+  UIManager,
+  View,
+  StyleSheet,
+  findNodeHandle,
+  TouchableOpacity,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -59,7 +65,7 @@ const MoreText = styled.Text`
   color: ${WHITE_COLOR};
   font-weight: 300;
   font-size: 10px;
-  marginTop: 5px;
+  margintop: 5px;
 `;
 
 const TimeText = styled(TickText)`
@@ -111,7 +117,10 @@ export default class Month extends PureComponent {
   }
 
   static getDerivedStateFromProps({ toggleTooltip, index }, prevState) {
-    if (toggleTooltip !== prevState.toggleTooltip || index !== prevState.index) {
+    if (
+      toggleTooltip !== prevState.toggleTooltip ||
+      index !== prevState.index
+    ) {
       return { index, toggleTooltip, selDateMs: null, tooltipShown: false };
     }
     return null;
@@ -134,9 +143,9 @@ export default class Month extends PureComponent {
     const offset = startOfMonth.weekday();
     const week = int((offset + day - 1) / 7);
     const dayInd = moment(selDateMs).weekday();
-    const dWidth = (SCREEN_WIDTH - (2 * PADDING) - this.dayWidth) / 6;
+    const dWidth = (SCREEN_WIDTH - 2 * PADDING - this.dayWidth) / 6;
     return {
-      x: PADDING + (dWidth * dayInd) + (this.dayWidth / 2),
+      x: PADDING + dWidth * dayInd + this.dayWidth / 2,
       y: this.dayHeight * week,
     };
   }
@@ -178,13 +187,14 @@ export default class Month extends PureComponent {
 
     if (dayTicks.length > 1) {
       return (
-        <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={this.onTooltipClick}>
+        <Tooltip
+          x={tooltipPos.x}
+          y={tooltipPos.y}
+          onTooltipClick={this.onTooltipClick}>
           <View style={styles.ticksContent}>
             <TextRow>
               <TimeText>Total:</TimeText>
-              <TickText>
-                {totalDesc}
-              </TickText>
+              <TickText>{totalDesc}</TickText>
             </TextRow>
           </View>
           <MoreText>
@@ -200,13 +210,13 @@ export default class Month extends PureComponent {
 
     const { timeDesc, shortDesc } = dayTicks[0];
     return (
-      <Tooltip x={tooltipPos.x} y={tooltipPos.y} onTooltipClick={this.onTooltipClick}>
+      <Tooltip
+        x={tooltipPos.x}
+        y={tooltipPos.y}
+        onTooltipClick={this.onTooltipClick}>
         <View style={styles.ticksContent}>
           <TextRow>
-            <TimeText>
-              {timeDesc}
-:
-            </TimeText>
+            <TimeText>{timeDesc}:</TimeText>
             <TickText>{shortDesc}</TickText>
           </TextRow>
         </View>

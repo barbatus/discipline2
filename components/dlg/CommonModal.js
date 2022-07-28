@@ -61,16 +61,12 @@ export default class CommonModal extends PureComponent {
     check.assert.like(this.state.modalVisible, true, 'Dlg already shown');
 
     this.onBeforeShown(...args);
-    this.setState({ modalVisible: true },
-      () => this.onAfterShown(...args),
-    );
+    this.setState({ modalVisible: true }, () => this.onAfterShown(...args));
   }
 
   hide() {
     this.onBeforeHidden();
-    this.setState({ modalVisible: false },
-      () => this.onAfterHidden(),
-    );
+    this.setState({ modalVisible: false }, () => this.onAfterHidden());
   }
 
   render() {
@@ -81,18 +77,13 @@ export default class CommonModal extends PureComponent {
         isVisible={modalVisible}
         hasBackdrop
         hideModalContentWhileAnimating
-        onModalShow={this.onModalShown}
-      >
+        onModalShow={this.onModalShown}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={this.hide}>
-            <Text style={styles.cancelText}>
-              Cancel
-            </Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-        <View style={commonStyles.flexFilled}>
-          {this.content}
-        </View>
+        <View style={commonStyles.flexFilled}>{this.content}</View>
       </Modal>
     );
   }

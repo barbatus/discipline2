@@ -7,7 +7,11 @@ import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import { caller } from 'app/utils/lang';
 
-import { commonDef, commonStyles as cs, SCREEN_WIDTH } from 'app/components/styles/common';
+import {
+  commonDef,
+  commonStyles as cs,
+  SCREEN_WIDTH,
+} from 'app/components/styles/common';
 
 const styles = StyleSheet.create({
   scroll: {
@@ -21,19 +25,19 @@ const styles = StyleSheet.create({
 });
 
 export default class ScrollScreenView extends PureComponent {
-  static contextTypes = {
-    navBar: PropTypes.object.isRequired,
-  };
+  emitter = new EventEmitter();
 
   static propTypes = {
     style: ViewPropTypes.style,
   };
 
+  static contextTypes = {
+    navBar: PropTypes.object.isRequired,
+  };
+
   static defaultProps = {
     style: null,
   };
-
-  emitter = new EventEmitter();
 
   constructor(props) {
     super(props);
@@ -85,8 +89,7 @@ export default class ScrollScreenView extends PureComponent {
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
           keyboardShouldPersistTaps="always"
-          keyboardDismissMode="on-drag"
-        >
+          keyboardDismissMode="on-drag">
           <View key={0} style={styles.slideContainer}>
             {this.leftView}
           </View>

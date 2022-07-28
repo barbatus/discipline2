@@ -20,7 +20,9 @@ class Trackers {
 
   async update(data: Tracker): Promise<Tracker> {
     let tracker = await this.getOne(data.id);
-    if (!tracker) { return tracker; }
+    if (!tracker) {
+      return tracker;
+    }
 
     tracker = { ...tracker, ...data };
     return db.save('tracker', tracker);
@@ -31,9 +33,13 @@ class Trackers {
       assert(has(trackerOrId, 'rev'));
     }
 
-    const tracker = typeof trackerOrId === 'string' ?
-      await this.getOne(trackerOrId) : trackerOrId;
-    if (!tracker) { return null; }
+    const tracker =
+      typeof trackerOrId === 'string'
+        ? await this.getOne(trackerOrId)
+        : trackerOrId;
+    if (!tracker) {
+      return null;
+    }
 
     await db.del('tracker', tracker);
     return tracker.id;

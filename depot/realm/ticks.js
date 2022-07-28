@@ -24,10 +24,14 @@ class Ticks {
     return ticks
       .filtered(`trackId = ${trackId}`)
       .sorted('createdAt')
-      .map((tick) => tick);
+      .map(tick => tick);
   }
 
-  getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number): Array<Tick> {
+  getForPeriod(
+    trackId: string,
+    minDateMs: number,
+    maxDateMs?: number,
+  ): Array<Tick> {
     check.assert.string(trackId);
     check.assert.number(minDateMs);
 
@@ -37,9 +41,10 @@ class Ticks {
       query = `${query} AND createdAt < ${maxDateMs}`;
     }
 
-    return ticks.filtered(query)
+    return ticks
+      .filtered(query)
       .sorted('createdAt')
-      .map((tick) => tick);
+      .map(tick => tick);
   }
 
   getLast(trackId: string): Tick {
@@ -95,7 +100,7 @@ class Ticks {
     const dataObj = db.objects(schema);
     const tickData = dataObj.filtered(`tick.id = ${tickId}`)[0];
     db.write(() => {
-      Object.keys(data).forEach((prop) => {
+      Object.keys(data).forEach(prop => {
         if (isArrayLike(tickData[prop]) && !isArrayLike(data[prop])) {
           tickData[prop].push(data[prop]);
           return;
@@ -116,10 +121,9 @@ class Ticks {
   removeForTracker(trackId: string) {
     check.assert.string(trackId);
 
-    const ticks = db.objects('Tick')
-      .filtered(`trackId = ${trackId}`);
+    const ticks = db.objects('Tick').filtered(`trackId = ${trackId}`);
 
-    const ids = ticks.map((tick) => tick.id);
+    const ids = ticks.map(tick => tick.id);
     db.write(() => db.delete(ticks));
     return ids;
   }

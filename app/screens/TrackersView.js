@@ -36,7 +36,11 @@ import {
 import TrackerCal from 'app/components/trackers/TrackerCal';
 import Trackers from 'app/components/trackers/Trackers';
 import DummyTrackerSlide from 'app/components/trackers/slides/DummyTrackerSlide';
-import { commonStyles, CONTENT_HEIGHT, SCREEN_WIDTH } from 'app/components/styles/common';
+import {
+  commonStyles,
+  CONTENT_HEIGHT,
+  SCREEN_WIDTH,
+} from 'app/components/styles/common';
 
 const MONTH_NAMES = [
   'January',
@@ -153,10 +157,14 @@ class TrackersView extends PureComponent {
   }
 
   static getDerivedStateFromProps({ trackers, app }, prevState) {
-    if (!trackers.size) {return null;}
+    if (!trackers.size) {
+      return null;
+    }
 
     if (prevState.current) {
-      const tracker = trackers.find((tracker) => tracker.id === prevState.current.id);
+      const tracker = trackers.find(
+        tracker => tracker.id === prevState.current.id,
+      );
       return tracker ? getCurrentTrackerUpdate(tracker, app) : null;
     }
 
@@ -205,12 +213,16 @@ class TrackersView extends PureComponent {
   }
 
   onSlideChange(index: number, previ: number, animated: boolean) {
-    this.setState(getCurrentTrackerUpdate(this.props.trackers.get(index), this.props.app));
+    this.setState(
+      getCurrentTrackerUpdate(this.props.trackers.get(index), this.props.app),
+    );
     caller(this.props.onSlideChange, index, previ, animated);
   }
 
   onRemove(tracker) {
-    if (this.isActive) {return;}
+    if (this.isActive) {
+      return;
+    }
 
     this.isActive = true;
     this.props.onRemove(tracker);
@@ -314,10 +326,12 @@ class TrackersView extends PureComponent {
     if (tracker.props.alerts) {
       Notifications.checkPermissions();
     }
-    this.props.onUpdate(TrackersModel.create({
-      ...current,
-      ...tracker,
-    }));
+    this.props.onUpdate(
+      TrackersModel.create({
+        ...current,
+        ...tracker,
+      }),
+    );
   }
 
   onSubmitFail() {
@@ -325,7 +339,9 @@ class TrackersView extends PureComponent {
   }
 
   saveEdit() {
-    if (this.isActive) {return;}
+    if (this.isActive) {
+      return;
+    }
 
     this.isActive = true;
     const { dispatch } = this.props;
@@ -340,18 +356,24 @@ class TrackersView extends PureComponent {
 
   render() {
     const { style, app, onMoveUp, onMoveDownCancel, onCancel } = this.props;
-    const { current: tracker, formatTickValue, calShown, toggleTooltip } = this.state;
+    const {
+      current: tracker,
+      formatTickValue,
+      calShown,
+      toggleTooltip,
+    } = this.state;
 
-    if (!tracker) { return <DummyTrackerSlide />; }
+    if (!tracker) {
+      return <DummyTrackerSlide />;
+    }
 
     const calcStyle = { opacity: this.calcOpacity, zIndex: calShown ? 1 : 0 };
     return (
       <Animated.View
         style={[commonStyles.flexFilled, style]}
-        onStartShouldSetResponder={(evt) => {
+        onStartShouldSetResponder={evt => {
           this.setState({ toggleTooltip: !toggleTooltip });
-        }}
-      >
+        }}>
         <TrackerCal
           ref={this.calendar}
           {...this.props}
@@ -398,27 +420,29 @@ export default connect(
     ticks: trackers.ticks,
   }),
   (dispatch, props) => ({
-    onCalendarUpdate: (tracker, monthDateMs, startDateMs, endDateMs) => (
-      dispatch(updateCalendar(tracker, monthDateMs, startDateMs, endDateMs))
-    ),
-    onRemove: (tracker) => dispatch(removeTracker(tracker)),
-    onUpdate: (tracker) => dispatch(updateTracker(tracker)),
-    onTick: (tracker, value, data) => dispatch(tickTracker(tracker, value, data)),
-    onStart: (tracker, value, data) => dispatch(startTracker(tracker, value, data)),
+    onCalendarUpdate: (tracker, monthDateMs, startDateMs, endDateMs) =>
+      dispatch(updateCalendar(tracker, monthDateMs, startDateMs, endDateMs)),
+    onRemove: tracker => dispatch(removeTracker(tracker)),
+    onUpdate: tracker => dispatch(updateTracker(tracker)),
+    onTick: (tracker, value, data) =>
+      dispatch(tickTracker(tracker, value, data)),
+    onStart: (tracker, value, data) =>
+      dispatch(startTracker(tracker, value, data)),
     // onProgress: (tracker, value, data, progress) => (
     //   dispatch(updateLastTick(tracker, value, data, progress))
     // ),
-    onStop: (tracker, value, data) => dispatch(stopTracker(tracker, value, data)),
-    onUndo: (tracker) => dispatch(undoLastTick(tracker)),
-    onAddCompleted: (index) => {
+    onStop: (tracker, value, data) =>
+      dispatch(stopTracker(tracker, value, data)),
+    onUndo: tracker => dispatch(undoLastTick(tracker)),
+    onAddCompleted: index => {
       dispatch(completeChange(index));
       caller(props.onAddCompleted, index);
     },
-    onRemoveCompleted: (index) => {
+    onRemoveCompleted: index => {
       dispatch(completeChange(index));
       caller(props.onRemoveCompleted, index);
     },
-    onSaveCompleted: (index) => {
+    onSaveCompleted: index => {
       dispatch(completeChange(index));
       caller(props.onSaveCompleted, index);
     },

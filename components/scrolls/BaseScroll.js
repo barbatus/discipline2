@@ -7,6 +7,16 @@ import isBoolean from 'lodash/isBoolean';
 import { caller } from 'app/utils/lang';
 
 export default class BaseScroll extends PureComponent {
+  indexInn = 0;
+
+  prevInd = 0;
+
+  pageX = 0;
+
+  onScrollToCb = null;
+
+  scrollView = React.createRef();
+
   static propTypes = {
     index: PropTypes.number,
     slideWidth: PropTypes.number.isRequired,
@@ -43,16 +53,6 @@ export default class BaseScroll extends PureComponent {
     onScrollBegin: null,
   };
 
-  indexInn = 0;
-
-  prevInd = 0;
-
-  pageX = 0;
-
-  onScrollToCb = null;
-
-  scrollView = React.createRef();
-
   constructor(props) {
     super(props);
 
@@ -74,15 +74,21 @@ export default class BaseScroll extends PureComponent {
   }
 
   onTouchMove(event) {
-    const { slides, slideWidth, scrollEnabled } = this.props;
+    const { slides, scrollEnabled } = this.props;
 
-    if (!scrollEnabled || slides.length <= 1) {return;}
+    if (!scrollEnabled || slides.length <= 1) {
+      return;
+    }
 
     const dx = this.pageX - event.nativeEvent.pageX;
     this.pageX = event.nativeEvent.pageX;
 
-    if (this.indexInn === 0 && dx <= 0) {return;}
-    if (this.indexInn === slides.length - 1 && dx >= 0) {return;}
+    if (this.indexInn === 0 && dx <= 0) {
+      return;
+    }
+    if (this.indexInn === slides.length - 1 && dx >= 0) {
+      return;
+    }
 
     caller(this.props.onTouchMove, dx);
   }
@@ -96,12 +102,7 @@ export default class BaseScroll extends PureComponent {
     caller(this.props.onScrollBegin, event);
   }
 
-
-  scrollTo(
-    index: number,
-    callback?: Function | boolean,
-    animated?: boolean,
-  ) {
+  scrollTo(index: number, callback?: Function | boolean, animated?: boolean) {
     const { slides, slideWidth } = this.props;
 
     if (isBoolean(callback)) {
@@ -190,8 +191,7 @@ export default class BaseScroll extends PureComponent {
         scrollEventThrottle={30}
         removeClippedSubviews={removeClippedSubviews}
         horizontal
-        showsHorizontalScrollIndicator={false}
-      >
+        showsHorizontalScrollIndicator={false}>
         {slides}
       </ScrollView>
     );

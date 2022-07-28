@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -125,6 +125,14 @@ const FreqPropFn = React.memo(({ input }) => {
 });
 
 FreqPropFn.propTypes = {
+  input: PropTypes.shape({
+    value: (props, propName) => {
+      if (/^(\d+)(d|w|m)$/.test(props[propName])) {
+        return null;
+      }
+      return new Error('Invalid property input.value');
+    },
+  }).isRequired,
 };
 
 export default React.memo(FreqPropFn);

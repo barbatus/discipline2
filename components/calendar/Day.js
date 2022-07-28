@@ -112,21 +112,13 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const {
-      value,
-      isOutDay,
-      hasTicks,
-      isSelected,
-      isToday,
-    } = this.props;
+    const { value, isOutDay, hasTicks, isSelected, isToday } = this.props;
 
     return isOutDay ? (
       <TouchableWithoutFeedback>
         <View style={styles.dayButton}>
           <View style={styles.dayCircle}>
-            <Text style={[styles.dayText, styles.outDayText]}>
-              {value}
-            </Text>
+            <Text style={[styles.dayText, styles.outDayText]}>{value}</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>

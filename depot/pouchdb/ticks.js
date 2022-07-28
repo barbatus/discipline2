@@ -19,8 +19,19 @@ class Ticks {
     return db.find('tick', tickId);
   }
 
-  async getForPeriod(trackId: string, minDateMs: number, maxDateMs?: number): Promise<Tick[]> {
-    return db.selectBy('tick', 'tracker', trackId, 'createdAt', minDateMs, maxDateMs);
+  async getForPeriod(
+    trackId: string,
+    minDateMs: number,
+    maxDateMs?: number,
+  ): Promise<Tick[]> {
+    return db.selectBy(
+      'tick',
+      'tracker',
+      trackId,
+      'createdAt',
+      minDateMs,
+      maxDateMs,
+    );
   }
 
   async add(
@@ -39,11 +50,20 @@ class Ticks {
   async getLastOne(trackId: string, minDateMs?: number): Promise<Tick> {
     check.assert.string(trackId);
 
-    const tick = await db.selectOrderBy('tick', 'tracker', trackId, 'createdAt', minDateMs);
+    const tick = await db.selectOrderBy(
+      'tick',
+      'tracker',
+      trackId,
+      'createdAt',
+      minDateMs,
+    );
     return tick[0];
   }
 
-  async getLastWithLimit(trackId: string, limit: number): Promise<Notification[]> {
+  async getLastWithLimit(
+    trackId: string,
+    limit: number,
+  ): Promise<Notification[]> {
     return db.selectOrderBy('tick', 'tracker', trackId, 'createdAt', limit);
   }
 
@@ -53,9 +73,8 @@ class Ticks {
 
     if (tickData && data) {
       const newData = data;
-      Object.keys(data).forEach((prop) => {
-        if (Array.isArray(tickData[prop]) &&
-            !Array.isArray(newData[prop])) {
+      Object.keys(data).forEach(prop => {
+        if (Array.isArray(tickData[prop]) && !Array.isArray(newData[prop])) {
           tickData[prop].push(newData[prop]);
         } else {
           tickData[prop] = newData[prop];
@@ -72,9 +91,11 @@ class Ticks {
       assert(has(tickOrId, 'rev'));
     }
 
-    const tick = typeof tickOrId === 'string' ?
-      await this.getOne(tickOrId) : tickOrId;
-    if (!tick) { return false; }
+    const tick =
+      typeof tickOrId === 'string' ? await this.getOne(tickOrId) : tickOrId;
+    if (!tick) {
+      return false;
+    }
 
     await db.del('tick', tick);
     return true;
@@ -82,8 +103,8 @@ class Ticks {
 
   async removeForTracker(trackId: string) {
     const ticks = await db.findHasMany('tick', 'tracker', trackId);
-    await Promise.all(ticks.map((tick) => db.del('tick', tick)));
-    const ids = ticks.map((tick) => tick.id);
+    await Promise.all(ticks.map(tick => db.del('tick', tick)));
+    const ids = ticks.map(tick => tick.id);
     return ids;
   }
 

@@ -1,10 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  StatusBar,
-  Text,
-  View,
-  Platform,
-} from 'react-native';
+import { StatusBar, Text, View, Platform } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 
@@ -36,7 +31,9 @@ const StatusBarShape = {
 function getButtonElement(data, style) {
   return (
     <View style={styles.navBarButtonContainer}>
-      {(!data || data.props) ? data : (
+      {!data || data.props ? (
+        data
+      ) : (
         <NavbarButton
           title={data.title}
           style={[data.style, style]}
@@ -59,7 +56,10 @@ function getTitleElement(data) {
 
   return (
     <View style={styles.navBarTitleContainer}>
-      <Text ellipsizeMode={data.ellipsizeMode} numberOfLines={data.numberOfLines} style={[styles.navBarTitleText, data.style, colorStyle]}>
+      <Text
+        ellipsizeMode={data.ellipsizeMode}
+        numberOfLines={data.numberOfLines}
+        style={[styles.navBarTitleText, data.style, colorStyle]}>
         {data.title}
       </Text>
     </View>
@@ -121,8 +121,9 @@ export default class NavigationBar extends PureComponent {
         StatusBar.setBarStyle(statusBar.style);
       }
 
-      const animation = statusBar.hidden ?
-        statusBar.hideAnimation : statusBar.showAnimation;
+      const animation = statusBar.hidden
+        ? statusBar.hideAnimation
+        : statusBar.showAnimation;
 
       StatusBar.showHideTransition = animation;
       StatusBar.hidden = statusBar.hidden;
@@ -130,24 +131,20 @@ export default class NavigationBar extends PureComponent {
   }
 
   render() {
-    const {
-      containerStyle,
-      tintColor,
-      title,
-      leftButton,
-      rightButton,
-      style,
-    } = this.props;
+    const { containerStyle, tintColor, title, leftButton, rightButton, style } =
+      this.props;
     const customTintColor = tintColor ? { backgroundColor: tintColor } : null;
 
-    const customStatusBarTintColor = this.props.statusBar.tintColor ?
-      { backgroundColor: this.props.statusBar.tintColor } : null;
+    const customStatusBarTintColor = this.props.statusBar.tintColor
+      ? { backgroundColor: this.props.statusBar.tintColor }
+      : null;
 
     let statusBar = null;
 
     if (Platform.OS === 'ios') {
-      statusBar = !this.props.statusBar.hidden ?
-        <View style={[styles.statusBar, customStatusBarTintColor]} /> : null;
+      statusBar = !this.props.statusBar.hidden ? (
+        <View style={[styles.statusBar, customStatusBarTintColor]} />
+      ) : null;
     }
 
     return (

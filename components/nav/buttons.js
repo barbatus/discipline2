@@ -25,14 +25,15 @@ export class NavButton extends PureComponent {
   };
 
   render() {
-    const onPress = this.props.onPress ? debounce(this.props.onPress, 16) : null;
+    const onPress = this.props.onPress
+      ? debounce(this.props.onPress, 16)
+      : null;
     const { copilot } = this.props;
     return (
       <TouchableOpacity
         hitSlop={{ left: 15, right: 15 }}
         style={this.props.style}
-        onPress={onPress}
-      >
+        onPress={onPress}>
         <Image
           {...copilot}
           source={getIcon(this.props.icon)}
@@ -43,7 +44,7 @@ export class NavButton extends PureComponent {
   }
 }
 
-const NavLeftButtonFn = (props) => (
+const NavLeftButtonFn = props => (
   <NavButton
     {...props}
     iconStyle={styles.newIcon}
@@ -53,7 +54,7 @@ const NavLeftButtonFn = (props) => (
 
 export const NavLeftButton = React.memo(NavLeftButtonFn);
 
-const NavRightButtonFn = (props) => (
+const NavRightButtonFn = props => (
   <NavButton
     {...props}
     iconStyle={styles.newIcon}
@@ -63,7 +64,7 @@ const NavRightButtonFn = (props) => (
 
 export const NavRightButton = React.memo(NavRightButtonFn);
 
-const NavAddButtonFn = (props) => (
+const NavAddButtonFn = props => (
   <NavButton
     {...props}
     icon="new"
@@ -74,7 +75,7 @@ const NavAddButtonFn = (props) => (
 
 export const NavAddButton = React.memo(NavAddButtonFn);
 
-const NavBackButtonFn = (props) => (
+const NavBackButtonFn = props => (
   <NavButton
     {...props}
     icon="back"
@@ -85,7 +86,7 @@ const NavBackButtonFn = (props) => (
 
 export const NavBackButton = React.memo(NavBackButtonFn);
 
-const NavMenuButtonFn = (props) => (
+const NavMenuButtonFn = props => (
   <NavButton
     {...props}
     icon="menu"
@@ -96,7 +97,7 @@ const NavMenuButtonFn = (props) => (
 
 export const NavMenuButton = React.memo(NavMenuButtonFn);
 
-const NavCancelButtonFn = (props) => (
+const NavCancelButtonFn = props => (
   <NavButton
     {...props}
     icon="cancel"
@@ -107,12 +108,8 @@ const NavCancelButtonFn = (props) => (
 
 export const NavCancelButton = React.memo(NavCancelButtonFn);
 
-const NavAcceptButtonFn = (props) => (
-  <NavButton
-    {...props}
-    icon="accept"
-    style={styles.navBarRightButton}
-  />
+const NavAcceptButtonFn = props => (
+  <NavButton {...props} icon="accept" style={styles.navBarRightButton} />
 );
 
 export const NavAcceptButton = React.memo(NavAcceptButtonFn);

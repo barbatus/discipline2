@@ -23,6 +23,12 @@ import Screen from './Screen';
 import MainScreenView from './MainScreenView';
 
 export class MainScreen extends PureComponent {
+  iconsDlg = React.createRef();
+
+  mapsDlg = React.createRef();
+
+  ticksDlg = React.createRef();
+
   static propTypes = {
     slides: PropTypes.number.isRequired,
     navigator: PropTypes.object.isRequired,
@@ -34,12 +40,6 @@ export class MainScreen extends PureComponent {
   static defaultProps = {
     app: null,
   };
-
-  iconsDlg = React.createRef();
-
-  mapsDlg = React.createRef();
-
-  ticksDlg = React.createRef();
 
   constructor(props) {
     super(props);
@@ -66,6 +66,43 @@ export class MainScreen extends PureComponent {
     registry.register(DlgType.ICONS, this.iconsDlg.current);
     registry.register(DlgType.MAPS, this.mapsDlg.current);
     registry.register(DlgType.TICKS, this.ticksDlg.current);
+  }
+
+  renderContent() {
+    return (
+      <MainScreenView
+        {...this.props}
+        onMenu={this.onMenu}
+        onScroll={this.onScroll}
+        onSlideChange={this.onSlideChange}
+        onSlideNoChange={this.onSlideNoChange}
+      />
+    );
+  }
+
+  renderMenu() {
+    const { app } = this.props;
+    const { menuOpacity } = this.state;
+    const menuStyle = { opacity: menuOpacity };
+    return (
+      <Menu
+        style={menuStyle}
+        props={app.props}
+        onAlertChange={this.onAlertChange}
+        onMeasureChange={this.onMeasureChange}
+      />
+    );
+  }
+
+  getMenuStyle(leftX) {
+    return {
+      overflow: 'visible',
+      transform: [
+        {
+          translateX: leftX,
+        },
+      ],
+    };
   }
 
   onSlideChange(index, previ, animated) {
@@ -109,52 +146,16 @@ export class MainScreen extends PureComponent {
     this.props.onUpdateAlerts(alerts);
   }
 
-  renderContent() {
-    return (
-      <MainScreenView
-        {...this.props}
-        onMenu={this.onMenu}
-        onScroll={this.onScroll}
-        onSlideChange={this.onSlideChange}
-        onSlideNoChange={this.onSlideNoChange}
-      />
-    );
-  }
-
-  renderMenu() {
-    const { app } = this.props;
-    const { menuOpacity } = this.state;
-    const menuStyle = { opacity: menuOpacity };
-    return (
-      <Menu
-        style={menuStyle}
-        props={app.props}
-        onAlertChange={this.onAlertChange}
-        onMeasureChange={this.onMeasureChange}
-      />
-    );
-  }
-
-  getMenuStyle(leftX) {
-    return {
-      overflow: 'visible',
-      transform: [{
-        translateX: leftX,
-      }]
-    };
-  }
-
   render() {
     const { app, slides, navigator } = this.props;
     const { isOpen } = this.state;
-    if (!app) { return null; }
+    if (!app) {
+      return null;
+    }
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <GradientSlider
-          ref={(el) => (this.gradient = el)}
-          slides={slides}
-        />
+        <GradientSlider ref={(el) => (this.gradient = el)} slides={slides} />
         <SideMenu
           disableGestures
           menu={this.renderMenu()}
@@ -162,11 +163,8 @@ export class MainScreen extends PureComponent {
           openMenuOffset={MENU_WIDTH}
           onChange={this.onMenuChange}
           onSliding={this.onMenuSliding}
-          animationStyle={this.getMenuStyle}
-        >
-          <Screen navigator={navigator}>
-            {this.renderContent()}
-          </Screen>
+          animationStyle={this.getMenuStyle}>
+          <Screen navigator={navigator}>{this.renderContent()}</Screen>
         </SideMenu>
         <IconsDlg ref={this.iconsDlg} />
         <MapsDlg ref={this.mapsDlg} />
@@ -183,10 +181,13 @@ const ScreenWithCopilot = copilot({
   tooltipComponent: CopilotTooltip,
 })(MainScreen);
 
-export default connect(({ trackers: { trackers, app } }) => ({
-  slides: trackers.size,
-  app,
-}), (dispatch) => ({
-  onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
-  onUpdateMetric: (metric) => dispatch(updateAppProps({ metric })),
-}))(ScreenWithCopilot);
+export default connect(
+  ({ trackers: { trackers, app } }) => ({
+    slides: trackers.size,
+    app,
+  }),
+  dispatch => ({
+    onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
+    onUpdateMetric: (metric) => dispatch(updateAppProps({ metric })),
+  }),
+)(ScreenWithCopilot);

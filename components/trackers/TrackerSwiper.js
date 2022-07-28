@@ -6,7 +6,10 @@ import { caller } from 'app/utils/lang';
 import ShakeEvent from 'app/utils/ShakeEvent';
 
 import Animation from '../animation/Animation';
-import { minScale, MoveUpScaleResponderAnim } from '../animation/MoveUpScaleResponderAnim';
+import {
+  minScale,
+  MoveUpScaleResponderAnim,
+} from '../animation/MoveUpScaleResponderAnim';
 import { MoveUpDownResponder } from '../animation/responders';
 import ScreenSlideUpDownAnim from '../animation/ScreenSlideUpDownAnim';
 import Swiper from '../scrolls/Swiper';
@@ -14,7 +17,6 @@ import { commonStyles, SCREEN_WIDTH } from '../styles/common';
 
 import { SLIDE_HEIGHT } from './styles/slideStyles';
 import TrackerRenderer from './TrackerRenderer';
-
 
 export default class TrackerSwiper extends TrackerRenderer {
   responder = new MoveUpDownResponder();
@@ -31,7 +33,7 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   constructor(props) {
     super(props);
-    this.state  = { ...super.state, scrollEnabled: true };
+    this.state = { ...super.state, scrollEnabled: true };
     this.shakeCurrent = ::this.shakeCurrent;
   }
 
@@ -65,7 +67,8 @@ export default class TrackerSwiper extends TrackerRenderer {
     enabled: prevEnabled,
     removeIndex: prevRemoveIndex,
   }) {
-    const { updateIndex, addIndex, trackers, enabled, removeIndex } = this.props;
+    const { updateIndex, addIndex, trackers, enabled, removeIndex } =
+      this.props;
 
     if (isNumber(updateIndex) && prevUpdIndex !== updateIndex) {
       this.cancelEdit();
@@ -103,7 +106,9 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   static getDerivedStateFromProps({ trackers, removeIndex }, prevState) {
-    if (isNumber(removeIndex)) {return null;}
+    if (isNumber(removeIndex)) {
+      return null;
+    }
 
     if (trackers !== prevState.trackers) {
       return { trackers };
@@ -112,7 +117,8 @@ export default class TrackerSwiper extends TrackerRenderer {
   }
 
   handleMoveUp() {
-    const { onScaleMove, onScaleDone, onScaleCancel, onScaleStart } = this.props;
+    const { onScaleMove, onScaleDone, onScaleCancel, onScaleStart } =
+      this.props;
     this.moveScale.subscribe(
       this.responder,
       onScaleMove,
@@ -143,12 +149,10 @@ export default class TrackerSwiper extends TrackerRenderer {
 
   cancelEdit(callback) {
     const trackerId = this.current.id;
-    return this.mapRefs.get(trackerId).cancelEdit(
-      () => {
-        this.responder.enable();
-        this.onCancelEdit(callback);
-      },
-    );
+    return this.mapRefs.get(trackerId).cancelEdit(() => {
+      this.responder.enable();
+      this.onCancelEdit(callback);
+    });
   }
 
   hide(callback) {
@@ -169,14 +173,14 @@ export default class TrackerSwiper extends TrackerRenderer {
   animateRemove(trackerId: number, index: number, callback: Function) {
     const prevInd = index + (index >= 1 ? -1 : 1);
 
-    this.mapRefs.get(trackerId).collapse(() => (
+    this.mapRefs.get(trackerId).collapse(() =>
       this.scrollTo(prevInd, () => {
         // In case of removing the first tracker,
         // we move to the next, so adjust the index accordingly.
         this.scrollTo(index ? prevInd : 0, null, false);
         caller(callback);
-      })
-    ));
+      }),
+    );
   }
 
   onCancelEdit(callback) {
@@ -191,11 +195,8 @@ export default class TrackerSwiper extends TrackerRenderer {
       width: SCREEN_WIDTH,
       height: SLIDE_HEIGHT,
     };
-    const slides = trackers.map((tracker) => (
-      <View
-        key={tracker.id}
-        style={[commonStyles.centered, slideStyle]}
-      >
+    const slides = trackers.map(tracker => (
+      <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
         {this.renderTracker(tracker, metric, shown)}
       </View>
     ));

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Animated, Text, StyleSheet } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { EnumSymbol } from 'app/depot/Enum';
@@ -43,10 +43,17 @@ export default class TrackerCal extends PureComponent {
     };
   }
 
-  static getDerivedStateFromProps({ ticks, trackerType, formatTickValue }, prevState) {
+  static getDerivedStateFromProps(
+    { ticks, trackerType, formatTickValue },
+    prevState,
+  ) {
     if (ticks !== prevState.ticks) {
       return {
-        ticksMap: combineTicksMonthly(ticks, trackerType, prevState.formatTickValue),
+        ticksMap: combineTicksMonthly(
+          ticks,
+          trackerType,
+          prevState.formatTickValue,
+        ),
         ticks,
         formatTickValue,
       };

@@ -108,11 +108,7 @@ export default class Calendar extends PureComponent {
       );
     }
 
-    return (
-      <View style={styles.calHeading}>
-        {headings}
-      </View>
-    );
+    return <View style={styles.calHeading}>{headings}</View>;
   }
 
   render() {
@@ -156,8 +152,7 @@ export default class Calendar extends PureComponent {
           style={styles.scrollView}
           showsHorizontalScrollIndicator={false}
           automaticallyAdjustContentInsets
-          onMomentumScrollEnd={this.scrollEnded}
-        >
+          onMomentumScrollEnd={this.scrollEnded}>
           {monthViews}
         </ScrollView>
       </View>

@@ -50,27 +50,34 @@ const PropToC = {
   freq: FreqProp,
 };
 
-const TrackerPropFn = ({ prop }) => (
-  <View style={propsStyles.row}>
-    <View style={[propsStyles.colLeftWide, propsStyles[`leftCol${prop.propId}`]]}>
-      <Text style={propsStyles.colText}>
-        { prop.name }
-      </Text>
+const TrackerPropFn = ({ prop, onChange }) => {
+  const onChange_ = React.useCallback((event, newVal) => {
+    onChange(newVal, prop.propId);
+  }, [onChange, prop]);
+  return (
+    <View style={propsStyles.row}>
+      <View style={[propsStyles.colLeftWide, propsStyles[`leftCol${prop.propId}`]]}>
+        <Text style={propsStyles.colText}>
+          { prop.name }
+        </Text>
+      </View>
+      <View style={propsStyles.colRight}>
+        <Field
+          name={`props.${prop.propId}`}
+          component={PropToC[prop.propId]}
+          onChange={onChange_}
+        />
+      </View>
     </View>
-    <View style={propsStyles.colRight}>
-      <Field
-        name={`props.${prop.propId}`}
-        component={PropToC[prop.propId]}
-      />
-    </View>
-  </View>
-);
+  );
+};
 
 TrackerPropFn.propTypes = {
   prop: PropTypes.shape({
     name: PropTypes.string,
     propId: PropTypes.string,
   }).isRequired,
+  onChange: PropTypes.func,
 };
 
 const TrackerProp = React.memo(TrackerPropFn);
@@ -99,6 +106,12 @@ export class TrackerEditView extends PureComponent {
     onRemove: null,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = { ...props.initialValues };
+    this.onChange = ::this.onChange;
+  }
+
   renderDeleteGroup() {
     return this.props.allowDelete ? (
       <View style={propsStyles.group}>
@@ -118,11 +131,13 @@ export class TrackerEditView extends PureComponent {
 
   renderPropsGroup() {
     const { props } = this.props;
+    const { alerts } = this.state;
+    const renderProps = props.filter((prop) => prop.propId == 'freq' ? alerts : true);
     return (
       <View style={[propsStyles.group, styles.mainGroup]}>
         {
-          props.map((prop) => (
-            <TrackerProp key={prop.propId} prop={prop} />
+          renderProps.map((prop) => (
+            <TrackerProp key={prop.propId} prop={prop} onChange={this.onChange} />
           ))
         }
       </View>
@@ -146,6 +161,12 @@ export class TrackerEditView extends PureComponent {
         </View>
       </View>
     ) : null;
+  }
+
+  onChange(newValue, name) {
+    this.setState({
+      [name]: newValue,
+    });
   }
 
   render() {

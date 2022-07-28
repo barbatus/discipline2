@@ -41,9 +41,11 @@ export class MoveUpScaleResponderAnim {
   ) {
     assert.ok(responder);
 
-    this.scale.addListener(({ value }) => caller(onScale, value <= minScale ? 0 : value));
+    this.scale.addListener(({ value }) =>
+      caller(onScale, value <= minScale ? 0 : value),
+    );
     this.unsubCb = responder.subscribeUp({
-      onMove: (dy) => {
+      onMove: dy => {
         const speed = Math.abs(dy) * 2;
         let scale = (this.slideHeight - speed) / this.slideHeight;
         scale = Math.max(minMoveScale, scale);
@@ -71,7 +73,9 @@ export class MoveUpScaleResponderAnim {
   }
 
   animateIn(callback?: Function) {
-    if (this.animIn) { return; }
+    if (this.animIn) {
+      return;
+    }
 
     this.animIn = Animation.timing(this.scale, 500, 1);
     Animation.animate([this.animIn], () => {
@@ -81,7 +85,9 @@ export class MoveUpScaleResponderAnim {
   }
 
   animateOut(callback?: Function) {
-    if (this.animOut) { return; }
+    if (this.animOut) {
+      return;
+    }
 
     this.animOut = Animation.timing(this.scale, 500, 0);
     Animation.animate([this.animOut], () => {

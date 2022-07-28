@@ -84,7 +84,7 @@ async function getGeoWatcher(callback, setCoords) {
   }
 }
 
-const MyLocationMarker = React.memo((props) => {
+const MyLocationMarker = React.memo(props => {
   const [coords, setCoords] = useState(null);
 
   useEffect(() => setCoords(props.coords), [props.coords]);
@@ -104,22 +104,26 @@ const MyLocationMarker = React.memo((props) => {
     };
   }, []);
 
-  if (!coords) {return null;}
+  if (!coords) {
+    return null;
+  }
 
   const { heading } = coords;
   const rotate = heading >= 0 ? `${heading}deg` : null;
 
   return (
-    <Marker {...props} anchor={ANCHOR} style={styles.mapMarker} coordinate={coords}>
+    <Marker
+      {...props}
+      anchor={ANCHOR}
+      style={styles.mapMarker}
+      coordinate={coords}>
       <View style={styles.container}>
         <View style={styles.markerHalo} />
-        {
-          rotate && (
-            <View style={[styles.heading, { transform: [{ rotate }] }]}>
-              <View style={styles.headingPointer} />
-            </View>
-          )
-        }
+        {rotate && (
+          <View style={[styles.heading, { transform: [{ rotate }] }]}>
+            <View style={styles.headingPointer} />
+          </View>
+        )}
         <View style={styles.marker}>
           <Text style={{ width: 0, height: 0 }}>
             {props.enableHack && rotate}

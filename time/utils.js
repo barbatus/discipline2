@@ -95,18 +95,22 @@ const time = {
     const now = moment();
     const end = moment().endOf('day');
 
-    return end.diff(now, 'milliseconds');
+    return end.diff(now, 'ms');
   },
 
-  getFromDayStartMs() {
-    const now = moment();
-    const start = now.startOf('day');
+  getFromDayStartMs(at) {
+    const now = moment(at);
+    const start = moment().startOf('day');
 
-    return now.diff(start, 'milliseconds');
+    return now.diff(start, 'ms');
   },
 
   getCurMonthDateMs() {
     return moment().startOf('month').valueOf();
+  },
+
+  getCurWeekDateMs() {
+    return moment().startOf('week').valueOf();
   },
 
   getNextMonthDateMs(dateMs) {

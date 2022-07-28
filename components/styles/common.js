@@ -38,7 +38,7 @@ export const WHITE_COLOR = '#F5F5F5';
 
 export const LINK_COLOR = '#1A7CF9';
 
-export const MAIN_COLOR = '#4A4A4A';
+export const MAIN_TEXT = '#4A4A4A';
 
 export const NAV_HEIHGT = 54;
 
@@ -54,6 +54,6 @@ export const CONTENT_HEIGHT = SCREEN_HEIGHT - NAV_HEIHGT;
 
 export const CONTENT_TOP_MARGIN = window.height >= 812 ? 10 : 0;
 
-export const MENU_WIDTH = (SCREEN_WIDTH / 2) + 25;
+export const MENU_WIDTH = SCREEN_WIDTH / 2 + 25;
 
 export const CONTENT_OFFSET = OFFSET_TOP + NAV_HEIHGT + CONTENT_TOP_MARGIN;

@@ -41,7 +41,12 @@ export default class Screen extends PureComponent {
   get navBar() {
     return {
       setButtons: (leftBtn, rightBtn, callback, animated) => {
-        this.navBarRef.current.setButtons(leftBtn, rightBtn, callback, animated);
+        this.navBarRef.current.setButtons(
+          leftBtn,
+          rightBtn,
+          callback,
+          animated,
+        );
       },
       setDisabled: (disabled, callback) => {
         this.navBarRef.current.setDisabled(disabled, callback);
@@ -60,9 +65,7 @@ export default class Screen extends PureComponent {
     return (
       <View style={styles.container}>
         <NavBar ref={this.navBarRef} />
-        <View style={styles.content}>
-          {children}
-        </View>
+        <View style={styles.content}>{children}</View>
       </View>
     );
   }

@@ -64,30 +64,48 @@ export class MoveUpDownResponder {
 
     return PanResponder.create({
       onMoveShouldSetPanResponder: (e: Object, state: Object) => {
-        if (this.disabled) {return false;}
+        if (this.disabled) {
+          return false;
+        }
 
         const dy = Math.abs(state.dy);
         const dx = Math.abs(state.dx);
-        const sin = dx / Math.sqrt((dy * dy) + (dx * dx));
+        const sin = dx / Math.sqrt(dy * dy + dx * dx);
         isUp = state.dy < 0;
         isDown = state.dy > 0;
         return sin <= ANGLE_TRESHOLD && dy >= DY_TRESHOLD;
       },
       onPanResponderMove: (e: Object, state: Object) => {
-        if (isUp) {caller(this.onMoveUp, state.dy);}
-        if (isDown) {caller(this.onMoveDown, state.dy);}
+        if (isUp) {
+          caller(this.onMoveUp, state.dy);
+        }
+        if (isDown) {
+          caller(this.onMoveDown, state.dy);
+        }
       },
       onPanResponderGrant: () => {
-        if (isUp) {caller(this.onMoveUpStart);}
-        if (isDown) {caller(this.onMoveDownStart);}
+        if (isUp) {
+          caller(this.onMoveUpStart);
+        }
+        if (isDown) {
+          caller(this.onMoveDownStart);
+        }
       },
       onPanResponderTerminate: () => {
-        if (isUp) {caller(this.onMoveUpCancel);}
-        if (isDown) {caller(this.onMoveDownCancel);}
+        if (isUp) {
+          caller(this.onMoveUpCancel);
+        }
+        if (isDown) {
+          caller(this.onMoveDownCancel);
+        }
       },
       onPanResponderRelease: () => {
-        if (isUp) {caller(this.onMoveUpDone);}
-        if (isDown) {caller(this.onMoveDownDone);}
+        if (isUp) {
+          caller(this.onMoveUpDone);
+        }
+        if (isDown) {
+          caller(this.onMoveDownDone);
+        }
       },
     });
   }

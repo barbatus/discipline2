@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { MAIN_COLOR } from 'app/components/styles';
+import { MAIN_TEXT } from 'app/components/styles';
 
 export const PATH_COLOR = '#2196F3';
 
@@ -31,7 +31,7 @@ export const mapStyles = StyleSheet.create({
     },
   },
   buttonIcon: {
-    color: MAIN_COLOR,
+    color: MAIN_TEXT,
     backgroundColor: 'transparent',
     paddingTop: 1,
     paddingLeft: 1,

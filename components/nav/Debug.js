@@ -72,23 +72,17 @@ const Debug = React.memo(({ onDayChange }) => {
         <Separator />
       </Line>
       <View style={menuStyles.prop}>
-        <Text style={menuStyles.label}>
-          Geo Debug
-        </Text>
+        <Text style={menuStyles.label}>Geo Debug</Text>
         <Switch value={isGeoDebug} onValueChange={onGeoSwitch} />
       </View>
       <View style={menuStyles.prop}>
-        <Text style={menuStyles.label}>
-          Alerts
-        </Text>
+        <Text style={menuStyles.label}>Alerts</Text>
         <Button onPress={onAlerts}>
           <BtnLabel>Run</BtnLabel>
         </Button>
       </View>
       <View style={menuStyles.prop}>
-        <Text style={menuStyles.label}>
-          Day Change
-        </Text>
+        <Text style={menuStyles.label}>Day Change</Text>
         <Button onPress={onDayChange}>
           <BtnLabel>Run</BtnLabel>
         </Button>

@@ -39,7 +39,7 @@ class AppDB {
     if (trackerId) {
       const app = await db.findOneRaw('app');
       const { trackers } = app;
-      const trackInd = trackers.findIndex((id) => id === trackerId);
+      const trackInd = trackers.findIndex(id => id === trackerId);
       trackers.splice(trackInd, 1);
       await db.save('app', { ...app, trackers });
       return true;

@@ -21,7 +21,7 @@ export default class ShakeAnimation {
   defineInterpolation(range: number) {
     const inputRange = [0];
     const outputRange = [0];
-    const step = 1 / ((range * 2) + 1);
+    const step = 1 / (range * 2 + 1);
     let steps = step;
     for (let i = range; i >= 1; i -= 1) {
       inputRange.push(steps);
@@ -40,7 +40,11 @@ export default class ShakeAnimation {
 
   animate(callback?: Function) {
     const anim = Animation.timing(
-      this.moveX, 500, 1, Easing.out(Easing.circle));
+      this.moveX,
+      500,
+      1,
+      Easing.out(Easing.circle),
+    );
     Animation.animate([anim], () => {
       this.moveX.setValue(0);
       caller(callback);

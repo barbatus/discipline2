@@ -56,11 +56,11 @@ const LocationButton = React.memo(({ onMyLocation }) => {
   return (
     <View style={mapStyles.buttonContainer}>
       <TouchableOpacity style={mapStyles.button} onPress={showLocation}>
-        {
-          settingLocation ?
-            <ActivityIndicator size="small" /> :
-            <Icon name="my-location" size={25} style={mapStyles.buttonIcon} />
-        }
+        {settingLocation ? (
+          <ActivityIndicator size="small" />
+        ) : (
+          <Icon name="my-location" size={25} style={mapStyles.buttonIcon} />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -87,11 +87,8 @@ export default class MapsDlg extends CommonModal {
   get content() {
     const { polylines, settingLocation, coords, region } = this.state;
 
-    const polylineElems = polylines.map((polyline) => (
-      <PolyLine
-        key={`${polyline.id}`}
-        coords={polyline.coords}
-      />
+    const polylineElems = polylines.map(polyline => (
+      <PolyLine key={`${polyline.id}`} coords={polyline.coords} />
     ));
     return (
       <>
@@ -104,8 +101,7 @@ export default class MapsDlg extends CommonModal {
           provider={PROVIDER_GOOGLE}
           showsMyLocationButton={false}
           onRegionChange={this.onRegionChange}
-          onRegionChangeComplete={this.onRegionChangeComplete}
-        >
+          onRegionChangeComplete={this.onRegionChangeComplete}>
           {polylineElems}
           <MyLocationMarker coords={coords} />
         </MapView.Animated>
@@ -115,11 +111,13 @@ export default class MapsDlg extends CommonModal {
   }
 
   draw(lat: number, lon: number) {
-    if (this.regionBeingChanged) {return;}
+    if (this.regionBeingChanged) {
+      return;
+    }
 
     const { polylines } = this.state;
     const lastLine = last(polylines);
-    const rest = polylines.filter((it) => it !== lastLine);
+    const rest = polylines.filter(it => it !== lastLine);
     InteractionManager.runAfterInteractions(() => {
       this.setState({
         polylines: rest.concat({
@@ -159,7 +157,10 @@ export default class MapsDlg extends CommonModal {
 
   async onBeforeShown(paths = []) {
     const now = Date.now();
-    const polylines = paths.map((path, index) => ({ id: now + index, coords: path.slice() }));
+    const polylines = paths.map((path, index) => ({
+      id: now + index,
+      coords: path.slice(),
+    }));
     this.setState({ polylines });
   }
 
@@ -170,7 +171,8 @@ export default class MapsDlg extends CommonModal {
 
     if (!moveToMyLocation) {
       const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
-      const longitude = coords.reduce((accum, p) => accum + p.longitude, 0) / len;
+      const longitude =
+        coords.reduce((accum, p) => accum + p.longitude, 0) / len;
       const region = new MapView.AnimatedRegion({
         latitude,
         longitude,

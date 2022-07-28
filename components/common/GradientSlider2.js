@@ -41,8 +41,7 @@ export default class GradientSlider extends PureComponent {
     const len = COLORS.length;
     const int = Math.floor(slides / len);
     const res = Math.max(slides % len, 2);
-    return flatten(times(int, () => COLORS))
-      .concat(COLORS.slice(0, res));
+    return flatten(times(int, () => COLORS)).concat(COLORS.slice(0, res));
   }
 
   slide() {}
@@ -66,9 +65,13 @@ export default class GradientSlider extends PureComponent {
   render() {
     const width = this.slides * SCREEN_WIDTH;
     const grads = this.getGrad(this.slides);
-    const style = [styles.background, {
-      width, transform: [{ translateX: this.move }],
-    }];
+    const style = [
+      styles.background,
+      {
+        width,
+        transform: [{ translateX: this.move }],
+      },
+    ];
     return (
       <Animated.View style={style}>
         <LinearGradient

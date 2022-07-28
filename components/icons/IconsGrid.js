@@ -60,18 +60,17 @@ const styles = StyleSheet.create({
 
 const GridFooter = () => (
   <Text style={styles.footer}>
-      Icons —&nbsp;
-    <Text style={styles.icon8} onPress={() => Linking.openURL('http://icons8.com')}>
-        icons8.com
+    Icons —&nbsp;
+    <Text
+      style={styles.icon8}
+      onPress={() => Linking.openURL('http://icons8.com')}>
+      icons8.com
     </Text>
   </Text>
 );
 
 const Icon = React.memo(({ icon, width, onIconChosen }) => (
-  <TouchableOpacity
-    style={styles.col}
-    onPress={() => onIconChosen(icon.id)}
-  >
+  <TouchableOpacity style={styles.col} onPress={() => onIconChosen(icon.id)}>
     <Image source={icon.png} style={[styles.icon, { width }]} />
   </TouchableOpacity>
 ));
@@ -97,8 +96,12 @@ UserIconsStore.preloadAll();
 
 function getIconRows(tagFilters: string[] = []): Array<UserIcon[]> {
   const allIcons = UserIconsStore.getAll();
-  const regExps = tagFilters.map((filter) => new RegExp(`\\b${filter}`, 'ig'));
-  const icons = regExps.length ? allIcons.filter(({ tags }) => tags.some((tag) => regExps.some((regExp) => regExp.test(tag)))) : allIcons;
+  const regExps = tagFilters.map(filter => new RegExp(`\\b${filter}`, 'ig'));
+  const icons = regExps.length
+    ? allIcons.filter(({ tags }) =>
+        tags.some(tag => regExps.some(regExp => regExp.test(tag))),
+      )
+    : allIcons;
   const iconRows = [];
   const { count } = getColSize();
   for (let row = 0; row < icons.length; row += count) {
@@ -112,7 +115,7 @@ export default class IconsGrid extends PureComponent {
   static propTypes = {
     style: ViewPropTypes.style,
     onIconChosen: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     style: null,
@@ -140,7 +143,7 @@ export default class IconsGrid extends PureComponent {
   renderRow(row) {
     return (
       <View key={row.key} style={styles.row}>
-        {row.icons.map((icon) => this.renderIcon(icon))}
+        {row.icons.map(icon => this.renderIcon(icon))}
       </View>
     );
   }

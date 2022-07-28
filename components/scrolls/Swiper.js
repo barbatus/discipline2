@@ -96,8 +96,8 @@ export default class Swiper extends PureComponent {
     let margin = 7;
     if (size >= 18) {
       const ratio = 18 / size;
-      radius = Math.floor((8 * ratio));
-      margin = Math.floor((8 * ratio));
+      radius = Math.floor(8 * ratio);
+      margin = Math.floor(8 * ratio);
     }
 
     return {
@@ -109,7 +109,9 @@ export default class Swiper extends PureComponent {
   }
 
   renderDots(index: number, size: number) {
-    if (size <= 1) {return null;}
+    if (size <= 1) {
+      return null;
+    }
 
     const dots = [];
     const basicDot = [styles.basicDot, this.scaleDot(size)];
@@ -120,9 +122,7 @@ export default class Swiper extends PureComponent {
 
     return (
       <Animated.View pointerEvents="none" style={styles.dotsContainer}>
-        <View style={styles.dots}>
-          {dots}
-        </View>
+        <View style={styles.dots}>{dots}</View>
       </Animated.View>
     );
   }
@@ -139,7 +139,8 @@ export default class Swiper extends PureComponent {
     } = this.props;
     const { index } = this.state;
 
-    const dots = slides.length >= 2 ? this.renderDots(index, slides.length) : null;
+    const dots =
+      slides.length >= 2 ? this.renderDots(index, slides.length) : null;
     return (
       <View style={style}>
         <BaseScroll

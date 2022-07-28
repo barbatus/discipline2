@@ -1,64 +1,111 @@
 import { InteractionManager } from 'react-native';
 import regression from 'regression';
 import BackgroundFetch from 'react-native-background-fetch';
+import moment from 'moment';
 
 import Logger from 'app/log';
 import time from 'app/time/utils';
 import depot from 'app/depot/depot';
+import { FreqType } from 'app/depot/consts';
 
 import PushNotification from './index';
 
-export const MIN_TICKS_DIST_MS = 30 * 60 * 1000;
+const dayRange = [8 * 3600 * 1000, 22 * 3600 * 1000];
+const dayDiffMs = dayRange[1] - dayRange[0];
 
-export const MIN_TICKS_AMOUNT = 5;
-
-function checkIfTicksFit(ticks) {
-  const dists = [];
-  for (let i = 0; i < ticks.length - 1; i++) {
-    dists.push(ticks[i + 1].createdAt - ticks[i].createdAt);
+function snapToRange(timeMs) {
+  const dayTime = time.getFromDayStartMs(timeMs);
+  if (dayTime <= dayRange[0]) {
+    return dayRange[0];
   }
-  const validDists = dists.filter((dist) => dist >= MIN_TICKS_DIST_MS);
-  return validDists.length >= MIN_TICKS_AMOUNT - 1;
+  if (dayTime >= dayRange[1]) {
+    return dayRange[1];
+  }
+  return timeMs;
 }
 
-function predictNext(ticks) { // Regression
-  const dots = [];
-  for (let i = 0; i < ticks.length - 1; i++) {
-    dots.push([i + 1, ticks[i + 1].createdAt - ticks[i].createdAt]);
+async function evalHours(trackId) {
+  const ticks = await depot.getTicks(trackId, time.getDateMs());
+  if (!ticks.length) {
+    return [time.getFromDayStartMs() - dayRange[0], time.getDateMs() + dayRange[0]];
   }
-  const result = regression.linear(dots);
-  return result.predict(ticks.length)[1];
+
+  const lastTick = ticks[ticks.length - 1];
+  const diff = Date.now() - lastTick.createdAt;
+  return [diff, lastTick.createdAt];
+}
+
+async function evalDays(trackId, startDayMs) {
+  const ticks = await depot.getTicks(trackId, startDayMs);
+  const lastDateMs = ticks.length ? ticks[ticks.length - 1].createdAt : startDayMs;
+  const lastDate = moment(lastDateMs);
+  const dayDiff = Math.max(0, moment().date() - lastDate.date() - 1);
+
+  if (dayDiff === 0) {
+    return [Date.now() - lastDateMs, lastDateMs];
+  }
+
+  const diff = dayDiff * dayDiffMs +
+    (dayRange[1] - snapToRange(lastDate.valueOf())) + (snapToRange(Date.now()) - dayRange[0]);
+  return [diff, lastDateMs];
 }
 
 export async function evalAlerts(callback: Function) {
   const app = await depot.getApp();
-  const tracksToNotify = app.trackers.filter((tracker) => tracker.props.alerts);
+  const tracksToNotify = app.trackers.filter((tracker) =>
+    tracker.props.alerts && tracker.props.freq);
   tracksToNotify.forEach(async (tracker) => {
+    const freq = tracker.props.freq;
+    const parsedFreq = /^(\d+)(d|w|m)$/.exec(freq);
+    if (!parsedFreq) {
+      Logger.error(`Invalid freq value: ${freq}`);
+      return;
+    }
+
+    const [_, c, p] = parsedFreq;
+    const times = parseInt(c, 10);
+    let curDistMs = null;
+    let maxDistMs = null;
+    let lastTickMs = null;
+    switch (p) {
+      case FreqType.DAILY.valueOf():
+        maxDistMs = Math.ceil(dayDiffMs / times); 
+        [curDistMs, lastTickMs] = await evalHours(tracker.id);
+        break;
+      case FreqType.WEEKLY.valueOf():
+        maxDistMs = Math.ceil(7 * dayDiffMs / times);
+        [curDistMs, lastTickMs] = await evalDays(tracker.id, time.getCurWeekDateMs());
+        break;
+      case FreqType.MONTHLY.valueOf():
+        maxDistMs = Math.ceil(30 * dayDiffMs / times);
+        [curDistMs, lastTickMs] = await evalDays(tracker.id,  time.getCurMonthDateMs());
+        break;
+      default:
+        Logger.error(`Invalid freq value: ${freq}`);
+        return;
+    }
+
+    Logger.log(`Tracker ${tracker.title} stats:
+      every ${time.formatDurationMs(maxDistMs)}, current distance ${time.formatDurationMs(curDistMs)}`, {
+      context: '[evalAlerts]',
+    });
+
     const lastAlert = await depot.getLastAlert(tracker.id);
-    const ticks = await depot.getLastTrackerTicks(tracker.id, MIN_TICKS_AMOUNT * 3);
-    const lastTick = ticks[ticks.length - 1];
-
-    if (lastAlert && lastTick && lastAlert.createdAt >= lastTick.createdAt) {return;}
-
-    if (!checkIfTicksFit(ticks)) {
-      Logger.log(`Tracker ${tracker.title}: not enough ticks for an alert`, {
-        context: '[evalAlerts:checkIfTicksFit]',
+    if (lastAlert && lastTickMs &&
+        lastAlert.createdAt >= lastTickMs &&
+        lastAlert.createdAt - lastTickMs < maxDistMs) {
+      Logger.log(`Tracker ${tracker.title}: already notified`, {
+        context: '[evalAlerts]',
       });
       return;
     }
 
-    const nextDistMs = predictNext(ticks);
-    const distToNow = Date.now() - (lastTick.createdAt + nextDistMs);
-    if (distToNow < 0) {
-      Logger.log(`New tick in ${time.formatDurationMs(nextDistMs)} for ${tracker.title}`, {
-        context: '[evalAlerts:predictNext]',
-      });
-      return;
-    }
+    if (curDistMs < maxDistMs) {return;}
 
     try {
+      const lastTick = await depot.getLastTick();
       await depot.addAlert(tracker.id, time.getNowMs());
-      callback(tracker, nextDistMs);
+      callback(tracker, lastTick?.createdAt);
     } catch (ex) {
       Logger.log(ex, { context: 'evalAlerts' });
     }
@@ -72,8 +119,9 @@ export async function notify() {
     const app = await depot.getApp();
     if (!app.props.alerts) {return;}
 
-    const showAlert = (tracker, distMs) => {
-      const alertBody = `Time to track ${tracker.title}? Usually you do it every ${time.formatDurationMs(distMs)}`;
+    const showAlert = (tracker, lastTickMs) => {
+      const fromNow = lastTickMs ? moment(lastTickMs).fromNow() : '';
+      const alertBody = `Time to track ${tracker.title}? Last time you did it ${fromNow}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
     InteractionManager.runAfterInteractions(() => {

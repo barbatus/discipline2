@@ -22,7 +22,7 @@ const TextRow = styled.View`
 const TextCol = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  alignItems: center;
+  alignitems: center;
   width: 90%;
 `;
 
@@ -34,12 +34,8 @@ const NextImg = styled.Image`
 const ListTick = React.memo(({ tick, onPress, showMore }) => (
   <TouchableOpacity disabled={!showMore} onPress={() => caller(onPress, tick)}>
     <TextRow>
-      <TextCol>
-        {tick.html}
-      </TextCol>
-      {
-        showMore ? <NextImg source={getIcon('next')} /> : null
-      }
+      <TextCol>{tick.html}</TextCol>
+      {showMore ? <NextImg source={getIcon('next')} /> : null}
     </TextRow>
   </TouchableOpacity>
 ));
@@ -83,11 +79,11 @@ export default class TicksDlg extends CommonModal {
   }
 
   showMap(item) {
-    const paths = item.paths.map((path) => (
+    const paths = item.paths.map(path =>
       path.map(({ lat, lon }) => ({
         latitude: lat,
         longitude: lon,
-      }))),
+      })),
     );
     this.mapsDlg.current.show(paths);
   }

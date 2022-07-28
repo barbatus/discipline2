@@ -20,9 +20,7 @@ export default class NavTitle extends PureComponent {
     const { style } = this.props;
     const navTitle = (
       <View style={[styles.navTitle, style]}>
-        <Text style={styles.navTitleText}>
-          {this.props.title}
-        </Text>
+        <Text style={styles.navTitleText}>{this.props.title}</Text>
       </View>
     );
 

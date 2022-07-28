@@ -1,11 +1,7 @@
 /* eslint react/no-unused-state: 0 */
 
 import React, { PureComponent } from 'react';
-import {
-  StyleSheet,
-  Animated,
-  InteractionManager,
-} from 'react-native';
+import { StyleSheet, Animated, InteractionManager } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 
@@ -109,8 +105,9 @@ export default class Trackers extends PureComponent {
   static getDerivedStateFromProps({ trackers }, state) {
     if (trackers !== state.trackers) {
       const arr = trackers.toArray();
-      return state.searchView ?
-        { trackers, scTrackers: arr } : { trackers, swTrackers: arr };
+      return state.searchView
+        ? { trackers, scTrackers: arr }
+        : { trackers, swTrackers: arr };
     }
     return null;
   }
@@ -160,12 +157,15 @@ export default class Trackers extends PureComponent {
     // Scroll, show, update w/o flicking.
     this.bscroll.current.hide();
     this.sscroll.current.hide();
-    this.swiper.current.scrollTo(index, () => (
-      this.swiper.current.show(() => {
-        this.renderTrackers(this.props.trackers);
-        caller(this.props.onSwiperShown);
-      })
-    ), false);
+    this.swiper.current.scrollTo(
+      index,
+      () =>
+        this.swiper.current.show(() => {
+          this.renderTrackers(this.props.trackers);
+          caller(this.props.onSwiperShown);
+        }),
+      false,
+    );
   }
 
   onSmallSlideTap(index: number) {
@@ -194,7 +194,8 @@ export default class Trackers extends PureComponent {
       onSwiperMoveDownDone,
       onSwiperMoveDownCancel,
     } = this.props;
-    this.moveDown.subscribe(this.swiper.current.responder,
+    this.moveDown.subscribe(
+      this.swiper.current.responder,
       onSwiperMoveDown,
       onSwiperMoveDownStart,
       () => {
@@ -221,8 +222,9 @@ export default class Trackers extends PureComponent {
     if (trackers.size) {
       this.renderTracker(trackers.first(), () => {
         this.renderTrackers(trackers);
-        InteractionManager.runAfterInteractions(
-          () => this.renderSearchTrackers(trackers));
+        InteractionManager.runAfterInteractions(() =>
+          this.renderSearchTrackers(trackers),
+        );
       });
     } else {
       this.show();
@@ -234,15 +236,21 @@ export default class Trackers extends PureComponent {
   }
 
   renderTrackers(trackers, callback: Function) {
-    this.setState({
-      swTrackers: trackers.toArray(),
-    }, callback);
+    this.setState(
+      {
+        swTrackers: trackers.toArray(),
+      },
+      callback,
+    );
   }
 
   renderSearchTrackers(trackers, callback: Function) {
-    this.setState({
-      scTrackers: trackers.toArray(),
-    }, callback);
+    this.setState(
+      {
+        scTrackers: trackers.toArray(),
+      },
+      callback,
+    );
   }
 
   render() {

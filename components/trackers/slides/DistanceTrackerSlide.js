@@ -17,7 +17,6 @@ import UserIconsStore from 'app/icons/UserIconsStore';
 import { DistanceTracker } from 'app/model/Tracker';
 import DistanceTrackers, { Timers } from 'app/model/DistanceTrackers';
 import { BGError } from 'app/geo/BGGeoLocationWatcher';
-import PushNotification from 'app/notifications';
 
 import { trackerStyles } from '../styles/trackerStyles';
 

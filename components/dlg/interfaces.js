@@ -1,5 +1,5 @@
 export interface Modal {
-  hide(): void,
+  hide(): void;
 
-  show(onChosen: Function): void,
+  show(onChosen: Function): void;
 }

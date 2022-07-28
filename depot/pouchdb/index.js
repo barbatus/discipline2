@@ -6,7 +6,13 @@ import DeviceInfo from 'react-native-device-info';
 
 import time from 'app/time/utils';
 
-import { App, type PlainTick, Tracker, NewTracker, type AppProps } from '../interfaces';
+import {
+  App,
+  type PlainTick,
+  Tracker,
+  NewTracker,
+  type AppProps,
+} from '../interfaces';
 import { DepotEvent } from '../consts';
 
 import trackersDB from './trackers';
@@ -67,24 +73,36 @@ export default class Depot {
     return newTracker;
   }
 
-  async hydrateTrackers(trackers: Tracker[], timeFromMs: number = time.getDateMs()): Promise<Tracker[]> {
-    const allTicks = await Promise.all(trackers.map(async (tracker) => this.getTrackerTicksFromDate(tracker)));
-    return trackers.map((tracker, index) => Object.assign(tracker, {
-      ticks: allTicks[index],
-    }));
+  async hydrateTrackers(
+    trackers: Tracker[],
+    timeFromMs: number = time.getDateMs(),
+  ): Promise<Tracker[]> {
+    const allTicks = await Promise.all(
+      trackers.map(async tracker => this.getTrackerTicksFromDate(tracker)),
+    );
+    return trackers.map((tracker, index) =>
+      Object.assign(tracker, {
+        ticks: allTicks[index],
+      }),
+    );
   }
 
   async getTracker(trackId: string) {
     check.assert.string(trackId);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) {throw new Error('Tracker not found');}
+    if (!tracker) {
+      throw new Error('Tracker not found');
+    }
 
     const ticks = await this.getTrackerTicksFromDate(tracker);
     return { ...tracker, ticks };
   }
 
-  async getTrackerTicksFromDate(tracker: Tracker, dateFromMs: number = time.getDateMs()) {
+  async getTrackerTicksFromDate(
+    tracker: Tracker,
+    dateFromMs: number = time.getDateMs(),
+  ) {
     let ticksFromMs = dateFromMs;
     if (tracker.active) {
       const lastTick = await this.getLastTick(tracker.id);
@@ -97,14 +115,18 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) {throw new Error('Tracker not found');}
+    if (!tracker) {
+      throw new Error('Tracker not found');
+    }
 
     return tracker;
   }
 
   async updateTracker(tracker: Tracker) {
     const updTracker = await trackersDB.update(tracker);
-    if (!updTracker) {throw new Error('No tracker found');}
+    if (!updTracker) {
+      throw new Error('No tracker found');
+    }
 
     this.event.emit(DepotEvent.TRACK_UPDATED, {
       trackId: updTracker.id,
@@ -116,7 +138,9 @@ export default class Depot {
     check.assert.string(trackId);
 
     const removed = appDB.removeTracker(trackId);
-    if (!removed) {throw new Error('Tracker no found');}
+    if (!removed) {
+      throw new Error('Tracker no found');
+    }
 
     this.event.emit(DepotEvent.TRACK_REMOVED, { trackId });
     const ids = await ticksDB.removeForTracker(trackId);
@@ -132,15 +156,25 @@ export default class Depot {
     return this.getTrackerTicks(trackId, minDateMs, maxDateMs);
   }
 
-  async addTick(trackId: string, createdAt: number, value?: number, data?: Object) {
+  async addTick(
+    trackId: string,
+    createdAt: number,
+    value?: number,
+    data?: Object,
+  ) {
     check.assert.string(trackId);
     check.assert.number(createdAt);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) {throw new Error('Tracker not found');}
+    if (!tracker) {
+      throw new Error('Tracker not found');
+    }
 
     const newTick = await ticksDB.add({ tracker, createdAt, value }, data);
-    this.event.emit(DepotEvent.TICK_ADDED, { tickId: newTick.id, trackId: tracker.id });
+    this.event.emit(DepotEvent.TICK_ADDED, {
+      tickId: newTick.id,
+      trackId: tracker.id,
+    });
     return ticksDB.plainTick(newTick);
   }
 
@@ -148,7 +182,9 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tick = await ticksDB.getLastOne(trackId, time.getDateMs());
-    if (!tick) {throw new Error('Last tick not found');}
+    if (!tick) {
+      throw new Error('Last tick not found');
+    }
 
     await ticksDB.remove(tick.id);
     this.event.emit(DepotEvent.TICKS_REMOVED, { tickIds: [tick.id], trackId });
@@ -158,7 +194,9 @@ export default class Depot {
     check.assert.string(trackId);
 
     let tick = await ticksDB.getLastOne(trackId);
-    if (!tick) {throw new Error('Last tick not found');}
+    if (!tick) {
+      throw new Error('Last tick not found');
+    }
 
     const tracker = await trackersDB.getOne(trackId);
     const updTick = { ...tick, tracker };
@@ -171,7 +209,9 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tick = await ticksDB.getLastOne(trackId);
-    if (!tick) {throw new Error('Last tick not found');}
+    if (!tick) {
+      throw new Error('Last tick not found');
+    }
 
     return this.updateLastTick(trackId, tick.value, data);
   }
@@ -183,14 +223,18 @@ export default class Depot {
     return ticksDB.plainTick(tick);
   }
 
-  async getTrackerTicks(trackId: string, minDateMs: number, maxDateMs?: number) {
+  async getTrackerTicks(
+    trackId: string,
+    minDateMs: number,
+    maxDateMs?: number,
+  ) {
     const ticks = await ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
-    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick));
+    return ticks.map<PlainTick>(tick => ticksDB.plainTick(tick));
   }
 
   async getLastTrackerTicks(trackId: string, limit: number) {
     const ticks = await ticksDB.getLastWithLimit(trackId, limit);
-    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick)).reverse();
+    return ticks.map<PlainTick>(tick => ticksDB.plainTick(tick)).reverse();
   }
 
   async addAlert(trackId: string, createdAt: number) {
@@ -198,10 +242,15 @@ export default class Depot {
     check.assert.number(createdAt);
 
     const tracker = await trackersDB.getOne(trackId);
-    if (!tracker) {throw new Error('Tracker not found');}
+    if (!tracker) {
+      throw new Error('Tracker not found');
+    }
 
     const newAlert = await alertsDB.add({ tracker, createdAt });
-    this.event.emit(DepotEvent.ALERT_ADDED, { alertId: newAlert.id, trackId: tracker.id });
+    this.event.emit(DepotEvent.ALERT_ADDED, {
+      alertId: newAlert.id,
+      trackId: tracker.id,
+    });
     return newAlert;
   }
 
@@ -219,7 +268,9 @@ export default class Depot {
     const app = await appDB.get();
     const appVer = DeviceInfo.getVersion();
     if (app.ver !== appVer) {
-      const promises = app.trackers.map((tracker) => appDB.removeTracker(tracker));
+      const promises = app.trackers.map(tracker =>
+        appDB.removeTracker(tracker),
+      );
       await Promise.all(promises);
       await appDB.setVer(appVer);
       return true;
@@ -231,11 +282,13 @@ export default class Depot {
     const app = await this.initApp();
     await this.resetTestData();
 
-    if (await this.hasTestData()) { return app; }
+    if (await this.hasTestData()) {
+      return app;
+    }
 
     // TODO: check out why Promise.all not working
     const trackers = await Promise.all(
-      testTrackers.map((tracker) => this.addTracker(tracker)),
+      testTrackers.map(tracker => this.addTracker(tracker)),
     );
     await appDB.setTestTrackers(trackers);
 

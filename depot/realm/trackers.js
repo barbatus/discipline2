@@ -60,7 +60,9 @@ class Trackers {
     check.assert.string(trackId);
 
     const tracker = this.getOne(trackId);
-    if (!tracker) { return false; }
+    if (!tracker) {
+      return false;
+    }
 
     db.write(() => db.delete(tracker));
     return true;
@@ -68,7 +70,9 @@ class Trackers {
 
   update(data: Tracker): Tracker {
     const tracker = this.getOne(data.id);
-    if (!tracker) { return null; }
+    if (!tracker) {
+      return null;
+    }
 
     db.write(() => Object.assign(tracker, omit(data, 'id')));
     return tracker;

@@ -74,10 +74,7 @@ export class NewTrackerScreenView extends ScrollScreenView {
   get rightView() {
     const { typeId } = this.state;
     return (
-      <TrackerTypesSlide
-        typeId={typeId}
-        onTypeChosen={this.onTypeChosen}
-      />
+      <TrackerTypesSlide typeId={typeId} onTypeChosen={this.onTypeChosen} />
     );
   }
 
@@ -127,14 +124,18 @@ export class NewTrackerScreenView extends ScrollScreenView {
   }
 
   onTypeCancel() {
-    if (Animation.on) {return;}
+    if (Animation.on) {
+      return;
+    }
 
     this.setNewTrackerBtns();
     this.moveLeft();
   }
 
   onTypeSelect() {
-    if (Animation.on) {return;}
+    if (Animation.on) {
+      return;
+    }
 
     this.setTrackerTypeBtns();
     this.moveRight();
@@ -147,7 +148,9 @@ export class NewTrackerScreenView extends ScrollScreenView {
   }
 
   onTypeAccept() {
-    if (Animation.on) {return;}
+    if (Animation.on) {
+      return;
+    }
 
     this.setNewTrackerBtns();
     this.moveLeft();

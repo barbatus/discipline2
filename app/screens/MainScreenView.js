@@ -10,7 +10,10 @@ import { caller } from 'app/utils/lang';
 import Keyboard from 'app/utils/Keyboard';
 
 import CopilotStep from 'app/components/copilot/CopilotStep';
-import CopilotStepEnum, { CopilotScreenEnum, getScreenByStep } from 'app/components/copilot/steps';
+import CopilotStepEnum, {
+  CopilotScreenEnum,
+  getScreenByStep,
+} from 'app/components/copilot/steps';
 import { NavAddButton, NavMenuButton } from 'app/components/nav/buttons';
 import { commonStyles } from 'app/components/styles/common';
 import Animation from 'app/components/animation/Animation';
@@ -125,9 +128,13 @@ export class MainScreenView extends ScrollScreenView {
   // New tracker events.
 
   onAcceptNewTracker(tracker) {
-    if (this.isActive) {return;}
+    if (this.isActive) {
+      return;
+    }
 
-    if (this.copilotIfAddIcon(tracker)) {return;}
+    if (this.copilotIfAddIcon(tracker)) {
+      return;
+    }
 
     this.isActive = true;
     Keyboard.dismiss();
@@ -140,7 +147,9 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   cancelNewTracker() {
-    if (Animation.on) {return;}
+    if (Animation.on) {
+      return;
+    }
 
     this.setMainViewBtns();
     this.moveLeft();
@@ -163,7 +172,7 @@ export class MainScreenView extends ScrollScreenView {
           onAccept={this.onAcceptNewTracker}
           onCancel={this.cancelNewTracker}
         />
-      )
+      ),
     });
 
     this.moveRight();
@@ -179,7 +188,9 @@ export class MainScreenView extends ScrollScreenView {
 
   copilotIfEmptyApp() {
     const { copilot } = this.props.app.props;
-    if (CopilotScreenEnum.EMPTY.value in copilot) {return false;}
+    if (CopilotScreenEnum.EMPTY.value in copilot) {
+      return false;
+    }
 
     const firstStep = first(CopilotScreenEnum.EMPTY.steps);
     this.hTimers[firstStep.value] = this.startCopilot(2000, firstStep.value);
@@ -188,11 +199,16 @@ export class MainScreenView extends ScrollScreenView {
 
   copilotIfAddIcon(tracker) {
     const { copilot } = this.props.app.props;
-    if (CopilotScreenEnum.CREATE_TRACKER.value in copilot) {return false;}
+    if (CopilotScreenEnum.CREATE_TRACKER.value in copilot) {
+      return false;
+    }
 
     const firstStep = first(CopilotScreenEnum.CREATE_TRACKER.steps);
     if (tracker.iconId) {
-      this.props.onCopilot(CopilotScreenEnum.CREATE_TRACKER.value, firstStep.value);
+      this.props.onCopilot(
+        CopilotScreenEnum.CREATE_TRACKER.value,
+        firstStep.value,
+      );
       return false;
     }
     this.hTimers[firstStep.value] = this.startCopilot(500, firstStep.value);
@@ -215,9 +231,12 @@ export class MainScreenView extends ScrollScreenView {
   }
 }
 
-export default connect(({ trackers }) => ({
-  ...trackers,
-}), (dispatch) => ({
-  onAddTracker: (tracker, index) => dispatch(addTracker(tracker, index)),
-  onCopilot: (screen, step) => dispatch(updateCopilot(screen, step)),
-}))(MainScreenView);
+export default connect(
+  ({ trackers }) => ({
+    ...trackers,
+  }),
+  dispatch => ({
+    onAddTracker: (tracker, index) => dispatch(addTracker(tracker, index)),
+    onCopilot: (screen, step) => dispatch(updateCopilot(screen, step)),
+  }),
+)(MainScreenView);

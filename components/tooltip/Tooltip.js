@@ -1,5 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Animated, StyleSheet, View, UIManager, findNodeHandle, TouchableOpacity } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  View,
+  UIManager,
+  findNodeHandle,
+  TouchableOpacity,
+} from 'react-native';
 import styled from 'styled-components/native';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
@@ -80,15 +87,6 @@ ArrowFn.propTypes = {
 const Arrow = React.memo(ArrowFn);
 
 export default class Tooltip extends PureComponent {
-  static propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-    children: PropTypes.oneOfType(
-      [PropTypes.element, PropTypes.arrayOf(PropTypes.element)],
-    ).isRequired,
-    onTooltipClick: PropTypes.func,
-  };
-
   opacity = new Animated.Value(0);
 
   moveY = new Animated.Value(0);
@@ -96,6 +94,16 @@ export default class Tooltip extends PureComponent {
   moveX = new Animated.Value(0);
 
   view = React.createRef();
+
+  static propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.arrayOf(PropTypes.element),
+    ]).isRequired,
+    onTooltipClick: PropTypes.func,
+  };
 
   constructor(props) {
     super(props);
@@ -129,39 +137,43 @@ export default class Tooltip extends PureComponent {
   updatePos() {
     const node = findNodeHandle(this.view.current);
     if (node) {
-      this.setTimeout(() => UIManager.measure(node, (x, y, width, height, pageX, pageY) => {
-        const haflW = width / 2;
-        const rightX = x + haflW - SCREEN_WIDTH + PADDING;
-        const leftX = x - haflW - PADDING;
-        let xPos = -haflW;
-        let arrLeft = (width - ARROW_WIDTH) / 2;
-        // If tooltip is out of the screen on the right.
-        if (rightX >= 0) {
-          xPos = -haflW - rightX;
-          arrLeft += rightX;
-        }
+      this.setTimeout(
+        () =>
+          UIManager.measure(node, (x, y, width, height, pageX, pageY) => {
+            const haflW = width / 2;
+            const rightX = x + haflW - SCREEN_WIDTH + PADDING;
+            const leftX = x - haflW - PADDING;
+            let xPos = -haflW;
+            let arrLeft = (width - ARROW_WIDTH) / 2;
+            // If tooltip is out of the screen on the right.
+            if (rightX >= 0) {
+              xPos = -haflW - rightX;
+              arrLeft += rightX;
+            }
 
-        // If tooltip is out of the screen on the left.
-        if (leftX <= 0) {
-          xPos = -haflW + Math.abs(leftX);
-          arrLeft += leftX;
-        }
+            // If tooltip is out of the screen on the left.
+            if (leftX <= 0) {
+              xPos = -haflW + Math.abs(leftX);
+              arrLeft += leftX;
+            }
 
-        let yPos = -height - TOP_MARGIN;
-        let arrTop = height;
-        if (CONTENT_OFFSET > pageY + yPos) {
-          yPos = Math.abs(33 + TOP_MARGIN);
-          arrTop = -ARROW_HEIHGT;
-        }
+            let yPos = -height - TOP_MARGIN;
+            let arrTop = height;
+            if (CONTENT_OFFSET > pageY + yPos) {
+              yPos = Math.abs(33 + TOP_MARGIN);
+              arrTop = -ARROW_HEIHGT;
+            }
 
-        this.moveY.setValue(yPos);
-        this.moveX.setValue(xPos);
-        this.opacity.setValue(1);
-        this.setState({
-          arrTop,
-          arrLeft,
-        });
-      }), 15);
+            this.moveY.setValue(yPos);
+            this.moveX.setValue(xPos);
+            this.opacity.setValue(1);
+            this.setState({
+              arrTop,
+              arrLeft,
+            });
+          }),
+        15,
+      );
     }
   }
 
@@ -173,20 +185,14 @@ export default class Tooltip extends PureComponent {
       left: x,
       top: y,
       opacity: this.opacity,
-      transform: [
-        { translateY: this.moveY },
-        { translateX: this.moveX },
-      ],
+      transform: [{ translateY: this.moveY }, { translateX: this.moveX }],
     };
     return (
-      <Animated.View
-        ref={this.view}
-        style={[styles.view, animStyle]}
-      >
-        <TouchableOpacity hitSlop={{ bottom: 15, right: 15 }} onPress={onTooltipClick}>
-          <View style={styles.tooltipContent}>
-            {this.props.children}
-          </View>
+      <Animated.View ref={this.view} style={[styles.view, animStyle]}>
+        <TouchableOpacity
+          hitSlop={{ bottom: 15, right: 15 }}
+          onPress={onTooltipClick}>
+          <View style={styles.tooltipContent}>{this.props.children}</View>
         </TouchableOpacity>
         <Arrow x={arrLeft} y={arrTop} />
       </Animated.View>
