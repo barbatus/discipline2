@@ -1,10 +1,7 @@
 PODS:
   - boost (1.76.0)
-  - BugsnagReactNative (2.23.10):
-    - BugsnagReactNative/Core (= 2.23.10)
-    - React
-  - BugsnagReactNative/Core (2.23.10):
-    - React
+  - BugsnagReactNative (7.17.3):
+    - React-Core
   - BVLinearGradient (2.4.0):
     - React
   - CocoaAsyncSocket (7.6.5)
@@ -429,7 +426,7 @@ PODS:
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
-  - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
+  - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -529,7 +526,7 @@ EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BugsnagReactNative:
-    :path: "../node_modules/bugsnag-react-native"
+    :path: "../node_modules/@bugsnag/react-native"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
@@ -631,7 +628,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
-  BugsnagReactNative: 98fb350df4bb0c94cce903023531a1a5cc11fa51
+  BugsnagReactNative: 24f614fbd87c52821e380cf9b429e4a93f523e7b
   BVLinearGradient: 8913bd8fdc47b85abc801ae8bae007bbfb6b4ce5
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646

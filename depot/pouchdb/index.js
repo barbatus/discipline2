@@ -220,7 +220,7 @@ export default class Depot {
     check.assert.string(trackId);
 
     const tick = await ticksDB.getLastOne(trackId);
-    return ticksDB.plainTick(tick);
+    return tick ? ticksDB.plainTick(tick) : null;
   }
 
   async getTrackerTicks(

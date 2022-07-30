@@ -113,6 +113,14 @@ const time = {
     return moment().startOf('week').valueOf();
   },
 
+  getPrevWeekDateMs(dateMs) {
+    return moment(dateMs)
+      .startOf('week')
+      .subtract(1, 'week')
+      .startOf('week')
+      .valueOf();
+  },
+
   getNextMonthDateMs(dateMs) {
     return moment(dateMs)
       .startOf('month')

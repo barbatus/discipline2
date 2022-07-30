@@ -969,6 +969,93 @@
   version "0.2.3"
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
 
+"@bugsnag/core@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/core/-/core-7.17.0.tgz#0422b87108c7807f6e334a573213126685b6df3d"
+  dependencies:
+    "@bugsnag/cuid" "^3.0.0"
+    "@bugsnag/safe-json-stringify" "^6.0.0"
+    error-stack-parser "^2.0.3"
+    iserror "0.0.2"
+    stack-generator "^2.0.3"
+
+"@bugsnag/cuid@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@bugsnag/cuid/-/cuid-3.0.0.tgz#2ee7642a30aee6dc86f5e7f824653741e42e5c35"
+
+"@bugsnag/delivery-react-native@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/delivery-react-native/-/delivery-react-native-7.17.0.tgz#e49ae87a49aaa470fd837eb40e871824c0f6250b"
+
+"@bugsnag/plugin-console-breadcrumbs@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-console-breadcrumbs/-/plugin-console-breadcrumbs-7.17.0.tgz#b9d935f6b137e8e4261ccfa11b6cb2a5c0ecc77f"
+
+"@bugsnag/plugin-network-breadcrumbs@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-network-breadcrumbs/-/plugin-network-breadcrumbs-7.17.0.tgz#99ebe3cafc2c8f724e5f5882f996e5e3f1b5c0cc"
+
+"@bugsnag/plugin-react-native-client-sync@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react-native-client-sync/-/plugin-react-native-client-sync-7.17.0.tgz#107ca980ed3e7a01a709818bad6f326d549eab1c"
+
+"@bugsnag/plugin-react-native-event-sync@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react-native-event-sync/-/plugin-react-native-event-sync-7.17.0.tgz#2302e066bec913def29e20c1adef5f644f73dd1b"
+
+"@bugsnag/plugin-react-native-global-error-handler@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react-native-global-error-handler/-/plugin-react-native-global-error-handler-7.17.0.tgz#4796e5969bc42ffea2cc92709f96e8fe0b3d3315"
+
+"@bugsnag/plugin-react-native-hermes@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react-native-hermes/-/plugin-react-native-hermes-7.17.0.tgz#2f83e16855539f4c70989799c2f91d41d6cdc786"
+
+"@bugsnag/plugin-react-native-session@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react-native-session/-/plugin-react-native-session-7.17.0.tgz#701a93e0533463511faf42621ac3c4e97b3cfa6b"
+
+"@bugsnag/plugin-react-native-unhandled-rejection@^7.17.1":
+  version "7.17.1"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react-native-unhandled-rejection/-/plugin-react-native-unhandled-rejection-7.17.1.tgz#79a8d36771062f374423595dfe2d17b46a370dbf"
+
+"@bugsnag/plugin-react@^7.17.0":
+  version "7.17.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react/-/plugin-react-7.17.0.tgz#aec2c02359096cc86379b4b05e118d25f5ebcd90"
+
+"@bugsnag/react-native@^7.17.3":
+  version "7.17.3"
+  resolved "https://registry.npmjs.org/@bugsnag/react-native/-/react-native-7.17.3.tgz#c25ff90301386c30ca1e47e8532e0e3368cc33da"
+  dependencies:
+    "@bugsnag/core" "^7.17.0"
+    "@bugsnag/delivery-react-native" "^7.17.0"
+    "@bugsnag/plugin-console-breadcrumbs" "^7.17.0"
+    "@bugsnag/plugin-network-breadcrumbs" "^7.17.0"
+    "@bugsnag/plugin-react" "^7.17.0"
+    "@bugsnag/plugin-react-native-client-sync" "^7.17.0"
+    "@bugsnag/plugin-react-native-event-sync" "^7.17.0"
+    "@bugsnag/plugin-react-native-global-error-handler" "^7.17.0"
+    "@bugsnag/plugin-react-native-hermes" "^7.17.0"
+    "@bugsnag/plugin-react-native-session" "^7.17.0"
+    "@bugsnag/plugin-react-native-unhandled-rejection" "^7.17.1"
+    iserror "^0.0.2"
+
+"@bugsnag/safe-json-stringify@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/@bugsnag/safe-json-stringify/-/safe-json-stringify-6.0.0.tgz#22abdcd83e008c369902976730c34c150148a758"
+
+"@bugsnag/source-maps@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.npmjs.org/@bugsnag/source-maps/-/source-maps-2.3.1.tgz#3caa33b7b9879e58e233eae017726852c50b1106"
+  dependencies:
+    command-line-args "^5.1.1"
+    command-line-usage "^6.1.0"
+    concat-stream "^2.0.0"
+    consola "^2.15.0"
+    form-data "^3.0.0"
+    glob "^7.1.6"
+    read-pkg-up "^7.0.1"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@cnakazawa/watch/-/watch-1.0.4.tgz"
@@ -2004,6 +2091,14 @@ arr-union@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/arr-union/-/arr-union-3.1.0.tgz"
 
+array-back@^3.0.1, array-back@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/array-back/-/array-back-3.1.0.tgz#b8859d7a508871c9a7b2cf42f99428f65e96bfb0"
+
+array-back@^4.0.1, array-back@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/array-back/-/array-back-4.0.2.tgz#8004e999a6274586beeb27342168652fdb89fa1e"
+
 array-filter@~0.0.0:
   version "0.0.1"
   resolved "https://registry.npmjs.org/array-filter/-/array-filter-0.0.1.tgz"
@@ -2451,9 +2546,9 @@ buffer@^5.5.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
-bugsnag-react-native@^2.23.0:
+bugsnag-react-native@^2.23.10:
   version "2.23.10"
-  resolved "https://registry.npmjs.org/bugsnag-react-native/-/bugsnag-react-native-2.23.10.tgz"
+  resolved "https://registry.npmjs.org/bugsnag-react-native/-/bugsnag-react-native-2.23.10.tgz#f2156f15182d1e81d076386e9bff5b02a2db5153"
   dependencies:
     iserror "^0.0.2"
     promise "^7"
@@ -2763,6 +2858,24 @@ command-exists@^1.2.8:
   version "1.2.9"
   resolved "https://registry.npmjs.org/command-exists/-/command-exists-1.2.9.tgz"
 
+command-line-args@^5.1.1:
+  version "5.2.1"
+  resolved "https://registry.npmjs.org/command-line-args/-/command-line-args-5.2.1.tgz#c44c32e437a57d7c51157696893c5909e9cec42e"
+  dependencies:
+    array-back "^3.1.0"
+    find-replace "^3.0.0"
+    lodash.camelcase "^4.3.0"
+    typical "^4.0.0"
+
+command-line-usage@^6.1.0:
+  version "6.1.3"
+  resolved "https://registry.npmjs.org/command-line-usage/-/command-line-usage-6.1.3.tgz#428fa5acde6a838779dfa30e44686f4b6761d957"
+  dependencies:
+    array-back "^4.0.2"
+    chalk "^2.4.2"
+    table-layout "^1.0.2"
+    typical "^5.2.0"
+
 commander@^2.19.0, commander@^2.5.0, commander@^2.9.0:
   version "2.20.3"
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
@@ -2824,6 +2937,15 @@ concat-stream@^1.4.7, concat-stream@^1.6.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+concat-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/concat-stream/-/concat-stream-2.0.0.tgz#414cf5af790a48c60ab9be4527d56d5e41133cb1"
+  dependencies:
+    buffer-from "^1.0.0"
+    inherits "^2.0.3"
+    readable-stream "^3.0.2"
+    typedarray "^0.0.6"
+
 configstore@^3.0.0:
   version "3.1.5"
   resolved "https://registry.npmjs.org/configstore/-/configstore-3.1.5.tgz"
@@ -2843,6 +2965,10 @@ connect@^3.6.5:
     finalhandler "1.1.2"
     parseurl "~1.3.3"
     utils-merge "1.0.1"
+
+consola@^2.15.0:
+  version "2.15.3"
+  resolved "https://registry.npmjs.org/consola/-/consola-2.15.3.tgz#2e11f98d6a4be71ff72e0bdf07bd23e12cb61550"
 
 console-control-strings@^1.0.0, console-control-strings@^1.1.0:
   version "1.1.0"
@@ -3045,7 +3171,7 @@ decode-uri-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.0.tgz"
 
-deep-extend@^0.6.0:
+deep-extend@^0.6.0, deep-extend@~0.6.0:
   version "0.6.0"
   resolved "https://registry.npmjs.org/deep-extend/-/deep-extend-0.6.0.tgz"
 
@@ -3294,6 +3420,12 @@ error-ex@^1.2.0, error-ex@^1.3.1:
   resolved "https://registry.npmjs.org/error-ex/-/error-ex-1.3.2.tgz"
   dependencies:
     is-arrayish "^0.2.1"
+
+error-stack-parser@^2.0.3:
+  version "2.1.4"
+  resolved "https://registry.npmjs.org/error-stack-parser/-/error-stack-parser-2.1.4.tgz#229cb01cdbfa84440bfa91876285b94680188286"
+  dependencies:
+    stackframe "^1.3.4"
 
 error-stack-parser@^2.0.6:
   version "2.0.7"
@@ -3916,6 +4048,12 @@ find-cache-dir@^2.0.0:
     make-dir "^2.0.0"
     pkg-dir "^3.0.0"
 
+find-replace@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/find-replace/-/find-replace-3.0.0.tgz#3e7e23d3b05167a76f770c9fbd5258b0def68c38"
+  dependencies:
+    array-back "^3.0.1"
+
 find-up@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/find-up/-/find-up-2.1.0.tgz"
@@ -4167,6 +4305,17 @@ glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4:
     inflight "^1.0.4"
     inherits "2"
     minimatch "^3.0.4"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
+glob@^7.1.6:
+  version "7.2.3"
+  resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.1.1"
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
@@ -4809,7 +4958,7 @@ isarray@1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
 
-iserror@^0.0.2:
+iserror@0.0.2, iserror@^0.0.2:
   version "0.0.2"
   resolved "https://registry.npmjs.org/iserror/-/iserror-0.0.2.tgz"
 
@@ -5650,6 +5799,10 @@ lodash-es@^4.17.4:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.21.tgz"
 
+lodash.camelcase@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.npmjs.org/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
+
 lodash.chunk@^4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/lodash.chunk/-/lodash.chunk-4.2.0.tgz"
@@ -6088,7 +6241,7 @@ mimic-fn@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/mimic-fn/-/mimic-fn-2.1.0.tgz"
 
-"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@^3.1.2:
+"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz"
   dependencies:
@@ -7195,12 +7348,6 @@ promise-retry@^2.0.1:
     err-code "^2.0.2"
     retry "^0.12.0"
 
-promise@7.0.4:
-  version "7.0.4"
-  resolved "https://registry.npmjs.org/promise/-/promise-7.0.4.tgz"
-  dependencies:
-    asap "~2.0.3"
-
 promise@^7, promise@^7.1.1:
   version "7.3.1"
   resolved "https://registry.npmjs.org/promise/-/promise-7.3.1.tgz"
@@ -7210,6 +7357,12 @@ promise@^7, promise@^7.1.1:
 promise@^8.0.3:
   version "8.1.0"
   resolved "https://registry.npmjs.org/promise/-/promise-8.1.0.tgz"
+  dependencies:
+    asap "~2.0.6"
+
+promise@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.npmjs.org/promise/-/promise-8.1.0.tgz#697c25c3dfe7435dd79fcd58c38a135888eaf05e"
   dependencies:
     asap "~2.0.6"
 
@@ -7646,7 +7799,7 @@ readable-stream@^2.2.2, readable-stream@~2.3.6:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-readable-stream@^3.4.0, readable-stream@^3.6.0:
+readable-stream@^3.0.2, readable-stream@^3.4.0, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.0.tgz"
   dependencies:
@@ -7684,6 +7837,10 @@ recast@^0.20.3, recast@^0.20.4:
     esprima "~4.0.0"
     source-map "~0.6.1"
     tslib "^2.0.1"
+
+reduce-flatten@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/reduce-flatten/-/reduce-flatten-2.0.0.tgz#734fd84e65f375d7ca4465c69798c25c9d10ae27"
 
 reduce-reducers@^0.1.0:
   version "0.1.5"
@@ -8398,6 +8555,12 @@ ssri@^8.0.0, ssri@^8.0.1:
   dependencies:
     minipass "^3.1.1"
 
+stack-generator@^2.0.3:
+  version "2.0.10"
+  resolved "https://registry.npmjs.org/stack-generator/-/stack-generator-2.0.10.tgz#8ae171e985ed62287d4f1ed55a1633b3fb53bb4d"
+  dependencies:
+    stackframe "^1.3.4"
+
 stack-utils@^2.0.2:
   version "2.0.5"
   resolved "https://registry.npmjs.org/stack-utils/-/stack-utils-2.0.5.tgz"
@@ -8407,6 +8570,10 @@ stack-utils@^2.0.2:
 stackframe@^1.1.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/stackframe/-/stackframe-1.2.1.tgz"
+
+stackframe@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.npmjs.org/stackframe/-/stackframe-1.3.4.tgz#b881a004c8c149a5e8efef37d51b16e412943310"
 
 stacktrace-parser@^0.1.3:
   version "0.1.10"
@@ -8643,6 +8810,15 @@ symbol-tree@^3.2.4:
   version "3.2.4"
   resolved "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz"
 
+table-layout@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/table-layout/-/table-layout-1.0.2.tgz#c4038a1853b0136d63365a734b6931cf4fad4a04"
+  dependencies:
+    array-back "^4.0.1"
+    deep-extend "~0.6.0"
+    typical "^5.2.0"
+    wordwrapjs "^4.0.0"
+
 tar@^6.0.2, tar@^6.1.11, tar@^6.1.2:
   version "6.1.11"
   resolved "https://registry.npmjs.org/tar/-/tar-6.1.11.tgz"
@@ -8873,6 +9049,14 @@ typedarray@^0.0.6:
 typescript@^4.6.3:
   version "4.6.4"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.6.4.tgz"
+
+typical@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/typical/-/typical-4.0.0.tgz#cbeaff3b9d7ae1e2bbfaf5a4e6f11eccfde94fc4"
+
+typical@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/typical/-/typical-5.2.0.tgz#4daaac4f2b5315460804f0acf6cb69c52bb93066"
 
 ua-parser-js@^0.7.30:
   version "0.7.31"
@@ -9200,6 +9384,13 @@ widest-line@^2.0.0:
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.3.tgz"
+
+wordwrapjs@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/wordwrapjs/-/wordwrapjs-4.0.1.tgz#d9790bccfb110a0fc7836b5ebce0937b37a8b98f"
+  dependencies:
+    reduce-flatten "^2.0.0"
+    typical "^5.2.0"
 
 wrap-ansi@^6.2.0:
   version "6.2.0"

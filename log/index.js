@@ -1,20 +1,20 @@
 
-import { Client, Configuration } from 'bugsnag-react-native';
+import Bugsnag from '@bugsnag/react-native';
 import Reactotron from 'reactotron-react-native';
 
 import env from 'react-native-config';
 
 import PushNotification from 'app/notifications';
 
+Bugsnag.start({
+  apiKey: env.BUGSNAG,
+  releaseStage: env.NAME,
+  enabledReleaseStages: ['beta', 'prod'],
+});
+
 const isLocal = env.NAME === 'local';
 const isBeta = env.NAME === 'beta';
 const isProd = env.NAME === 'prod';
-
-const config = new Configuration();
-config.apiKey = env.BUGSNAG;
-config.notifyReleaseStages = ['beta', 'prod'];
-config.releaseStage = env.NAME;
-const remoteLogger = new Client(config);
 
 if (isLocal) {
   import('./reactotron');
@@ -52,7 +52,7 @@ const Logger = {
   notify(error) {
     this.error(error);
     if (isBeta || isProd) {
-      remoteLogger.notify(error);
+      Bugsnag.notify(error);
     }
   },
 };

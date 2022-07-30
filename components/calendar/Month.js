@@ -65,7 +65,7 @@ const MoreText = styled.Text`
   color: ${WHITE_COLOR};
   font-weight: 300;
   font-size: 10px;
-  margintop: 5px;
+  margin-top: 5px;
 `;
 
 const TimeText = styled(TickText)`

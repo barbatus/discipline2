@@ -66,7 +66,7 @@ export const DepotEvent = {
 
 
 export const DEFAULT_TRACKER_PROPS = [
-  { propId: 'alerts', name: 'Send Alerts' },
+  { propId: 'alerts', name: 'Remind me' },
   { propId: 'freq', name: 'Frequency' },
 ];
 

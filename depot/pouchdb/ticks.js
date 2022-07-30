@@ -109,6 +109,7 @@ class Ticks {
   }
 
   plainTick(tick: Tick): PlainTick {
+    check.assert.object(tick);
     const types = Object.keys(TrackerToPropType);
     return types.reduce((accum, type) => {
       const dataType = TrackerToPropType[type];

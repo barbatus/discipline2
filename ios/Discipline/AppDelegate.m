@@ -1,3 +1,4 @@
+#import <Bugsnag/Bugsnag.h>
 #import "AppDelegate.h"
 
 #import <React/RCTBridge.h>
@@ -33,7 +34,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  RCTAppSetupPrepareApp(application);
+    [Bugsnag start];
+
+RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 

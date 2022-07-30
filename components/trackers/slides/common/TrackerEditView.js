@@ -9,7 +9,8 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { connect } from 'react-redux'
+import { Field, reduxForm, SubmissionError, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 
 import { propsStyles } from '../../styles/trackerStyles';
@@ -38,7 +39,7 @@ BooleanProp.propTypes = {
       if (typeof props[propName] === 'boolean' || props[propName] === '') {
         return null;
       }
-      return new Error('Invalid property input.value');
+      return new Error('Invalid property input.value: ' + propName);
     },
   }).isRequired,
 };
@@ -95,6 +96,7 @@ export class TrackerEditView extends PureComponent {
       }),
     ),
     style: PropTypes.arrayOf(PropTypes.object),
+    alerts: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -108,7 +110,6 @@ export class TrackerEditView extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = { ...props.initialValues };
     this.onChange = ::this.onChange;
   }
 
@@ -130,8 +131,7 @@ export class TrackerEditView extends PureComponent {
   }
 
   renderPropsGroup() {
-    const { props } = this.props;
-    const { alerts } = this.state;
+    const { props, alerts } = this.props;
     const renderProps = props.filter((prop) => prop.propId == 'freq' ? alerts : true);
     return (
       <View style={[propsStyles.group, styles.mainGroup]}>
@@ -149,7 +149,7 @@ export class TrackerEditView extends PureComponent {
       <View style={propsStyles.group}>
         <View style={propsStyles.row}>
           <View style={propsStyles.colLeft}>
-            <Text style={propsStyles.colText}>
+            <Text numberOfLines={1} style={propsStyles.colText}>
               Tracker Type
             </Text>
           </View>
@@ -196,7 +196,12 @@ export class TrackerEditView extends PureComponent {
   }
 }
 
-export default reduxForm({
+export default connect((state, props) => {
+  const selector = formValueSelector(props.form);
+  return {
+    alerts: selector(state, 'props.alerts')
+  };
+})(reduxForm({
   enableReinitialize: true,
   onSubmit: (values) => {
     const tracker = values;
@@ -223,4 +228,4 @@ export default reduxForm({
       },
     };
   },
-})(TrackerEditView);
+})(TrackerEditView));
