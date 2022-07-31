@@ -60,6 +60,6 @@ platform :ios do
   end
 
   lane :pro do
-    build(branch: "release", schema: "Discipline-pro", testflight: false)
+    build(branch: "release", schema: "Discipline-pro", testflight: true)
   end
 end

@@ -403,7 +403,7 @@ const UserIcons = new Enum({
   TREADMILL: {
     value: 'treadmill',
     [IconSize.NORMAL]: require('./files/user/icon8/treadmill.png'),
-    tags: ['treadmill', 'fitness'],
+    tags: ['treadmill', 'fitness', 'running'],
   },
   TRAINERS: {
     value: 'trainers',
@@ -448,7 +448,7 @@ const UserIcons = new Enum({
   XMAS_STOCKING: {
     value: 'xmas_stocking',
     [IconSize.NORMAL]: require('./files/user/icon8/xmas_stocking.png'),
-    tags: ['xmas', 'gift'],
+    tags: ['xmas', 'gift', 'holidays'],
   },
   YOGA: {
     value: 'yoga',

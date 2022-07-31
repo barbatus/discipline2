@@ -89,7 +89,7 @@ export default class TrackerSwiper extends TrackerRenderer {
     if (isNumber(removeIndex) && prevRemoveIndex !== removeIndex) {
       const tracker = prevTrackers[removeIndex];
       this.animateRemove(tracker.id, removeIndex, () => {
-        this.setState({ trackers });
+        this.setState({ trackers, scrollEnabled: true });
         caller(this.props.onRemoveCompleted, removeIndex);
         this.responder.enable();
       });

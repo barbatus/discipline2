@@ -184,7 +184,7 @@ const editDef = {
     paddingLeft: 15,
   },
   colRight: {
-    flex: 1,
+    flex: 0.5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -220,5 +220,8 @@ export const propsStyles = StyleSheet.create({
   },
   leftColfreq: {
     display: 'none',
+  },
+  rightColfreq: {
+    flex: 1,
   },
 });

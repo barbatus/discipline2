@@ -70,7 +70,10 @@ const GridFooter = () => (
 );
 
 const Icon = React.memo(({ icon, width, onIconChosen }) => (
-  <TouchableOpacity style={styles.col} onPress={() => onIconChosen(icon.id)}>
+  <TouchableOpacity
+    style={styles.col}
+    hitSlop={{ top: 10, bottom: 10 }}
+    onPress={() => onIconChosen(icon.id)}>
     <Image source={icon.png} style={[styles.icon, { width }]} />
   </TouchableOpacity>
 ));

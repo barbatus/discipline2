@@ -79,7 +79,9 @@ export default class CommonModal extends PureComponent {
         hideModalContentWhileAnimating
         onModalShow={this.onModalShown}>
         <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={this.hide}>
+          <TouchableOpacity
+            hitSlop={{ top: 10, bottom: 10 }}
+            onPress={this.hide}>
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>

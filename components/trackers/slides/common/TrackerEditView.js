@@ -62,7 +62,7 @@ const TrackerPropFn = ({ prop, onChange }) => {
           { prop.name }
         </Text>
       </View>
-      <View style={propsStyles.colRight}>
+      <View style={[propsStyles.colRight, propsStyles[`rightCol${prop.propId}`]]}>
         <Field
           name={`props.${prop.propId}`}
           component={PropToC[prop.propId]}
