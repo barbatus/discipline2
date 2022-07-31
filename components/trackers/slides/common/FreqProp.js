@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   countText: {
+    width: 40,
     fontSize: 18,
     fontWeight: '200',
-    paddingLeft: 10,
-    paddingRight: 10,
+    textAlign: 'center',
   },
   perText: {
     paddingLeft: 10,
@@ -95,10 +95,12 @@ const FreqPropFn = React.memo(({ input }) => {
   const [count, setCount] = React.useState(parseInt(c));
   const [period, setPeriod] = React.useState(p);
   const onInc = React.useCallback(() => {
-    setCount(count + 1);
+    if (count < 7) {
+      setCount(count + 1);
+    }
   }, [count]);
   const onDec = React.useCallback(() => {
-    if (count >= 1) {
+    if (count > 1) {
       setCount(count - 1);
     }
   }, [count]);
