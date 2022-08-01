@@ -9,12 +9,12 @@ import PushNotification from 'app/notifications';
 Bugsnag.start({
   apiKey: env.BUGSNAG,
   releaseStage: env.NAME,
-  enabledReleaseStages: ['beta', 'prod'],
+  enabledReleaseStages: ['production', 'staging'],
 });
 
 const isLocal = env.NAME === 'local';
-const isBeta = env.NAME === 'beta';
-const isProd = env.NAME === 'prod';
+const isBeta = env.NAME === 'staging';
+const isProd = env.NAME === 'production';
 
 if (isLocal) {
   import('./reactotron');

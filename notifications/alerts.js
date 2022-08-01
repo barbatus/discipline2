@@ -123,7 +123,11 @@ export async function evalAlerts(callback: Function) {
   });
 }
 
+let notifying = false;
 export async function notify() {
+  if (notifying) return;
+  notifying = true;
+
   try {
     await PushNotification.configure();
 
@@ -137,9 +141,11 @@ export async function notify() {
     };
     InteractionManager.runAfterInteractions(() => {
       evalAlerts(showAlert);
+      notifying = false;
       Logger.log('Alerts evaluated');
     });
   } catch (ex) {
     Logger.error(ex, { context: 'alerts:notify' });
+    notifying = false;
   }
 }
