@@ -6,8 +6,12 @@ import env from 'react-native-config';
 
 import PushNotification from 'app/notifications';
 
+import appConfig from '../appConfig.json';
+
 Bugsnag.start({
   apiKey: env.BUGSNAG,
+  appVersion: appConfig.appVersion,
+  autoDetectErrors: true,
   releaseStage: env.NAME,
   enabledReleaseStages: ['production', 'staging'],
 });

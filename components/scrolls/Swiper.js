@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { caller } from 'app/utils/lang';
 
-import { commonStyles, SCREEN_WIDTH } from '../styles/common';
+import { commonStyles, SCREEN_WIDTH, IS_IPHONE5 } from '../styles/common';
 
 import BaseScroll from './BaseScroll';
 
@@ -24,7 +24,7 @@ const stylesDef = {
   },
   dotsContainer: {
     position: 'absolute',
-    bottom: 20,
+    bottom: IS_IPHONE5 ? 15 : 20,
     left: 0,
     right: 0,
   },

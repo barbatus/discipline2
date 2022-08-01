@@ -13,6 +13,8 @@ import { connect } from 'react-redux';
 import { Field, reduxForm, SubmissionError, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 
+import { IS_IPHONE5 } from 'app/components/styles/common';
+
 import { propsStyles } from '../../styles/trackerStyles';
 
 import TrackerIcon from './TrackerIcon';
@@ -22,7 +24,7 @@ import FreqProp from './FreqProp';
 
 const styles = StyleSheet.create({
   mainGroup: {
-    marginBottom: 50,
+    marginBottom: IS_IPHONE5 ? 25 : 50,
   },
 });
 

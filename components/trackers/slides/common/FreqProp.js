@@ -11,6 +11,7 @@ import styled from 'styled-components/native';
 
 import { getIcon } from 'app/icons/icons';
 import { FreqType } from 'app/depot/consts';
+import { IS_IPHONE5 } from 'app/components/styles/common';
 
 import { propsStyles } from '../../styles/trackerStyles';
 
@@ -28,14 +29,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   countText: {
-    width: 40,
+    width: 30,
     fontSize: 18,
     fontWeight: '200',
     textAlign: 'center',
   },
   perText: {
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: IS_IPHONE5 ? 5 : 10,
+    paddingRight: IS_IPHONE5 ? 5 : 10,
   },
 });
 
