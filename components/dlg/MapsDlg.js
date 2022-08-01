@@ -87,7 +87,7 @@ export default class MapsDlg extends CommonModal {
   get content() {
     const { polylines, settingLocation, coords, region } = this.state;
 
-    const polylineElems = polylines.map(polyline => (
+    const polylineElems = polylines.map((polyline) => (
       <PolyLine key={`${polyline.id}`} coords={polyline.coords} />
     ));
     return (
@@ -117,7 +117,7 @@ export default class MapsDlg extends CommonModal {
 
     const { polylines } = this.state;
     const lastLine = last(polylines);
-    const rest = polylines.filter(it => it !== lastLine);
+    const rest = polylines.filter((it) => it !== lastLine);
     InteractionManager.runAfterInteractions(() => {
       this.setState({
         polylines: rest.concat({

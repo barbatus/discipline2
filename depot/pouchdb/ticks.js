@@ -73,7 +73,7 @@ class Ticks {
 
     if (tickData && data) {
       const newData = data;
-      Object.keys(data).forEach(prop => {
+      Object.keys(data).forEach((prop) => {
         if (Array.isArray(tickData[prop]) && !Array.isArray(newData[prop])) {
           tickData[prop].push(newData[prop]);
         } else {
@@ -103,8 +103,8 @@ class Ticks {
 
   async removeForTracker(trackId: string) {
     const ticks = await db.findHasMany('tick', 'tracker', trackId);
-    await Promise.all(ticks.map(tick => db.del('tick', tick)));
-    const ids = ticks.map(tick => tick.id);
+    await Promise.all(ticks.map((tick) => db.del('tick', tick)));
+    const ids = ticks.map((tick) => tick.id);
     return ids;
   }
 

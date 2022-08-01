@@ -84,7 +84,7 @@ async function getGeoWatcher(callback, setCoords) {
   }
 }
 
-const MyLocationMarker = React.memo(props => {
+const MyLocationMarker = React.memo((props) => {
   const [coords, setCoords] = useState(null);
 
   useEffect(() => setCoords(props.coords), [props.coords]);

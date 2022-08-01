@@ -27,19 +27,19 @@ export const CopilotScreenEnum = new Enum({
 
 export function checkIfStepLast(step) {
   const screens = CopilotScreenEnum.symbols();
-  const parent = screens.find(screen => screen.steps.includes(step));
+  const parent = screens.find((screen) => screen.steps.includes(step));
   return last(parent.steps) === step;
 }
 
 export function checkIfStepFirst(step) {
   const screens = CopilotScreenEnum.symbols();
-  const parent = screens.find(screen => screen.steps.includes(step));
+  const parent = screens.find((screen) => screen.steps.includes(step));
   return first(parent.steps) === step;
 }
 
 export function getScreenByStep(step) {
   const screens = CopilotScreenEnum.symbols();
-  return screens.find(screen => screen.steps.includes(step));
+  return screens.find((screen) => screen.steps.includes(step));
 }
 
 export default CopilotStepEnum;

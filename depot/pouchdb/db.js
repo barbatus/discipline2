@@ -144,8 +144,8 @@ const api = {
       endkey: db.rel.makeDocID({ type, id: {} }),
     });
     const docs = result.rows
-      .filter(row => row.doc && !row.value.deleted)
-      .map(row => row.doc);
+      .filter((row) => row.doc && !row.value.deleted)
+      .map((row) => row.doc);
     const doc = docs[0];
     return doc ? fromRawDoc(doc) : null;
   },
@@ -154,15 +154,15 @@ const api = {
   merge: (type: string, result: Object) => {
     let typeValues = result[`${type}s`];
     const types = `${type}s`;
-    const keys = Object.keys(result).filter(key => key !== types);
-    keys.forEach(resTypes => {
+    const keys = Object.keys(result).filter((key) => key !== types);
+    keys.forEach((resTypes) => {
       const resType = resTypes.replace(/s$/, '');
       const datas = result[resTypes];
-      typeValues = typeValues.map(value => {
+      typeValues = typeValues.map((value) => {
         const ids = value[resType] || value[resTypes];
-        const valueData = Array.isArray(ids)
-          ? ids.map(id => datas.find(dt => id === dt.id))
-          : datas.find(dt => ids === dt.id);
+        const valueData = Array.isArray(ids) ?
+          ids.map((id) => datas.find((dt) => id === dt.id)) :
+          datas.find((dt) => ids === dt.id);
         if (valueData) {
           const mergedValue = { ...value };
           if (Array.isArray(ids)) {
@@ -195,7 +195,7 @@ const api = {
     selector[`data.${field}`] = { $gte: minValue, $lt: maxValue };
     const result = await db
       .find({ selector })
-      .then(findRes => db.rel.parseRelDocs(type, findRes.docs));
+      .then((findRes) => db.rel.parseRelDocs(type, findRes.docs));
     return api.merge(type, result);
   },
   selectOrderBy: async (
@@ -219,7 +219,7 @@ const api = {
         sort: [{ [`data.${orderByField}`]: 'desc' }],
         limit,
       })
-      .then(findRes => db.rel.parseRelDocs(type, findRes.docs));
+      .then((findRes) => db.rel.parseRelDocs(type, findRes.docs));
     return api.merge(type, result);
   },
   selectHasMany: async (type: string, relType: string, relId: string) => {
@@ -233,7 +233,7 @@ const api = {
     selector['data.createdAt'] = { $gte: null };
     return db
       .find({ selector })
-      .then(findRes => db.rel.parseRelDocs(type, findRes.docs));
+      .then((findRes) => db.rel.parseRelDocs(type, findRes.docs));
   },
 };
 

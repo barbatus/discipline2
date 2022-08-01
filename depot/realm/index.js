@@ -41,7 +41,7 @@ export default class Depot {
 
   async getTrackers() {
     const trackers = this.trackers.getAll();
-    return trackers.map(tracker => {
+    return trackers.map((tracker) => {
       const ticks = this.getTrackerTicks(tracker, time.getDateMs());
       return {
         ...tracker,
@@ -227,7 +227,7 @@ export default class Depot {
       if (!trackers.length) {
         trackers = this.trackers.getAll();
       }
-      trackers.forEach(tracker => this.trackers.remove(tracker.id));
+      trackers.forEach((tracker) => this.trackers.remove(tracker.id));
       this.appInfo.setVer(appVer);
     }
   }
@@ -247,7 +247,7 @@ export default class Depot {
 
   getTrackerTicks(tracker: Tracker, minDateMs: number, maxDateMs?: number) {
     const ticks = this.getTicksFromTo(tracker.id, minDateMs, maxDateMs);
-    return ticks.map(tick => this.convertTick(tracker, tick));
+    return ticks.map((tick) => this.convertTick(tracker, tick));
   }
 
   convertTick(tracker: Tracker, tick: Tick) {
@@ -260,7 +260,7 @@ export default class Depot {
 
   stripRealm(obj: Object) {
     const result = {};
-    Object.keys(obj).forEach(prop => {
+    Object.keys(obj).forEach((prop) => {
       if (obj[prop] instanceof List) {
         result[prop] = obj[prop].slice();
         return;

@@ -49,8 +49,8 @@ class Alerts {
 
   async removeForTracker(trackId: string) {
     const alerts = await db.findHasMany('alert', 'tracker', trackId);
-    await Promise.all(alerts.map(alert => db.del('alert', alert)));
-    return alerts.map(alert => alert.id);
+    await Promise.all(alerts.map((alert) => db.del('alert', alert)));
+    return alerts.map((alert) => alert.id);
   }
 }
 

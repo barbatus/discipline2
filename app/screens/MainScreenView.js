@@ -235,7 +235,7 @@ export default connect(
   ({ trackers }) => ({
     ...trackers,
   }),
-  dispatch => ({
+  (dispatch) => ({
     onAddTracker: (tracker, index) => dispatch(addTracker(tracker, index)),
     onCopilot: (screen, step) => dispatch(updateCopilot(screen, step)),
   }),

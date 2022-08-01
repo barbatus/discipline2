@@ -132,7 +132,7 @@ FreqPropFn.propTypes = {
       if (/^(\d+)(d|w|m)$/.test(props[propName])) {
         return null;
       }
-      return new Error('Invalid property input.value ' + propName);
+      return new Error(`Invalid property input.value ${propName}`);
     },
   }).isRequired,
 };

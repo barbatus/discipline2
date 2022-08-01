@@ -31,7 +31,7 @@ export class AnimationManager {
       this.timeout = null;
     }
 
-    animations.forEach(anim => {
+    animations.forEach((anim) => {
       this.animations.push(anim);
     });
     this.callbacks.push(callback);
@@ -40,26 +40,26 @@ export class AnimationManager {
       const allAnim = this.animations.slice();
       this.callbacks.length = 0;
       this.animations.length = 0;
-      this.runParallel(allAnim, () => allCb.forEach(cb => caller(cb)));
+      this.runParallel(allAnim, () => allCb.forEach((cb) => caller(cb)));
     });
   }
 
   animateIn(animations, callback) {
     this.animate(
-      animations.map(an => an.aIn),
+      animations.map((an) => an.aIn),
       callback,
     );
   }
 
   animateOut(animations, callback) {
     this.animate(
-      animations.map(an => an.aOut),
+      animations.map((an) => an.aOut),
       callback,
     );
   }
 
   combineStyles(...anims) {
-    const transform = flatten(anims.map(anim => anim.style.transform));
+    const transform = flatten(anims.map((anim) => anim.style.transform));
     return { transform };
   }
 

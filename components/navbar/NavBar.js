@@ -121,9 +121,9 @@ export default class NavigationBar extends PureComponent {
         StatusBar.setBarStyle(statusBar.style);
       }
 
-      const animation = statusBar.hidden
-        ? statusBar.hideAnimation
-        : statusBar.showAnimation;
+      const animation = statusBar.hidden ?
+        statusBar.hideAnimation :
+        statusBar.showAnimation;
 
       StatusBar.showHideTransition = animation;
       StatusBar.hidden = statusBar.hidden;
@@ -135,9 +135,9 @@ export default class NavigationBar extends PureComponent {
       this.props;
     const customTintColor = tintColor ? { backgroundColor: tintColor } : null;
 
-    const customStatusBarTintColor = this.props.statusBar.tintColor
-      ? { backgroundColor: this.props.statusBar.tintColor }
-      : null;
+    const customStatusBarTintColor = this.props.statusBar.tintColor ?
+      { backgroundColor: this.props.statusBar.tintColor } :
+      null;
 
     let statusBar = null;
 

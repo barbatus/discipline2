@@ -155,7 +155,7 @@ export class MainScreen extends PureComponent {
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <GradientSlider ref={el => (this.gradient = el)} slides={slides} />
+        <GradientSlider ref={(el) => (this.gradient = el)} slides={slides} />
         <SideMenu
           disableGestures
           menu={this.renderMenu()}
@@ -186,8 +186,8 @@ export default connect(
     slides: trackers.size,
     app,
   }),
-  dispatch => ({
-    onUpdateAlerts: alerts => dispatch(updateAppProps({ alerts })),
-    onUpdateMetric: metric => dispatch(updateAppProps({ metric })),
+  (dispatch) => ({
+    onUpdateAlerts: (alerts) => dispatch(updateAppProps({ alerts })),
+    onUpdateMetric: (metric) => dispatch(updateAppProps({ metric })),
   }),
 )(ScreenWithCopilot);

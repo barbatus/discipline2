@@ -1,9 +1,6 @@
 import { AppState } from 'react-native';
 
-import assert from 'assert';
 import EventEmitter from 'eventemitter3';
-
-import time from './utils';
 
 class Timeout extends EventEmitter {
   waitMs: number;

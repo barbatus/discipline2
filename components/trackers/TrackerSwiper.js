@@ -195,7 +195,7 @@ export default class TrackerSwiper extends TrackerRenderer {
       width: SCREEN_WIDTH,
       height: SLIDE_HEIGHT,
     };
-    const slides = trackers.map(tracker => (
+    const slides = trackers.map((tracker) => (
       <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
         {this.renderTracker(tracker, metric, shown)}
       </View>

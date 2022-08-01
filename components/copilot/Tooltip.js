@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Button = props => (
+const Button = (props) => (
   <View style={[styles.button]}>
     <Text style={[styles.buttonText]} {...props} />
   </View>

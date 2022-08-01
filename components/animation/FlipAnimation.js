@@ -72,7 +72,7 @@ export default class FlipAnimation {
       1,
       0,
       1,
-      value => value > 0.5,
+      (value) => value > 0.5,
       () => {
         this.in = true;
         Animation.setValue(this.move1, 1, this.setDone(callback));
@@ -91,7 +91,7 @@ export default class FlipAnimation {
       0,
       1,
       0,
-      value => value <= 0.5,
+      (value) => value <= 0.5,
       () => {
         this.in = false;
         Animation.setValue(this.move2, 1, this.setDone(callback));

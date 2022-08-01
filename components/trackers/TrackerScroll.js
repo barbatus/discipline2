@@ -33,7 +33,7 @@ export default class TrackerScroll extends TrackerRenderer {
 
   onTap(tracker: Tracker) {
     const index = this.state.trackers.findIndex(
-      nTracker => nTracker === tracker,
+      (nTracker) => nTracker === tracker,
     );
 
     const scroll = this.scroll.current.index;
@@ -50,7 +50,7 @@ export default class TrackerScroll extends TrackerRenderer {
       width: SCREEN_WIDTH * scale,
       height: SLIDE_HEIGHT * scale,
     };
-    const slides = this.state.trackers.map(tracker => (
+    const slides = this.state.trackers.map((tracker) => (
       <View key={tracker.id} style={[commonStyles.centered, slideStyle]}>
         {this.renderScaledTracker(tracker, scale, responsive, metric, shown)}
       </View>

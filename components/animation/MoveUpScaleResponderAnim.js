@@ -45,7 +45,7 @@ export class MoveUpScaleResponderAnim {
       caller(onScale, value <= minScale ? 0 : value),
     );
     this.unsubCb = responder.subscribeUp({
-      onMove: dy => {
+      onMove: (dy) => {
         const speed = Math.abs(dy) * 2;
         let scale = (this.slideHeight - speed) / this.slideHeight;
         scale = Math.max(minMoveScale, scale);

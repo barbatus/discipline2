@@ -79,7 +79,7 @@ export default class TicksDlg extends CommonModal {
   }
 
   showMap(item) {
-    const paths = item.paths.map(path =>
+    const paths = item.paths.map((path) =>
       path.map(({ lat, lon }) => ({
         latitude: lat,
         longitude: lon,

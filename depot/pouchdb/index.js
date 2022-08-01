@@ -78,7 +78,7 @@ export default class Depot {
     timeFromMs: number = time.getDateMs(),
   ): Promise<Tracker[]> {
     const allTicks = await Promise.all(
-      trackers.map(async tracker => this.getTrackerTicksFromDate(tracker)),
+      trackers.map(async (tracker) => this.getTrackerTicksFromDate(tracker)),
     );
     return trackers.map((tracker, index) =>
       Object.assign(tracker, {
@@ -229,12 +229,12 @@ export default class Depot {
     maxDateMs?: number,
   ) {
     const ticks = await ticksDB.getForPeriod(trackId, minDateMs, maxDateMs);
-    return ticks.map<PlainTick>(tick => ticksDB.plainTick(tick));
+    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick));
   }
 
   async getLastTrackerTicks(trackId: string, limit: number) {
     const ticks = await ticksDB.getLastWithLimit(trackId, limit);
-    return ticks.map<PlainTick>(tick => ticksDB.plainTick(tick)).reverse();
+    return ticks.map<PlainTick>((tick) => ticksDB.plainTick(tick)).reverse();
   }
 
   async addAlert(trackId: string, createdAt: number) {
@@ -268,7 +268,7 @@ export default class Depot {
     const app = await appDB.get();
     const appVer = DeviceInfo.getVersion();
     if (app.ver !== appVer) {
-      const promises = app.trackers.map(tracker =>
+      const promises = app.trackers.map((tracker) =>
         appDB.removeTracker(tracker),
       );
       await Promise.all(promises);
@@ -288,7 +288,7 @@ export default class Depot {
 
     // TODO: check out why Promise.all not working
     const trackers = await Promise.all(
-      testTrackers.map(tracker => this.addTracker(tracker)),
+      testTrackers.map((tracker) => this.addTracker(tracker)),
     );
     await appDB.setTestTrackers(trackers);
 

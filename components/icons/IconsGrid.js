@@ -99,12 +99,12 @@ UserIconsStore.preloadAll();
 
 function getIconRows(tagFilters: string[] = []): Array<UserIcon[]> {
   const allIcons = UserIconsStore.getAll();
-  const regExps = tagFilters.map(filter => new RegExp(`\\b${filter}`, 'ig'));
-  const icons = regExps.length
-    ? allIcons.filter(({ tags }) =>
-        tags.some(tag => regExps.some(regExp => regExp.test(tag))),
-      )
-    : allIcons;
+  const regExps = tagFilters.map((filter) => new RegExp(`\\b${filter}`, 'ig'));
+  const icons = regExps.length ?
+    allIcons.filter(({ tags }) =>
+      tags.some((tag) => regExps.some((regExp) => regExp.test(tag))),
+    ) :
+    allIcons;
   const iconRows = [];
   const { count } = getColSize();
   for (let row = 0; row < icons.length; row += count) {
@@ -146,7 +146,7 @@ export default class IconsGrid extends PureComponent {
   renderRow(row) {
     return (
       <View key={row.key} style={styles.row}>
-        {row.icons.map(icon => this.renderIcon(icon))}
+        {row.icons.map((icon) => this.renderIcon(icon))}
       </View>
     );
   }

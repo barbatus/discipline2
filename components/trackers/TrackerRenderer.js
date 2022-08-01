@@ -114,7 +114,7 @@ class TrackerWrapper extends PureComponent {
     const { component, responsive, ...rest } = this.props;
     return React.createElement(component, {
       ...rest,
-      ref: el => (this.tracker = el),
+      ref: (el) => (this.tracker = el),
       responsive,
       onEdit: this.onEdit,
       onRemove: this.onRemove,
@@ -318,7 +318,7 @@ export default class TrackerRenderer extends PureComponent {
       <TrackerWrapper
         {...props}
         component={Component}
-        ref={ref => this.mapRefs.set(tracker.id, ref)}
+        ref={(ref) => this.mapRefs.set(tracker.id, ref)}
         key={tracker.id}
         onEdit={this.onEdit}
         onRemove={this.onRemove}

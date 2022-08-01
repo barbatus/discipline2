@@ -81,7 +81,7 @@ export async function evalAlerts(callback: Function) {
     switch (p) {
       case FreqType.DAILY.valueOf():
         [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] = await evalDiff(tracker.id,
-            time.getYestMs(), time.getDateMs());
+          time.getYestMs(), time.getDateMs());
         break;
       case FreqType.WEEKLY.valueOf():
         [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] = await evalDiff(tracker.id,
@@ -125,7 +125,7 @@ export async function evalAlerts(callback: Function) {
 
 let notifying = false;
 export async function notify() {
-  if (notifying) return;
+  if (notifying) {return;}
   notifying = true;
 
   try {
@@ -136,7 +136,7 @@ export async function notify() {
 
     const showAlert = (tracker, lastTickMs) => {
       const fromNow = lastTickMs ? `Last time you did it ${moment(lastTickMs).fromNow()}` : '';
-      const alertBody = `Time to track ${tracker.title}? ` + fromNow;
+      const alertBody = `Time to track ${tracker.title}? ${fromNow}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };
     InteractionManager.runAfterInteractions(() => {

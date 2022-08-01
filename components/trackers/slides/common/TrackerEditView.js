@@ -9,7 +9,7 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { Field, reduxForm, SubmissionError, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 
@@ -39,7 +39,7 @@ BooleanProp.propTypes = {
       if (typeof props[propName] === 'boolean' || props[propName] === '') {
         return null;
       }
-      return new Error('Invalid property input.value: ' + propName);
+      return new Error(`Invalid property input.value: ${propName}`);
     },
   }).isRequired,
 };
@@ -199,7 +199,7 @@ export class TrackerEditView extends PureComponent {
 export default connect((state, props) => {
   const selector = formValueSelector(props.form);
   return {
-    alerts: selector(state, 'props.alerts')
+    alerts: selector(state, 'props.alerts'),
   };
 })(reduxForm({
   enableReinitialize: true,

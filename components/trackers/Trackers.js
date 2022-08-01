@@ -105,9 +105,9 @@ export default class Trackers extends PureComponent {
   static getDerivedStateFromProps({ trackers }, state) {
     if (trackers !== state.trackers) {
       const arr = trackers.toArray();
-      return state.searchView
-        ? { trackers, scTrackers: arr }
-        : { trackers, swTrackers: arr };
+      return state.searchView ?
+        { trackers, scTrackers: arr } :
+        { trackers, swTrackers: arr };
     }
     return null;
   }

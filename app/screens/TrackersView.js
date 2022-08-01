@@ -163,7 +163,7 @@ class TrackersView extends PureComponent {
 
     if (prevState.current) {
       const tracker = trackers.find(
-        tracker => tracker.id === prevState.current.id,
+        (tracker) => tracker.id === prevState.current.id,
       );
       return tracker ? getCurrentTrackerUpdate(tracker, app) : null;
     }
@@ -371,7 +371,7 @@ class TrackersView extends PureComponent {
     return (
       <Animated.View
         style={[commonStyles.flexFilled, style]}
-        onStartShouldSetResponder={evt => {
+        onStartShouldSetResponder={(evt) => {
           this.setState({ toggleTooltip: !toggleTooltip });
         }}>
         <TrackerCal
@@ -422,8 +422,8 @@ export default connect(
   (dispatch, props) => ({
     onCalendarUpdate: (tracker, monthDateMs, startDateMs, endDateMs) =>
       dispatch(updateCalendar(tracker, monthDateMs, startDateMs, endDateMs)),
-    onRemove: tracker => dispatch(removeTracker(tracker)),
-    onUpdate: tracker => dispatch(updateTracker(tracker)),
+    onRemove: (tracker) => dispatch(removeTracker(tracker)),
+    onUpdate: (tracker) => dispatch(updateTracker(tracker)),
     onTick: (tracker, value, data) =>
       dispatch(tickTracker(tracker, value, data)),
     onStart: (tracker, value, data) =>
@@ -433,16 +433,16 @@ export default connect(
     // ),
     onStop: (tracker, value, data) =>
       dispatch(stopTracker(tracker, value, data)),
-    onUndo: tracker => dispatch(undoLastTick(tracker)),
-    onAddCompleted: index => {
+    onUndo: (tracker) => dispatch(undoLastTick(tracker)),
+    onAddCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onAddCompleted, index);
     },
-    onRemoveCompleted: index => {
+    onRemoveCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onRemoveCompleted, index);
     },
-    onSaveCompleted: index => {
+    onSaveCompleted: (index) => {
       dispatch(completeChange(index));
       caller(props.onSaveCompleted, index);
     },
