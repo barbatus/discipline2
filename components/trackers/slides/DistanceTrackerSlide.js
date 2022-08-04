@@ -397,9 +397,9 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   onLatLonUpdate({ dist, lat, lon, speed }) {
     this.onProgress(dist, { latlon: { lat, lon } }, { speed });
     const dlg = registry.get(DlgType.MAPS);
-    if (dlg.shown) {
-      dlg.draw(lat, lon);
-    }
+    // if (dlg.shown) {
+    //   dlg.draw(lat, lon);
+    // }
     this.setState({ dist, speed });
   }
 

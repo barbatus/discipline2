@@ -72,12 +72,8 @@ export default class MoveDownResponderAnim {
   animateOut(callback?: Function) {
     const out = Animation.timing(this.moveY, 300, 0);
     Animation.animate([out], () => {
-      // Some issue with animate when out goes
-      // immediately after in.
-      if (this.moveY._value === 0) {
-        this.in = false;
-        caller(callback);
-      }
+      this.in = false;
+      caller(callback);
     });
   }
 }

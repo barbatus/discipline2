@@ -47,10 +47,13 @@ const LocationButton = React.memo(({ onMyLocation }) => {
   const [settingLocation, setSettingLocation] = React.useState(false);
 
   const showLocation = React.useCallback(async () => {
-    setSettingLocation(true);
-    const location = await getLocation();
-    onMyLocation(location);
-    setSettingLocation(false);
+    try {
+      setSettingLocation(true);
+      const location = await getLocation();
+      onMyLocation(location);
+    } finally {
+      setSettingLocation(false);
+    }
   }, [onMyLocation]);
 
   return (
@@ -103,7 +106,7 @@ export default class MapsDlg extends CommonModal {
           onRegionChange={this.onRegionChange}
           onRegionChangeComplete={this.onRegionChangeComplete}>
           {polylineElems}
-          <MyLocationMarker coords={coords} />
+          <MyLocationMarker />
         </MapView.Animated>
         <LocationButton onMyLocation={this.onMyLocation} />
       </>
@@ -165,7 +168,7 @@ export default class MapsDlg extends CommonModal {
   }
 
   async onAfterShown(paths = []) {
-    const coords = flatten(paths);
+    const coords = last(paths);
     const len = coords.length;
     const moveToMyLocation = len === 0;
 
@@ -179,7 +182,7 @@ export default class MapsDlg extends CommonModal {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       });
-      this.setState({ region });
+      this.setState({ region, coords });
     } else {
       this.showLocation();
     }

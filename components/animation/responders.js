@@ -107,6 +107,14 @@ export class MoveUpDownResponder {
           caller(this.onMoveDownDone);
         }
       },
+      onPanResponderReject: () => {
+        if (isUp) {
+          caller(this.onMoveUpCancel);
+        }
+        if (isDown) {
+          caller(this.onMoveDownCancel);
+        }
+      },
     });
   }
 }
