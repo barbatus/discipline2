@@ -131,7 +131,7 @@ export default class Calendar extends PureComponent {
     const monthsToRender = this.getMonthsToRender(monthDateMs);
     const monthViews = monthsToRender.map((monthDate, index) => {
       const monthTicks = ticks.get(monthDate.month());
-      const showPrev = monthDate.valueOf() === startOfCurMonth;
+      const showPrev = monthDate.valueOf() === startOfCurMonth && !monthTicks;
       return (
         <Month
           key={monthDate.month()}

@@ -49,8 +49,8 @@ class Ticks {
 
   async getLastOne(
     trackId: string,
-    minDateMs?: number,
-    maxDateMs?: number,
+    minDateMs?: number = null,
+    maxDateMs?: number = null,
   ): Promise<Tick> {
     check.assert.string(trackId);
 
