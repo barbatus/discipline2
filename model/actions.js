@@ -36,7 +36,9 @@ export const updateCalendar = (
   const endOfPrevMs = moment(monthDateMs).subtract(1, 'month').endOf('month').valueOf();
   const promise = Promise.all([
     depot.getTicks(tracker.id, startDateMs, endDateMs),
-    depot.getLastTick(tracker.id, endOfPrevMs),
+    time.getCurMonthDateMs() === monthDateMs ?
+      depot.getLastTick(tracker.id, endOfPrevMs) :
+      Promise.resolve(null),
   ]);
 
   return promise.then(([ticks, prevTick]) => (

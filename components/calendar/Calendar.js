@@ -127,9 +127,11 @@ export default class Calendar extends PureComponent {
       prevTick,
     } = this.props;
 
+    const startOfCurMonth = time.getCurMonthDateMs();
     const monthsToRender = this.getMonthsToRender(monthDateMs);
     const monthViews = monthsToRender.map((monthDate, index) => {
       const monthTicks = ticks.get(monthDate.month());
+      const showPrev = monthDate.valueOf() === startOfCurMonth;
       return (
         <Month
           key={monthDate.month()}
@@ -141,9 +143,7 @@ export default class Calendar extends PureComponent {
           ticks={monthTicks?.ticks}
           totalDesc={showTotal ? monthTicks?.totalDesc : null}
           prevDesc={
-            !monthTicks && prevTick
-              ? moment(prevTick.createdAt).fromNow()
-              : null
+            showPrev && prevTick ? moment(prevTick.createdAt).fromNow() : null
           }
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}

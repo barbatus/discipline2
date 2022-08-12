@@ -93,6 +93,10 @@ const TotalView = styled.View`
   opacity: 0.5;
 `;
 
+const PrevView = styled(TotalView)`
+  margin-top: 10px;
+`;
+
 const TotalText = styled.Text`
   color: ${WHITE_COLOR};
   font-size: 40px;
@@ -259,7 +263,7 @@ export default class Month extends PureComponent {
           <TotalText>{totalDesc}</TotalText>
         </TotalView>
       ) : (
-        <TotalView>
+        <PrevView>
           <PrevIcon>
             <Image style={styles.iconBack} source={getIcon('back')} />
             <Image
@@ -268,7 +272,7 @@ export default class Month extends PureComponent {
             />
           </PrevIcon>
           <PrevText>{prevDesc}</PrevText>
-        </TotalView>
+        </PrevView>
       );
     }
     return null;
