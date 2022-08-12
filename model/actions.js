@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import last from 'lodash/last';
 
 import time from 'app/time/utils';
@@ -30,16 +32,23 @@ export const updateCalendar = (
   monthDateMs,
   startDateMs,
   endDateMs,
-) => (dispatch) => (
-  depot.getTicks(tracker.id, startDateMs, endDateMs).then((ticks) => (
+) => async (dispatch) => {
+  const endOfPrevMs = moment(monthDateMs).subtract(1, 'month').endOf('month').valueOf();
+  const promise = Promise.all([
+    depot.getTicks(tracker.id, startDateMs, endDateMs),
+    depot.getLastTick(tracker.id, endOfPrevMs),
+  ]);
+
+  return promise.then(([ticks, prevTick]) => (
     dispatch({
       type: UPDATE_CALENDAR,
       monthDateMs,
       tracker,
       ticks: mapTicks(ticks),
+      prevTick: prevTick ? new Tick(prevTick) : null,
     })
-  ))
-);
+  ));
+};
 
 export const LOAD_APP = 'APP/LOAD';
 

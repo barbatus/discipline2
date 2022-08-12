@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import { caller, int } from 'app/utils/lang';
 import time from 'app/time/utils';
+import { Tick } from 'app/model/Tracker';
 
 import { SCREEN_WIDTH } from '../styles/common';
 import Month from './Month';
@@ -14,6 +15,8 @@ import styles from './styles';
 export default class Calendar extends PureComponent {
   static propTypes = {
     ticks: PropTypes.instanceOf(Map),
+    // Prev tick for the current month.
+    prevTick: PropTypes.instanceOf(Tick),
     customStyle: PropTypes.object,
     dayHeadings: PropTypes.array,
     titleFormat: PropTypes.string,
@@ -30,7 +33,7 @@ export default class Calendar extends PureComponent {
   };
 
   static defaultProps = {
-    ticks: null,
+    ticks: new Map(),
     customStyle: {},
     dayHeadings: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
     titleFormat: 'MMMM YYYY',
@@ -121,11 +124,12 @@ export default class Calendar extends PureComponent {
       onTooltipClick,
       toggleTooltip,
       showTotal,
+      prevTick,
     } = this.props;
 
     const monthsToRender = this.getMonthsToRender(monthDateMs);
     const monthViews = monthsToRender.map((monthDate, index) => {
-      const monthTicks = ticks?.get(monthDate.month());
+      const monthTicks = ticks.get(monthDate.month());
       return (
         <Month
           key={monthDate.month()}
@@ -136,6 +140,11 @@ export default class Calendar extends PureComponent {
           todayMs={todayMs}
           ticks={monthTicks?.ticks}
           totalDesc={showTotal ? monthTicks?.totalDesc : null}
+          prevDesc={
+            !monthTicks && prevTick
+              ? moment(prevTick.createdAt).fromNow()
+              : null
+          }
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}
         />

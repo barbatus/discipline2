@@ -34,9 +34,9 @@ class Trackers {
     }
 
     const tracker =
-      typeof trackerOrId === 'string' ?
-        await this.getOne(trackerOrId) :
-        trackerOrId;
+      typeof trackerOrId === 'string'
+        ? await this.getOne(trackerOrId)
+        : trackerOrId;
     if (!tracker) {
       return null;
     }

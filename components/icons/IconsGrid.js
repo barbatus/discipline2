@@ -100,11 +100,11 @@ UserIconsStore.preloadAll();
 function getIconRows(tagFilters: string[] = []): Array<UserIcon[]> {
   const allIcons = UserIconsStore.getAll();
   const regExps = tagFilters.map((filter) => new RegExp(`\\b${filter}`, 'ig'));
-  const icons = regExps.length ?
-    allIcons.filter(({ tags }) =>
-      tags.some((tag) => regExps.some((regExp) => regExp.test(tag))),
-    ) :
-    allIcons;
+  const icons = regExps.length
+    ? allIcons.filter(({ tags }) =>
+        tags.some((tag) => regExps.some((regExp) => regExp.test(tag))),
+      )
+    : allIcons;
   const iconRows = [];
   const { count } = getColSize();
   for (let row = 0; row < icons.length; row += count) {

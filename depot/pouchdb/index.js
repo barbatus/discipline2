@@ -216,10 +216,10 @@ export default class Depot {
     return this.updateLastTick(trackId, tick.value, data);
   }
 
-  async getLastTick(trackId: string) {
+  async getLastTick(trackId: string, maxDateMs?: number) {
     check.assert.string(trackId);
 
-    const tick = await ticksDB.getLastOne(trackId);
+    const tick = await ticksDB.getLastOne(trackId, null, maxDateMs);
     return tick ? ticksDB.plainTick(tick) : null;
   }
 

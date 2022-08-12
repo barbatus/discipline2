@@ -6,7 +6,12 @@ import {
   InteractionManager,
 } from 'react-native';
 import flatten from 'lodash/flatten';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, {
+  PROVIDER_GOOGLE,
+  Polyline,
+  Animated,
+  AnimatedRegion,
+} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import last from 'lodash/last';
 
@@ -30,11 +35,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const PolyLine = React.memo(({ coords }) => (
-  <MapView.Polyline
-    coordinates={coords}
-    strokeColor={PATH_COLOR}
-    strokeWidth={4}
-  />
+  <Polyline coordinates={coords} strokeColor={PATH_COLOR} strokeWidth={4} />
 ));
 
 const getLocation = async () => {
@@ -95,7 +96,7 @@ export default class MapsDlg extends CommonModal {
     ));
     return (
       <>
-        <MapView.Animated
+        <Animated
           style={mapStyles.mapView}
           ref={this.map}
           region={region}
@@ -107,7 +108,7 @@ export default class MapsDlg extends CommonModal {
           onRegionChangeComplete={this.onRegionChangeComplete}>
           {polylineElems}
           <MyLocationMarker />
-        </MapView.Animated>
+        </Animated>
         <LocationButton onMyLocation={this.onMyLocation} />
       </>
     );
@@ -134,7 +135,7 @@ export default class MapsDlg extends CommonModal {
   async showLocation() {
     try {
       const coords = await getLocation();
-      const region = new MapView.AnimatedRegion({
+      const region = new AnimatedRegion({
         latitude: coords.latitude,
         longitude: coords.longitude,
         latitudeDelta: LATITUDE_DELTA,
@@ -148,7 +149,7 @@ export default class MapsDlg extends CommonModal {
     if (this.state.region) {
       this.state.region.timing(coords, { useNativeDriver: true }).start();
     } else {
-      const region = new MapView.AnimatedRegion({
+      const region = new AnimatedRegion({
         latitude: coords.latitude,
         longitude: coords.longitude,
         latitudeDelta: LATITUDE_DELTA,
@@ -176,7 +177,7 @@ export default class MapsDlg extends CommonModal {
       const latitude = coords.reduce((accum, p) => accum + p.latitude, 0) / len;
       const longitude =
         coords.reduce((accum, p) => accum + p.longitude, 0) / len;
-      const region = new MapView.AnimatedRegion({
+      const region = new AnimatedRegion({
         latitude,
         longitude,
         latitudeDelta: LATITUDE_DELTA,

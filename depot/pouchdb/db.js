@@ -160,9 +160,9 @@ const api = {
       const datas = result[resTypes];
       typeValues = typeValues.map((value) => {
         const ids = value[resType] || value[resTypes];
-        const valueData = Array.isArray(ids) ?
-          ids.map((id) => datas.find((dt) => id === dt.id)) :
-          datas.find((dt) => ids === dt.id);
+        const valueData = Array.isArray(ids)
+          ? ids.map((id) => datas.find((dt) => id === dt.id))
+          : datas.find((dt) => ids === dt.id);
         if (valueData) {
           const mergedValue = { ...value };
           if (Array.isArray(ids)) {
@@ -204,6 +204,8 @@ const api = {
     relId: string,
     orderByField: string,
     limit = 1,
+    minValue: number = null,
+    maxValue: number = null,
   ) => {
     const selector = {
       _id: {
@@ -212,7 +214,7 @@ const api = {
       },
     };
     selector[`data.${relType}`] = relId;
-    selector[`data.${orderByField}`] = { $gte: null };
+    selector[`data.${orderByField}`] = { $gte: minValue, $lt: maxValue };
     const result = await db
       .find({
         selector,

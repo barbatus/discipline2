@@ -5,6 +5,7 @@ import {
   StyleSheet,
   findNodeHandle,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
@@ -12,6 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 
 import { caller, int } from 'app/utils/lang';
+import { getIcon } from 'app/icons/icons';
 
 import Tooltip from '../tooltip/Tooltip';
 import { SCREEN_WIDTH, HINT_COLOR, WHITE_COLOR } from '../styles/common';
@@ -48,6 +50,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: WHITE_COLOR,
   },
+  iconBack: {
+    position: 'absolute',
+    resizeMode: 'contain',
+    width: 20,
+    height: 20,
+  },
+  iconRight: {
+    left: 10,
+  },
 });
 
 const TextRow = styled.View`
@@ -83,8 +94,22 @@ const TotalView = styled.View`
 `;
 
 const TotalText = styled.Text`
-  font-size: 40px;
   color: ${WHITE_COLOR};
+  font-size: 40px;
+  font-weight: 200;
+`;
+
+const PrevIcon = styled.View`
+  display: flex;
+  flex-direction: row;
+  width: 20px;
+  height: 20px;
+`;
+
+const PrevText = styled.Text`
+  color: ${WHITE_COLOR};
+  font-size: 25px;
+  font-weight: 200;
 `;
 
 export default class Month extends PureComponent {
@@ -96,6 +121,7 @@ export default class Month extends PureComponent {
     monthMs: PropTypes.number.isRequired,
     todayMs: PropTypes.number.isRequired,
     totalDesc: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    prevDesc: PropTypes.string,
     onDateSelect: PropTypes.func.isRequired,
     onTooltipClick: PropTypes.func.isRequired,
   };
@@ -225,13 +251,27 @@ export default class Month extends PureComponent {
   }
 
   renderTotal() {
-    const { totalDesc } = this.props;
-    return totalDesc ? (
-      <TotalView>
-        <TotalText>=</TotalText>
-        <TotalText>{totalDesc}</TotalText>
-      </TotalView>
-    ) : null;
+    const { totalDesc, prevDesc, ticks } = this.props;
+    if (totalDesc || prevDesc) {
+      return totalDesc ? (
+        <TotalView>
+          <TotalText>=</TotalText>
+          <TotalText>{totalDesc}</TotalText>
+        </TotalView>
+      ) : (
+        <TotalView>
+          <PrevIcon>
+            <Image style={styles.iconBack} source={getIcon('back')} />
+            <Image
+              style={[styles.iconBack, styles.iconRight]}
+              source={getIcon('back')}
+            />
+          </PrevIcon>
+          <PrevText>{prevDesc}</PrevText>
+        </TotalView>
+      );
+    }
+    return null;
   }
 
   render() {
