@@ -1,4 +1,4 @@
-package com.rndiffapp;
+package com.discipline;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

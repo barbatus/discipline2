@@ -22,6 +22,10 @@ target 'Discipline' do
     :app_path => '#{Pod::Config.instance.installation_root}/..'
   )
 
+  pod 'react-native-sqlite-2', :path => '../node_modules/react-native-sqlite-2'
+
+  pod 'BugsnagReactNative', :path => '../node_modules/@bugsnag/react-native'
+
   target 'DisciplineTests' do
     inherit! :complete
     # Pods for testing

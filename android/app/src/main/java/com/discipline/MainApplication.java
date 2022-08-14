@@ -2,81 +2,31 @@ package com.discipline;
 
 import com.bugsnag.android.Bugsnag;
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
+import com.bugsnag.android.BugsnagPackage;
+import com.bugsnag.android.BugsnagPackage;
+import dog.craftz.sqlite_2.RNSqlite2Package;
+import com.facebook.react.ReactInstanceManager;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.reactlibrary.RNThreadPackage;
-import co.apptailor.Worker.BaseReactPackage;
-import com.wix.reactnativenotifications.RNNotificationsPackage;
-import io.realm.react.RealmReactPackage;
-import com.clipsub.RNShake.RNShakeEventPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.horcrux.svg.SvgPackage;
-import com.clipsub.RNShake.RNShakeEventPackage;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import dog.craftz.sqlite_2.RNSqlite2Package;
-import io.realm.react.RealmReactPackage;
-import com.jadsonlourenco.RNShakeEvent.RNShakeEventPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
+import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
+import com.discipline.newarchitecture.MainApplicationReactNativeHost;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import java.lang.reflect.InvocationTargetException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,76 +43,21 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       @SuppressWarnings("UnnecessaryLocalVariable")
       List<ReactPackage> packages = new PackageList(this).getPackages();
-      return packages.addAll(
-          Arrays.<ReactPackage>asList(
-            BugsnagReactNative.getPackage(),
-            new ReactNativePushNotificationPackage(),
-            new RNThreadPackage(),
-            new BaseReactPackage(),
-            new RNNotificationsPackage(),
-            new RealmReactPackage(),
-            new RNShakeEventPackage(),
-            new RNBackgroundFetchPackage(),
-            new SvgPackage(),
-            new RNShakeEventPackage(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new RNBackgroundGeolocation(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new RNBackgroundGeolocation(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new RNSqlite2Package(),
-            new RNShakeEventPackage(),
-            new MapsPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new RNBackgroundGeolocation(),
-            new RNSqlite2Package(),
-            new RealmReactPackage(),
-            new RNShakeEventPackage(),
-            new LinearGradientPackage(),
-            new RNDeviceInfo(),
-            new RNBackgroundGeolocation(),
-            new MapsPackage()
-        )
-      );
+      // packages.addAll(
+      //     Arrays.<ReactPackage>asList(
+      //       // new ReactNativePushNotificationPackage(),
+      //       // new RNBackgroundFetchPackage(),
+      //       // new SvgPackage(),
+      //       // new RNSqlite2Package(),
+      //       // new MapsPackage(),
+      //       // new LinearGradientPackage(),
+      //       // new RNDeviceInfo(),
+      //       // new RNBackgroundGeolocation(),
+      //       // new ReactNativeConfigPackage(),
+      //       // new BugsnagPackage()
+      //   )
+      // );
+      return packages;
     }
 
     @Override
@@ -171,15 +66,23 @@ public class MainApplication extends Application implements ReactApplication {
     }
   };
 
+  private final ReactNativeHost mNewArchitectureNativeHost =
+    new MainApplicationReactNativeHost(this);
+
   @Override
   public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      return mNewArchitectureNativeHost;
+    } else {
+      return mReactNativeHost;
+    }
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
     Bugsnag.start(this);
+    ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
@@ -199,7 +102,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.rndiffapp.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.discipline.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

@@ -838,7 +838,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development: Alexander Baradach (3K7RPFADM5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Alexander Baradach (3K7RPFADM5)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P7R9C37TYV;
 				EXCLUDED_ARCHS = "";
@@ -887,7 +887,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Baradach (P7R9C37TYV)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Alexander Baradach (P7R9C37TYV)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = P7R9C37TYV;
 				EXCLUDED_ARCHS = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;

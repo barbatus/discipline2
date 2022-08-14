@@ -19,11 +19,11 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.discipline.BuildConfig;
 import com.discipline.newarchitecture.components.MainComponentsRegistry;
 import com.discipline.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
+import com.discipline.BuildConfig;
 
 /**
  * A {@link ReactNativeHost} that helps you load everything needed for the New Architecture, both

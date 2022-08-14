@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Text,
 } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
