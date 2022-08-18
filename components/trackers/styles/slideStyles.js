@@ -18,13 +18,6 @@ export const slideDef = {
   innerView: {
     width: SLIDE_WIDTH,
     height: SLIDE_HEIGHT,
-    shadowColor: 'black',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
     opacity: 1,
     transform: [{ rotateY: '0deg' }],
     backgroundColor: 'white',

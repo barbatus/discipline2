@@ -11,6 +11,7 @@ import styled from 'styled-components/native';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
 import PropTypes from 'prop-types';
+import { Shadow } from 'react-native-shadow-2';
 
 import { SCREEN_WIDTH, CONTENT_OFFSET } from '../styles/common';
 
@@ -28,14 +29,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#BD8E83',
     minWidth: 100,
     borderRadius: 3,
-    shadowColor: 'black',
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    shadowOffset: {
-      height: 5,
-      width: 0,
-    },
     zIndex: 3,
+  },
+  shadow: {
+    backgroundColor: '#BD8E83',
+    borderRadius: 3,
   },
   arrDown: {
     backgroundColor: 'transparent',
@@ -139,7 +137,8 @@ export default class Tooltip extends PureComponent {
     if (node) {
       this.setTimeout(
         () =>
-          UIManager.measure(node, (x, y, width, height, pageX, pageY) => {
+          UIManager.measure(node, (_x, _y, width, height, pageX, pageY) => {
+            const { x, y } = this.props;
             const haflW = width / 2;
             const rightX = x + haflW - SCREEN_WIDTH + PADDING;
             const leftX = x - haflW - PADDING;
@@ -178,8 +177,7 @@ export default class Tooltip extends PureComponent {
   }
 
   render() {
-    const { onTooltipClick } = this.props;
-    const { x, y } = this.state;
+    const { x, y, onTooltipClick } = this.props;
     const { arrLeft, arrTop } = this.state;
     const animStyle = {
       left: x,
@@ -189,12 +187,18 @@ export default class Tooltip extends PureComponent {
     };
     return (
       <Animated.View ref={this.view} style={[styles.view, animStyle]}>
-        <TouchableOpacity
-          hitSlop={{ bottom: 15, right: 15 }}
-          onPress={onTooltipClick}>
-          <View style={styles.tooltipContent}>{this.props.children}</View>
-        </TouchableOpacity>
-        <Arrow x={arrLeft} y={arrTop} />
+        <Shadow
+          style={styles.shadow}
+          startColor="rgba(0,0,0,0.15)"
+          offset={[0, 2]}
+          distance={5}>
+          <TouchableOpacity
+            hitSlop={{ bottom: 15, right: 15 }}
+            onPress={onTooltipClick}>
+            <View style={styles.tooltipContent}>{this.props.children}</View>
+          </TouchableOpacity>
+          <Arrow x={arrLeft} y={arrTop} />
+        </Shadow>
       </Animated.View>
     );
   }

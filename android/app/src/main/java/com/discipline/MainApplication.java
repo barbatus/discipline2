@@ -43,20 +43,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       @SuppressWarnings("UnnecessaryLocalVariable")
       List<ReactPackage> packages = new PackageList(this).getPackages();
-      // packages.addAll(
-      //     Arrays.<ReactPackage>asList(
-      //       // new ReactNativePushNotificationPackage(),
-      //       // new RNBackgroundFetchPackage(),
-      //       // new SvgPackage(),
-      //       // new RNSqlite2Package(),
-      //       // new MapsPackage(),
-      //       // new LinearGradientPackage(),
-      //       // new RNDeviceInfo(),
-      //       // new RNBackgroundGeolocation(),
-      //       // new ReactNativeConfigPackage(),
-      //       // new BugsnagPackage()
-      //   )
-      // );
       return packages;
     }
 

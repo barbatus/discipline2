@@ -139,13 +139,9 @@ export default class NavigationBar extends PureComponent {
       ? { backgroundColor: this.props.statusBar.tintColor }
       : null;
 
-    let statusBar = null;
-
-    if (Platform.OS === 'ios') {
-      statusBar = !this.props.statusBar.hidden ? (
-        <View style={[styles.statusBar, customStatusBarTintColor]} />
-      ) : null;
-    }
+    const statusBar = !this.props.statusBar.hidden ? (
+      <View style={[styles.statusBar, customStatusBarTintColor]} />
+    ) : null;
 
     return (
       <View style={[styles.navBarContainer, containerStyle, customTintColor]}>

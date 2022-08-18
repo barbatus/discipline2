@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+import { Shadow } from 'react-native-shadow-2';
 
 import PropTypes from 'prop-types';
 
@@ -94,35 +95,37 @@ export default class TrackerView extends PureComponent {
     const { title, iconId } = tracker;
     return (
       <Animated.View style={[trackerStyles.innerView, style]}>
-        <TouchableWithoutFeedback onPress={onTap}>
-          <View style={{ flex: 1 }}>
-            <View style={trackerStyles.headerContainer}>
-              <View style={trackerStyles.barContainer}>
-                <TouchableOpacity
-                  hitSlop={{ bottom: 15, left: 15, right: 15 }}
-                  onPress={onEdit}
-                >
+        <Shadow style={[trackerStyles.innerView]} startColor="rgba(0,0,0,0.2)" offset={[0, 2]} distance={5}>
+          <TouchableWithoutFeedback onPress={onTap}>
+            <View style={{ flex: 1 }}>
+              <View style={trackerStyles.headerContainer}>
+                <View style={trackerStyles.barContainer}>
+                  <TouchableOpacity
+                    hitSlop={{ bottom: 15, left: 15, right: 15 }}
+                    onPress={onEdit}
+                  >
+                    <Image
+                      source={getIcon('info')}
+                      style={trackerStyles.infoIcon}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={trackerStyles.iconContainer}>
                   <Image
-                    source={getIcon('info')}
-                    style={trackerStyles.infoIcon}
+                    source={this.getMainIcon(iconId)}
+                    style={trackerStyles.mainIcon}
                   />
-                </TouchableOpacity>
+                </View>
+                <View style={trackerStyles.titleContainer}>
+                  <Text style={trackerStyles.titleText}>
+                    {title}
+                  </Text>
+                </View>
               </View>
-              <View style={trackerStyles.iconContainer}>
-                <Image
-                  source={this.getMainIcon(iconId)}
-                  style={trackerStyles.mainIcon}
-                />
-              </View>
-              <View style={trackerStyles.titleContainer}>
-                <Text style={trackerStyles.titleText}>
-                  {title}
-                </Text>
-              </View>
+              {this.renderContent(backImg)}
             </View>
-            {this.renderContent(backImg)}
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </Shadow>
       </Animated.View>
     );
   }

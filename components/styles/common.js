@@ -44,15 +44,15 @@ export const NAV_HEIHGT = 54;
 
 export const SCREEN_WIDTH = window.width;
 
-export const SCREEN_HEIGHT = window.height >= 812 ? 667 : window.height;
-
 export const WIN_HEIGHT = window.height;
+
+export const SCREEN_HEIGHT = window.height >= 781 ? 667 : WIN_HEIGHT;
 
 export const OFFSET_TOP = (WIN_HEIGHT - SCREEN_HEIGHT) / 2;
 
 export const CONTENT_HEIGHT = SCREEN_HEIGHT - NAV_HEIHGT;
 
-export const CONTENT_TOP_MARGIN = window.height >= 812 ? 10 : 0;
+export const CONTENT_TOP_MARGIN = window.height >= 781 ? 10 : 0;
 
 export const MENU_WIDTH = SCREEN_WIDTH / 2 + 25;
 

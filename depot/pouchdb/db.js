@@ -214,9 +214,9 @@ const api = {
       },
     };
     selector[`data.${relType}`] = relId;
-    selector[`data.${orderByField}`] = maxValue ?
-      { $gte: minValue, $lt: maxValue } :
-      { $gte: minValue };
+    selector[`data.${orderByField}`] = maxValue
+      ? { $gte: minValue, $lt: maxValue }
+      : { $gte: minValue };
     const result = await db
       .find({
         selector,

@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginTop: 100,
   },
   content: {
     paddingTop: CONTENT_TOP_MARGIN,

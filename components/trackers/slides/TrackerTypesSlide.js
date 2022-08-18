@@ -101,10 +101,6 @@ const TypeView = styled.View`
   width: 75px;
   display: flex;
   flex-direction: column;
-  shadow-color: rgba(185, 185, 185, 0.4);
-  shadow-opacity: 1;
-  shadow-radius: 0;
-  shadow-offset: 0px -1px;
   border-top-width: 4px;
   border-top-color: ${({ isSelected }) => isSelected ? LINK_COLOR : BACK_COLOR};
   background-color: ${({ isSelected }) => isSelected ? '#E6E6E6' : BACK_COLOR};

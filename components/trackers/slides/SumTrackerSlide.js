@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 0.5,
     borderBottomColor: '#DADADA',
-    paddingBottom: 10,
+    // paddingBottom: 10,
     marginBottom: 10,
   },
   textContainer: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sumInput: {
-    height: INPUT_HEIGHT,
+    height: INPUT_HEIGHT + 10,
     width: INPUT_WIDTH,
     paddingRight: BTN_SIZE + 10,
     fontSize: FONT_SIZE,

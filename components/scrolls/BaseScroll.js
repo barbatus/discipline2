@@ -17,6 +17,8 @@ export default class BaseScroll extends PureComponent {
 
   scrollView = React.createRef();
 
+  scrollTimeout = null;
+
   static propTypes = {
     index: PropTypes.number,
     slideWidth: PropTypes.number.isRequired,
@@ -129,9 +131,15 @@ export default class BaseScroll extends PureComponent {
       animated: animated !== false,
     });
 
-    if (animated === false) {
-      this.endScrolling(offsetX, false);
-    }
+    clearTimeout(this.scrollTimeout);
+    // There is no way to know when scrollTo is done when animated
+    // so here is an approximation.
+    this.scrollTimeout = setTimeout(
+      () => {
+        this.endScrolling(offsetX, animated);
+      },
+      animated ? 1000 : 0,
+    );
   }
   /* eslint-enable no-param-reassign */
 
