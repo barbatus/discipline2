@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View, InteractionManager } from 'react-native';
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
@@ -47,6 +47,8 @@ export default class Calendar extends PureComponent {
 
   calendar = React.createRef();
 
+  scrollTimeout = null;
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -88,6 +90,12 @@ export default class Calendar extends PureComponent {
   scrollToItem(itemIndex: number, animated = true) {
     const scrollToX = itemIndex * SCREEN_WIDTH;
     this.calendar.current.scrollTo({ y: 0, x: scrollToX, animated });
+    if (animated) {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = setTimeout(() => {
+        this.scrollEnded({ nativeEvent: { contentOffset: { x: scrollToX } } });
+      }, 500);
+    }
   }
 
   scrollEnded({ nativeEvent }) {

@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 0,
     zIndex: 2,
-    overflow: 'visible',
+    // overflow: 'visible',
   },
   calControls: {
     marginTop: 10,
