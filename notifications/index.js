@@ -1,4 +1,4 @@
-import { Alert, Linking } from 'react-native';
+import { Alert, Linking, Platform } from 'react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import RNPushNotification from 'react-native-push-notification';
 
@@ -22,7 +22,7 @@ const PushNotification = {
         }
       },
       popInitialNotification: true,
-      requestPermissions: true,
+      requestPermissions: Platform.OS === 'ios',
       playSound: false,
     });
   },

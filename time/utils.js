@@ -27,6 +27,11 @@ const time = {
     return moment().valueOf();
   },
 
+  getDayMsAt(atMs) {
+    const now = moment();
+    return moment(atMs).hour(now.hour()).minute(now.minute()).valueOf();
+  },
+
   formatTimeMs(timeMs) {
     const duration = moment.duration(timeMs);
 

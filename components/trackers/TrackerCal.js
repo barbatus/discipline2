@@ -23,6 +23,7 @@ export default class TrackerCal extends PureComponent {
     shown: PropTypes.bool,
     monthDateMs: PropTypes.number,
     todayMs: PropTypes.number,
+    onDayLongPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -91,6 +92,7 @@ export default class TrackerCal extends PureComponent {
           prevButtonText="Prev"
           nextButtonText="Next"
           onDateSelect={this.props.onDateSelect}
+          onDayLongPress={this.props.onDayLongPress}
         />
       </Animated.View>
     );

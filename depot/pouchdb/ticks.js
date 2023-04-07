@@ -92,7 +92,7 @@ class Ticks {
     return db.save('tick', { ...tick, value });
   }
 
-  async remove(tickOrId: string | Tick) {
+  async remove(tickOrId: string | Tick): boolean {
     if (isObject(tickOrId)) {
       assert(has(tickOrId, 'rev'));
     }

@@ -128,6 +128,7 @@ export default class Month extends PureComponent {
     prevDesc: PropTypes.string,
     onDateSelect: PropTypes.func.isRequired,
     onTooltipClick: PropTypes.func.isRequired,
+    onDayLongPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -144,6 +145,7 @@ export default class Month extends PureComponent {
     this.dayHeight = 0;
     this.onSelectDate = ::this.onSelectDate;
     this.onTooltipClick = ::this.onTooltipClick;
+    this.onDayLongPress = ::this.onDayLongPress;
   }
 
   static getDerivedStateFromProps({ toggleTooltip, index }, prevState) {
@@ -207,6 +209,12 @@ export default class Month extends PureComponent {
 
     const { ticks: dayTicks } = this.getDayTicks(selDateMs);
     onTooltipClick(dayTicks);
+  }
+
+  onDayLongPress(day: number) {
+    const { monthMs, onDayLongPress } = this.props;
+    const selDateMs = moment(monthMs).date(day).valueOf();
+    caller(onDayLongPress, selDateMs);
   }
 
   renderTooltip() {
@@ -299,6 +307,7 @@ export default class Month extends PureComponent {
           key={startDay.valueOf()}
           ref={this.dayRef}
           onPress={this.onSelectDate}
+          onLongPress={this.onDayLongPress}
           value={startDay.date()}
           isToday={startDay.isSame(todayMs, 'day')}
           isSelected={startDay.isSame(selDateMs, 'day')}

@@ -30,6 +30,7 @@ export default class Calendar extends PureComponent {
     onDateSelect: PropTypes.func,
     onMonthChanged: PropTypes.func.isRequired,
     onTooltipClick: PropTypes.func.isRequired,
+    onDayLongPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -125,6 +126,7 @@ export default class Calendar extends PureComponent {
       toggleTooltip,
       showTotal,
       prevTick,
+      onDayLongPress,
     } = this.props;
 
     const startOfCurMonth = time.getCurMonthDateMs();
@@ -147,6 +149,7 @@ export default class Calendar extends PureComponent {
           }
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}
+          onDayLongPress={onDayLongPress}
         />
       );
     });
