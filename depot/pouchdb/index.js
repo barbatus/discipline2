@@ -139,7 +139,7 @@ export default class Depot {
 
     const removed = appDB.removeTracker(trackId);
     if (!removed) {
-      throw new Error('Tracker no found');
+      throw new Error('Tracker not found');
     }
 
     this.event.emit(DepotEvent.TRACK_REMOVED, { trackId });
@@ -147,6 +147,18 @@ export default class Depot {
     if (ids.length) {
       this.event.emit(DepotEvent.TICKS_REMOVED, { ids, trackId });
     }
+  }
+
+  async removeTick(trackId: string, tickId: string) {
+    check.assert.string(trackId);
+    check.assert.string(tickId);
+
+    const removed = await ticksDB.remove(tickId);
+    if (!removed) {
+      throw new Error('Tick not found');
+    }
+
+    this.event.emit(DepotEvent.TICKS_REMOVED, { trackId, ids: [tickId] });
   }
 
   async getTicks(trackId: string, minDateMs: number, maxDateMs?: number) {

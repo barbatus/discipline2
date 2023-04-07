@@ -194,7 +194,7 @@ const api = {
     selector[`data.${relType}`] = relId;
     selector[`data.${field}`] = { $gte: minValue, $lt: maxValue };
     const result = await db
-      .find({ selector })
+      .find({ selector, sort: [{ [`data.${field}`]: 'asc' }] })
       .then((findRes) => db.rel.parseRelDocs(type, findRes.docs));
     return api.merge(type, result);
   },

@@ -24,6 +24,10 @@ import {
   completeChange,
   startTracker,
   stopTracker,
+  loadTicks,
+  putTick,
+  popTick,
+  saveTicks,
 } from 'app/model/actions';
 
 import {
@@ -134,6 +138,8 @@ class TrackersView extends PureComponent {
       calShown: false,
       toggleTooltip: false,
     };
+    this.onTick = ::this.onTick;
+    this.onUndo = ::this.onUndo;
     this.onStartEdit = ::this.onStartEdit;
     this.onTrackerEdit = ::this.onTrackerEdit;
     this.onSubmitFail = ::this.onSubmitFail;
@@ -154,6 +160,7 @@ class TrackersView extends PureComponent {
     this.saveEdit = ::this.saveEdit;
     this.onSwiperMoveUpDone = ::this.onSwiperMoveUpDone;
     this.onSwiperMoveDownDone = ::this.onSwiperMoveDownDone;
+    this.onHistoryEdit = ::this.onHistoryEdit;
   }
 
   static getDerivedStateFromProps({ trackers, app }, prevState) {
@@ -195,6 +202,17 @@ class TrackersView extends PureComponent {
       this.getCancelBtn(this.cancelEdit),
       this.getAcceptBtn(this.saveEdit),
     );
+  }
+
+  setEditHistoryBtns(
+    dateTitle: string,
+    onAccept: function,
+    onCancel: function,
+  ) {
+    const { navBar } = this.context;
+
+    navBar.setTitle(`Edit at ${dateTitle}`);
+    navBar.setButtons(this.getCancelBtn(onCancel), this.getAcceptBtn(onAccept));
   }
 
   setCalendarBtns() {
@@ -338,6 +356,52 @@ class TrackersView extends PureComponent {
     this.isActive = false;
   }
 
+  onTick(tracker, value, data) {
+    const { editDayMs } = this.state;
+    if (editDayMs) {
+      this.props.onPutTick(tracker, value, editDayMs);
+    } else {
+      this.props.onTick(tracker, value, data);
+    }
+  }
+
+  onUndo(tracker) {
+    const { editDayMs } = this.state;
+    if (editDayMs) {
+      this.props.onPopTick(tracker);
+    } else {
+      this.props.onUndo(tracker);
+    }
+  }
+
+  onHistoryEdit(dayMs: number) {
+    if (dayMs >= time.getDateMs()) return;
+
+    this.trackers.current.moveUp(() => {
+      this.onSwiperMoveUpDone();
+      this.setState({ editDayMs: dayMs });
+    });
+    const onBackToCalendar = () => {
+      this.trackers.current.moveDown(() => {
+        this.onSwiperMoveDownStart();
+        this.onSwiperMoveDownDone();
+        this.setState({ editDayMs: null });
+        this.props.onLoadTicks(this.state.current, time.getDateMs());
+      });
+    };
+    this.setEditHistoryBtns(
+      moment(dayMs).format('MMM Do YY'),
+      () => {
+        this.props.onSaveTicks(this.state.current, dayMs);
+        onBackToCalendar();
+      },
+      onBackToCalendar,
+    );
+    this.props.onLoadTicks(this.state.current, dayMs);
+  }
+
+  // Edit tracker events.
+
   saveEdit() {
     if (this.isActive) {
       return;
@@ -347,8 +411,6 @@ class TrackersView extends PureComponent {
     const { dispatch } = this.props;
     dispatch(submit('trackerForm'));
   }
-
-  // Edit tracker events.
 
   cancelEdit() {
     this.trackers.current.cancelEdit();
@@ -383,6 +445,7 @@ class TrackersView extends PureComponent {
           style={[styles.calc, calcStyle]}
           onMonthChanged={this.onMonthChanged}
           onTooltipClick={this.onTooltipClick}
+          onDayLongPress={this.onHistoryEdit}
         />
         <View style={styles.trackersContainer}>
           <Trackers
@@ -390,6 +453,8 @@ class TrackersView extends PureComponent {
             {...this.props}
             style={commonStyles.flexFilled}
             metric={app.props.metric}
+            onTick={this.onTick}
+            onUndo={this.onUndo}
             onRemove={this.onRemove}
             onRemoveCompleted={this.onRemoveCompleted}
             onEdit={this.onStartEdit}
@@ -434,17 +499,29 @@ export default connect(
     onStop: (tracker, value, data) =>
       dispatch(stopTracker(tracker, value, data)),
     onUndo: (tracker) => dispatch(undoLastTick(tracker)),
-    onAddCompleted: (index) => {
+    onAddCompleted(index) {
       dispatch(completeChange(index));
       caller(props.onAddCompleted, index);
     },
-    onRemoveCompleted: (index) => {
+    onRemoveCompleted(index) {
       dispatch(completeChange(index));
       caller(props.onRemoveCompleted, index);
     },
-    onSaveCompleted: (index) => {
+    onSaveCompleted(index) {
       dispatch(completeChange(index));
       caller(props.onSaveCompleted, index);
+    },
+    onLoadTicks(tracker, dayMs) {
+      dispatch(loadTicks(tracker, dayMs));
+    },
+    onPutTick(tracker, value, dateMs) {
+      dispatch(putTick(tracker, value, dateMs));
+    },
+    onPopTick(tracker) {
+      dispatch(popTick(tracker));
+    },
+    onSaveTicks(tracker, dateMs) {
+      dispatch(saveTicks(tracker, dateMs));
     },
     dispatch,
   }),

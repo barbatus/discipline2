@@ -11,7 +11,7 @@ import styles from './styles';
 export class NavButton extends PureComponent {
   static propTypes = {
     style: ViewPropTypes.style,
-    iconStyle: Image.propTypes.style,
+    iconStyle: ViewPropTypes.style,
     icon: PropTypes.string.isRequired,
     copilot: PropTypes.object,
     onPress: PropTypes.func,

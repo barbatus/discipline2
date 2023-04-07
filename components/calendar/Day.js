@@ -10,6 +10,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import { caller } from 'app/utils/lang';
+
 import { WHITE_COLOR } from '../styles/common';
 
 const styles = StyleSheet.create({
@@ -64,6 +66,7 @@ export default class Day extends PureComponent {
     isToday: PropTypes.bool,
     isOutDay: PropTypes.bool,
     onPress: PropTypes.func.isRequired,
+    onLongPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -76,6 +79,7 @@ export default class Day extends PureComponent {
   constructor(props) {
     super(props);
     this.onPress = ::this.onPress;
+    this.onLongPress = ::this.onLongPress;
   }
 
   getDayCircleStyle(isSelected, isToday) {
@@ -111,6 +115,11 @@ export default class Day extends PureComponent {
     onPress(value);
   }
 
+  onLongPress() {
+    const { value, onLongPress } = this.props;
+    caller(onLongPress, value);
+  }
+
   render() {
     const { value, isOutDay, hasTicks, isSelected, isToday } = this.props;
 
@@ -123,7 +132,7 @@ export default class Day extends PureComponent {
         </View>
       </TouchableWithoutFeedback>
     ) : (
-      <TouchableOpacity onPress={this.onPress}>
+      <TouchableOpacity onPress={this.onPress} onLongPress={this.onLongPress}>
         <View style={styles.dayButton}>
           <View style={this.getDayCircleStyle(isSelected, isToday)}>
             {hasTicks ? <View style={styles.tickPoint} /> : null}

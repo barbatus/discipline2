@@ -20,6 +20,7 @@ import {
   STOP_TRACKER_WITH_TICK_UPDATE,
   UPDATE_APP_PROPS,
   UPDATE_COPILOT,
+  LOAD_TICKS,
 } from './actions';
 
 import { Tick } from './Tracker';
@@ -136,7 +137,7 @@ export const trackersReducer = handleActions(
         trackers,
       };
     },
-    [UNDO_LAST_TICK]: (state, { tracker }) => {
+    [combineActions(UNDO_LAST_TICK, LOAD_TICKS)]: (state, { tracker }) => {
       const trackers = cloneTracker(state.trackers, tracker);
       return {
         ...state,

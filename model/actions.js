@@ -95,9 +95,8 @@ export const updateTracker = (tracker) => (dispatch) => (
 
 export const TICK_TRACKER = 'TICK_TRACKER';
 
-export const tickTracker = (tracker, value, data) => async (dispatch) => {
-  const createdAt = time.getNowMs();
-  const tick = await depot.addTick(tracker.id, createdAt, value, data);
+export const tickTracker = (tracker, value, data, dateMs = time.getNowMs()) => async (dispatch) => {
+  const tick = await depot.addTick(tracker.id, dateMs, value, data);
   return dispatch({
     type: TICK_TRACKER,
     tracker,
@@ -183,5 +182,58 @@ export const changeDay = () => async (dispatch) => {
     type: CHANGE_DAY,
     todayMs: time.getDateMs(),
     trackers,
+  });
+};
+
+export const LOAD_TICKS = 'LOAD_TICKS';
+
+export const loadTicks = (tracker, dateMs) => async (dispatch) => {
+  const ticks = await depot.getTicks(tracker.id, dateMs, moment(dateMs).endOf('day').valueOf());
+  return dispatch({
+    type: LOAD_TICKS,
+    tracker: Trackers.clone(tracker, { ticks }),
+  });
+};
+
+export const PUT_TICK = 'PUT_TICK';
+
+export const putTick = (tracker, value, dateMs) => async (dispatch) => {
+  const tick = { id: String(time.getNowMs()), createdAt: time.getDayMsAt(dateMs), value };
+  return dispatch({
+    type: TICK_TRACKER,
+    tracker,
+    tick: new Tick(tick),
+  });
+};
+
+export const POP_TICK = 'POP_TICK';
+
+export const popTick = (tracker) => async (dispatch) => {
+  const ticks = tracker.ticks || [];
+  ticks.pop();
+
+  return dispatch({
+    type: UNDO_LAST_TICK,
+    tracker: Trackers.clone(tracker, { ticks }),
+  });
+};
+
+export const SAVE_TICKS = 'SAVE_TICKS';
+
+export const saveTicks = (tracker, dateMs) => async (dispatch) => {
+  const oldTicks = await depot.getTicks(tracker.id, dateMs, moment(dateMs).endOf('day').valueOf());
+  const ticks = tracker.ticks || [];
+  const newTicks = ticks.filter((tck) => {
+    return !oldTicks.find(({ id }) => id === tck.id);
+  });
+  const removeTicks = oldTicks.filter((tck) => {
+    return !ticks.find(({ id }) => id === tck.id);
+  });
+  await Promise.all(newTicks.map((tck) => depot.addTick(tracker.id, tck.createdAt, tck.value))
+    .concat(removeTicks.map((tck) => depot.removeTick(tracker.id, tck.id))));
+
+  return dispatch({
+    type: LOAD_TICKS,
+    tracker: Trackers.clone(tracker, { ticks }),
   });
 };
