@@ -169,7 +169,7 @@ export default class MapsDlg extends CommonModal {
   }
 
   async onAfterShown(paths = []) {
-    const coords = last(paths);
+    const coords = last(paths) || [];
     const len = coords.length;
     const moveToMyLocation = len === 0;
 

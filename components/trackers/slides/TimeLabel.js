@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
 
 import { MAIN_TEXT } from 'app/components/styles';
@@ -60,7 +61,7 @@ const TimeDigitFn = ({ style, value, width }) => {
 };
 
 TimeDigitFn.propTypes = {
-  style: Text.propTypes.style,
+  style: ViewPropTypes.style,
   width: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
 };

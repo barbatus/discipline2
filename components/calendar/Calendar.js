@@ -30,6 +30,7 @@ export default class Calendar extends PureComponent {
     onDateSelect: PropTypes.func,
     onMonthChanged: PropTypes.func.isRequired,
     onTooltipClick: PropTypes.func.isRequired,
+    onDayLongPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -90,12 +91,6 @@ export default class Calendar extends PureComponent {
   scrollToItem(itemIndex: number, animated = true) {
     const scrollToX = itemIndex * SCREEN_WIDTH;
     this.calendar.current.scrollTo({ y: 0, x: scrollToX, animated });
-    if (animated) {
-      clearTimeout(this.scrollTimeout);
-      this.scrollTimeout = setTimeout(() => {
-        this.scrollEnded({ nativeEvent: { contentOffset: { x: scrollToX } } });
-      }, 500);
-    }
   }
 
   scrollEnded({ nativeEvent }) {
@@ -133,6 +128,7 @@ export default class Calendar extends PureComponent {
       toggleTooltip,
       showTotal,
       prevTick,
+      onDayLongPress,
     } = this.props;
 
     const startOfCurMonth = time.getCurMonthDateMs();
@@ -155,6 +151,7 @@ export default class Calendar extends PureComponent {
           }
           onDateSelect={this.selectDate}
           onTooltipClick={onTooltipClick}
+          onDayLongPress={onDayLongPress}
         />
       );
     });

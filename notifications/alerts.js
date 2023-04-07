@@ -1,6 +1,4 @@
 import { InteractionManager } from 'react-native';
-import regression from 'regression';
-import BackgroundFetch from 'react-native-background-fetch';
 import moment from 'moment';
 
 import Logger from 'app/log';

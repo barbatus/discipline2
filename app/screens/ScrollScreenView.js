@@ -80,7 +80,7 @@ export default class ScrollScreenView extends PureComponent {
         <ScrollView
           // TODO: some strange issue when lambda is used
           ref={this.refHandler}
-          // style={styles.scroll}
+          style={styles.scroll}
           horizontal
           pagingEnabled
           scrollEnabled={false}

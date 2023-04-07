@@ -67,7 +67,7 @@ export default class Trackers extends PureComponent {
 
   opacity = new Animated.Value(0);
 
-  moveDown = new MoveDownResponderAnim(SLIDE_HEIGHT);
+  moveDownAnim = new MoveDownResponderAnim(SLIDE_HEIGHT);
 
   bscroll = React.createRef();
 
@@ -113,7 +113,7 @@ export default class Trackers extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.moveDown.dispose();
+    this.moveDownAnim.dispose();
   }
 
   onEdit(tracker: Tracker) {
@@ -143,9 +143,9 @@ export default class Trackers extends PureComponent {
   }
 
   onTap() {
-    if (this.moveDown.in) {
+    if (this.moveDownAnim.in) {
       caller(this.props.onSwiperMoveUpStart);
-      this.moveDown.animateOut(() => {
+      this.moveDownAnim.animateOut(() => {
         this.setState({ swiperEnabled: true });
         caller(this.props.onSwiperMoveUpDone);
       });
@@ -187,6 +187,20 @@ export default class Trackers extends PureComponent {
     caller(this.props.onCancel);
   }
 
+  moveUp(callback) {
+    this.moveDownAnim.animateOut(() => {
+      this.setState({ swiperEnabled: false });
+      caller(callback);
+    });
+  }
+
+  moveDown(callback) {
+    this.moveDownAnim.animateIn(() => {
+      this.setState({ swiperEnabled: false });
+      caller(callback);
+    });
+  }
+
   handleMoveDown() {
     const {
       onSwiperMoveDown,
@@ -194,7 +208,7 @@ export default class Trackers extends PureComponent {
       onSwiperMoveDownDone,
       onSwiperMoveDownCancel,
     } = this.props;
-    this.moveDown.subscribe(
+    this.moveDownAnim.subscribe(
       this.swiper.current.responder,
       onSwiperMoveDown,
       onSwiperMoveDownStart,
@@ -207,7 +221,7 @@ export default class Trackers extends PureComponent {
   }
 
   unhandleMoveDown() {
-    this.moveDown.unsubscribe();
+    this.moveDownAnim.unsubscribe();
   }
 
   show(callback) {
@@ -259,7 +273,7 @@ export default class Trackers extends PureComponent {
 
     const combinedStyle = [
       style,
-      this.moveDown.style,
+      this.moveDownAnim.style,
       { opacity: this.opacity },
     ];
     return (
