@@ -1,9 +1,9 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.discipline">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.discipline">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" tools:node="remove"/>
 
     <application
       android:name=".MainApplication"
@@ -25,7 +25,7 @@
         </intent-filter>
       </activity>
       <meta-data android:name="com.bugsnag.android.API_KEY" android:value="5094a731067734cfc0e05568fd1b11c2" />
-      <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDnCjT2geaw4fX67TdxTc0db8X1djs1TdE" />
+      <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBaQSY4BsA251-GUlBLTf0zuOVqhp-pIa4" />
       <service android:name="com.transistorsoft.locationmanager.service.TrackingService" android:foregroundServiceType="location" />
       <service android:name="com.transistorsoft.locationmanager.service.LocationRequestService" android:foregroundServiceType="location" />
 
