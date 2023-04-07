@@ -14,29 +14,33 @@ target 'Discipline' do
   flags = get_default_flags()
 
   use_react_native!(
-    :path => config['reactNativePath'],
+    :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => flags[:hermes_enabled],
+    :hermes_enabled => true,
     :fabric_enabled => flags[:fabric_enabled],
+    :flipper_configuration => FlipperConfiguration.enabled,
     # An absolute path to your application root.
     :app_path => '#{Pod::Config.instance.installation_root}/..'
   )
 
-  target 'DisciplineTests' do
-    inherit! :complete
-    # Pods for testing
-  end
+  pod 'react-native-sqlite-2', :path => '../node_modules/react-native-sqlite-2'
+
+  pod 'BugsnagReactNative', :path => '../node_modules/@bugsnag/react-native'
+
+  # target 'DisciplineTests' do
+  #   inherit! :complete
+  #   # Pods for testing
+  # end
 
   use_native_modules!
-
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
-  use_flipper!('Flipper-DoubleConversion' => '1.1.7')
 end
 
 post_install do |installer|
-  react_native_post_install(installer)
+  react_native_post_install(
+    installer,
+    # Set `mac_catalyst_enabled` to `true` in order to apply patches
+    # necessary for Mac Catalyst builds
+    :mac_catalyst_enabled => false
+  )
   __apply_Xcode_12_5_M1_post_install_workaround(installer)
  end

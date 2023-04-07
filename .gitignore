@@ -62,3 +62,4 @@ report.xml
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+service_account.json
