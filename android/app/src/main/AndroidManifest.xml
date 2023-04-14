@@ -26,6 +26,9 @@
       </activity>
       <meta-data android:name="com.bugsnag.android.API_KEY" android:value="5094a731067734cfc0e05568fd1b11c2" />
       <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBaQSY4BsA251-GUlBLTf0zuOVqhp-pIa4" />
+      <meta-data android:name="com.bugsnag.android.AUTO_DETECT_ERRORS" android:value="true" />
+      <meta-data android:name="com.bugsnag.android.ENABLED_RELEASE_STAGES" android:value="production,staging"/>
+      <meta-data android:name="com.bugsnag.android.RELEASE_STAGE" android:value="@string/NAME"/>
       <service android:name="com.transistorsoft.locationmanager.service.TrackingService" android:foregroundServiceType="location" />
       <service android:name="com.transistorsoft.locationmanager.service.LocationRequestService" android:foregroundServiceType="location" />
 

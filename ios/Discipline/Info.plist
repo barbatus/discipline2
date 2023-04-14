@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -78,6 +78,13 @@
 	<dict>
 		<key>apiKey</key>
 		<string>5094a731067734cfc0e05568fd1b11c2</string>
+		<key>autoDetectErrors</key>
+    <true />
+		<key>enabledReleaseStages</key>
+    <array>
+      <string>production</string>
+			<string>staging</string>
+    </array>
 	</dict>
 </dict>
 </plist>
