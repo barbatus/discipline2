@@ -20,6 +20,8 @@ import DayChangeEvent from './DayChangeEvent';
 LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 export default function createApp(store: Store<any>) {
+  Logger.leaveBreadcrumb('App opened');
+
   return createAppContainer(
     createStackNavigator({
       Home: {
