@@ -120,11 +120,17 @@ export default class SumTrackerSlide extends TrackerSlide {
 
   shake() {
     const { tracker } = this.props;
-    if (this.undoAlertOn || !tracker.lastTick) {return;}
+    if (this.undoAlertOn || !tracker.lastTick) {
+      return;
+    }
 
     this.undoAlertOn = true;
-    const onHide = () => { this.undoAlertOn = false; };
-    Alert.alert('Do you want to undo?', null,
+    const onHide = () => {
+      this.undoAlertOn = false;
+    };
+    Alert.alert(
+      'Do you want to undo?',
+      null,
       [
         {
           text: 'Cancel',
@@ -178,7 +184,7 @@ export default class SumTrackerSlide extends TrackerSlide {
         <View style={styles.textContainer}>
           <Text style={styles.sumText}>=</Text>
           <Text style={styles.sumText}>
-            { tracker.props.showBuck ? '$ ' : null }
+            {tracker.props.showBuck ? '$ ' : null}
             {tracker.value}
           </Text>
         </View>
@@ -187,11 +193,7 @@ export default class SumTrackerSlide extends TrackerSlide {
   }
 
   get footerControls() {
-    return (
-      <Text style={trackerStyles.footerText}>
-        Shake to undo
-      </Text>
-    );
+    return <Text style={trackerStyles.footerText}>Shake to undo</Text>;
   }
 
   onPlus() {

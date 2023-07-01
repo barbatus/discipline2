@@ -1,11 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import { getIcon } from 'app/icons/icons';

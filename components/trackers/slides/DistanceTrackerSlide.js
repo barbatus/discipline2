@@ -108,19 +108,11 @@ const DistanceDataFn = ({ time, dist, metric }) => {
   return (
     <View style={styles.distData}>
       <View style={[styles.label, styles.distLabel]}>
-        <Text style={styles.labelText}>
-          {distFormat.format()}
-        </Text>
-        <Text style={styles.unitText}>
-          {distFormat.unit}
-        </Text>
+        <Text style={styles.labelText}>{distFormat.format()}</Text>
+        <Text style={styles.unitText}>{distFormat.unit}</Text>
       </View>
       <View style={styles.label}>
-        <TimeLabel
-          style={styles.labelText}
-          width={200}
-          timeMs={time}
-        />
+        <TimeLabel style={styles.labelText} width={200} timeMs={time} />
       </View>
     </View>
   );
@@ -135,7 +127,13 @@ DistanceDataFn.propTypes = {
 const DistanceData = React.memo(DistanceDataFn);
 
 const DistanceFooterFn = ({
-  active, responsive, enabled, showMap, onStopBtn, onStartBtn, onShowMap,
+  active,
+  responsive,
+  enabled,
+  showMap,
+  onStopBtn,
+  onStartBtn,
+  onShowMap,
 }) => (
   <View style={styles.footerControlsContainer}>
     <StartStopBtn
@@ -144,19 +142,14 @@ const DistanceFooterFn = ({
       enabled={enabled}
       onPress={active ? onStopBtn : onStartBtn}
     />
-    {
-      showMap ? (
-        <TouchableOpacity
-          style={styles.seeMap}
-          onPress={onShowMap}
-        >
-          <Image
-            source={UserIconsStore.get('map_marker').png}
-            style={styles.mapIcon}
-          />
-        </TouchableOpacity>
-      ) : null
-    }
+    {showMap ? (
+      <TouchableOpacity style={styles.seeMap} onPress={onShowMap}>
+        <Image
+          source={UserIconsStore.get('map_marker').png}
+          style={styles.mapIcon}
+        />
+      </TouchableOpacity>
+    ) : null}
   </View>
 );
 
@@ -176,24 +169,13 @@ const DistanceBodyFn = ({ dist, time, metric, speed, showSpeed }) => {
   const speedFormat = formatSpeed(speed, metric);
   return (
     <View style={trackerStyles.controls}>
-      {
-        showSpeed ? (
-          <View style={[styles.label, styles.speedLabel]}>
-            <Text style={styles.speedText}>
-              {speedFormat.format()}
-            </Text>
-            <Text style={styles.unitText2}>
-              {speedFormat.unit}
-            </Text>
-          </View>
-        ) : null
-      }
-      <DistanceData
-        dist={dist}
-        time={time}
-        speed={speed}
-        metric={metric}
-      />
+      {showSpeed ? (
+        <View style={[styles.label, styles.speedLabel]}>
+          <Text style={styles.speedText}>{speedFormat.format()}</Text>
+          <Text style={styles.unitText2}>{speedFormat.unit}</Text>
+        </View>
+      ) : null}
+      <DistanceData dist={dist} time={time} speed={speed} metric={metric} />
     </View>
   );
 };
@@ -273,7 +255,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   async componentDidMount() {
     const { shown, tracker } = this.props;
     if (shown) {
-      const timer = Timers.getOrCreate(tracker.id, tracker.time, TIME_INTRVL_MS);
+      const timer = Timers.getOrCreate(
+        tracker.id,
+        tracker.time,
+        TIME_INTRVL_MS,
+      );
       let distTracker = null;
       try {
         distTracker = await DistanceTrackers.getOrCreate(
@@ -340,11 +326,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
   }
 
   /*
-  * Start or stop associated trackers based on tracker model's values.
-  * There is a gap on when tracker model is started (i.e. this.onStart) and when actual trackers are engaged,
-  * this is done due to keep tracker starting logic in one place and use tracker model's values
-  * for starting/stopping actual trackers.
-  */
+   * Start or stop associated trackers based on tracker model's values.
+   * There is a gap on when tracker model is started (i.e. this.onStart) and when actual trackers are engaged,
+   * this is done due to keep tracker starting logic in one place and use tracker model's values
+   * for starting/stopping actual trackers.
+   */
   async manageTrackers() {
     const { tracker } = this.props;
 
@@ -373,7 +359,6 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     try {
       const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
       await distTracker.stop();
-
     } catch {}
     const timer = Timers.getOrCreate(tracker.id);
     timer.stop();
@@ -407,8 +392,11 @@ export default class DistanceTrackerSlide extends ProgressTrackerSlide {
     const dlg = registry.get(DlgType.MAPS);
     const { tracker } = this.props;
     const distTracker = await DistanceTrackers.getOrCreate(tracker.id);
-    const paths = tracker.paths.concat(distTracker.paths)
-      .map((path) => path.map(({ lat, lon }) => ({ latitude: lat, longitude: lon })));
+    const paths = tracker.paths
+      .concat(distTracker.paths)
+      .map((path) =>
+        path.map(({ lat, lon }) => ({ latitude: lat, longitude: lon })),
+      );
     dlg.show(paths);
   }
 }

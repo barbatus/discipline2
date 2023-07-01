@@ -102,20 +102,23 @@ const TypeView = styled.View`
   display: flex;
   flex-direction: column;
   border-top-width: 4px;
-  border-top-color: ${({ isSelected }) => isSelected ? LINK_COLOR : BACK_COLOR};
-  background-color: ${({ isSelected }) => isSelected ? '#E6E6E6' : BACK_COLOR};
+  border-top-color: ${({ isSelected }) =>
+    isSelected ? LINK_COLOR : BACK_COLOR};
+  background-color: ${({ isSelected }) =>
+    isSelected ? '#E6E6E6' : BACK_COLOR};
 `;
 
 const SlideType = React.memo(({ type, selected, onTypeChosen }) => (
   <TouchableWithoutFeedback onPress={() => onTypeChosen(type)}>
     <TypeView isSelected={selected}>
       <View style={styles.typeIconContainer}>
-        <Image source={getTrackerIcon(type.valueOf())} style={styles.typeIcon} />
+        <Image
+          source={getTrackerIcon(type.valueOf())}
+          style={styles.typeIcon}
+        />
       </View>
       <View style={styles.typeTitleContainer}>
-        <Text style={styles.typeTitle}>
-          {type.title}
-        </Text>
+        <Text style={styles.typeTitle}>{type.title}</Text>
       </View>
     </TypeView>
   </TouchableWithoutFeedback>
@@ -174,8 +177,10 @@ export default class TrackerTypesSlide extends PureComponent {
       />
     ));
 
-    const borderColor = (selected === lastType || selected === firstType) ?
-      styles.selectedBorder : null;
+    const borderColor =
+      selected === lastType || selected === firstType
+        ? styles.selectedBorder
+        : null;
     return (
       <ScrollView
         style={[styles.types, borderColor]}
@@ -198,14 +203,10 @@ export default class TrackerTypesSlide extends PureComponent {
       <View style={[slideStyles.slide, style]}>
         <View style={slideStyles.innerView}>
           <View style={[slideStyles.headerContainer, styles.headerContainer]}>
-            <Text style={styles.title}>
-              {title}
-            </Text>
+            <Text style={styles.title}>{title}</Text>
           </View>
           <View style={[slideStyles.bodyContainer, styles.bodyContainer]}>
-            <Text style={styles.desc}>
-              {clean(desc)}
-            </Text>
+            <Text style={styles.desc}>{clean(desc)}</Text>
           </View>
           <View style={[slideStyles.footerContainer, styles.footerContainer]}>
             {this.renderTypes()}
