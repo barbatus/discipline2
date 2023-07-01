@@ -1,4 +1,3 @@
-
 import BackgroundFetch from 'react-native-background-fetch';
 
 import Logger from 'app/log';
@@ -9,17 +8,21 @@ import { notify } from './alerts';
 const ALERTS_CHECK_INTERVAL_MINS = 15;
 
 function runInBackground() {
-  BackgroundFetch.configure({
-    minimumFetchInterval: ALERTS_CHECK_INTERVAL_MINS, // minutes (15 is minimum allowed)
-    // Android options
-    stopOnTerminate: false,
-    startOnBoot: true,
-  }, async () => {
-    await notify();
-    BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
-  }, (ex) => {
-    Logger.error(ex, { context: 'RNBackgroundFetch.configure' });
-  });
+  BackgroundFetch.configure(
+    {
+      minimumFetchInterval: ALERTS_CHECK_INTERVAL_MINS, // minutes (15 is minimum allowed)
+      // Android options
+      stopOnTerminate: false,
+      startOnBoot: true,
+    },
+    async () => {
+      await notify();
+      BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
+    },
+    (ex) => {
+      Logger.error(ex, { context: 'RNBackgroundFetch.configure' });
+    },
+  );
 
   BackgroundFetch.status((status) => {
     switch (status) {
@@ -47,7 +50,9 @@ function runInForeground() {
 let isLaunched = false;
 
 export function launch() {
-  if (isLaunched) {return;}
+  if (isLaunched) {
+    return;
+  }
 
   runInBackground();
   runInForeground();

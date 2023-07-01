@@ -40,12 +40,13 @@ const cloneTracker = (trackers, tracker, index?: number, ticks?: Tick[]) => {
   }
   let trTicks = tracker.ticks;
   if (ticks) {
-    const tcks = tracker.ticks.filter((tck1) => !ticks.find((tck2) => tck1.id === tck2.id));
+    const tcks = tracker.ticks.filter(
+      (tck1) => !ticks.find((tck2) => tck1.id === tck2.id),
+    );
     trTicks = tcks.concat(ticks);
   }
-  return trackers.update(trIndex, () => Trackers.clone(
-    trackers.get(trIndex),
-    { ...tracker, ticks: trTicks }),
+  return trackers.update(trIndex, () =>
+    Trackers.clone(trackers.get(trIndex), { ...tracker, ticks: trTicks }),
   );
 };
 
@@ -53,13 +54,17 @@ const cloneTicks = (trackers, tracker, progress, ticks: Tick[]) => {
   const trIndex = findIndex(trackers, tracker);
   let trTicks = tracker.ticks;
   if (ticks) {
-    const tcks = tracker.ticks.filter((tck1) => !ticks.find((tck2) => tck1.id === tck2.id));
+    const tcks = tracker.ticks.filter(
+      (tck1) => !ticks.find((tck2) => tck1.id === tck2.id),
+    );
     trTicks = tcks.concat(ticks);
   }
-  return trackers.update(trIndex, () => Trackers.clone(trackers.get(trIndex), {
-    ...progress,
-    ticks: trTicks,
-  }));
+  return trackers.update(trIndex, () =>
+    Trackers.clone(trackers.get(trIndex), {
+      ...progress,
+      ticks: trTicks,
+    }),
+  );
 };
 
 const insertTracker = (trackers, tracker, index?: number) => {
@@ -76,11 +81,13 @@ export const trackersReducer = handleActions(
       ...state,
       app,
     }),
-    [combineActions(LOAD_APP, LOAD_TEST_APP)]: (state, { app: { trackers, ...app } }) => ({
+    [combineActions(LOAD_APP, LOAD_TEST_APP)]: (
+      state,
+      { app: { trackers, ...app } },
+    ) => ({
       ...state,
       app,
-      trackers: new List(trackers.map(
-        (tracker) => Trackers.create(tracker))),
+      trackers: new List(trackers.map((tracker) => Trackers.create(tracker))),
     }),
     [REMOVE_TRACKER]: (state, { tracker }) => {
       const index = findIndex(state.trackers, tracker);
@@ -154,8 +161,11 @@ export const trackersReducer = handleActions(
     [CHANGE_DAY]: (state, { todayMs, trackers }) => ({
       ...state,
       todayMs,
-      trackers: new List(trackers.map((tracker) =>
-        Trackers.create({ ...tracker, active: false, ticks: [] }))),
+      trackers: new List(
+        trackers.map((tracker) =>
+          Trackers.create({ ...tracker, active: false, ticks: [] }),
+        ),
+      ),
     }),
     [UPDATE_CALENDAR]: (state, { monthDateMs, ticks, prevTick }) => ({
       ...state,

@@ -1,5 +1,3 @@
-
-
 import { IconSize } from './consts';
 
 import Enum from '../depot/Enum';

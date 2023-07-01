@@ -34,8 +34,9 @@ function calcDist(curMs, prevMs) {
   if (dayDiff === 0) {
     return snapToRange(curMs) - snapToRange(prevMs);
   }
-  const diff = dayDiff * dayDiffMs +
-    ((time.getDateMs() + dayRange[1]) - snapToRange(prevMs)) +
+  const diff =
+    dayDiff * dayDiffMs +
+    (time.getDateMs() + dayRange[1] - snapToRange(prevMs)) +
     (snapToRange(curMs) - (time.getDateMs() + dayRange[0]));
   return diff;
 }
@@ -44,23 +45,32 @@ async function evalDiff(trackId, prevStartMs, curStartMs) {
   const ticks = await depot.getTicks(trackId, curStartMs);
   const prevTicks = await depot.getTicks(trackId, prevStartMs, curStartMs);
   const dayStartMs = moment().startOf('day');
-  const lastDateMs = snapToRange(ticks.length ? ticks[ticks.length - 1].createdAt : curStartMs);
+  const lastDateMs = snapToRange(
+    ticks.length ? ticks[ticks.length - 1].createdAt : curStartMs,
+  );
   const dayDiff = Math.max(0, moment().date() - moment(lastDateMs).date() - 1);
 
   if (dayDiff === 0) {
-    return [Date.now() - lastDateMs, Boolean(prevTicks.length), Boolean(ticks.length), lastDateMs];
+    return [
+      Date.now() - lastDateMs,
+      Boolean(prevTicks.length),
+      Boolean(ticks.length),
+      lastDateMs,
+    ];
   }
 
-  const diff = dayDiff * dayDiffMs +
-    ((time.getDateMs() + dayRange[1]) - lastDateMs) +
+  const diff =
+    dayDiff * dayDiffMs +
+    (time.getDateMs() + dayRange[1] - lastDateMs) +
     (snapToRange(Date.now()) - (time.getDateMs() + dayRange[0]));
   return [diff, Boolean(prevTicks.length), Boolean(ticks.length), lastDateMs];
 }
 
 export async function evalAlerts(callback: Function) {
   const app = await depot.getApp();
-  const tracksToNotify = app.trackers.filter((tracker) =>
-    tracker.props.alerts && tracker.props.freq);
+  const tracksToNotify = app.trackers.filter(
+    (tracker) => tracker.props.alerts && tracker.props.freq,
+  );
   tracksToNotify.forEach(async (tracker) => {
     const freq = tracker.props.freq;
     const parsedFreq = /^(\d+)(d|w|m)$/.exec(freq);
@@ -71,33 +81,46 @@ export async function evalAlerts(callback: Function) {
 
     const [_, c, p] = parsedFreq;
     const times = parseInt(c, 10);
-    let maxDistMs = Math.ceil(days[p] * dayDiffMs / times);
+    let maxDistMs = Math.ceil((days[p] * dayDiffMs) / times);
     let curDistMs = null;
     let lastTickMs = null;
     let hasTicksCurPeriod = true;
     let hasTicksLastPeriod = true;
     switch (p) {
       case FreqType.DAILY.valueOf():
-        [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] = await evalDiff(tracker.id,
-          time.getYestMs(), time.getDateMs());
+        [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] =
+          await evalDiff(tracker.id, time.getYestMs(), time.getDateMs());
         break;
       case FreqType.WEEKLY.valueOf():
-        [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] = await evalDiff(tracker.id,
-          time.getPrevWeekDateMs(), time.getCurWeekDateMs());
+        [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] =
+          await evalDiff(
+            tracker.id,
+            time.getPrevWeekDateMs(),
+            time.getCurWeekDateMs(),
+          );
         break;
       case FreqType.MONTHLY.valueOf():
-        [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] = await evalDiff(tracker.id,
-          time.getPrevMonthDateMs(), time.getCurMonthDateMs());
+        [curDistMs, hasTicksLastPeriod, hasTicksCurPeriod, lastTickMs] =
+          await evalDiff(
+            tracker.id,
+            time.getPrevMonthDateMs(),
+            time.getCurMonthDateMs(),
+          );
         break;
       default:
         Logger.error(`Invalid freq value: ${freq}`);
         return;
     }
 
-    Logger.log(`Tracker ${tracker.title} stats:
-      every ${time.formatDurationMs(maxDistMs)}, current distance ${time.formatDurationMs(curDistMs)}`, {
-      context: '[evalAlerts]',
-    });
+    Logger.log(
+      `Tracker ${tracker.title} stats:
+      every ${time.formatDurationMs(
+        maxDistMs,
+      )}, current distance ${time.formatDurationMs(curDistMs)}`,
+      {
+        context: '[evalAlerts]',
+      },
+    );
 
     // If there is lastAlert and distance to Now does not exceed maxDistMs
     // then skip alerting again.
@@ -109,7 +132,9 @@ export async function evalAlerts(callback: Function) {
       return;
     }
 
-    if (curDistMs < maxDistMs && (hasTicksCurPeriod || hasTicksLastPeriod)) {return;}
+    if (curDistMs < maxDistMs && (hasTicksCurPeriod || hasTicksLastPeriod)) {
+      return;
+    }
 
     try {
       const lastTick = await depot.getLastTick(tracker.id);
@@ -123,17 +148,23 @@ export async function evalAlerts(callback: Function) {
 
 let notifying = false;
 export async function notify() {
-  if (notifying) {return;}
+  if (notifying) {
+    return;
+  }
   notifying = true;
 
   try {
     await PushNotification.configure();
 
     const app = await depot.getApp();
-    if (!app.props.alerts) {return;}
+    if (!app.props.alerts) {
+      return;
+    }
 
     const showAlert = (tracker, lastTickMs) => {
-      const fromNow = lastTickMs ? `Last time you did it ${moment(lastTickMs).fromNow()}` : '';
+      const fromNow = lastTickMs
+        ? `Last time you did it ${moment(lastTickMs).fromNow()}`
+        : '';
       const alertBody = `Time to track ${tracker.title}? ${fromNow}`;
       PushNotification.localNotification(`Tracker ${tracker.title}`, alertBody);
     };

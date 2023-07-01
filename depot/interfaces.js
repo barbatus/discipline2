@@ -9,10 +9,10 @@ import {
 } from './consts';
 
 export type Copilot = {
-  [key: CopilotScreenId]: CopilotStepId;
+  [key: CopilotScreenId]: CopilotStepId,
 };
 
-export type AppProps = { alerts: boolean; copilot: Copilot };
+export type AppProps = { alerts: boolean, copilot: Copilot };
 
 export interface App {
   ver: string;
@@ -27,7 +27,7 @@ export interface RawApp {
 }
 
 export type PropType = {
-  [string]: *;
+  [string]: *,
 };
 
 export interface Tracker {

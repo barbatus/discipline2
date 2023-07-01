@@ -29,7 +29,11 @@ class DistanceTimers {
 
   getOrCreate(trackerId: number, initValueMs?: number, intervalMs?: number) {
     if (!this.timers[trackerId]) {
-      this.timers[trackerId] = new DistanceTimer(trackerId, initValueMs, intervalMs);
+      this.timers[trackerId] = new DistanceTimer(
+        trackerId,
+        initValueMs,
+        intervalMs,
+      );
     }
     return this.timers[trackerId];
   }
@@ -47,10 +51,15 @@ export const Timers = new DistanceTimers();
 export class DistanceTrackers {
   trackers = {};
 
-  async getOrCreate(trackerId: string, initValue?: number, distFilter?: number) {
+  async getOrCreate(
+    trackerId: string,
+    initValue?: number,
+    distFilter?: number,
+  ) {
     if (!this.trackers[trackerId]) {
       return new Promise(async (resolve, reject) => {
-        const createTracker = (geoWatcher) => new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
+        const createTracker = (geoWatcher) =>
+          new DistanceTracker(trackerId, geoWatcher, initValue, distFilter);
         try {
           const geoWatcher = await BGGeoLocationWatcher.getOrCreate();
           this.trackers[trackerId] = createTracker(geoWatcher);
@@ -76,7 +85,9 @@ export class DistanceTrackers {
   }
 
   updateKeepAwake() {
-    const trackers = Object.values(this.trackers).filter((tracker) => tracker.active);
+    const trackers = Object.values(this.trackers).filter(
+      (tracker) => tracker.active,
+    );
     if (trackers.length === 0) {
       KeepAwake.deactivate();
     }
@@ -117,7 +128,7 @@ export class DistanceTracker extends EventEmitter {
     trackerId: string,
     geoWatcher: BGGeoLocationWatcher,
     initValue: number = 0,
-    distFilterM: number = 5 // 5m
+    distFilterM: number = 5, // 5m
   ) {
     check.assert.number(initValue);
     super();
@@ -147,7 +158,9 @@ export class DistanceTracker extends EventEmitter {
   }
 
   async start(baseDist: number) {
-    if (this.isStarting || this.active) {return;}
+    if (this.isStarting || this.active) {
+      return;
+    }
 
     this.isStarting = true;
     this.state = baseDist ? { ...this.state, dist: baseDist } : this.state;
@@ -165,7 +178,9 @@ export class DistanceTracker extends EventEmitter {
   }
 
   async stop() {
-    if (!this.active) {return;}
+    if (!this.active) {
+      return;
+    }
 
     this.unwatchGeo();
     try {
@@ -195,7 +210,7 @@ export class DistanceTracker extends EventEmitter {
     let state;
 
     if ((state = this.setNextPosState(this.state, pos))) {
-      if ((state.dist - this.savedDist) >= this.distFilter) {
+      if (state.dist - this.savedDist >= this.distFilter) {
         this.saveLatLonUpdate(state);
         this.fireLatLonUpdate(state);
         this.savedDist = state.dist;
@@ -212,7 +227,9 @@ export class DistanceTracker extends EventEmitter {
 
   async saveLatLonUpdate({ stopped, dist, lastStartDist, lat, lon }) {
     try {
-      await depot.updateLastTick(this.trackerId, lastStartDist, { latlon: { lat, lon } });
+      await depot.updateLastTick(this.trackerId, lastStartDist, {
+        latlon: { lat, lon },
+      });
     } catch (ex) {
       Logger.log(`Try to save DistanceTracker: ${ex.message}`);
     }
@@ -232,15 +249,20 @@ export class DistanceTracker extends EventEmitter {
     this.emit('onStart');
   }
 
-  setNextPosState(prevState, { coords: { speed, latitude: lat, longitude: lon } }) {
+  setNextPosState(
+    prevState,
+    { coords: { speed, latitude: lat, longitude: lon } },
+  ) {
     if (prevState.lat !== lat || prevState.lon !== lon) {
       const speedAbs = Math.abs(speed);
-      const delta = prevState.lat ? utils.delta(prevState.lat, lat, prevState.lon, lon) : 0;
+      const delta = prevState.lat
+        ? utils.delta(prevState.lat, lat, prevState.lon, lon)
+        : 0;
       return {
         delta,
         lat,
         lon,
-        speed: speedAbs * 3600 / 1000, // km / h
+        speed: (speedAbs * 3600) / 1000, // km / h
         dist: prevState.dist + delta,
         lastStartDist: prevState.lastStartDist + delta,
         timestamp: Date.now(),

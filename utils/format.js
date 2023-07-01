@@ -6,7 +6,7 @@ const KM_TO_MILES = 0.621371;
 
 const FOOT_TO_MILES = 5280;
 
-export const padZero = (digits) => digits < 10 ? `0${digits}` : `${digits}`;
+export const padZero = (digits) => (digits < 10 ? `0${digits}` : `${digits}`);
 
 export function formatSpeed(speed, metric = true) {
   check.assert.number(speed);
@@ -52,7 +52,7 @@ export function formatImperial(dist) {
 
   const rounded = round(dist * KM_TO_MILES, 2);
   const mi = int(rounded);
-  const ft = int(rounded * 100 % 100);
+  const ft = int((rounded * 100) % 100);
 
   return {
     format: () => `${mi}.${padZero(ft)}`,
@@ -70,7 +70,7 @@ export function formatMetric(dist) {
 
   const rounded = round(dist, 2);
   const km = int(rounded);
-  const mm = int(rounded * 100 % 100);
+  const mm = int((rounded * 100) % 100);
 
   return {
     format: () => `${km}.${padZero(mm)}`,

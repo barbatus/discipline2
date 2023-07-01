@@ -11,7 +11,9 @@ function uncatchErrorHandler(error) {
   Logger.notify(error);
 }
 
-const errorHandlerMiddleware = createThunkErrorHandlerMiddleware({ onError: uncatchErrorHandler });
+const errorHandlerMiddleware = createThunkErrorHandlerMiddleware({
+  onError: uncatchErrorHandler,
+});
 
 const middleware = applyMiddleware(errorHandlerMiddleware, thunk);
 
