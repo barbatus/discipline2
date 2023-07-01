@@ -35,7 +35,13 @@ export const TrackerType = new Enum({
   DISTANCE: {
     title: 'Distance',
     value: 'DISTANCE',
-    desc: 'Measure distance whether it\'s jogging or just a walk to a grocery store',
+    desc: "Measure the distance, whether it's a jog or a walk to the grocery store",
+  },
+
+  RATE: {
+    title: 'Rate',
+    value: 'RATE',
+    desc: 'Rate any activity or even evaluate how successful the entire day has been',
   },
 });
 
@@ -63,7 +69,6 @@ export const DepotEvent = {
   TRACK_UPDATED: 'track_updated',
   ALERT_ADDED: 'alert_added',
 };
-
 
 export const DEFAULT_TRACKER_PROPS = [
   { propId: 'alerts', name: 'Remind me' },

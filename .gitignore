@@ -67,3 +67,4 @@ service_account.json
 # react-native-config codegen
 ios/tmp.xcconfig
 .env.default
+vendor

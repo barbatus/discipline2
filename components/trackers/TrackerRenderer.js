@@ -14,6 +14,7 @@ import CounterSlide from './slides/CounterSlide';
 import SumTrackerSlide from './slides/SumTrackerSlide';
 import StopWatchTrackerSlide from './slides/StopWatchTrackerSlide';
 import DistanceTrackerSlide from './slides/DistanceTrackerSlide';
+import RateTrackerSlide from './slides/RateTrackerSlide';
 
 // TODO: get rid of it once we get rid of refs.
 class TrackerWrapper extends PureComponent {
@@ -308,6 +309,8 @@ export default class TrackerRenderer extends PureComponent {
           metric,
           shown,
         });
+      case TrackerType.RATE:
+        return this.renderSlide(RateTrackerSlide, tracker, trackProps);
       default:
         throw new Error('Tracker type is not supported');
     }
