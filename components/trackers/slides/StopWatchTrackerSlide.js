@@ -52,9 +52,7 @@ const FooterBtnFn = ({ label, responsive, onPress }) => (
     disabled={!responsive}
     onPress={onPress}
   >
-    <Text style={styles.btnText}>
-      {label}
-    </Text>
+    <Text style={styles.btnText}>{label}</Text>
   </TouchableOpacity>
 );
 
@@ -85,11 +83,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TimeLabel
-            width={200}
-            timeMs={timeMs}
-            lapTimeMs={lapTimeMs}
-          />
+          <TimeLabel width={200} timeMs={timeMs} lapTimeMs={lapTimeMs} />
         </View>
       </View>
     );
@@ -104,11 +98,7 @@ export default class StopWatchTrackerSlide extends ProgressTrackerSlide {
           responsive={responsive}
           onPress={tracker.active ? this.onStop : this.onTick}
         />
-        <FooterBtn
-          label="LAP"
-          responsive={responsive}
-          onPress={this.onLap}
-        />
+        <FooterBtn label="LAP" responsive={responsive} onPress={this.onLap} />
       </View>
     );
   }

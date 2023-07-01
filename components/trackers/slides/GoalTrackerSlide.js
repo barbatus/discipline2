@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  Vibration,
-} from 'react-native';
+import { View, TouchableOpacity, Image, Text, Vibration } from 'react-native';
 
 import { getIcon } from 'app/icons/icons';
 import { caller } from 'app/utils/lang';
@@ -25,7 +19,11 @@ export default class GoalTrackerSlide extends TrackerSlide {
     const { responsive } = this.props;
     return (
       <View style={trackerStyles.controls}>
-        <TouchableOpacity disabled={!responsive} onLongPress={this.onUndo} onPress={this.onTick}>
+        <TouchableOpacity
+          disabled={!responsive}
+          onLongPress={this.onUndo}
+          onPress={this.onTick}
+        >
           <Image source={getIcon('check')} style={this.checkStyle} />
         </TouchableOpacity>
       </View>
@@ -42,19 +40,24 @@ export default class GoalTrackerSlide extends TrackerSlide {
 
   get checkStyle() {
     const { tracker } = this.props;
-    return tracker.checked ?
-      [trackerStyles.checkBtn, trackerStyles.filledBtn] : trackerStyles.checkBtn;
+    return tracker.checked
+      ? [trackerStyles.checkBtn, trackerStyles.filledBtn]
+      : trackerStyles.checkBtn;
   }
 
   onUndo() {
     const { tracker } = this.props;
-    if (!tracker.checked) {return;}
+    if (!tracker.checked) {
+      return;
+    }
     caller(this.props.onUndo);
   }
 
   onTick() {
     const { tracker } = this.props;
-    if (tracker.checked) {return;}
+    if (tracker.checked) {
+      return;
+    }
     Vibration.vibrate();
     caller(this.props.onTick);
   }

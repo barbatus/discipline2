@@ -11,7 +11,9 @@ export default class ProgressTrackerSlide extends TrackerSlide {
 
   onEdit() {
     const { tracker } = this.props;
-    if (tracker.active) { return; }
+    if (tracker.active) {
+      return;
+    }
     super.onEdit();
   }
 

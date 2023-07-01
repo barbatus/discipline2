@@ -88,13 +88,14 @@ export default class TrackerSlide extends PureComponent {
   }
 
   showEdit(onStart, onDone) {
-    if (Animation.on) {return;}
+    if (Animation.on) {
+      return;
+    }
 
     caller(onStart);
     const { tracker } = this.props;
     Keyboard.dismiss();
-    this.setState({ editTracker: tracker },
-      () => this.flip.animateIn(onDone));
+    this.setState({ editTracker: tracker }, () => this.flip.animateIn(onDone));
   }
 
   cancelEdit(callback) {
@@ -112,7 +113,9 @@ export default class TrackerSlide extends PureComponent {
 
   renderBackView() {
     const { editable, onTrackerEdit, onSubmitFail } = this.props;
-    if (!editable) {return null;}
+    if (!editable) {
+      return null;
+    }
 
     const { editTracker } = this.state;
     return editTracker ? (

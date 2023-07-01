@@ -47,14 +47,10 @@ const TimeDigitFn = ({ style, value, width }) => {
   return (
     <View style={styles.slotStyle}>
       <Text style={[{ width }, align]}>
-        <Text style={style}>
-          {value[0]}
-        </Text>
+        <Text style={style}>{value[0]}</Text>
       </Text>
       <Text style={[{ width }, align]}>
-        <Text style={style}>
-          {value[1]}
-        </Text>
+        <Text style={style}>{value[1]}</Text>
       </Text>
     </View>
   );
@@ -98,20 +94,16 @@ export default class TimeLabel extends PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          {hh ? <TimeDigit style={digitStyle} width={digWidth} value={hh} /> : null}
+          {hh ? (
+            <TimeDigit style={digitStyle} width={digWidth} value={hh} />
+          ) : null}
           {hh ? <Text style={delimStyle}>:</Text> : null}
           <TimeDigit style={digitStyle} width={digWidth} value={mm} />
           <Text style={delimStyle}>,</Text>
           <TimeDigit style={digitStyle} width={digWidth} value={ss} />
         </View>
         <View style={styles.textContainer}>
-          {
-            lapTimeMs ? (
-              <Text style={lapStyle}>
-                {timeLap.format()}
-              </Text>
-            ) : null
-          }
+          {lapTimeMs ? <Text style={lapStyle}>{timeLap.format()}</Text> : null}
         </View>
       </View>
     );

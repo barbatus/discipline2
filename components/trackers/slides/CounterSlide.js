@@ -47,7 +47,10 @@ export default class CounterSlide extends TrackerSlide {
     return (
       <View style={trackerStyles.controls}>
         <View style={styles.controls}>
-          <TouchableOpacity disabled={!responsive || tracker.count <= 0} onPress={this.onUndo}>
+          <TouchableOpacity
+            disabled={!responsive || tracker.count <= 0}
+            onPress={this.onUndo}
+          >
             <Image source={getIcon('minus')} style={trackerStyles.circleBtn} />
           </TouchableOpacity>
           <Text style={styles.countText} numberOfLines={1}>
