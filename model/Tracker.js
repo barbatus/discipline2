@@ -25,7 +25,8 @@ export class Tick implements DBTick {
 }
 
 // Generics map<> not working w/o flow
-export const mapTicks = (ticks: DBTick[] = []) => ticks.map((tick) => new Tick(tick));
+export const mapTicks = (ticks: DBTick[] = []) =>
+  ticks.map((tick) => new Tick(tick));
 
 export default class Tracker implements DBTracker {
   id: string;
@@ -40,6 +41,8 @@ export default class Tracker implements DBTracker {
 
   ticks: DBTick[];
 
+  oneTick: boolean;
+
   props: Array<PropType>;
 
   static get properties() {
@@ -49,6 +52,7 @@ export default class Tracker implements DBTracker {
   static defaultValues(data: NewTracker) {
     return {
       active: false,
+      oneTick: false,
       props: { alerts: false, freq: '1d' },
       ...data,
     };
@@ -94,17 +98,16 @@ export default class Tracker implements DBTracker {
 
   get lastValue() {
     const len = this.ticks.length;
-    if (!len) {return null;}
+    if (!len) {
+      return null;
+    }
     return this.ticks[len - 1].value;
   }
 }
 
 export class SumTracker extends Tracker {
   static get properties() {
-    return [
-      ...Tracker.properties,
-      { propId: 'showBuck', name: 'Show $ Sign' },
-    ];
+    return [...Tracker.properties, { propId: 'showBuck', name: 'Show $ Sign' }];
   }
 
   static defaultValues(data?: $Shape<NewTracker>) {
@@ -123,10 +126,7 @@ export class DistanceTracker extends Tracker {
   speed: number;
 
   static get properties() {
-    return [
-      ...Tracker.properties,
-      { propId: 'showSpeed', name: 'Show Speed' },
-    ];
+    return [...Tracker.properties, { propId: 'showSpeed', name: 'Show Speed' }];
   }
 
   static defaultValues(data?: $Shape<NewTracker>) {
@@ -153,5 +153,20 @@ export class DistanceTracker extends Tracker {
 
   get paths() {
     return this.ticks.map((tick) => tick.latlon || []);
+  }
+}
+
+export class RateTracker extends Tracker {
+  static defaultValues(data?: $Shape<NewTracker>) {
+    const values = Tracker.defaultValues(data);
+    return {
+      ...values,
+      oneTick: true,
+    };
+  }
+
+  constructor(tracker: DBTracker) {
+    super(tracker);
+    this.oneTick = true;
   }
 }

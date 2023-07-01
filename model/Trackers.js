@@ -2,7 +2,7 @@ import { TrackerType } from '../depot/consts';
 import { Tracker as DBTracker } from '../depot/interfaces';
 import depot from '../depot/depot';
 
-import Tracker, { DistanceTracker, SumTracker } from './Tracker';
+import Tracker, { DistanceTracker, SumTracker, RateTracker } from './Tracker';
 
 export default class Trackers {
   static async getAll() {
@@ -36,6 +36,8 @@ export default class Trackers {
         return new DistanceTracker(tracker);
       case TrackerType.SUM.valueOf():
         return new SumTracker(tracker);
+      case TrackerType.RATE.valueOf():
+        return new RateTracker(tracker);
       default:
         return new Tracker(tracker);
     }
@@ -92,7 +94,7 @@ export default class Trackers {
         title: 'Reading time',
         typeId: TrackerType.STOPWATCH.valueOf(),
         iconId: 'reading',
-      })
+      }),
     );
 
     trackers.push(
