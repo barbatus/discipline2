@@ -13,7 +13,7 @@ import Tracker, { Tick } from './Tracker';
 export function tickValueFormatter(tracker: Tracker, metric: boolean) {
   switch (tracker.type) {
     case TrackerType.SUM:
-      return (value: Number) => tracker.props.showBuck ? `$${value}` : value;
+      return (value: Number) => (tracker.props.showBuck ? `$${value}` : value);
     case TrackerType.DISTANCE:
       return (value: Number) => {
         const distFmt = formatDistance(value, metric);
@@ -29,7 +29,11 @@ export function tickValueFormatter(tracker: Tracker, metric: boolean) {
   }
 }
 
-export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTickValue: (value: number) => string) {
+export function combineTicksMonthly(
+  ticks: Tick[],
+  type: TrackerType,
+  formatTickValue: (value: number) => string,
+) {
   const months = groupBy(ticks, (tick) => {
     const tickDate = moment(tick.createdAt);
     return tickDate.month();
@@ -46,7 +50,10 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTick
       const day = parseInt(dayKey, 10);
       const ticksDaily = days[dayKey];
       const dayTickPrints = groupTicksDaily(ticksDaily, type, formatTickValue);
-      const total = dayTickPrints.reduce((accum, tick) => accum + tick.value, 0);
+      const total = dayTickPrints.reduce(
+        (accum, tick) => accum + tick.value,
+        0,
+      );
       const dayTicksPrint = {
         totalDesc: formatTickValue(total),
         ticks: dayTickPrints,
@@ -61,8 +68,15 @@ export function combineTicksMonthly(ticks: Tick[], type: TrackerType, formatTick
   }, new Map());
 }
 
-export function groupTicksDaily(ticks: Tick[], type: TrackerType, formatTickValue: (value: number) => string) {
-  const mins = groupBy(ticks, (tick) => tick.createdAt - (tick.createdAt % 60000));
+export function groupTicksDaily(
+  ticks: Tick[],
+  type: TrackerType,
+  formatTickValue: (value: number) => string,
+) {
+  const mins = groupBy(
+    ticks,
+    (tick) => tick.createdAt - (tick.createdAt % 60000),
+  );
   const tickPrints = Object.keys(mins).map((minKey) => {
     const minMs = parseInt(minKey, 10);
     const ticksMinly = mins[minKey];
@@ -84,18 +98,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const b = (text) => <Text style={styles.bold} numberOfLines={1}>{text}</Text>;
+const b = (text) => (
+  <Text style={styles.bold} numberOfLines={1}>
+    {text}
+  </Text>
+);
 
-function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickValue: (value: number) => string) {
+function printTick(
+  ticks: Tick[],
+  minMs: number,
+  type: TrackerType,
+  formatTickValue: (value: number) => string,
+) {
   const timeDesc = moment(minMs).format('LT');
   switch (type) {
     case TrackerType.GOAL:
       return {
-        html: (
-          <Text>
-            {timeDesc}: the goal was achieved
-          </Text>
-        ),
+        html: <Text>{timeDesc}: the goal was achieved</Text>,
         shortDesc: 'the goal was achieved',
         timeDesc,
         value: 1,
@@ -151,9 +170,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       return {
         html: (
           <Text>
-            Tracked
-            {' '}
-            {b(distDesc)}
+            Tracked {b(distDesc)}
             {' with time '}
             {b(timeFmt.format(false))}
             {' starting at '}
@@ -174,9 +191,7 @@ function printTick(ticks: Tick[], minMs: number, type: TrackerType, formatTickVa
       return {
         html: (
           <Text>
-            Tracked
-            {' '}
-            {b(timeFmt.format())}
+            Tracked {b(timeFmt.format())}
             {' starting at '}
             {b(timeDesc)}
           </Text>

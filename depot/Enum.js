@@ -11,7 +11,8 @@ export class EnumSymbol {
     this.key = key;
 
     Object.getOwnPropertyNames(props).forEach(
-      (prop) => (this[prop] = props[prop]));
+      (prop) => (this[prop] = props[prop]),
+    );
 
     Object.freeze(this);
   }
@@ -28,7 +29,8 @@ export class EnumSymbol {
 export default class Enum {
   constructor(enumLiterals: Object) {
     Object.getOwnPropertyNames(enumLiterals).forEach(
-      (key) => (this[key] = new EnumSymbol(key, enumLiterals[key])));
+      (key) => (this[key] = new EnumSymbol(key, enumLiterals[key])),
+    );
 
     Object.freeze(this);
   }

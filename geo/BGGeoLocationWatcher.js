@@ -8,20 +8,26 @@ import { ValuedError } from 'app/utils/lang';
 
 import Enum from '../depot/Enum';
 
-export function configureBackgroundGeolocation(callback: Function, debug: boolean = DEBUG_GEO) {
-  BackgroundGeolocation.ready({
-    reset: true,
-    debug,
-    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-    distanceFilter: 1,
-    stopOnTerminate: false,
-    autoSync: false,
-    startOnBoot: true,
-    stationaryRadius: 1,
-    disableElasticity: true,
-    preventSuspend: true,
-    locationAuthorizationRequest: 'Any',
-  }, callback);
+export function configureBackgroundGeolocation(
+  callback: Function,
+  debug: boolean = DEBUG_GEO,
+) {
+  BackgroundGeolocation.ready(
+    {
+      reset: true,
+      debug,
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+      distanceFilter: 1,
+      stopOnTerminate: false,
+      autoSync: false,
+      startOnBoot: true,
+      stationaryRadius: 1,
+      disableElasticity: true,
+      preventSuspend: true,
+      locationAuthorizationRequest: 'Any',
+    },
+    callback,
+  );
 }
 
 const LOCATION_TIMEOUT = 5;
@@ -50,7 +56,7 @@ export const BGError = new Enum({
   },
   LOCATION_TIMEOUT: {
     value: BG_ERROR_CODE.LOCATION_TIMEOUT,
-    message: 'Can\'t determine phone location. Make sure that GPS is available.',
+    message: "Can't determine phone location. Make sure that GPS is available.",
   },
 });
 
@@ -72,12 +78,13 @@ export default class BGGeoLocationWatcher {
     geoPromise = new Promise((resolve, reject) => {
       configureBackgroundGeolocation((state) => {
         const authStatus = state.lastLocationAuthorizationStatus;
-        if (BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
-            BGError.LOCATION_UNKNOWN.valueOf() === authStatus) {
-          reject(new ValuedError(
-            singleton,
-            BGError.LOCATION_PERMISSION_DENIED,
-          ));
+        if (
+          BGError.LOCATION_PERMISSION_DENIED.valueOf() === authStatus ||
+          BGError.LOCATION_UNKNOWN.valueOf() === authStatus
+        ) {
+          reject(
+            new ValuedError(singleton, BGError.LOCATION_PERMISSION_DENIED),
+          );
         } else {
           resolve(singleton);
         }
@@ -102,9 +109,12 @@ export default class BGGeoLocationWatcher {
 
   async watchPos() {
     return new Promise((resolve, reject) => {
-      BackgroundGeolocation.start(() => {
-        this.watchPosInner().then(resolve).catch(reject);
-      }, (error) => reject(new ValuedError(null, error)));
+      BackgroundGeolocation.start(
+        () => {
+          this.watchPosInner().then(resolve).catch(reject);
+        },
+        (error) => reject(new ValuedError(null, error)),
+      );
     });
   }
 
@@ -116,28 +126,36 @@ export default class BGGeoLocationWatcher {
         return;
       }
 
-      BackgroundGeolocation.changePace(true, () => {
-        const watchPosition = () => BackgroundGeolocation.watchPosition(
-          (pos) => this.emitter.emit('position', pos),
-          (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
-          BG_POS_OPT,
-        );
+      BackgroundGeolocation.changePace(
+        true,
+        () => {
+          const watchPosition = () =>
+            BackgroundGeolocation.watchPosition(
+              (pos) => this.emitter.emit('position', pos),
+              (errorCode) =>
+                reject(new ValuedError(null, this.handleError(errorCode))),
+              BG_POS_OPT,
+            );
 
-        BackgroundGeolocation.getCurrentPosition(
-          { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
-          (pos) => {
-            this.watching = true;
-            watchPosition();
-            resolve(pos);
-          },
-          (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
-        );
-        setTimeout(() => {
-          if (!this.watching) {
-            reject(new ValuedError(null, BGError.LOCATION_TIMEOUT));
-          }
-        }, 1.5 * LOCATION_TIMEOUT * 1000);
-      }, (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))));
+          BackgroundGeolocation.getCurrentPosition(
+            { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
+            (pos) => {
+              this.watching = true;
+              watchPosition();
+              resolve(pos);
+            },
+            (errorCode) =>
+              reject(new ValuedError(null, this.handleError(errorCode))),
+          );
+          setTimeout(() => {
+            if (!this.watching) {
+              reject(new ValuedError(null, BGError.LOCATION_TIMEOUT));
+            }
+          }, 1.5 * LOCATION_TIMEOUT * 1000);
+        },
+        (errorCode) =>
+          reject(new ValuedError(null, this.handleError(errorCode))),
+      );
     });
   }
 
@@ -146,7 +164,8 @@ export default class BGGeoLocationWatcher {
       BackgroundGeolocation.getCurrentPosition(
         { ...BG_POS_OPT, samples: 1, maximumAge: 0 },
         resolve,
-        (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
+        (errorCode) =>
+          reject(new ValuedError(null, this.handleError(errorCode))),
       );
     });
   }
@@ -167,8 +186,12 @@ export default class BGGeoLocationWatcher {
     return new Promise((resolve, reject) => {
       BackgroundGeolocation.getCurrentPosition(
         { ...BG_POS_OPT, ...options },
-        (pos) => pos ? resolve(pos) : reject(new ValuedError(null, BGError.LOCATION_UNKNOWN)),
-        (errorCode) => reject(new ValuedError(null, this.handleError(errorCode))),
+        (pos) =>
+          pos
+            ? resolve(pos)
+            : reject(new ValuedError(null, BGError.LOCATION_UNKNOWN)),
+        (errorCode) =>
+          reject(new ValuedError(null, this.handleError(errorCode))),
       );
     });
   }

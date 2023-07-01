@@ -31,13 +31,16 @@ export default class NavGeoLocationWatcherKls {
   watchPos(onStart: Function) {
     check.assert.function(onStart);
 
-    if (this.watchId) {return;}
+    if (this.watchId) {
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         this.watchId = navigator.geolocation.watchPosition(
           (watchPos) => this.emitter.emit('position', watchPos),
-          null, NAV_POS_OPT,
+          null,
+          NAV_POS_OPT,
         );
         caller(onStart, pos, null);
       },

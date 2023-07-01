@@ -23,14 +23,16 @@ export default function createApp(store: Store<any>) {
   Logger.leaveBreadcrumb('App opened');
 
   return createAppContainer(
-    createStackNavigator({
-      Home: {
-        screen: (props: { navigation: StackNav }) => (
-          <Home navigation={props.navigation} store={store} />
-        ),
+    createStackNavigator(
+      {
+        Home: {
+          screen: (props: { navigation: StackNav }) => (
+            <Home navigation={props.navigation} store={store} />
+          ),
+        },
       },
-    },
-    { headerMode: 'none' }),
+      { headerMode: 'none' },
+    ),
   );
 }
 

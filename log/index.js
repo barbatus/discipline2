@@ -1,4 +1,3 @@
-
 import Bugsnag from '@bugsnag/react-native';
 import Reactotron from 'reactotron-react-native';
 import DeviceInfo from 'react-native-device-info';
@@ -9,7 +8,10 @@ import PushNotification from 'app/notifications';
 
 import appConfig from '../appConfig.json';
 
-const bugsnagStartPromise = Promise.all([DeviceInfo.getUniqueId(), DeviceInfo.getDeviceId()]).then(([id, device]) => {
+const bugsnagStartPromise = Promise.all([
+  DeviceInfo.getUniqueId(),
+  DeviceInfo.getDeviceId(),
+]).then(([id, device]) => {
   Bugsnag.start({
     releaseStage: env.NAME,
     user: {

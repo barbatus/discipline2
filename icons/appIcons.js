@@ -1,5 +1,3 @@
-
-
 const appIcons = {
   back: require('./files/app/back.png'),
   check: require('./files/app/check.png'),

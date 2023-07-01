@@ -39,7 +39,9 @@ export class Timer extends Interval {
   }
 
   start(baseTimeMs: number, lastTickMs: number): boolean {
-    if (this.active || this.allTimeMs >= TIME_LIMIT_MS) {return;}
+    if (this.active || this.allTimeMs >= TIME_LIMIT_MS) {
+      return;
+    }
 
     super.start(baseTimeMs, lastTickMs);
     super.on(this.onTimeChange, this);
@@ -47,13 +49,18 @@ export class Timer extends Interval {
   }
 
   async restart(baseTimeMs: number) {
-    if (this.active) {return;}
+    if (this.active) {
+      return;
+    }
 
     const lastTick = await depot.getLastTick(this.trackerId);
     const lastTickTimeMs = this.tickTimeGetter(lastTick);
     const diff = Date.now() - lastTick.createdAt;
     // New last tick value
-    const newLastTickMs = Math.min(Math.max(lastTickTimeMs, diff), TIME_LIMIT_MS);
+    const newLastTickMs = Math.min(
+      Math.max(lastTickTimeMs, diff),
+      TIME_LIMIT_MS,
+    );
     this.saveTimerUpdate(newLastTickMs);
     const allTimePassed = baseTimeMs - lastTickTimeMs + newLastTickMs;
     if (allTimePassed < TIME_LIMIT_MS) {
@@ -65,7 +72,9 @@ export class Timer extends Interval {
   }
 
   stop() {
-    if (!this.active) {return;}
+    if (!this.active) {
+      return;
+    }
 
     super.stop();
     super.off(this.onTimeChange, this);

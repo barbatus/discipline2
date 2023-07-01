@@ -43,11 +43,15 @@ const PushNotification = {
         [
           { text: 'Cancel' },
           { text: 'Settings', onPress: () => Linking.openURL('app-settings:') },
-        ]
+        ],
       );
     }, delayMs);
   },
-  localNotification(title: string, message: string, checkPermissions: Boolean = false) {
+  localNotification(
+    title: string,
+    message: string,
+    checkPermissions: Boolean = false,
+  ) {
     if (checkPermissions) {
       this.checkPermissions();
     }

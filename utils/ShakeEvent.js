@@ -1,5 +1,9 @@
 import EventEmitter from 'eventemitter3';
-import { accelerometer, SensorTypes, setUpdateIntervalForType } from 'react-native-sensors';
+import {
+  accelerometer,
+  SensorTypes,
+  setUpdateIntervalForType,
+} from 'react-native-sensors';
 
 import { noop } from 'app/utils/lang';
 
@@ -31,12 +35,14 @@ export class ShakeEvent extends EventEmitter {
   }
 
   subscribe() {
-    let px = 0, py = 0, pz = 0;
     this.subscription = accelerometer.subscribe(({ x, y, z }) => {
-      const acceleration = Math.sqrt(Math.pow(x - px, 2) + Math.pow(y - py, 2) + Math.pow(z - pz, 2));
-      px = x, py = y, px = z;
-      if (acceleration > SHAKE_THRESHOLD &&
-          Date.now() - this.lastShakeMs > MIN_TIME_BETWEEN_SHAKES_MS) {
+      const acceleration = Math.sqrt(
+        Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2),
+      );
+      if (
+        acceleration > SHAKE_THRESHOLD &&
+        Date.now() - this.lastShakeMs > MIN_TIME_BETWEEN_SHAKES_MS
+      ) {
         this.lastShakeMs = Date.now();
         this.emit('shake');
       }

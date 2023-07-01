@@ -9,17 +9,11 @@ export class Keyboard {
 
   constructor() {
     this.keyboardWillHide = ::this.keyboardWillHide;
-    KeyboardRN.addListener(
-      'keyboardWillHide',
-      this.keyboardWillHide,
-    );
+    KeyboardRN.addListener('keyboardWillHide', this.keyboardWillHide);
   }
 
   dispose() {
-    KeyboardRN.removeListener(
-      'keyboardWillHide',
-      this.keyboardWillHide,
-    );
+    KeyboardRN.removeListener('keyboardWillHide', this.keyboardWillHide);
   }
 
   dismiss() {

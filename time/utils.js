@@ -11,16 +11,12 @@ const DAY_MS = 24 * 60 * 60 * SS_MS;
 const time = {
   getDateMs() {
     const now = moment();
-    return moment([
-      now.year(), now.month(), now.date(),
-    ]).valueOf();
+    return moment([now.year(), now.month(), now.date()]).valueOf();
   },
 
   getYestMs() {
     const yest = moment().subtract(1, 'days');
-    return moment([
-      yest.year(), yest.month(), yest.date(),
-    ]).valueOf();
+    return moment([yest.year(), yest.month(), yest.date()]).valueOf();
   },
 
   getNowMs() {
@@ -41,7 +37,7 @@ const time = {
         hh: null,
         mm: '00',
         ss: padZero(ss),
-        format: (full = true) => full ? `00:${f.ss}s` : `${f.ss}s`,
+        format: (full = true) => (full ? `00:${f.ss}s` : `${f.ss}s`),
       };
       return f;
     }
@@ -151,10 +147,7 @@ const time = {
   },
 
   subtractMonth(dateMs) {
-    return moment(dateMs)
-      .subtract(1, 'month')
-      .startOf('month')
-      .valueOf();
+    return moment(dateMs).subtract(1, 'month').startOf('month').valueOf();
   },
 };
 
