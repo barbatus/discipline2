@@ -12,6 +12,11 @@ const CopilotStepEnum = new Enum({
     order: 2,
     title: 'Add an icon to make your tracker pretty :)',
   },
+  EDIT_PAST: {
+    value: 'EDIT_PAST',
+    order: 3,
+    title: 'Tap on a past day and edit the tracker',
+  },
 });
 
 export const CopilotScreenEnum = new Enum({
@@ -22,6 +27,10 @@ export const CopilotScreenEnum = new Enum({
   CREATE_TRACKER: {
     value: 'ADD_ICON',
     steps: [CopilotStepEnum.ADD_ICON],
+  },
+  CALENDAR: {
+    value: 'CALENDAR',
+    steps: [CopilotStepEnum.EDIT_PAST],
   },
 });
 

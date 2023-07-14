@@ -65,6 +65,7 @@ export default class Day extends PureComponent {
     isSelected: PropTypes.bool,
     isToday: PropTypes.bool,
     isOutDay: PropTypes.bool,
+    copilot: PropTypes.object,
     onPress: PropTypes.func.isRequired,
     onLongPress: PropTypes.func,
   };
@@ -74,6 +75,7 @@ export default class Day extends PureComponent {
     isSelected: false,
     isToday: false,
     isOutDay: false,
+    copilot: null,
   };
 
   constructor(props) {
@@ -121,7 +123,8 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { value, isOutDay, hasTicks, isSelected, isToday } = this.props;
+    const { value, isOutDay, hasTicks, isSelected, isToday, copilot } =
+      this.props;
 
     return isOutDay ? (
       <TouchableWithoutFeedback>
@@ -134,7 +137,10 @@ export default class Day extends PureComponent {
     ) : (
       <TouchableOpacity onPress={this.onPress} onLongPress={this.onLongPress}>
         <View style={styles.dayButton}>
-          <View style={this.getDayCircleStyle(isSelected, isToday)}>
+          <View
+            {...copilot}
+            style={this.getDayCircleStyle(isSelected, isToday)}
+          >
             {hasTicks ? <View style={styles.tickPoint} /> : null}
             <Text style={this.getDayTextStyle(isSelected, isToday)}>
               {value}

@@ -14,6 +14,8 @@ import moment from 'moment';
 
 import { caller, int } from 'app/utils/lang';
 import { getIcon } from 'app/icons/icons';
+import CopilotStep from 'app/components/copilot/CopilotStep';
+import CopilotStepEnum from 'app/components/copilot/steps';
 
 import Tooltip from '../tooltip/Tooltip';
 import { SCREEN_WIDTH, HINT_COLOR, WHITE_COLOR } from '../styles/common';
@@ -228,7 +230,8 @@ export default class Month extends PureComponent {
         <Tooltip
           x={tooltipPos.x}
           y={tooltipPos.y}
-          onTooltipClick={this.onTooltipClick}>
+          onTooltipClick={this.onTooltipClick}
+        >
           <View style={styles.ticksContent}>
             <TextRow>
               <TimeText>Total:</TimeText>
@@ -251,7 +254,8 @@ export default class Month extends PureComponent {
       <Tooltip
         x={tooltipPos.x}
         y={tooltipPos.y}
-        onTooltipClick={this.onTooltipClick}>
+        onTooltipClick={this.onTooltipClick}
+      >
         <View style={styles.ticksContent}>
           <TextRow>
             <TimeText>{timeDesc}:</TimeText>
@@ -290,6 +294,7 @@ export default class Month extends PureComponent {
     const { monthMs, todayMs, ticks } = this.props;
     const { selDateMs } = this.state;
 
+    const today = moment(todayMs);
     const startOfMonth = moment(monthMs).startOf('month');
     const endOfMonth = moment(monthMs).endOf('month');
     const startOffset = startOfMonth.weekday();
@@ -315,6 +320,15 @@ export default class Month extends PureComponent {
           isOutDay={isOutDay}
         />,
       );
+      // 10th day is around the center
+      if (today.month() === startDay.month() && startDay.date() === 10) {
+        const dayElem = days.pop();
+        days.push(
+          <CopilotStep key="copilot" step={CopilotStepEnum.EDIT_PAST}>
+            {dayElem}
+          </CopilotStep>,
+        );
+      }
       if (startDay.weekday() === 6) {
         weekRows.push(
           <View key={startDay.valueOf()} style={styles.weekRow}>

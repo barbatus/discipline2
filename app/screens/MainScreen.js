@@ -163,7 +163,8 @@ export class MainScreen extends PureComponent {
           openMenuOffset={MENU_WIDTH}
           onChange={this.onMenuChange}
           onSliding={this.onMenuSliding}
-          animationStyle={this.getMenuStyle}>
+          animationStyle={this.getMenuStyle}
+        >
           <Screen navigator={navigator}>{this.renderContent()}</Screen>
         </SideMenu>
         <IconsDlg ref={this.iconsDlg} />
@@ -174,8 +175,28 @@ export class MainScreen extends PureComponent {
   }
 }
 
+const circleSvgPath = ({ size, position, canvasSize }) =>
+  Math.abs(size.x._value - size.y._value) <= 20
+    ? `
+  M0,0H${canvasSize.x}V${canvasSize.y}H0V0ZM ${position.x._value - 2}, ${
+        position.y._value + size.y._value / 2
+      }
+    a ${size.x._value / 2 + 2},${size.x._value / 2 + 2} 0 1,0 ${
+        size.x._value + 4
+      },0
+    a ${size.x._value / 2 + 2},${size.x._value / 2 + 2} 0 1,0 -${
+        size.x._value + 4
+      },0
+  `
+    : `M0,0H${canvasSize.x}V${canvasSize.y}H0V0ZM${position.x._value},${
+        position.y._value
+      }H${position.x._value + size.x._value}V${
+        position.y._value + size.y._value
+      }H${position.x._value}V${position.y._value}Z`;
+
 const ScreenWithCopilot = copilot({
   overlay: 'svg',
+  svgMaskPath: circleSvgPath,
   animated: true,
   stepNumberComponent: () => null,
   tooltipComponent: CopilotTooltip,
