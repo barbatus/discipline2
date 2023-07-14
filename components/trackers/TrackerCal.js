@@ -77,7 +77,7 @@ export default class TrackerCal extends PureComponent {
     const { trackerType, style, shown } = this.props;
     const { ticksMap } = this.state;
 
-    const showTotal = trackerType !== TrackerType.STOPWATCH;
+    const showTotal = !(trackerType === TrackerType.STOPWATCH || trackerType === TrackerType.RATE);
     return (
       <Animated.View style={[styles.container, style]}>
         <Calendar

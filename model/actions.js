@@ -164,14 +164,12 @@ export const UPDATE_LAST_TICK = 'UPDATE_LAST_TICK';
 
 export const updateLastTick =
   (tracker, value, data, progress) => async (dispatch) => {
-    // const tick = await depot.getLastTick(tracker.id);
-    const lastTick = last(tracker.ticks);
-    const tick = new Tick({ ...lastTick, value, data });
+    const tick = await depot.updateLastTick(tracker.id, value, data)
     return dispatch({
       type: UPDATE_LAST_TICK,
       tracker,
       progress,
-      tick,
+      tick: new Tick(tick),
     });
   };
 

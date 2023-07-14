@@ -202,6 +202,15 @@ function printTick(
         createdAt: minMs,
       };
     }
+    case TrackerType.RATE:
+      const tick = ticks[0];
+      return {
+        html: <Text>{timeDesc}: rated {tick.value}</Text>,
+        shortDesc: `rated ${tick.value}`,
+        timeDesc,
+        value: tick.value,
+        createdAt: minMs,
+      };
     default:
       throw new Error('Tracker type is not supported');
   }
