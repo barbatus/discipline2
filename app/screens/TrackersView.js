@@ -435,7 +435,8 @@ class TrackersView extends PureComponent {
         style={[commonStyles.flexFilled, style]}
         onStartShouldSetResponder={(evt) => {
           this.setState({ toggleTooltip: !toggleTooltip });
-        }}>
+        }}
+      >
         <TrackerCal
           ref={this.calendar}
           {...this.props}
@@ -485,8 +486,16 @@ export default connect(
     ticks: trackers.ticks,
   }),
   (dispatch, props) => ({
-    onCalendarUpdate: (tracker, monthDateMs, startDateMs, endDateMs) =>
-      dispatch(updateCalendar(tracker, monthDateMs, startDateMs, endDateMs)),
+    onCalendarUpdate(tracker, monthDateMs, startDateMs, endDateMs) {
+      dispatch(updateCalendar(tracker, monthDateMs, startDateMs, endDateMs));
+      caller(
+        props.onCalendarUpdate,
+        tracker,
+        monthDateMs,
+        startDateMs,
+        endDateMs,
+      );
+    },
     onRemove: (tracker) => dispatch(removeTracker(tracker)),
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),
     onTick: (tracker, value, data) =>

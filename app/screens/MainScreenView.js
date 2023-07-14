@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Alert } from 'react-native';
 import first from 'lodash/first';
+import moment from 'moment';
 
 import { MAX_TRACKERS } from 'app/env';
 import { addTracker, updateCopilot } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
 import Keyboard from 'app/utils/Keyboard';
+import time from 'app/time/utils';
 
 import CopilotStep from 'app/components/copilot/CopilotStep';
 import CopilotStepEnum, {
@@ -50,6 +52,7 @@ export class MainScreenView extends ScrollScreenView {
     this.onMenuToggle = ::this.onMenuToggle;
     this.onNewTracker = ::this.onNewTracker;
     this.onMoveDownCancel = ::this.onMoveDownCancel;
+    this.onCalendarUpdate = ::this.onCalendarUpdate;
   }
 
   get leftView() {
@@ -65,6 +68,7 @@ export class MainScreenView extends ScrollScreenView {
         onCancel={this.setMainViewBtns}
         onMoveUp={this.setMainViewBtns}
         onMoveDownCancel={this.onMoveDownCancel}
+        onCalendarUpdate={this.onCalendarUpdate}
       />
     );
   }
@@ -187,22 +191,12 @@ export class MainScreenView extends ScrollScreenView {
   // Copilot
 
   copilotIfEmptyApp() {
-    const { copilot } = this.props.app.props;
-    if (CopilotScreenEnum.EMPTY.value in copilot) {
-      return false;
-    }
-
     const firstStep = first(CopilotScreenEnum.EMPTY.steps);
     this.hTimers[firstStep.value] = this.startCopilot(2000, firstStep.value);
     return true;
   }
 
   copilotIfAddIcon(tracker) {
-    const { copilot } = this.props.app.props;
-    if (CopilotScreenEnum.CREATE_TRACKER.value in copilot) {
-      return false;
-    }
-
     const firstStep = first(CopilotScreenEnum.CREATE_TRACKER.steps);
     if (tracker.iconId) {
       this.props.onCopilot(
@@ -213,6 +207,17 @@ export class MainScreenView extends ScrollScreenView {
     }
     this.hTimers[firstStep.value] = this.startCopilot(500, firstStep.value);
     return true;
+  }
+
+  copilotIfEditPast(tracker, monthMs) {
+    if (
+      tracker.ticks.length &&
+      moment(monthMs).month() === moment().month() &&
+      moment().date() === 14
+    ) {
+      const firstStep = first(CopilotScreenEnum.CALENDAR.steps);
+      this.hTimers[firstStep.value] = this.startCopilot(500, firstStep.value);
+    }
   }
 
   // Common
@@ -228,6 +233,10 @@ export class MainScreenView extends ScrollScreenView {
 
   onMoveDownCancel() {
     this.setMainViewBtns(null, false);
+  }
+
+  onCalendarUpdate(tracker, monthDateMs, startDateMs, endDateMs) {
+    this.copilotIfEditPast(tracker, monthDateMs);
   }
 }
 
