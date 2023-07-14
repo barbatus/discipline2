@@ -191,12 +191,20 @@ export class MainScreenView extends ScrollScreenView {
   // Copilot
 
   copilotIfEmptyApp() {
+    const { copilot } = this.props.app.props;
+    if (CopilotScreenEnum.EMPTY.value in copilot) {
+      return false;
+    }
     const firstStep = first(CopilotScreenEnum.EMPTY.steps);
     this.hTimers[firstStep.value] = this.startCopilot(2000, firstStep.value);
     return true;
   }
 
   copilotIfAddIcon(tracker) {
+    const { copilot } = this.props.app.props;
+    if (CopilotScreenEnum.CREATE_TRACKER.value in copilot) {
+      return false;
+    }
     const firstStep = first(CopilotScreenEnum.CREATE_TRACKER.steps);
     if (tracker.iconId) {
       this.props.onCopilot(
