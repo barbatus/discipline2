@@ -18,6 +18,7 @@ const appIcons = {
   next_: require('./files/app/next_.png'),
   map: require('./files/app/map.png'),
   distance: require('./files/app/distance.png'),
+  rate: require('./files/app/star.png'),
 };
 
 export default appIcons;

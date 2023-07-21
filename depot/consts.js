@@ -41,7 +41,7 @@ export const TrackerType = new Enum({
   RATE: {
     title: 'Rate',
     value: 'RATE',
-    desc: 'Rate any activity or even evaluate how successful the entire day has been',
+    desc: 'Rate your day or any other activity',
   },
 });
 
