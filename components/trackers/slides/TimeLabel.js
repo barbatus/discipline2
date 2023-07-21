@@ -70,7 +70,7 @@ const TimeDigit = React.memo(TimeDigitFn);
 
 export default class TimeLabel extends PureComponent {
   static propTypes = {
-    style: TimeDigitFn.propTypes.style,
+    style: ViewPropTypes.style,
     width: PropTypes.number.isRequired,
     timeMs: PropTypes.number.isRequired,
     lapTimeMs: PropTypes.number,

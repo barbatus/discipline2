@@ -15,7 +15,7 @@ const CopilotStepEnum = new Enum({
   EDIT_PAST: {
     value: 'EDIT_PAST',
     order: 3,
-    title: 'Tap on a past day and edit the tracker',
+    title: 'Tap and hold on a past day and edit the tracker',
   },
 });
 
