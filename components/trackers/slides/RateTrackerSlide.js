@@ -22,22 +22,26 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   row: {
-    marginBottom: 10,
     width: '70%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   rateBtn: {
     ...trackerDef.checkBtn,
-    height: 40,
-    width: 40,
+    height: 50,
+    width: 50,
     borderWidth: 1,
+    marginRight: 5,
     borderColor: '#E6E6E6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   rateText: {
+    fontSize: 16,
+  },
+  checkedText: {
     color: 'white',
+    fontSize: 18,
   },
 });
 
@@ -45,21 +49,25 @@ const RateBtn = (props: {
   value: number,
   checked: boolean,
   disabled: boolean,
+  last: Boolean,
   onUndo: (value) => void,
   onTick: () => void,
 }) => {
+  const lastStyle = props.last ? { marginRight: 0 } : null;
   return (
     <TouchableOpacity
       style={
         props.checked
-          ? [styles.rateBtn, trackerStyles.filledBtn]
-          : styles.rateBtn
+          ? [styles.rateBtn, trackerStyles.filledBtn, lastStyle]
+          : [styles.rateBtn, lastStyle]
       }
       disabled={props.disabled}
       onLongPress={() => props.checked && props.onUndo(props.value)}
       onPress={() => props.onTick(props.value)}
     >
-      <Text style={props.checked ? styles.rateText : null}>{props.value}</Text>
+      <Text style={props.checked ? styles.checkedText : styles.rateText}>
+        {props.value}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -73,27 +81,30 @@ export default class RateTrackerSlide extends TrackerSlide {
 
   get bodyControls() {
     const { responsive, tracker } = this.props;
-    const rates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const rates1 = [1, 2, 3, 4, 5];
+    const rates2 = [];
     return (
       <View style={styles.controls}>
         <View style={styles.row}>
-          {rates.slice(0, 5).map((value) => (
+          {rates1.slice(0, 5).map((value, index) => (
             <RateBtn
               key={value}
               value={value}
               checked={value === tracker.lastValue}
+              last={index === 4}
               disabled={!responsive}
               onUndo={this.onUndo}
               onTick={this.onTick}
             />
           ))}
         </View>
-        <View style={styles.row}>
-          {rates.slice(5).map((value) => (
+        <View style={[styles.row, { marginTop: 10 }]}>
+          {rates2.map((value, index) => (
             <RateBtn
               key={value}
               value={value}
               checked={value === tracker.lastValue}
+              last={index === 4}
               disabled={!responsive}
               onUndo={this.onUndo}
               onTick={this.onTick}
