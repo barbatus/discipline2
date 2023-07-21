@@ -343,6 +343,11 @@ const UserIcons = new Enum({
     [IconSize.NORMAL]: require('./files/user/icon8/smoking.png'),
     tags: ['smoking'],
   },
+  SPA: {
+    value: 'spa',
+    [IconSize.NORMAL]: require('./files/user/icon8/spa.png'),
+    tags: ['spa'],
+  },
   SPORT: {
     value: 'sport',
     [IconSize.NORMAL]: require('./files/user/icon8/sport.png'),
@@ -352,6 +357,11 @@ const UserIcons = new Enum({
     value: 'stopwatch',
     [IconSize.NORMAL]: require('./files/user/icon8/stopwatch.png'),
     tags: ['stopwatch', 'time', 'watch'],
+  },
+  STRETCH: {
+    value: 'stretch',
+    [IconSize.NORMAL]: require('./files/user/icon8/stretching.png'),
+    tags: ['stretch', 'gym', 'fitness'],
   },
   SUBWAY: {
     value: 'subway',
@@ -367,6 +377,11 @@ const UserIcons = new Enum({
     value: 'surf',
     [IconSize.NORMAL]: require('./files/user/icon8/surf.png'),
     tags: ['surf', 'ocean'],
+  },
+  SUSHI: {
+    value: 'sushi',
+    [IconSize.NORMAL]: require('./files/user/icon8/sushi.png'),
+    tags: ['sushi', 'food', 'healthy', 'exercise'],
   },
   SWIMMING: {
     value: 'swimming',

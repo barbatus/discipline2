@@ -204,7 +204,8 @@ const ScreenWithCopilot = copilot({
 
 export default connect(
   ({ trackers: { trackers, app } }) => ({
-    slides: trackers.size,
+    // Keep +1 to adjust for the animation of the last track removal.
+    slides: trackers.size + 1,
     app,
   }),
   (dispatch) => ({
