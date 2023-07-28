@@ -27,7 +27,12 @@ export default class Depot {
     const app = await appDB.get();
     if (!app) {
       const appVer = DeviceInfo.getVersion();
-      return appDB.create(appVer, { alerts: true, metric: true, copilot: {} });
+      return appDB.create(appVer, {
+        alerts: true,
+        metric: true,
+        copilot: {},
+        ratedAt: null,
+      });
     }
     const trackers = await this.hydrateTrackers(app.trackers);
     return { ...app, trackers };

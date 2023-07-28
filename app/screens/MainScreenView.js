@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { Alert, Text } from 'react-native';
 import first from 'lodash/first';
 import moment from 'moment';
+import Rate, { AndroidMarket } from 'react-native-rate';
 
 import { MAX_TRACKERS } from 'app/env';
-import { addTracker, updateCopilot } from 'app/model/actions';
+import { addTracker, updateCopilot, updateAppProps } from 'app/model/actions';
 import { caller } from 'app/utils/lang';
 import Keyboard from 'app/utils/Keyboard';
 import time from 'app/time/utils';
@@ -44,6 +45,7 @@ export class MainScreenView extends ScrollScreenView {
 
     this.state = { rightView: null };
 
+    this.onTick = ::this.onTick;
     this.onSlideChange = ::this.onSlideChange;
     this.onAddCompleted = ::this.onAddCompleted;
     this.setMainViewBtns = ::this.setMainViewBtns;
@@ -61,6 +63,7 @@ export class MainScreenView extends ScrollScreenView {
         {...this.props}
         parent={this.emitter}
         style={commonStyles.absFilled}
+        onTick={this.onTick}
         onSlideChange={this.onSlideChange}
         onAddCompleted={this.onAddCompleted}
         onRemoveCompleted={this.setMainViewBtns}
@@ -118,18 +121,28 @@ export class MainScreenView extends ScrollScreenView {
     }
   }
 
-  startCopilot(delay: number, stepId: string) {
-    return setTimeout(() => {
-      const { copilot } = this.props.app.props;
-      const step = CopilotStepEnum.fromValue(stepId);
-      const screen = getScreenByStep(step);
-      if (!(screen.value in copilot)) {
-        this.props.start(stepId);
-      }
-    }, delay);
-  }
-
   // New tracker events.
+
+  onTick(tracker) {
+    if (!tracker.createdAt || this.props.app.ratedAt) return;
+    // Two months old tracker and has more than 5 ticks in the current month.
+    if (
+      moment().diff(moment(tracker.createdAt), 'months') >= 2 &&
+      tracker.ticks.length >= 5
+    ) {
+      const options = {
+        AppleAppID: '1457495351',
+        preferInApp: true,
+        GooglePackageName: 'com.discipline', //?
+        preferredAndroidMarket: AndroidMarket.Google,
+      };
+      Rate.rate(options, (success) => {
+        if (success) {
+          this.props.onRate();
+        }
+      });
+    }
+  }
 
   onAcceptNewTracker(tracker) {
     if (this.isActive) {
@@ -189,6 +202,17 @@ export class MainScreenView extends ScrollScreenView {
   }
 
   // Copilot
+
+  startCopilot(delay: number, stepId: string) {
+    return setTimeout(() => {
+      const { copilot } = this.props.app.props;
+      const step = CopilotStepEnum.fromValue(stepId);
+      const screen = getScreenByStep(step);
+      if (!(screen.value in copilot)) {
+        this.props.start(stepId);
+      }
+    }, delay);
+  }
 
   copilotIfEmptyApp() {
     const { copilot } = this.props.app.props;
@@ -255,5 +279,6 @@ export default connect(
   (dispatch) => ({
     onAddTracker: (tracker, index) => dispatch(addTracker(tracker, index)),
     onCopilot: (screen, step) => dispatch(updateCopilot(screen, step)),
+    onRate: () => dispatch(updateAppProps({ ratedAt: Date.now() })),
   }),
 )(MainScreenView);

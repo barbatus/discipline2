@@ -45,6 +45,8 @@ export default class Tracker implements DBTracker {
 
   props: Array<PropType>;
 
+  createdAt: number;
+
   static get properties() {
     return DEFAULT_TRACKER_PROPS;
   }

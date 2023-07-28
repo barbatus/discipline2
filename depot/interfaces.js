@@ -39,6 +39,7 @@ export interface Tracker {
   ticks?: Array<Tick>;
   alerts?: Array<Alert>;
   props: Array<PropType>;
+  createdAt: number;
 }
 
 export interface NewTracker {
