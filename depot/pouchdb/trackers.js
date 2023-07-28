@@ -14,7 +14,10 @@ class Trackers {
   }
 
   async add(data: NewTracker): Promise<Tracker> {
-    const tracker = await db.save('tracker', data);
+    const tracker = await db.save('tracker', {
+      ...data,
+      createdAt: Date.now(),
+    });
     return tracker;
   }
 

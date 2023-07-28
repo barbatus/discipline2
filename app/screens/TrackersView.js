@@ -107,6 +107,7 @@ class TrackersView extends PureComponent {
     onMoveUp: PropTypes.func,
     onMoveDownCancel: PropTypes.func,
     onCancel: PropTypes.func,
+    onTick: PropTypes.func,
     monthDateMs: PropTypes.number.isRequired,
     style: ViewPropTypes.style,
     app: PropTypes.object.isRequired,
@@ -498,8 +499,10 @@ export default connect(
     },
     onRemove: (tracker) => dispatch(removeTracker(tracker)),
     onUpdate: (tracker) => dispatch(updateTracker(tracker)),
-    onTick: (tracker, value, data) =>
-      dispatch(tickTracker(tracker, value, data)),
+    onTick: (tracker, value, data) => {
+      dispatch(tickTracker(tracker, value, data));
+      caller(props.onTick, tracker);
+    },
     onStart: (tracker, value, data) =>
       dispatch(startTracker(tracker, value, data)),
     // onProgress: (tracker, value, data, progress) => (
